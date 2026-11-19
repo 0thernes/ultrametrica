@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability Disclosure (Private)
+    url: https://github.com/0thernes/ultrametrica/blob/main/.github/SECURITY.md
+    about: Report security vulnerabilities privately per our Security Policy — never in public issues.
+  - name: White Paper, Master Report & Verification Protocol
+    url: https://github.com/0thernes/ultrametrica/blob/main/INDEX.md
+    about: Consult the Master Index, White Paper, Lean 4 proof audit, and falsification criteria before opening an issue.

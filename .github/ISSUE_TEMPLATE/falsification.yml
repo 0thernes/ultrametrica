@@ -1,0 +1,23 @@
+name: Proof Challenge / Falsification Report
+description: Submit a counterexample, priority citation, Lean 4 scope critique, or numerical falsification test against any claim in ULTRAMETRICA
+title: "[Falsification]: "
+labels: ["verification", "falsification"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every theorem, invariant, and novelty boundary in **ULTRAMETRICA** is explicitly falsifiable (see `VERIFICATION.md` and `paper/WHITE_PAPER.md`). Counterexamples, prior-literature citations, and formal proof audits are strongly welcomed.
+  - type: input
+    id: target
+    attributes:
+      label: Target Claim, Theorem, or Equation
+      placeholder: "e.g., Theorem I (Adelic Parity-Doubling Dichotomy), Theorem II (BTZ Ollivier-Ricci L=5 trichotomy), or White Paper Section 6.2"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Counterexample, Prior Citation, or Reproducible Script
+      description: Provide exact parameters (p, n, L, theta, g, Omega), Lean 4 proof term, or bibliographic DOI/arXiv reference.
+    validations:
+      required: true

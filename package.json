@@ -1,0 +1,11 @@
+{
+  "name": "ultrametrica",
+  "version": "1.0.0",
+  "description": "Real-time p-adic AdS/CFT Holographic Quantum Gravity, Bruhat-Tits BTZ Black Hole, Kozyrev Wavelet & Ultrametric Acoustic Engine",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/verify.mjs",
+    "discover": "node scripts/discover.mjs"
+  }
+}

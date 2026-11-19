@@ -1,0 +1,641 @@
+{
+  "generatedAt": "2026-11-19T02:20:26.771Z",
+  "nodeVersion": "v25.8.2",
+  "experimentA_adelicHybridSpectrum": [
+    {
+      "p": 3,
+      "n": 4,
+      "alpha": 1,
+      "N": 81,
+      "commutatorNorm": 620.9770534063907,
+      "normalizedCommutator": 0.021873947086722155,
+      "sweep": [
+        {
+          "theta": 0,
+          "totalLevels": 81,
+          "distinctLevels": 41,
+          "degeneracyBrokenFraction": 0.5061728395061729,
+          "meanR_distinct": 0.9999999999999785,
+          "meanR_raw": 2.0682616579169508e-14,
+          "spectralWidth": 32.028041512706004,
+          "meanIPR": 0.01844231062338103,
+          "normalizedIPR": 1.4938271604938635,
+          "meanShannonEntropy": 4.091134390665532,
+          "shannonFraction": 0.9309777509464628
+        },
+        {
+          "theta": 0.1,
+          "totalLevels": 81,
+          "distinctLevels": 41,
+          "degeneracyBrokenFraction": 0.5061728395061729,
+          "meanR_distinct": 0.939987023097736,
+          "meanR_raw": 1.940539876833662e-14,
+          "spectralWidth": 30.91473492703462,
+          "meanIPR": 0.01905841068718951,
+          "normalizedIPR": 1.5437312656623505,
+          "meanShannonEntropy": 4.073190173726379,
+          "shannonFraction": 0.9268943684091832
+        },
+        {
+          "theta": 0.25,
+          "totalLevels": 81,
+          "distinctLevels": 41,
+          "degeneracyBrokenFraction": 0.5061728395061729,
+          "meanR_distinct": 0.8738608829651542,
+          "meanR_raw": 3.0505886249072894e-14,
+          "spectralWidth": 29.294002060659928,
+          "meanIPR": 0.01981981693914227,
+          "normalizedIPR": 1.605405172070524,
+          "meanShannonEntropy": 4.048332442386008,
+          "shannonFraction": 0.9212377478714439
+        },
+        {
+          "theta": 0.4,
+          "totalLevels": 81,
+          "distinctLevels": 41,
+          "degeneracyBrokenFraction": 0.5061728395061729,
+          "meanR_distinct": 0.8315899464536651,
+          "meanR_raw": 2.962194997250075e-14,
+          "spectralWidth": 27.74274726169227,
+          "meanIPR": 0.02037601216260848,
+          "normalizedIPR": 1.650456985171287,
+          "meanShannonEntropy": 4.030171583001692,
+          "shannonFraction": 0.9171050662212293
+        },
+        {
+          "theta": 0.5,
+          "totalLevels": 81,
+          "distinctLevels": 41,
+          "degeneracyBrokenFraction": 0.5061728395061729,
+          "meanR_distinct": 0.809624271125156,
+          "meanR_raw": 4.9401018863464336e-14,
+          "spectralWidth": 26.75359592657645,
+          "meanIPR": 0.02071321385950152,
+          "normalizedIPR": 1.677770322619623,
+          "meanShannonEntropy": 4.018435090753885,
+          "shannonFraction": 0.9144343123144902
+        },
+        {
+          "theta": 0.6,
+          "totalLevels": 81,
+          "distinctLevels": 41,
+          "degeneracyBrokenFraction": 0.5061728395061729,
+          "meanR_distinct": 0.7908311603547106,
+          "meanR_raw": 6.076031915144264e-14,
+          "spectralWidth": 25.805270556827722,
+          "meanIPR": 0.021067322409415633,
+          "normalizedIPR": 1.7064531151626663,
+          "meanShannonEntropy": 4.006649009240711,
+          "shannonFraction": 0.9117522738841122
+        },
+        {
+          "theta": 0.75,
+          "totalLevels": 81,
+          "distinctLevels": 41,
+          "degeneracyBrokenFraction": 0.5061728395061729,
+          "meanR_distinct": 0.7661229508825266,
+          "meanR_raw": 1.074280613696499e-13,
+          "spectralWidth": 24.46845566409576,
+          "meanIPR": 0.021699277425400523,
+          "normalizedIPR": 1.7576414714574424,
+          "meanShannonEntropy": 3.9862232213456195,
+          "shannonFraction": 0.9071041855398942
+        },
+        {
+          "theta": 0.9,
+          "totalLevels": 81,
+          "distinctLevels": 41,
+          "degeneracyBrokenFraction": 0.5061728395061729,
+          "meanR_distinct": 0.743288702982665,
+          "meanR_raw": 1.8340494894585465e-13,
+          "spectralWidth": 23.24606581588079,
+          "meanIPR": 0.02254187442465106,
+          "normalizedIPR": 1.825891828396736,
+          "meanShannonEntropy": 3.9604662914124322,
+          "shannonFraction": 0.9012429435442277
+        },
+        {
+          "theta": 1,
+          "totalLevels": 81,
+          "distinctLevels": 5,
+          "degeneracyBrokenFraction": 0.06172839506172839,
+          "meanR_distinct": 0.3888888888888901,
+          "meanR_raw": 2.1073090362647003e-15,
+          "spectralWidth": 22.500000000000043,
+          "meanIPR": 0.04615415570038123,
+          "normalizedIPR": 3.7384866117308793,
+          "meanShannonEntropy": 3.5515228779891315,
+          "shannonFraction": 0.8081838594520866
+        }
+      ]
+    },
+    {
+      "p": 2,
+      "n": 6,
+      "alpha": 1,
+      "N": 64,
+      "commutatorNorm": 369.2146530488412,
+      "normalizedCommutator": 0.02523937920385145,
+      "sweep": [
+        {
+          "theta": 0,
+          "totalLevels": 64,
+          "distinctLevels": 33,
+          "degeneracyBrokenFraction": 0.515625,
+          "meanR_distinct": 0.9999999999999788,
+          "meanR_raw": 1.4577329836089087e-14,
+          "spectralWidth": 26.179706132368224,
+          "meanIPR": 0.023278841222187915,
+          "normalizedIPR": 1.4898458382200266,
+          "meanShannonEntropy": 3.857716389283551,
+          "shannonFraction": 0.927584717329243
+        },
+        {
+          "theta": 0.1,
+          "totalLevels": 64,
+          "distinctLevels": 64,
+          "degeneracyBrokenFraction": 1,
+          "meanR_distinct": 0.05748530788230869,
+          "meanR_raw": 0.05748530788230869,
+          "spectralWidth": 25.561735519131428,
+          "meanIPR": 0.0228550858626697,
+          "normalizedIPR": 1.4627254952108608,
+          "meanShannonEntropy": 3.8772061810388605,
+          "shannonFraction": 0.9322710216481335
+        },
+        {
+          "theta": 0.25,
+          "totalLevels": 64,
+          "distinctLevels": 64,
+          "degeneracyBrokenFraction": 1,
+          "meanR_distinct": 0.07242669536903863,
+          "meanR_raw": 0.07242669536903863,
+          "spectralWidth": 24.63477959927619,
+          "meanIPR": 0.022760900364797464,
+          "normalizedIPR": 1.4566976233470377,
+          "meanShannonEntropy": 3.8833597472768737,
+          "shannonFraction": 0.9337506415640274
+        },
+        {
+          "theta": 0.4,
+          "totalLevels": 64,
+          "distinctLevels": 64,
+          "degeneracyBrokenFraction": 1,
+          "meanR_distinct": 0.07188487158696127,
+          "meanR_raw": 0.07188487158696127,
+          "spectralWidth": 23.70782367942097,
+          "meanIPR": 0.02251507393290663,
+          "normalizedIPR": 1.4409647317060243,
+          "meanShannonEntropy": 3.895175000160054,
+          "shannonFraction": 0.9365916093542629
+        },
+        {
+          "theta": 0.5,
+          "totalLevels": 64,
+          "distinctLevels": 64,
+          "degeneracyBrokenFraction": 1,
+          "meanR_distinct": 0.07712559356377129,
+          "meanR_raw": 0.07712559356377129,
+          "spectralWidth": 23.089853066184126,
+          "meanIPR": 0.02224755178718974,
+          "normalizedIPR": 1.4238433143801434,
+          "meanShannonEntropy": 3.9067474466051952,
+          "shannonFraction": 0.939374194537156
+        },
+        {
+          "theta": 0.6,
+          "totalLevels": 64,
+          "distinctLevels": 64,
+          "degeneracyBrokenFraction": 1,
+          "meanR_distinct": 0.0665312717132931,
+          "meanR_raw": 0.0665312717132931,
+          "spectralWidth": 22.471882452947302,
+          "meanIPR": 0.02192597647630515,
+          "normalizedIPR": 1.4032624944835297,
+          "meanShannonEntropy": 3.919827077307951,
+          "shannonFraction": 0.9425191809290767
+        },
+        {
+          "theta": 0.75,
+          "totalLevels": 64,
+          "distinctLevels": 64,
+          "degeneracyBrokenFraction": 1,
+          "meanR_distinct": 0.04931344981543224,
+          "meanR_raw": 0.04931344981543224,
+          "spectralWidth": 21.54492653309209,
+          "meanIPR": 0.02143058516183477,
+          "normalizedIPR": 1.3715574503574253,
+          "meanShannonEntropy": 3.9388480797252003,
+          "shannonFraction": 0.9470927652390939
+        },
+        {
+          "theta": 0.9,
+          "totalLevels": 64,
+          "distinctLevels": 64,
+          "degeneracyBrokenFraction": 1,
+          "meanR_distinct": 0.02808865752730247,
+          "meanR_raw": 0.02808865752730247,
+          "spectralWidth": 20.61797061323682,
+          "meanIPR": 0.021068353833496672,
+          "normalizedIPR": 1.348374645343787,
+          "meanShannonEntropy": 3.951954867332826,
+          "shannonFraction": 0.950244281486345
+        },
+        {
+          "theta": 1,
+          "totalLevels": 64,
+          "distinctLevels": 7,
+          "degeneracyBrokenFraction": 0.109375,
+          "meanR_distinct": 0.5999999999999903,
+          "meanR_raw": 0.09999999999999712,
+          "spectralWidth": 20.00000000000002,
+          "meanIPR": 0.046329614438189996,
+          "normalizedIPR": 2.9650953240441598,
+          "meanShannonEntropy": 3.446461661309061,
+          "shannonFraction": 0.8286988578974201
+        }
+      ]
+    },
+    {
+      "p": 5,
+      "n": 3,
+      "alpha": 1,
+      "N": 125,
+      "commutatorNorm": 213.17406227876023,
+      "normalizedCommutator": 0.013534001795362655,
+      "sweep": [
+        {
+          "theta": 0,
+          "totalLevels": 125,
+          "distinctLevels": 63,
+          "degeneracyBrokenFraction": 0.504,
+          "meanR_distinct": 0.9999999999999597,
+          "meanR_raw": 3.75009356046474e-14,
+          "spectralWidth": 19.287913807553654,
+          "meanIPR": 0.011968000000000577,
+          "normalizedIPR": 1.4960000000000722,
+          "meanShannonEntropy": 4.52390122836082,
+          "shannonFraction": 0.9369526245592392
+        },
+        {
+          "theta": 0.1,
+          "totalLevels": 125,
+          "distinctLevels": 63,
+          "degeneracyBrokenFraction": 0.504,
+          "meanR_distinct": 0.9470970542594532,
+          "meanR_raw": 4.418586725861159e-14,
+          "spectralWidth": 18.57192725151426,
+          "meanIPR": 0.012318139806498915,
+          "normalizedIPR": 1.5397674758123643,
+          "meanShannonEntropy": 4.507917465053031,
+          "shannonFraction": 0.9336422010496186
+        },
+        {
+          "theta": 0.25,
+          "totalLevels": 125,
+          "distinctLevels": 63,
+          "degeneracyBrokenFraction": 0.504,
+          "meanR_distinct": 0.9009185969981254,
+          "meanR_raw": 4.660624655538345e-14,
+          "spectralWidth": 17.509920794547867,
+          "meanIPR": 0.012687469383526277,
+          "normalizedIPR": 1.5859336729407845,
+          "meanShannonEntropy": 4.490940788570182,
+          "shannonFraction": 0.930126133659115
+        },
+        {
+          "theta": 0.4,
+          "totalLevels": 125,
+          "distinctLevels": 63,
+          "degeneracyBrokenFraction": 0.504,
+          "meanR_distinct": 0.8706221928428655,
+          "meanR_raw": 6.385704433089327e-14,
+          "spectralWidth": 16.464264540261965,
+          "meanIPR": 0.012940371205443646,
+          "normalizedIPR": 1.6175464006804556,
+          "meanShannonEntropy": 4.479426906721014,
+          "shannonFraction": 0.9277414746506885
+        },
+        {
+          "theta": 0.5,
+          "totalLevels": 125,
+          "distinctLevels": 63,
+          "degeneracyBrokenFraction": 0.504,
+          "meanR_distinct": 0.8544737539638303,
+          "meanR_raw": 7.644239382692825e-14,
+          "spectralWidth": 15.777475697434296,
+          "meanIPR": 0.013083387307213623,
+          "normalizedIPR": 1.635423413401703,
+          "meanShannonEntropy": 4.47312376535507,
+          "shannonFraction": 0.9264360206746456
+        },
+        {
+          "theta": 0.6,
+          "totalLevels": 125,
+          "distinctLevels": 63,
+          "degeneracyBrokenFraction": 0.504,
+          "meanR_distinct": 0.8403733557655797,
+          "meanR_raw": 9.227806612730788e-14,
+          "spectralWidth": 15.099893141557894,
+          "meanIPR": 0.013222655558906421,
+          "normalizedIPR": 1.6528319448633026,
+          "meanShannonEntropy": 4.467204809958021,
+          "shannonFraction": 0.92521013608655
+        },
+        {
+          "theta": 0.75,
+          "totalLevels": 125,
+          "distinctLevels": 63,
+          "degeneracyBrokenFraction": 0.504,
+          "meanR_distinct": 0.8217815109486893,
+          "meanR_raw": 1.5383834045985358e-13,
+          "spectralWidth": 14.102730068983425,
+          "meanIPR": 0.013442700403365242,
+          "normalizedIPR": 1.6803375504206552,
+          "meanShannonEntropy": 4.458139369023504,
+          "shannonFraction": 0.9233325777032826
+        },
+        {
+          "theta": 0.9,
+          "totalLevels": 125,
+          "distinctLevels": 63,
+          "degeneracyBrokenFraction": 0.504,
+          "meanR_distinct": 0.8043424947023726,
+          "meanR_raw": 4.3779567382403133e-13,
+          "spectralWidth": 13.13147058565908,
+          "meanIPR": 0.01369421607952572,
+          "normalizedIPR": 1.711777009940715,
+          "meanShannonEntropy": 4.448142215541315,
+          "shannonFraction": 0.9212620508017365
+        },
+        {
+          "theta": 1,
+          "totalLevels": 125,
+          "distinctLevels": 4,
+          "degeneracyBrokenFraction": 0.032,
+          "meanR_distinct": 0.22499999999999937,
+          "meanR_raw": 1.3122836151069422e-15,
+          "spectralWidth": 12.500000000000023,
+          "meanIPR": 0.039735881152915056,
+          "normalizedIPR": 4.966985144114382,
+          "meanShannonEntropy": 3.806054584040395,
+          "shannonFraction": 0.7882782253016831
+        }
+      ]
+    }
+  ],
+  "experimentB_btzOllivierRicciLaw": [
+    {
+      "p": 3,
+      "n": 4,
+      "h": 1,
+      "L": 3,
+      "measured": -0.5999999999999999,
+      "predicted": -0.6,
+      "maxErr": 1.1102230246251565e-16,
+      "pureAdS": -1,
+      "deltaFromAdS": 0.40000000000000013
+    },
+    {
+      "p": 2,
+      "n": 5,
+      "h": 2,
+      "L": 4,
+      "measured": -0.5,
+      "predicted": -0.5,
+      "maxErr": 0,
+      "pureAdS": -0.6666666666666666,
+      "deltaFromAdS": 0.16666666666666663
+    },
+    {
+      "p": 5,
+      "n": 3,
+      "h": 1,
+      "L": 5,
+      "measured": -1.2857142857142856,
+      "predicted": -1.2857142857142858,
+      "maxErr": 2.220446049250313e-16,
+      "pureAdS": -1.3333333333333333,
+      "deltaFromAdS": 0.04761904761904767
+    },
+    {
+      "p": 7,
+      "n": 3,
+      "h": 1,
+      "L": 7,
+      "measured": -1.5555555555555554,
+      "predicted": -1.5555555555555556,
+      "maxErr": 2.220446049250313e-16,
+      "pureAdS": -1.5,
+      "deltaFromAdS": -0.05555555555555536
+    },
+    {
+      "p": 2,
+      "n": 6,
+      "h": 3,
+      "L": 8,
+      "measured": -1,
+      "predicted": -1,
+      "maxErr": 0,
+      "pureAdS": -0.6666666666666666,
+      "deltaFromAdS": -0.33333333333333337
+    },
+    {
+      "p": 3,
+      "n": 5,
+      "h": 2,
+      "L": 9,
+      "measured": -1.2000000000000002,
+      "predicted": -1.2,
+      "maxErr": 2.220446049250313e-16,
+      "pureAdS": -1,
+      "deltaFromAdS": -0.20000000000000018
+    },
+    {
+      "p": 2,
+      "n": 6,
+      "h": 4,
+      "L": 16,
+      "measured": -1,
+      "predicted": -1,
+      "maxErr": 0,
+      "pureAdS": -0.6666666666666666,
+      "deltaFromAdS": -0.33333333333333337
+    }
+  ],
+  "experimentC_kozyrevCompactonSolitons": [
+    {
+      "g": 0,
+      "soloLeakage": 0,
+      "soloNormDrift": 2.540190280342358e-13,
+      "disjointBallADrift": 2.298161660974074e-14,
+      "multiScaleLeakage": 0,
+      "archimedeanTwinLeakage": 0.892067386395878
+    },
+    {
+      "g": 20,
+      "soloLeakage": 0,
+      "soloNormDrift": 3.1297187064183163e-13,
+      "disjointBallADrift": 1.2545520178264269e-14,
+      "multiScaleLeakage": 0.0020446929857443896,
+      "archimedeanTwinLeakage": 0.87485453916484
+    },
+    {
+      "g": 60,
+      "soloLeakage": 0,
+      "soloNormDrift": 2.4569235534954714e-13,
+      "disjointBallADrift": 7.438494264988549e-15,
+      "multiScaleLeakage": 0.003661302343141326,
+      "archimedeanTwinLeakage": 0.8357919812281163
+    },
+    {
+      "g": 150,
+      "soloLeakage": 0,
+      "soloNormDrift": 2.416955524608966e-13,
+      "disjointBallADrift": 2.4202861936828413e-14,
+      "multiScaleLeakage": 0.002881147752401003,
+      "archimedeanTwinLeakage": 0.7144583691449362
+    },
+    {
+      "g": 300,
+      "soloLeakage": 0,
+      "soloNormDrift": 2.353672812205332e-13,
+      "disjointBallADrift": 1.865174681370263e-14,
+      "multiScaleLeakage": 0.0004161213340873049,
+      "archimedeanTwinLeakage": 0.6112676107366036
+    },
+    {
+      "g": 500,
+      "soloLeakage": 0,
+      "soloNormDrift": 2.468025783741723e-13,
+      "disjointBallADrift": 2.353672812205332e-14,
+      "multiScaleLeakage": 0.000038633598448356565,
+      "archimedeanTwinLeakage": 0.5939829528803834
+    }
+  ],
+  "experimentD_kerrBtzAharonovBohmFlux": {
+    "rows": [
+      {
+        "omega": -3.141592653589793,
+        "omegaOverPi": -1,
+        "horizonCurrentJ": -0.01116920403034506,
+        "totalBulkAction": 4.355250207630601,
+        "maxResidual": 7.771561172376096e-16
+      },
+      {
+        "omega": -2.748893571891069,
+        "omegaOverPi": -0.875,
+        "horizonCurrentJ": -0.009924306046955125,
+        "totalBulkAction": 4.337092287730534,
+        "maxResidual": 4.443059973708341e-16
+      },
+      {
+        "omega": -2.356194490192345,
+        "omegaOverPi": -0.75,
+        "horizonCurrentJ": -0.00862178941553581,
+        "totalBulkAction": 4.321106162448356,
+        "maxResidual": 4.441027621704298e-16
+      },
+      {
+        "omega": -1.9634954084936207,
+        "omegaOverPi": -0.625,
+        "horizonCurrentJ": -0.007267907480474894,
+        "totalBulkAction": 4.30739368459295,
+        "maxResidual": 7.771561172376096e-16
+      },
+      {
+        "omega": -1.5707963267948966,
+        "omegaOverPi": -0.5,
+        "horizonCurrentJ": -0.005869741582197518,
+        "totalBulkAction": 4.2960447230940995,
+        "maxResidual": 6.106282077343213e-16
+      },
+      {
+        "omega": -1.1780972450961724,
+        "omegaOverPi": -0.375,
+        "horizonCurrentJ": -0.00443513040327204,
+        "totalBulkAction": 4.2871354798383425,
+        "maxResidual": 5.551130369697895e-16
+      },
+      {
+        "omega": -0.7853981633974483,
+        "omegaOverPi": -0.25,
+        "horizonCurrentJ": -0.0029725667993672563,
+        "totalBulkAction": 4.280726973130589,
+        "maxResidual": 5.551115123125783e-16
+      },
+      {
+        "omega": -0.39269908169872414,
+        "omegaOverPi": -0.125,
+        "horizonCurrentJ": -0.0014910645595669514,
+        "totalBulkAction": 4.276863763425978,
+        "maxResidual": 6.661338147750939e-16
+      },
+      {
+        "omega": 0,
+        "omegaOverPi": 0,
+        "horizonCurrentJ": 0,
+        "totalBulkAction": 4.27557298880188,
+        "maxResidual": 6.661338147750939e-16
+      },
+      {
+        "omega": 0.39269908169872414,
+        "omegaOverPi": 0.125,
+        "horizonCurrentJ": 0.0014910645595669514,
+        "totalBulkAction": 4.276863763425978,
+        "maxResidual": 6.661338147750939e-16
+      },
+      {
+        "omega": 0.7853981633974483,
+        "omegaOverPi": 0.25,
+        "horizonCurrentJ": 0.0029725667993672563,
+        "totalBulkAction": 4.280726973130589,
+        "maxResidual": 5.551115123125783e-16
+      },
+      {
+        "omega": 1.1780972450961724,
+        "omegaOverPi": 0.375,
+        "horizonCurrentJ": 0.00443513040327204,
+        "totalBulkAction": 4.2871354798383425,
+        "maxResidual": 5.551130369697895e-16
+      },
+      {
+        "omega": 1.5707963267948966,
+        "omegaOverPi": 0.5,
+        "horizonCurrentJ": 0.005869741582197518,
+        "totalBulkAction": 4.2960447230940995,
+        "maxResidual": 6.106282077343213e-16
+      },
+      {
+        "omega": 1.9634954084936207,
+        "omegaOverPi": 0.625,
+        "horizonCurrentJ": 0.007267907480474894,
+        "totalBulkAction": 4.30739368459295,
+        "maxResidual": 7.771561172376096e-16
+      },
+      {
+        "omega": 2.356194490192345,
+        "omegaOverPi": 0.75,
+        "horizonCurrentJ": 0.00862178941553581,
+        "totalBulkAction": 4.321106162448356,
+        "maxResidual": 4.441027621704298e-16
+      },
+      {
+        "omega": 2.748893571891069,
+        "omegaOverPi": 0.875,
+        "horizonCurrentJ": 0.009924306046955125,
+        "totalBulkAction": 4.337092287730534,
+        "maxResidual": 4.443059973708341e-16
+      },
+      {
+        "omega": 3.141592653589793,
+        "omegaOverPi": 1,
+        "horizonCurrentJ": 0.01116920403034506,
+        "totalBulkAction": 4.355250207630601,
+        "maxResidual": 7.771561172376096e-16
+      }
+    ],
+    "maxParityErrJ": 0,
+    "maxParityErrE": 0
+  }
+}

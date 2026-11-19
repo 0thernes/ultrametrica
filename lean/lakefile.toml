@@ -1,0 +1,6 @@
+name = "UltrametricaProofs"
+version = "1.0.0"
+defaultTargets = ["UltrametricaProofs"]
+
+[[lean_lib]]
+name = "UltrametricaProofs"

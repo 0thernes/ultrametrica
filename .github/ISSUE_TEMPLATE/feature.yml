@@ -1,0 +1,19 @@
+name: Research / Feature proposal
+description: Propose a new non-Archimedean theorem, Lean 4 formalization, bulk gravity kernel, experiment, or shader/DSP enhancement
+title: "[Research]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Mathematical / Computational Proposal
+      description: Describe the proposed equation, theorem, operator, or visualization and how it couples rigorously into ULTRAMETRICA.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification & Falsifiability Criteria
+      description: Specify the exact Lean 4 theorem statement, closed-form invariant, or numerical precision threshold required to validate or falsify the proposal.
+    validations:
+      required: true

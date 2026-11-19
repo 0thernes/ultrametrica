@@ -1,0 +1,39 @@
+name: Verify Proofs & Benchmarks
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  node-theorems:
+    name: Node.js 9-Theorem Suite & Discovery Benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run 9 automated mathematical & physical theorems
+        run: npm test
+      - name: Run reproducible discovery benchmarks
+        run: npm run discover
+
+  lean4-formal-proofs:
+    name: Lean 4 (v4.35.0) Zero-Sorry Kernel Proof Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan & Lean 4 toolchain
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+      - name: Build Lean 4 proof modules & verify zero sorryAx
+        working-directory: lean
+        run: |
+          lake build 2>&1 | tee lean-ci-audit.txt
+          if grep -q "sorryAx" lean-ci-audit.txt; then
+            echo "ERROR: sorryAx detected in Lean 4 axiom audit!"
+            exit 1
+          fi

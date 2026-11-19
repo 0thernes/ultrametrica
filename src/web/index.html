@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ULTRAMETRICA — p-adic Holographic AdS/CFT &amp; Quantum Gravity Engine</title>
+  <link rel="stylesheet" href="/web/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Scientific Instrument Bar -->
+    <header class="topbar">
+      <div class="brand-group">
+        <div class="brand-mark"></div>
+        <span class="brand-title">ULTRAMETRICA</span>
+        <span id="manifoldBadge" class="badge badge-cyan">Q_3 / Bruhat-Tits AdS</span>
+      </div>
+
+      <div class="toolbar-group">
+        <span class="toolbar-label">PRIME</span>
+        <div class="seg-group" id="primeGroup">
+          <button class="seg-btn" data-prime="2">p=2</button>
+          <button class="seg-btn active" data-prime="3">p=3</button>
+          <button class="seg-btn" data-prime="5">p=5</button>
+          <button class="seg-btn" data-prime="7">p=7</button>
+        </div>
+      </div>
+
+      <div class="toolbar-group">
+        <span class="toolbar-label">BULK</span>
+        <div class="seg-group" id="topoGroup">
+          <button class="seg-btn active" data-btz="0">Pure AdS</button>
+          <button class="seg-btn" data-btz="1">BTZ Black Hole</button>
+        </div>
+      </div>
+
+      <div class="toolbar-group">
+        <span class="toolbar-label">CLICK TOOL</span>
+        <div class="seg-group" id="toolGroup">
+          <button class="seg-btn active" data-tool="wavelet" title="Click any bulk node or rim ball to inject an exact Kozyrev wavelet (Shift+Click replaces state)">Wavelet</button>
+          <button class="seg-btn" data-tool="surgery" title="Click any bulk edge to pinch/stretch a_e (Shift/Right-Click reinforces)">Wormhole</button>
+          <button class="seg-btn" data-tool="rt" title="Click boundary balls to toggle Ryu-Takayanagi region A">RT Cut</button>
+          <button class="seg-btn" data-tool="triangle" title="Click 3 boundary rim leaves to prove strong triangle inequality">3-Pt Probe</button>
+        </div>
+      </div>
+
+      <div class="toolbar-actions">
+        <button id="btnAudio" class="action-btn" title="Enable 48kHz AudioWorklet non-octave prime-power harmonic synthesis">
+          <span class="dot"></span>
+          <span id="audioLabel">Audio OFF</span>
+        </button>
+        <button id="btnPause" class="action-btn">Pause</button>
+        <button id="btnReset" class="action-btn">Reset</button>
+      </div>
+    </header>
+
+    <!-- Main Laboratory Workspace -->
+    <div class="workspace">
+      <!-- Left Parameter & Experiment Rail -->
+      <aside class="sidebar">
+        <section class="panel-section">
+          <div class="section-header">
+            <span>EXPERIMENTS</span>
+            <span class="section-sub">6 ALIEN PHENOMENA</span>
+          </div>
+          <div id="experimentList" class="experiment-list"></div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-header">
+            <span>FIELD &amp; GRAVITY CONTROLS</span>
+            <label class="inline-toggle">
+              <input id="chkGravity" type="checkbox" checked />
+              <span>Dyn Gravity</span>
+            </label>
+          </div>
+
+          <div class="control-row">
+            <div class="control-meta">
+              <span>Vladimirov Exp &alpha;</span>
+              <span id="valAlpha" class="mono">1.00</span>
+            </div>
+            <input id="sldAlpha" type="range" min="0.25" max="1.90" step="0.05" value="1.00" />
+          </div>
+
+          <div class="control-row">
+            <div class="control-meta">
+              <span>Adelic Morph &theta; (R &harr; Q<sub>p</sub>)</span>
+              <span id="valAdelic" class="mono">1.00</span>
+            </div>
+            <input id="sldAdelic" type="range" min="0.00" max="1.00" step="0.01" value="1.00" />
+          </div>
+
+          <div class="control-row">
+            <div class="control-meta">
+              <span>Nonlinearity g (|&psi;|&sup2;&psi;)</span>
+              <span id="valNonlin" class="mono">0.0</span>
+            </div>
+            <input id="sldNonlin" type="range" min="-180" max="200" step="5" value="0" />
+          </div>
+
+          <div class="control-row">
+            <div class="control-meta">
+              <span>CFT Dim &Delta; <span id="valMass" class="dim-sub">m&sup2;=+0.93</span></span>
+              <span id="valDelta" class="mono">1.50</span>
+            </div>
+            <input id="sldDelta" type="range" min="0.52" max="2.40" step="0.02" value="1.50" />
+          </div>
+
+          <div class="control-row">
+            <div class="control-meta">
+              <span>Newton Coupling G<sub>N</sub></span>
+              <span id="valGravity" class="mono">0.00</span>
+            </div>
+            <input id="sldGravity" type="range" min="0.00" max="3.50" step="0.05" value="0.00" />
+          </div>
+
+          <div class="control-row" id="rowFlux">
+            <div class="control-meta">
+              <span>Kerr-BTZ Flux &Omega;</span>
+              <span id="valFlux" class="mono">0.00 rad</span>
+            </div>
+            <input id="sldFlux" type="range" min="-3.14" max="3.14" step="0.02" value="0.00" />
+          </div>
+
+          <div class="control-row">
+            <div class="control-meta">
+              <span>RT Region |A|/N <span id="rtPhaseBadge" class="rt-pill">DETACHED</span></span>
+              <span id="valRT" class="mono">38%</span>
+            </div>
+            <input id="sldRT" type="range" min="0.03" max="0.97" step="0.01" value="0.38" />
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-header">
+            <span>EXACT LIVE INVARIANTS</span>
+            <span class="section-sub verified-tag">VERIFIED</span>
+          </div>
+          <div class="telemetry-grid">
+            <div class="tele-cell">
+              <span class="tele-k">||&psi;||&sup2; &minus; 1</span>
+              <span id="telNormDrift" class="tele-v mono">0.00e+0</span>
+            </div>
+            <div class="tele-cell">
+              <span class="tele-k">Bulk KG Resid</span>
+              <span id="telBulkRes" class="tele-v mono">0.00e+0</span>
+            </div>
+            <div class="tele-cell">
+              <span class="tele-k">Mean Ricci &kappa;</span>
+              <span id="telRicci" class="tele-v mono">-1.000</span>
+            </div>
+            <div class="tele-cell">
+              <span class="tele-k">RT Entropy S<sub>A</sub></span>
+              <span id="telRT" class="tele-v mono">1.099</span>
+            </div>
+            <div class="tele-cell">
+              <span class="tele-k">Hamiltonian &lang;H&rang;</span>
+              <span id="telEnergy" class="tele-v mono">0.000</span>
+            </div>
+            <div class="tele-cell">
+              <span class="tele-k">Horizon Flux J</span>
+              <span id="telHorizonJ" class="tele-v mono">0.000</span>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <!-- Right Stage: 3D Hyperbolic Bulk + Bottom Scientific Oscilloscopes -->
+      <main class="stage">
+        <div class="viewport-wrap">
+          <canvas id="canvas3d"></canvas>
+
+          <!-- Floating Top-Left Shader Mode Switcher -->
+          <div class="overlay-top-left">
+            <div class="seg-group overlay-seg" id="shaderGroup">
+              <button class="seg-btn active" data-view="field">Quantum Field</button>
+              <button class="seg-btn" data-view="ricci">Ollivier-Ricci &kappa;</button>
+              <button class="seg-btn" data-view="rt">Ryu-Takayanagi</button>
+              <button class="seg-btn" data-view="gravity">Grav Strain a<sub>e</sub></button>
+            </div>
+            <button id="btnAutoOrbit" class="mini-pill active" title="Toggle gentle orbital drift">Orbit</button>
+          </div>
+
+          <!-- Floating Top-Right Hover Probe Readout -->
+          <div id="hoverReadout" class="overlay-top-right mono">
+            Drag to orbit &middot; Scroll to zoom &middot; Click any node/edge
+          </div>
+
+          <!-- Floating Bottom-Left Experiment Hypothesis Card -->
+          <div class="overlay-bottom-left">
+            <div class="exp-caption-title">
+              <span id="captionTitle">Kozyrev Wavelet Trap</span>
+              <span id="captionFormula" class="mono formula-chip">D_3^1 &psi; = 3^3 &psi;</span>
+            </div>
+            <p id="captionDesc" class="exp-caption-desc"></p>
+          </div>
+        </div>
+
+        <!-- Bottom 3-Panel Scientific Telemetry Dock -->
+        <div class="bottom-dock">
+          <div class="dock-card dock-wide">
+            <canvas id="canvasReality"></canvas>
+          </div>
+          <div class="dock-card dock-mid">
+            <canvas id="canvasSpectrum"></canvas>
+          </div>
+          <div class="dock-card dock-right">
+            <canvas id="canvasTriangle"></canvas>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="/web/app.js"></script>
+</body>
+</html>
