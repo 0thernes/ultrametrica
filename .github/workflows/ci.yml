@@ -41,13 +41,22 @@ jobs:
         run: |
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
-      - name: Verify zero sorry / admit / custom axiom declarations in library
+      - name: Verify zero sorry / admit / custom axiom declarations in library code
         run: |
-          if grep -rnE '\b(sorry|admit|axiom)\b' lean/UltrametricaProofs lean/UltrametricaProofs.lean; then
-            echo "ERROR: Forbidden sorry/admit/axiom token detected!"
-            exit 1
-          fi
-          echo "PASS: Zero sorry/admit/axiom tokens in Lean library."
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          files = [Path("lean/UltrametricaProofs.lean")] + sorted(Path("lean/UltrametricaProofs").glob("*.lean"))
+          for p in files:
+              txt = p.read_text(encoding="utf-8")
+              # Strip Lean block comments /- ... -/ and line comments -- ...
+              txt = re.sub(r"/-.*?-/", "", txt, flags=re.S)
+              txt = re.sub(r"--[^\n]*", "", txt)
+              m = re.search(r"\b(sorry|admit|axiom)\b", txt)
+              if m:
+                  raise SystemExit(f"ERROR: Forbidden token '{m.group(1)}' in executable code of {p}")
+          print(f"PASS: Zero sorry/admit/axiom tokens in executable code across {len(files)} Lean library files.")
+          PY
       - name: Build Lean 4 library & audit all 36 declarations via VerifyAxioms.lean
         working-directory: lean
         run: |
