@@ -1,30 +1,45 @@
-✔ [2/7] Built UltrametricaProofs.HolographyCurvature (17s)
-✔ [3/7] Built UltrametricaProofs.SolitonAndSolver (17s)
-✔ [4/7] Built UltrametricaProofs.AdelicSymmetry (18s)
-✔ [5/7] Built UltrametricaProofs.Basic (19s)
-ℹ [6/7] Built UltrametricaProofs (5.5s)
-info: UltrametricaProofs.lean:12:0: 'Ultrametrica.ultrametric_isosceles_lt' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:13:0: 'Ultrametrica.ultrametric_two_longest_equal' depends on axioms: [propext, Classical.choice, Quot.sound]
-info: UltrametricaProofs.lean:14:0: 'Ultrametrica.pow_dvd_add' does not depend on any axioms
-info: UltrametricaProofs.lean:15:0: 'Ultrametrica.not_pow_dvd_add_of_dvd_left' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:16:0: 'Ultrametrica.monna_involution_p3_n4' does not depend on any axioms
-info: UltrametricaProofs.lean:17:0: 'Ultrametrica.complement_commutes_monna_p3_n4' does not depend on any axioms
-info: UltrametricaProofs.lean:18:0: 'Ultrametrica.hilbert_sector_completeness' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:19:0: 'Ultrametrica.conjugate_sector_factor' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:20:0: 'Ultrametrica.conjugate_residue_mod_p' depends on axioms: [propext, Classical.choice, Quot.sound]
-info: UltrametricaProofs.lean:21:0: 'Ultrametrica.odd_prime_conjugate_sector_disjoint' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:22:0: 'Ultrametrica.even_prime_self_conjugate' does not depend on any axioms
-info: UltrametricaProofs.lean:23:0: 'Ultrametrica.odd_prime_doublet_bound' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:24:0: 'Ultrametrica.btz_curvature_excess_identity' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:25:0: 'Ultrametrica.btz_flatter_than_ads_L3_L4' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:26:0: 'Ultrametrica.btz_flatter_L5_for_p_ge_4' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:27:0: 'Ultrametrica.btz_more_negative_for_L_ge_6' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:28:0: 'Ultrametrica.gubser_bf_bound_exact_square' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:29:0: 'Ultrametrica.gubser_bf_excess_nonneg' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:30:0: 'Ultrametrica.kozyrev_exact_nonlinear_soliton' depends on axioms: [propext]
-info: UltrametricaProofs.lean:31:0: 'Ultrametrica.disjoint_multi_soliton_no_crosstalk' depends on axioms: [propext]
-info: UltrametricaProofs.lean:32:0: 'Ultrametrica.horizon_edge_laplacian_psd' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:33:0: 'Ultrametrica.horizon_edge_quadratic_expansion' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:34:0: 'Ultrametrica.sherman_morrison_denominator_ge_one' depends on axioms: [propext, Quot.sound]
-info: UltrametricaProofs.lean:35:0: 'Ultrametrica.sherman_morrison_denominator_ne_zero' depends on axioms: [propext, Quot.sound]
+✔ [2/7] Built UltrametricaProofs.Basic (1.6s)
+✔ [3/7] Built UltrametricaProofs.AdelicSymmetry (1.6s)
+✔ [4/7] Built UltrametricaProofs.HolographyCurvature (1.6s)
+✔ [5/7] Built UltrametricaProofs.SolitonAndSolver (1.6s)
+✔ [6/7] Built UltrametricaProofs (715ms)
 Build completed successfully (7 jobs).
+
+--- AXIOM AUDIT (VerifyAxioms.lean) ---
+
+'Ultrametrica.ultrametric_isosceles_lt' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ultrametric_two_longest_equal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.pow_dvd_add' does not depend on any axioms
+'Ultrametrica.not_pow_dvd_add_of_dvd_left' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.monna_involution_p2_n6' does not depend on any axioms
+'Ultrametrica.monna_involution_p3_n4' does not depend on any axioms
+'Ultrametrica.monna_involution_p5_n3' does not depend on any axioms
+'Ultrametrica.monna_involution_p7_n2' does not depend on any axioms
+'Ultrametrica.complement_commutes_monna_p2_n6' does not depend on any axioms
+'Ultrametrica.complement_commutes_monna_p3_n4' does not depend on any axioms
+'Ultrametrica.complement_commutes_monna_p5_n3' does not depend on any axioms
+'Ultrametrica.complement_commutes_monna_p7_n2' does not depend on any axioms
+'Ultrametrica.hilbert_sector_completeness' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.conjugate_sector_factor' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.conjugate_residue_mod_p' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.odd_prime_conjugate_sector_disjoint' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.even_prime_self_conjugate' does not depend on any axioms
+'Ultrametrica.odd_prime_doublet_bound' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.btz_curvature_excess_identity' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.btz_flatter_than_ads_L3_L4' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.btz_critical_L5_p2' does not depend on any axioms
+'Ultrametrica.btz_critical_L5_p3' does not depend on any axioms
+'Ultrametrica.btz_critical_L5_p5' does not depend on any axioms
+'Ultrametrica.btz_flatter_L5_for_p_ge_4' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.btz_more_negative_for_L_ge_6' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gubser_massless_marginal' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gubser_bf_bound_exact_square' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gubser_bf_excess_nonneg' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.rt_odd_prime_horizon_dominance' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.rt_dyadic_criticality' does not depend on any axioms
+'Ultrametrica.kozyrev_exact_nonlinear_soliton' depends on axioms: [propext]
+'Ultrametrica.disjoint_multi_soliton_no_crosstalk' depends on axioms: [propext]
+'Ultrametrica.horizon_edge_laplacian_psd' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.horizon_edge_quadratic_expansion' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.sherman_morrison_denominator_ge_one' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.sherman_morrison_denominator_ne_zero' depends on axioms: [propext, Quot.sound]

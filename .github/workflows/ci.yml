@@ -1,10 +1,11 @@
-name: Verify Proofs & Benchmarks
+name: Formal Verification, Exact Rational Audit & Manuscript CI
 
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   node-theorems:
@@ -20,8 +21,19 @@ jobs:
       - name: Run reproducible discovery benchmarks
         run: npm run discover
 
+  python-exact-verify:
+    name: Independent Exact-Rational Falsifier (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run zero-dependency exact Fraction & Q(i) falsification script
+        run: python scripts/verify_exact.py
+
   lean4-formal-proofs:
-    name: Lean 4 (v4.35.0) Zero-Sorry Kernel Proof Check
+    name: Lean 4 (v4.35.0) 36-Theorem Zero-Sorry & Axiom Allowlist Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,11 +41,58 @@ jobs:
         run: |
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
-      - name: Build Lean 4 proof modules & verify zero sorryAx
-        working-directory: lean
+      - name: Verify zero sorry / admit / custom axiom declarations in library
         run: |
-          lake build 2>&1 | tee lean-ci-audit.txt
-          if grep -q "sorryAx" lean-ci-audit.txt; then
-            echo "ERROR: sorryAx detected in Lean 4 axiom audit!"
+          if grep -rnE '\b(sorry|admit|axiom)\b' lean/UltrametricaProofs lean/UltrametricaProofs.lean; then
+            echo "ERROR: Forbidden sorry/admit/axiom token detected!"
             exit 1
           fi
+          echo "PASS: Zero sorry/admit/axiom tokens in Lean library."
+      - name: Build Lean 4 library & audit all 36 declarations via VerifyAxioms.lean
+        working-directory: lean
+        run: |
+          lake build
+          lake env lean VerifyAxioms.lean | tee axioms.log
+          python3 - <<'PY'
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          count = 0
+          for line in open("axioms.log", encoding="utf-8"):
+              line = line.strip()
+              if "sorryAx" in line:
+                  raise SystemExit(f"ERROR: sorryAx detected: {line}")
+              if "depends on axioms:" in line:
+                  count += 1
+                  used = {t.strip() for t in line.split("[", 1)[1].rsplit("]", 1)[0].split(",") if t.strip()}
+                  if not used.issubset(allowed):
+                      raise SystemExit(f"ERROR: Forbidden axiom {used - allowed} in: {line}")
+              elif "does not depend on any axioms" in line:
+                  count += 1
+          assert count >= 36, f"Expected >= 36 audited declarations, got {count}"
+          print(f"PASS: All {count} Lean 4 declarations strictly within {sorted(allowed)} (or zero axioms).")
+          PY
+
+  latex-manuscript:
+    name: AMS-LaTeX White Paper PDF Build (Tectonic)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Tectonic
+        run: |
+          curl --proto '=https' --tlsv1.2 -fsSL https://drop-sh.fullyjustified.net | sh
+          sudo mv tectonic /usr/local/bin/tectonic
+          tectonic --version
+      - name: Compile paper/main.tex and verify zero warnings
+        working-directory: paper
+        run: |
+          mkdir -p build
+          tectonic -X compile main.tex --outdir build --keep-intermediates --keep-logs
+          if grep -E "Overfull \\\\hbox|Underfull \\\\hbox|Undefined|LaTeX Warning" build/main.log; then
+            echo "ERROR: LaTeX warning or overfull hbox detected!"
+            exit 1
+          fi
+          echo "PASS: Clean zero-warning AMS-LaTeX PDF build."
+      - name: Upload compiled manuscript PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: Donahue_2026_Ultrametrica
+          path: paper/build/main.pdf

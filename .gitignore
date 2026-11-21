@@ -1,5 +1,6 @@
 node_modules/
 lean/.lake/
+paper/build/
 .DS_Store
 Thumbs.db
 *.log

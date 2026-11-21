@@ -3,12 +3,13 @@
 > **Zero-dependency real-time $p$-adic AdS/CFT Holographic Quantum Gravity, Rotating Kerr-BTZ Black Holes, Adelic Parity-Doubling Symmetries, 48 kHz Prime-Power AudioWorklet DSP, and Pure Lean 4 (`v4.35.0`) Machine-Checked Proofs.**
 
 [![License: 0thernes Non-Commercial](https://img.shields.io/badge/License-0thernes_Non--Commercial-0ea5e9)](LICENSE)
-[![Lean 4](https://img.shields.io/badge/Lean_4-v4.35.0_(24_Theorems,_0_sorry)-10b981)](lean/README.md)
+[![Lean 4](https://img.shields.io/badge/Lean_4-v4.35.0_(36_Theorems,_0_sorry)-10b981)](lean/README.md)
+[![Exact Rational Audit](https://img.shields.io/badge/Exact_Rational_Falsifier-Python_Fraction_PASS-10b981)](scripts/verify_exact.py)
 [![Node Tests](https://img.shields.io/badge/Verified_Theorems-9%2F9_Passed-10b981)](test/verify.mjs)
-[![Dependencies](https://img.shields.io/badge/Runtime_Dependencies-0-38bdf8)](NOTICE)
+[![PDF Manuscript](https://img.shields.io/badge/AMS--LaTeX_PDF-Zero_Warnings-38bdf8)](dist/Donahue_2026_Ultrametrica.pdf)
 
-**Author:** Alexander S. Donahue ([0thernes LLC](https://0thernes.art) · `0_0@0thernes.art` · ORCID [0009-0006-8168-9648](https://orcid.org/0009-0006-8168-9648))  
-**Release:** `v1.0.0` (Research Preprint & Interactive Laboratory — Non-Commercial Research & Play; see [LICENSE](LICENSE) and [LEGAL.md](LEGAL.md))
+**Author:** Alexander Stephen Donahue ([0thernes LLC](https://0thernes.art), Spokane, WA, USA · `0_0@0thernes.art` · ORCID [0009-0006-8168-9648](https://orcid.org/0009-0006-8168-9648))  
+**Release:** `v1.1.0` (Research Preprint & Interactive Laboratory — Non-Commercial Research & Play; see [LICENSE](LICENSE) and [LEGAL.md](LEGAL.md))
 
 ---
 
@@ -16,11 +17,12 @@
 
 | Document | Description |
 |---|---|
+| **[dist/Donahue_2026_Ultrametrica.pdf](dist/Donahue_2026_Ultrametrica.pdf)** | **Frozen AMS-LaTeX Publication PDF** (11 pages, 3 vector figures, zero warnings; arXiv bundle: [`dist/arxiv_submission.tar.gz`](dist/arxiv_submission.tar.gz)) |
 | **[INDEX.md](INDEX.md)** | Complete Master Index & Table of Contents (all files, theorems, equations & benchmarks) |
 | **[SUMMARY.md](SUMMARY.md)** | Standalone 2-page Executive Summary Paper & Novelty Verdict |
-| **[paper/WHITE_PAPER.md](paper/WHITE_PAPER.md)** | Full 13-section Research White Paper with derivations, tables & 18 cited primary sources |
+| **[paper/WHITE_PAPER.md](paper/WHITE_PAPER.md)** | Full Markdown Research White Paper (LaTeX source: [`paper/main.tex`](paper/main.tex) + [`paper/refs.bib`](paper/refs.bib)) |
 | **[docs/MASTER_REPORT.md](docs/MASTER_REPORT.md)** | Deep-Dive Technical, Mathematical, Scientific, Computational, Functional & Operational Master Report |
-| **[lean/README.md](lean/README.md)** | Pure Lean 4 (`v4.35.0`) formal proof library (24 audited theorems, zero `sorryAx`, zero Mathlib) |
+| **[lean/README.md](lean/README.md)** | Pure Lean 4 (`v4.35.0`) formal proof library (**36 audited theorems**, [`VerifyAxioms.lean`](lean/VerifyAxioms.lean), zero `sorryAx`, zero Mathlib) |
 | **[VERIFICATION.md](VERIFICATION.md)** | Provable / Falsifiable / Verifiable / Authenticated protocol & SHA-256 digests |
 | **[GLOSSARY.md](GLOSSARY.md)** | Comprehensive 45+ term mathematical, holographic & acoustic glossary |
 | **[LEGAL.md](LEGAL.md)** | Ownership, non-commercial reservation, AI disclosure & formal verification boundaries |
@@ -61,13 +63,16 @@ Requires **Node.js $\ge 20$** (and optionally **Lean 4 `v4.35.0`** to re-check k
 # 1. Run all 9 executable mathematical & physical theorem suites
 npm test
 
-# 2. Reproduce all 4 discovery benchmark datasets (results/discovery-benchmarks.json)
+# 2. Run independent exact-rational (fractions.Fraction & Q(i)) falsifier
+python scripts/verify_exact.py
+
+# 3. Reproduce all 4 discovery benchmark datasets (results/discovery-benchmarks.json)
 npm run discover
 
-# 3. Machine-check all 24 Lean 4 theorems from scratch (zero sorryAx)
-cd lean && lake clean && lake build && cd ..
+# 4. Machine-check all 36 Lean 4 theorems & audit axioms (zero sorryAx)
+cd lean && lake clean && lake build && lake env lean VerifyAxioms.lean && cd ..
 
-# 4. Launch the interactive WebGL2 + 48 kHz AudioWorklet Observatory
+# 5. Launch the interactive WebGL2 + 48 kHz AudioWorklet Observatory
 npm start
 # Open http://localhost:4173 (or set PORT=4174)
 ```

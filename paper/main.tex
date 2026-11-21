@@ -1,0 +1,366 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=teal!60!black,urlcolor=blue!60!black]{hyperref}
+\usepackage[nameinlink,capitalise]{cleveref}
+
+\numberwithin{equation}{section}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Qp}{\mathbb{Q}_p}
+\newcommand{\Zp}{\mathbb{Z}_p}
+\newcommand{\Tp}{T_p}
+\newcommand{\Dp}{D_p^\alpha}
+\newcommand{\IPR}{\mathrm{IPR}}
+\newcommand{\lca}{\mathrm{lca}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\code}[1]{{\ttfamily\footnotesize\def\_{\textunderscore\penalty0\hskip0pt}#1}}
+\emergencystretch=2em
+
+\title{\Large\bfseries ULTRAMETRICA: Exact Non-Archimedean Holography, Recursive Adelic Valuation-Residue Symmetries, Tate-Curve BTZ Ollivier--Ricci Curvature, and Lean~4 Formal Verification}
+
+\author{
+  Alexander Stephen Donahue\thanks{0thernes LLC, Spokane, WA, USA. Email: \href{mailto:0_0@0thernes.art}{\texttt{0\_0@0thernes.art}}. ORCID: \href{https://orcid.org/0009-0006-8168-9648}{\texttt{0009-0006-8168-9648}}. Source code, WebGL2 observatory, and Lean~4 formalization: \url{https://github.com/0thernes/ultrametrica}.}\\[0.35em]
+  \normalsize 0thernes LLC
+}
+
+\date{November 21, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present \textbf{ULTRAMETRICA}, a zero-dependency computational laboratory and formal mathematical framework coupling discrete $p$-adic quantum dynamics on $\Zp / p^n \Zp$ ($p \in \{2,3,5,7\}$) to exact holographic bulk gravity on the Bruhat--Tits tree $\Tp$ and its rotating Tate-curve BTZ black hole quotients $\Tp / p^{h\Z}$. Beyond implementing established non-Archimedean constructions to machine precision ($10^{-12}$--$10^{-17}$)---including native Radix-$p$ Pontryagin fast Fourier transforms, Vladimirov fractional pseudo-differential operators $\Dp$, orthonormal Kozyrev wavelets, fourth-order Yoshida symplectic nonlinear integration, dynamic edge-length gravitational backreaction, and exact $O(V)$ Ryu--Takayanagi minimal cuts---we derive, independently cross-check in exact rational arithmetic, and formally machine-verify across $36$ exported declarations in pure Lean~4 (\code{v4.35.0}, zero Mathlib, zero \code{sorry}) four sharp mathematical and algorithmic results:
+\begin{enumerate}[leftmargin=1.8em,itemsep=2pt]
+  \item \emph{Adelic Parity-Doubling Dichotomy and Recursive Valuation-Residue Decomposition (\cref{thm:adelic}):} Conjugating $\Dp$ by the discrete $p$-adic Monna digit-reversal involution $R_p$ and adding any real even Archimedean circulant operator $H_{\R}$ produces a non-commuting hybrid Hamiltonian $H_\theta = \theta R_p \Dp R_p + (1-\theta) H_{\R}$ that nevertheless block-diagonalizes identically into $1 + n(p-1)$ Fourier valuation-residue sectors $W_{s,m}$ (off-block leak $< 3.2\times 10^{-14}$). Complex conjugation maps $W_{s,m} \xrightarrow{\sim} W_{s,p-m}$, forcing every excited eigenvalue into exact even multiplicity ($\ge 2$, at most $(p^n+1)/2$ distinct levels) for every odd prime $p \ge 3$, while uniquely lifting all doublets to $2^n$ simple levels at $p = 2$.
+  \item \emph{Unified Tate-Curve BTZ Ollivier--Ricci Curvature Law and $L_c = 5$ Trichotomy (\cref{thm:btz-ricci}):} On any uniform discrete BTZ black hole quotient $\Tp / p^{h\Z}$ of horizon circumference $L \ge 3$ and vertex degree $p+2$, exact non-lazy bipartite $1$-Wasserstein transport yields $\kappa_{\mathrm{BTZ}}(p, L) = -(2p - \max(0, 6-L))/(p+2)$, so that $(p+1)(p+2)(\kappa_{\mathrm{BTZ}} - \kappa_{\mathrm{AdS}}) = (p+1)\max(0, 6-L) - 4$. Planck-scale horizons ($L \in \{3,4\}$, and $L=5$ for $p \ge 4$) are strictly flatter than pure AdS; $(p, L) = (3, 5)$ exhibits exact curvature cancellation ($\kappa_{\mathrm{BTZ}} = \kappa_{\mathrm{AdS}} = -1$); and macroscopic horizons ($L \ge 6$) are strictly more negatively curved by $-4/((p+1)(p+2))$.
+  \item \emph{Multi-Ball Kozyrev Compacton-Soliton Invariance and Self-Trapping Resonance (\cref{thm:soliton}):} Disjoint-ball superpositions of Kozyrev wavelets are exact, strictly compactly supported, radiation-free nonlinear solitons of $i\partial_t \psi = (\Dp + F(|\psi|^2))\psi$ for arbitrary local nonlinearity $F$ ($0.00\%$ leakage up to $g = 500$), whereas overlapping multi-scale packets exhibit a non-monotonic tunneling peak followed by macroscopic nonlinear self-trapping.
+  \item \emph{Unconditional Positive-Definite Rank-$1$ Kerr--BTZ Bulk Solver (\cref{thm:solver}):} Decomposing the gauge-coupled horizon wrap edge as $w_{L-1} u u^\dagger \succeq 0$ guarantees an open-chain Hermitian positive-definite tridiagonal core $T \succ 0$ and Sherman--Morrison denominator $1 + w_{L-1} u^\dagger T^{-1} u \ge 1 > 0$ unconditionally for all positive edge weights and Kerr fluxes $\Omega \in [-\pi, \pi]$, yielding $O(V)$ exact solutions to $10^{-16}$--$10^{-17}$ uneliminated residual.
+\end{enumerate}
+\end{abstract}
+
+\medskip
+\noindent\textbf{Keywords:} $p$-adic AdS/CFT; Bruhat--Tits tree; Vladimirov operator; Kozyrev wavelets; adelic physics; Ollivier--Ricci curvature; discrete BTZ black hole; Ryu--Takayanagi entropy; Lean~4 formal verification.
+
+\smallskip
+\noindent\textbf{MSC 2020:} 11S80; 81T40; 83E05; 05C12; 42C40; 68V20.
+
+\tableofcontents
+
+% =====================================================================
+\section{Introduction and Epistemic Scope}
+\label{sec:intro}
+% =====================================================================
+
+By Ostrowski's theorem, every non-trivial absolute value on $\Q$ is equivalent either to the Archimedean norm $|\cdot|_\infty$ (completing to $\R$) or to a $p$-adic ultrametric norm $|x|_p = p^{-v_p(x)}$ for some prime $p$ (completing to $\Qp$), obeying the strong triangle inequality $|x + y|_p \le \max(|x|_p, |y|_p)$. Non-Archimedean and adelic models of Planck-scale geometry and string amplitudes were pioneered by Volovich~\cite{Volovich1987}, Freund and Witten~\cite{FreundWitten1987}, and Vladimirov, Volovich, and Zelenov~\cite{Vladimirov1994}, with comprehensive modern surveys in~\cite{Dragovich2017}. A structural resurgence followed the formulation of \emph{$p$-adic AdS/CFT} by Gubser et~al.~\cite{Gubser2017,GubserEdge2017} and Heydeman, Marcolli, Saberi, and Stoica~\cite{Heydeman2018,Heydeman2021}, establishing the $(p+1)$-regular Bruhat--Tits tree $\Tp$ as a discrete hyperbolic holographic bulk dual to $\mathbb{P}^1(\Qp)$ and its Tate-curve Schottky quotients $\Tp / q^{\Z}$ as discrete BTZ black holes.
+
+\textbf{Epistemic and Priority Scope.} This manuscript is a mathematical-physics, formal-verification, and computational engineering preprint; it is \emph{not} a peer-reviewed journal article and makes no claim of empirical discovery of new physical laws of nature. Foundational $p$-adic analysis, Kozyrev wavelets~\cite{Kozyrev2002}, $p$-adic AdS/CFT~\cite{Gubser2017,Heydeman2018}, dynamic edge-length gravity~\cite{GubserEdge2017}, Ollivier--Ricci curvature on regular trees~\cite{Ollivier2009,LinLuYau2011}, holographic tensor-network entanglement~\cite{RyuTakayanagi2006,Pastawski2015}, and fourth-order Yoshida splitting~\cite{Yoshida1990} are credited to their original authors. Our original contributions are restricted strictly to the four exact mathematical and algorithmic results in \cref{sec:solitons,sec:adelic,sec:bulk,sec:ricci}, their Lean~4 formalizations~\cite{deMouraUllrich2021}, exact-rational falsification tests, and their real-time coupled WebGL2/AudioWorklet synthesis.
+
+% =====================================================================
+\section{Discrete \texorpdfstring{$p$}{p}-adic Harmonic Analysis and Radix-\texorpdfstring{$p$}{p} Pontryagin FFT}
+\label{sec:padic}
+% =====================================================================
+
+Fix a prime $p \in \{2,3,5,7\}$ and precision depth $n \ge 2$, with dimension $N = p^n$. We discretize locally constant Schwartz--Bruhat functions on $\Zp$ to the finite-dimensional Hilbert space $\mathcal{H}_{p,n} = L^2(\Zp / p^n \Zp) \cong \C^{p^n}$.
+
+\subsection{Base-\texorpdfstring{$p$}{p} Digit Reversal as the Exact Discrete Monna Map}
+Write $x \in \{0,\dots,p^n - 1\}$ in little-endian base-$p$ digits $x = \sum_{r=0}^{n-1} d_r p^r$ ($d_r \in \{0,\dots,p-1\}$). The classical Monna map~\cite{Monna1970} $\mathcal{M}_p : \Zp \to [0,1]$ sends $x \mapsto \sum_{r=0}^{n-1} d_r p^{-(r+1)}$. On $\Z / p^n\Z$, scaling by $p^n$ yields the exact \emph{base-$p$ digit-reversal involution}
+\begin{equation}
+  R_p(x) := p^n \mathcal{M}_p(x) = \sum_{r=0}^{n-1} d_r p^{n-1-r}, \qquad R_p(R_p(x)) = x.
+  \label{eq:monna-inv}
+\end{equation}
+Two $p$-adic integers $x, y$ belong to the same ultrametric ball $B(a, p^{-j})$ ($x \equiv y \pmod{p^j}$, equivalently $|x - y|_p \le p^{-j}$) if and only if their leaf indices $\ell_x = R_p(x)$ and $\ell_y = R_p(y)$ share the same top $j$ base-$p$ digits, making every $p$-adic ball an exact contiguous subtree slice $\ell \in [b\, p^{n-j}, (b+1)\,p^{n-j})$ of the depth-$n$ Bruhat--Tits tree. Exhaustive certificates of $R_p^2 = I$ and its commutation $S R_p = R_p S$ with digit complement $S(x) = (p^n - 1) - x$ are formally verified without axioms in \code{UltrametricaProofs/Basic.lean}.
+
+\subsection{Native Radix-\texorpdfstring{$p$}{p} Pontryagin FFT and Vladimirov Operator}
+The Pontryagin dual of $\Zp / p^n\Zp$ is $p^{-n}\Z / \Z$, indexed by $k \in \{0,\dots,p^n-1\}$ with additive character $\chi_p(\xi_k x) = e^{2\pi i k x / p^n}$ ($\xi_k = k/p^n$). To preserve exact prime-power periodicity without power-of-$2$ zero-padding artifacts, \code{src/engine/padic.js} implements a native decimation-in-time unitary Radix-$p$ Cooley--Tukey transform:
+\begin{equation}
+  (\mathcal{F}_p \psi)[k] = \frac{1}{\sqrt{p^n}} \sum_{x=0}^{p^n-1} \psi(x) e^{-2\pi i x k / p^n}
+  \label{eq:radix-fft}
+\end{equation}
+in $O(p N \log_p N)$ operations, verified against naive $O(N^2)$ DFT and Parseval's identity to $< 10^{-11}$ across $p \in \{2,3,5,7\}$. The Vladimirov fractional pseudo-differential operator $\Dp$~\cite{Vladimirov1994} acts diagonally in Pontryagin dual space via
+\begin{equation}
+  \widehat{(\Dp \psi)}[k] = |\xi_k|_p^\alpha \, \hat{\psi}[k], \qquad
+  |\xi_k|_p = \begin{cases} 0 & k = 0, \\ p^{n - v_p(k)} & 1 \le k < p^n, \end{cases}
+  \label{eq:vladimirov}
+\end{equation}
+where $v_p(k) = \max\{r : p^r \mid k\}$. Its position-space matrix elements depend strictly on $v_p(x - y)$ (verified to $1.78\times 10^{-15}$), endowing $\Dp$ with symmetry under the entire Bruhat--Tits wreath-product automorphism group $\Aut(\Tp) = S_p \wr \cdots \wr S_p$.
+
+% =====================================================================
+\section{Kozyrev Wavelets and Multi-Ball Compacton-Soliton Invariance}
+\label{sec:solitons}
+% =====================================================================
+
+Kozyrev~\cite{Kozyrev2002} constructed an orthonormal basis of strictly compactly supported eigenfunctions of $\Dp$. On $\Zp / p^n\Zp$, for scale $0 \le j < n$, ball $0 \le b < p^j$, and non-trivial character $1 \le m < p$:
+\begin{equation}
+  \psi_{j,b,m}(x) = p^{-(n-j)/2} \, \mathbf{1}_{B_j(b)}(x) \, \exp\!\left(\frac{2\pi i \, m \, d_j(x)}{p}\right),
+  \qquad \Dp \psi_{j,b,m} = p^{\alpha(j+1)} \psi_{j,b,m}.
+  \label{eq:kozyrev}
+\end{equation}
+Together with the constant mode $\psi_0(x) = p^{-n/2}$, the total count satisfies $1 + \sum_{j=0}^{n-1}(p-1)p^j = p^n$ (Lean~4: \code{hilbert\_sector\_completeness}). Unlike Euclidean space---where Paley--Wiener analyticity forbids compactly supported eigenfunctions of $(-\Delta_{\R})^{\alpha/2}$---Kozyrev localization extends verbatim to arbitrary local nonlinearities.
+
+\begin{theorem}[Multi-Ball Kozyrev Compacton-Soliton Invariance]
+\label{thm:soliton}
+Let $F : \R_{\ge 0} \to \R$ be any local nonlinear potential, and let $\{(j_r, b_r, m_r)\}_{r=1}^K$ index Kozyrev wavelets supported on pairwise disjoint $p$-adic balls $B_{j_r}(b_r) \cap B_{j_{r'}}(b_{r'}) = \emptyset$ ($r \ne r'$), with arbitrary complex weights $c_r \in \C$. Then
+\begin{equation}
+  \Psi(x, t) = \sum_{r=1}^K c_r \, e^{-i \omega_r t} \, \psi_{j_r, b_r, m_r}(x), \qquad
+  \omega_r = p^{\alpha(j_r + 1)} + F\!\left(|c_r|^2 p^{-(n - j_r)}\right),
+  \label{eq:multisoliton}
+\end{equation}
+is an exact, strictly compactly supported, radiation-free, non-interacting solution of the nonlinear $p$-adic Gross--Pitaevskii equation $i\partial_t \Psi = (\Dp + F(|\Psi|^2))\Psi$.
+\end{theorem}
+
+\begin{proof}
+For each $r$, $|\psi_{j_r,b_r,m_r}(x)|^2 = p^{-(n-j_r)}$ everywhere on $B_{j_r}(b_r)$ and $0$ outside. By pairwise disjointness of the supports, at every $x \in \Zp/p^n\Zp$ at most one term $r$ is nonzero, so $|\Psi(x,t)|^2 = |c_r|^2 p^{-(n-j_r)}$ on $B_{j_r}(b_r)$. Hence
+\[
+  F(|\Psi(x,t)|^2)\Psi(x,t) = \sum_{r=1}^K F\!\bigl(|c_r|^2 p^{-(n-j_r)}\bigr)\, c_r e^{-i\omega_r t}\psi_{j_r,b_r,m_r}(x).
+\]
+Combining this with linearity of $\Dp$ and~\eqref{eq:kozyrev} gives $i\partial_t \Psi = (\Dp + F(|\Psi|^2))\Psi$ pointwise identically. This result is formalized abstractly in \code{SolitonAndSolver.lean} via the declarations \code{kozyrev\_exact\_nonlinear\_soliton} and \code{disjoint\_multi\_soliton\_no\_crosstalk}, depending solely on \code{propext}.
+\end{proof}
+
+\begin{remark}[Empirical Macroscopic Self-Trapping Resonance]
+When two Kozyrev wavelets overlap at \emph{distinct} scales inside the same parent ball, $|\Psi|^2$ is no longer uniform on its support, breaking \cref{thm:soliton} and triggering discontinuous ultrametric tunneling. Experiment~C (\cref{fig:soliton}, \cref{tab:soliton}) reveals a non-monotonic resonance for $p=3, n=5$: leakage rises from $0.00\%$ ($g=0$) to a peak of $0.37\%$ ($g=60$), then collapses back to $0.04\%$ ($g=300$) and $0.00\%$ ($g=500$) as strong nonlinear detuning $g|\psi|^2 \gg \|\Dp\|$ decouples the occupied ball from empty exterior balls.
+\end{remark}
+
+% =====================================================================
+\section[Adelic Hybrid Hamiltonian and Parity-Doubling Dichotomy]{Monna-Conjugated Adelic Hybrid Hamiltonian and Parity-Doubling Dichotomy}
+\label{sec:adelic}
+% =====================================================================
+
+Inspired by adelic physics~\cite{FreundWitten1987,Dragovich2017}, we couple Archimedean circular dispersion and $p$-adic Vladimirov dispersion on the leaf circle $\Z / p^n\Z$ via the one-parameter real symmetric \emph{Adelic Hybrid Hamiltonian} ($\theta \in [0,1]$):
+\begin{equation}
+  H_\theta := \theta \, H_Q^{\mathrm{leaf}} + (1 - \theta) \, H_R^{\mathrm{leaf}}, \qquad
+  H_Q^{\mathrm{leaf}} := R_p \mathcal{F}_p^\dagger \Lambda_{\Qp} \mathcal{F}_p R_p, \quad
+  H_R^{\mathrm{leaf}} := \mathcal{F}_p^\dagger \Lambda_{\R} \mathcal{F}_p,
+  \label{eq:adelic-ham}
+\end{equation}
+where $\Lambda_{\R}[k] \propto (2\pi \min(k, N-k))^\alpha$ is RMS-calibrated to $\Lambda_{\Qp}$. Because $R_p$ is the digit-reversal involution, $[H_Q^{\mathrm{leaf}}, H_R^{\mathrm{leaf}}] \ne 0$ (normalized Frobenius commutator $0.02187$ at $p=3, n=4$; $0.02524$ at $p=2, n=6$; $0.01353$ at $p=5, n=3$).
+
+A naïve quantum-chaos expectation (motivated by the structural resemblance of $R_p$ to a quantum Baker's map and Oganesyan--Huse level statistics~\cite{OganesyanHuse2007}) would anticipate global GOE degeneracy lifting across all $N$ levels for $0 < \theta < 1$. Exact Jacobi diagonalization (\cref{tab:adelic}, \cref{fig:adelic}) \emph{falsifies} that hypothesis and reveals an exact recursive block-symmetry law.
+
+\begin{theorem}[Recursive Valuation-Residue Decomposition and Adelic Parity-Doubling Dichotomy]
+\label{thm:adelic}
+Let $H_Q$ be any $p$-adic ultrametric operator (matrix element depending solely on $v_p(x-y)$) and $H_R$ any real even circulant operator on $\Z / p^n\Z$. Let $e_k(\ell) = p^{-n/2} e^{2\pi i k \ell / p^n}$ be the discrete Fourier basis on leaves, and partition $\{0,\dots,p^n-1\}$ into the $1 + n(p-1)$ valuation-residue sectors
+\begin{equation}
+  W_0 := \C e_0, \qquad
+  W_{s,m} := \operatorname{span}\!\bigl\{e_k : k \equiv m \, p^s \pmod{p^{s+1}}\bigr\}
+  \qquad (0 \le s < n,\; 1 \le m < p).
+  \label{eq:sectors}
+\end{equation}
+Then:
+\begin{enumerate}[leftmargin=1.8em,itemsep=2pt]
+  \item \textbf{Exact Block Invariance:} Every subspace $W_{s,m}$ (of dimension $p^{n-s-1}$) is an exact invariant subspace of $H_\theta = \theta R_p H_Q R_p + (1-\theta) H_R$ for all $\theta \in \R$.
+  \item \textbf{Anti-Unitary Conjugate Pairing:} Position-space complex conjugation $C(\psi) = \overline{\psi}$ commutes with $H_\theta$ and maps $W_{s,m} \xrightarrow{\sim} W_{s, p-m}$ isometrically.
+  \item \textbf{Prime-Parity Dichotomy:} For every odd prime $p \ge 3$, $m \ne p - m$ for all $1 \le m < p$, so $W_{s,m} \perp W_{s,p-m}$ are disjoint orthogonal isospectral blocks and every excited eigenvalue of $H_\theta$ has exact even multiplicity ($\ge 2$), capping the distinct eigenvalue count at $(p^n + 1)/2$. Conversely, for $p = 2$, the unique nonzero residue satisfies $m = 1 = p - 1$, making every block $W_{s,1}$ self-conjugate under $C$ and lifting all protected doublets to generically $2^n$ simple eigenvalues.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Since $H_R$ is circulant, it is diagonal in $\{e_k\}$ and preserves every $W_{s,m}$ trivially. For $H_Q^{\mathrm{leaf}}$, fix $s \in \{0,\dots,n-1\}$ and let $f \in \bigoplus_{m=1}^{p-1} W_{s,m}$. Every mode $e_k$ in this direct sum has $p^s \mid k$ and $p^{s+1} \nmid k$, so $f(\ell + p^{n-s}) = f(\ell)$ (periodic across all $p^s$ depth-$s$ balls) and $\sum_{r=0}^{p^{n-s}-1} f(q p^{n-s} + r) = 0$ (zero mean on each depth-$s$ ball). Write $\ell = q p^{n-s} + r$. Because $H_Q^{\mathrm{leaf}}(\ell, \ell')$ depends strictly on the Bruhat--Tits $\lca$ depth of $(\ell, \ell')$, for any $q' \ne q$ the kernel is constant over $r' \in \{0,\dots,p^{n-s}-1\}$, so cross-ball sums vanish identically by the zero-mean property. Within the single depth-$s$ subtree ($q' = q$), the cyclic shift $T^{p^{n-s-1}}$ cyclically permutes the $p$ child subtrees at depth $s+1$ without carrying outside the depth-$s$ ball, hence is an exact subtree ultrametric isometry commuting with $H_Q^{\mathrm{leaf}}$ on $\bigoplus_{m=1}^{p-1} W_{s,m}$. Its eigenspaces on that subspace are precisely $W_{s,m}$ with distinct eigenvalues $e^{2\pi i m / p}$ ($m=1,\dots,p-1$), proving~(1).
+
+Since $H_\theta$ is real symmetric in position space, $C H_\theta = H_\theta C$ and $C(e_k) = e_{(p^n - k)\bmod p^n}$. Writing $k = p^s q$ with $q \equiv m \pmod{p}$ ($1 \le m < p$), we have $p^n - k = p^s(p^{n-s} - q)$ and $(p^{n-s} - q) \equiv p - m \pmod{p}$ (verified in Lean~4 by \code{conjugate\_sector\_factor} and \code{conjugate\_residue\_mod\_p}), proving~(2). Finally, $m = p - m \iff 2m = p$, which has no integer solution in $\{1,\dots,p-1\}$ for odd $p$ (Lean~4: \code{odd\_prime\_conjugate\_sector\_disjoint}) and the unique solution $m = 1$ for $p = 2$ (Lean~4: \code{even\_prime\_self\_conjugate}), establishing~(3). Off-block matrix elements of $\mathcal{F}_p H_Q^{\mathrm{leaf}} \mathcal{F}_p^\dagger$ vanish numerically to $< 3.2\times 10^{-14}$ across $p \in \{2,3,5,7\}$ (\code{Theorem~9}).
+\end{proof}
+
+% =====================================================================
+\section[Bruhat--Tits AdS and Rotating Kerr--BTZ Bulk Solver]{Bruhat--Tits AdS and Unconditional Rotating Kerr--BTZ Bulk Solver}
+\label{sec:bulk}
+% =====================================================================
+
+For depth $n$, the finite cutoff Bruhat--Tits tree $\Tp$ has $V = (p^{n+1}-1)/(p-1)$ vertices across depths $d \in \{0,\dots,n\}$. A discrete rotating \emph{Kerr--BTZ black hole} quotient $\Tp / p^{h\Z}$ ($h \ge 1$, $L = p^h \ge 3$) excises all depths $d < h$ and welds the $L$ depth-$h$ vertices $h_0,\dots,h_{L-1}$ into a closed horizon ring threaded by Aharonov--Bohm / frame-dragging flux $\Omega \in [-\pi, \pi]$ (directed phase $\theta = \Omega/L$ per horizon edge).
+
+With positive dynamic edge lengths $a_e > 0$ and conductances $w_e = 1/a_e$, the bulk complex scalar field $\phi : V \to \C$ obeys the curved gauge-covariant Klein--Gordon equation at every internal vertex $v \in V_{\mathrm{int}}$:
+\begin{equation}
+  \sum_{u \sim v} w_{uv}\bigl(\phi_v - e^{i A_{uv}} \phi_u\bigr) + m^2(\Delta)\,\mu_v\,\phi_v = 0, \qquad
+  m^2(\Delta) = p^\Delta + p^{1-\Delta} - (p+1),
+  \label{eq:kg}
+\end{equation}
+with Dirichlet boundary data $\phi(v_\ell) = \psi_{\mathrm{boundary}}(\ell)$ and local conductance volume $\mu_v = \frac{1}{\deg(v)}\sum_{e\ni v} w_e$. At the root $d = 0$ of pure AdS, adding the exact asymptotic infinity-branch Robin impedance $\mu_0(1 - p^{-\Delta})$ reproduces Gubser's infinite-tree analytic propagator $K_\Delta(v, y) = p^{(2\lca(v,y)-d)\Delta}$~\cite{Gubser2017} to $< 10^{-12}$ (\code{Theorem~6}). Writing $x = p^{\Delta/2}$, $y = p^{(1-\Delta)/2}$, and $s = \sqrt{p} = xy$, the Breitenlohner--Freedman bound $m_{\mathrm{BF}}^2 = -(\sqrt{p}-1)^2$ satisfies the exact squared excess identity
+\begin{equation}
+  m^2(\Delta) - m_{\mathrm{BF}}^2 = \bigl(p^{\Delta/2} - p^{(1-\Delta)/2}\bigr)^2 \ge 0,
+  \label{eq:bf-square}
+\end{equation}
+which is machine-checked in \code{HolographyCurvature.lean} through the declarations \code{gubser\_bf\_bound\_exact\_square} and \code{gubser\_bf\_excess\_nonneg}.
+
+\begin{theorem}[Unconditional Positive-Definite Rank-$1$ Kerr--BTZ Solver]
+\label{thm:solver}
+Bottom-up Schur-complement elimination reduces all hanging $p$-adic subtrees into the $L$ horizon vertices in $O(V)$ operations, leaving an $L \times L$ Hermitian cyclic tridiagonal matrix $M$. Extracting the wrap-around horizon edge $e_{L-1} = (h_{L-1} \to h_0)$ writes
+\begin{equation}
+  M = T + w_{L-1}\, u u^\dagger, \qquad
+  u = \bigl[1,\, 0,\, \dots,\, 0,\, -e^{i\theta}\bigr]^T,
+  \label{eq:sm-decomp}
+\end{equation}
+where $T$ is the open-chain Hermitian tridiagonal matrix obtained by deleting edge $e_{L-1}$. For all positive conductances $w_e > 0$ (within the BF stability regime so $T \succ 0$) and all rotational fluxes $\Omega \in [-\pi,\pi]$:
+\begin{enumerate}[leftmargin=1.8em,itemsep=2pt]
+  \item $w_{L-1} u u^\dagger \succeq 0$ has quadratic form $w_{L-1}|z_0 - e^{i\theta} z_{L-1}|^2 \ge 0$;
+  \item the Sherman--Morrison~\cite{ShermanMorrison1950} update $\phi_H = y - \frac{w_{L-1} u^\dagger y}{1 + w_{L-1} u^\dagger z} z$ ($Ty = \tilde{b}_H$, $Tz = u$) has a strictly real positive denominator $1 + w_{L-1} u^\dagger T^{-1} u \ge 1 > 0$ unconditionally, yielding the exact solution in $O(V)$ time without pivoting failure.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Direct expansion of $|z_0 - e^{i\theta}z_{L-1}|^2$ for $|e^{i\theta}|^2 = 1$ matches the exact diagonal and wrap-around off-diagonal entries of $M$ on $(0, L-1)$ (Lean~4: \code{horizon\_edge\_quadratic\_expansion}), confirming $w_{L-1} u u^\dagger \succeq 0$ (\code{horizon\_edge\_laplacian\_psd}). Since $T \succ 0 \implies T^{-1} \succ 0$, we have $q := u^\dagger T^{-1} u \ge 0$, whence $1 + w_{L-1} q \ge 1 > 0$ (Lean~4: \code{sherman\_morrison\_denominator\_ge\_one}). Independent exact Gaussian-rational $\Q(i)$ verification in \code{scripts/verify\_exact.py} confirms $M\phi = b$ with literally zero residual.
+\end{proof}
+
+% =====================================================================
+\section{Unified Tate-Curve BTZ Ollivier--Ricci Curvature Law}
+\label{sec:ricci}
+% =====================================================================
+
+Following Ollivier~\cite{Ollivier2009}, the discrete Ricci curvature of an edge $e = (u, v)$ of length $a_{uv}$ with non-lazy conductance walks $\mu_u(x) = w_{ux}/\sum_{z\sim u} w_{uz}$ is $\kappa(u,v) := 1 - W_1(\mu_u, \mu_v)/a_{uv}$. On a uniform $(p+1)$-regular Bruhat--Tits tree $\Tp$, the Kantorovich--Rubinstein tree formula yields $\kappa_{\mathrm{AdS}}(p) = -\frac{2(p-1)}{p+1}$. On a uniform Tate-curve BTZ horizon ring of length $L \ge 3$, each horizon node has degree $p + 2$ ($2$ ring neighbors plus $p$ hanging children), and transport can shortcut around the back of the cycle.
+
+\begin{theorem}[Unified Tate-Curve BTZ Ollivier--Ricci Law and $L_c = 5$ Trichotomy]
+\label{thm:btz-ricci}
+On every horizon edge of a uniform discrete BTZ black hole quotient $\Tp / p^{h\Z}$ with prime degree $p \ge 2$ and horizon circumference $L \ge 3$, the exact non-lazy Ollivier--Ricci curvature is
+\begin{equation}
+  \kappa_{\mathrm{BTZ}}(p, L) = -\frac{2p - \max(0, 6 - L)}{p + 2},
+  \label{eq:btz-ricci}
+\end{equation}
+and its exact deviation from pure Bruhat--Tits AdS satisfies
+\begin{equation}
+  (p + 1)(p + 2)\bigl(\kappa_{\mathrm{BTZ}}(p, L) - \kappa_{\mathrm{AdS}}(p)\bigr)
+  = (p + 1)\max(0, 6 - L) - 4.
+  \label{eq:btz-excess}
+\end{equation}
+Consequently, there is an exact three-regime geometric trichotomy across all $p \ge 2, L \ge 3$:
+\begin{enumerate}[leftmargin=1.8em,itemsep=2pt]
+  \item \textbf{Planck-Scale Horizon Flattening ($L \in \{3, 4\}$, all $p \ge 2$):} $\kappa_{\mathrm{BTZ}}(p, L) > \kappa_{\mathrm{AdS}}(p)$ strictly.
+  \item \textbf{Critical Circumference $L_c = 5$ Trichotomy:} $\kappa_{\mathrm{BTZ}}(2, 5) - \kappa_{\mathrm{AdS}}(2) = -\frac{1}{12} < 0$; $\kappa_{\mathrm{BTZ}}(3, 5) - \kappa_{\mathrm{AdS}}(3) = 0$ (exact cancellation, both $-1$); and $\kappa_{\mathrm{BTZ}}(p, 5) > \kappa_{\mathrm{AdS}}(p)$ for all $p \ge 4$.
+  \item \textbf{Macroscopic Horizon Hyperbolicity ($L \ge 6$, all $p \ge 2$):} $\kappa_{\mathrm{BTZ}}(p, L) - \kappa_{\mathrm{AdS}}(p) = -\frac{4}{(p+1)(p+2)} < 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Let $e = (h_0, h_1)$ with $d = p + 2$ uniform neighbors of mass $1/d$ each. On an infinite $(p+2)$-regular tree, matching one child of $h_0$ to $h_0$ (via $h_1$'s mass at $h_0$, cost $1$), $h_1$ to one child of $h_1$ (cost $1$), and the remaining $p$ neighbors of $h_0$ to the remaining $p$ neighbors of $h_1$ (each at distance $3$) gives $W_1^{\mathrm{tree}} = (1 + 1 + 3p)/(p+2) = (3p+2)/(p+2)$ and $\kappa = -2p/(p+2)$. On a cycle of length $L$, the unique pair of opposite ring neighbors $(h_{L-1}, h_2)$ has back-of-ring distance $L - 3$ (with $h_{L-1} = h_2$ at distance $0$ for $L=3$). Whenever $L - 3 < 3$ (i.e.\ $L < 6$), routing the $1/d$ mass between $h_{L-1}$ and $h_2$ around the back of the horizon saves $(3 - (L-3))/(p+2) = (6 - L)/(p+2)$, yielding~\eqref{eq:btz-ricci}. Clearing denominators produces~\eqref{eq:btz-excess}, whose algebraic identity and all three sign regimes are machine-checked in \code{HolographyCurvature.lean}. Furthermore, \code{scripts/verify\_exact.py} independently solves exact \code{fractions.Fraction} bipartite optimal transport across $45$ $(p, L)$ pairs ($p \in \{2,3,5,7,11\}$, $L \in \{3..12\}$) with zero rounding error.
+\end{proof}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\textwidth]{figures/fig1_btz_curvature.pdf}
+  \caption{Exact Tate-curve BTZ horizon curvature excess $\kappa_{\mathrm{BTZ}}(p, L) - \kappa_{\mathrm{AdS}}(p)$ from \cref{thm:btz-ricci} across primes $p \in \{2,3,5,7\}$ and horizon circumferences $L \in [3, 12]$, highlighting Planck-scale flattening ($L \in \{3,4\}$), the exact $L_c = 5$ trichotomy (including exact zero cancellation at $p=3, L=5$), and macroscopic hyperbolicity ($L \ge 6$).}
+  \label{fig:btz}
+\end{figure}
+
+% =====================================================================
+\section[Ryu--Takayanagi Minimal Cuts and Real-Time Observatory]{Ryu--Takayanagi Minimal Cuts, Edge-Length Gravity, and Real-Time Observatory}
+\label{sec:rt-gravity}
+% =====================================================================
+
+In discrete holographic tensor networks~\cite{RyuTakayanagi2006,Heydeman2018,Pastawski2015}, each bulk edge carries entanglement capacity $\mathrm{cap}(e) = w_e \ln p$. For any boundary subset $A \subset \Zp / p^n\Zp$, \code{computeRyuTakayanagi} computes the global minimum homologous edge cut $\gamma_A$ and entanglement wedge $\mathcal{E}(A)$ in exact $O(V)$ time via bottom-up tree dynamic programming plus a $2$-case cycle DP around the BTZ horizon ring (verified against exhaustive $2^{|V_{\mathrm{int}}|}$ brute-force minimization on random weighted trees and $4{,}096$-state BTZ graphs in \code{Theorem~8}). On uniform BTZ rings, pulling a full horizon subtree into $\mathcal{E}(A)$ costs $2\ln p$ (cutting $2$ horizon edges) versus $p\ln p$ (cutting $p$ child edges), so $2 < p$ for all odd primes $p \ge 3$ (Lean~4: \code{rt\_odd\_prime\_horizon\_dominance}), whereas $p=2$ sits at exact criticality $2 = p$.
+
+Motivated by Gubser--Heydeman--Jepsen--Marcolli edge-length dynamics~\cite{GubserEdge2017}, each edge carries a dynamical log-length $\sigma_e = \ln a_e$ obeying a damped second-order gravitational wave equation on the bulk line graph driven by covariant stress-energy $T_e = w_e|\phi_u - e^{i A_{uv}}\phi_v|^2$, feeding radial redshift backreaction $V_{\mathrm{grav}}(\ell)$ into a fourth-order Yoshida symplectic boundary integrator~\cite{Yoshida1990} (norm drift $\sim 10^{-15}$, verified $\Delta t^4$ energy scaling). The full coupled system runs live at $60\text{ FPS}$ in custom zero-dependency WebGL2 GLSL~300~es shaders (\code{src/web/renderer3d.js}) alongside a synchronized Euclidean $\R$ twin oscilloscope (\code{src/web/panels2d.js}) and a lock-free $48\text{ kHz}$ \code{AudioWorklet} synthesizer (\code{src/web/audio-worklet.js}) tuned to prime-power Vladimirov harmonic shells ($3^x$ Bohlen--Pierce tritaves, $5^x$ pentaves, $7^x$ heptaves).
+
+% =====================================================================
+\section{Reproducible Benchmarks and Visual Data}
+\label{sec:benchmarks}
+% =====================================================================
+
+All datasets below are deterministically reproduced by \code{npm run discover} and archived in \code{results/discovery-benchmarks.json}.
+
+\begin{table}[ht]
+\centering
+\caption{Experiment~A: Exact Jacobi spectrum of the Monna-conjugated Adelic hybrid Hamiltonian $H_\theta$ ($\alpha = 1.0$), confirming \cref{thm:adelic}.}
+\label{tab:adelic}
+\footnotesize
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}rrrrrrr@{}}
+\toprule
+$p$ & $N$ & $\|[H_Q,H_R]\|_F^{\mathrm{norm}}$ & Distinct ($\theta{=}0$) & Distinct ($\theta{=}0.5$) & Distinct ($\theta{=}1$) & $N\cdot\overline{\IPR}$ ($\theta{=}0.5{\to}1$) \\
+\midrule
+$2$ & $64$  & $0.02524$ & $33/64$  & $\mathbf{64/64}$ (lifted)   & $7/64$  & $1.424 \to 2.965$ \\
+$3$ & $81$  & $0.02187$ & $41/81$  & $\mathbf{41/81}$ (doublets) & $5/81$  & $1.678 \to 3.738$ \\
+$5$ & $125$ & $0.01353$ & $63/125$ & $\mathbf{63/125}$ (doublets)& $4/125$ & $1.635 \to 4.967$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.98\textwidth]{figures/fig2_adelic_spectrum.pdf}
+  \caption{Adelic Parity-Doubling Dichotomy across $\theta \in [0, 1]$: (a)~distinct eigenvalue fraction remains locked at $(N+1)/(2N)$ for odd primes $p=3,5$ while jumping to $1.00$ (complete lifting) at $p=2$; (b)~mean normalized eigenstate localization $N\cdot\overline{\IPR}$.}
+  \label{fig:adelic}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\caption{Experiment~C ($p=3, n=5$): Exact multi-ball Kozyrev compacton-soliton zero leakage vs.\ overlapping multi-scale tunneling resonance and synchronized Euclidean $\R$ twin explosion.}
+\label{tab:soliton}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}rrrrr@{}}
+\toprule
+$g$ & Solo Soliton ($\Q_3$) & Disjoint 2-Ball Drift & 2-Scale Overlap Leak & Euclidean $\R$ Twin Leak \\
+\midrule
+$0$   & $0.00\times 10^{0}$ & $2.30\times 10^{-14}$ & $0.00\%$ & $89.21\%$ \\
+$20$  & $0.00\times 10^{0}$ & $1.25\times 10^{-14}$ & $0.20\%$ & $87.49\%$ \\
+$60$  & $0.00\times 10^{0}$ & $7.44\times 10^{-15}$ & $\mathbf{0.37\%}$ (peak) & $83.58\%$ \\
+$150$ & $0.00\times 10^{0}$ & $2.42\times 10^{-14}$ & $0.29\%$ & $71.45\%$ \\
+$300$ & $0.00\times 10^{0}$ & $1.87\times 10^{-14}$ & $0.04\%$ & $61.13\%$ \\
+$500$ & $0.00\times 10^{0}$ & $2.35\times 10^{-14}$ & $\mathbf{0.00\%}$ (self-trapped) & $59.40\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.98\textwidth]{figures/fig3_soliton_resonance.pdf}
+  \caption{Experiment~C ($p=3, n=5$): (a)~non-monotonic multi-scale ultrametric tunneling resonance peaking at $g = 60$ and collapsing via macroscopic self-trapping at $g = 500$, contrasted with exact zero leakage of a single Kozyrev compacton-soliton; (b)~Reality Split comparison against the synchronized Euclidean $\R$ twin.}
+  \label{fig:soliton}
+\end{figure}
+
+In Experiment~B, exact SPFA bipartite Wasserstein measurements match \cref{thm:btz-ricci} to $\le 2.22\times 10^{-16}$ across all tested horizons $L \in \{3,4,5,7,8,9,16\}$. In Experiment~D ($p=3, n=5, L=9$), sweeping Kerr flux $\Omega \in [-\pi,\pi]$ yields peak horizon current $|J| = 1.1169\times 10^{-2}$ with exact odd current parity $\max|J(-\Omega)+J(\Omega)| = 0.00$ and exact even bulk action $\max|E(-\Omega)-E(\Omega)| = 0.00$.
+
+% =====================================================================
+\section[Formal Verification Audit and AI Disclosure]{Formal Verification Audit, Verification Boundaries, and AI Disclosure}
+\label{sec:audit}
+% =====================================================================
+
+\begin{table}[ht]
+\centering
+\caption{Lean~4 (\code{v4.35.0}) formalization map: $36$ audited declarations across $4$ pure core modules (zero Mathlib, zero \code{sorryAx}, zero custom axioms; audited via \code{lake env lean VerifyAxioms.lean}).}
+\label{tab:lean}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{4.2cm}>{\raggedright\arraybackslash}p{5.5cm}r>{\raggedright\arraybackslash}p{3.9cm}@{}}
+\toprule
+Module & Key Audited Declarations & Count & Axioms Used \\
+\midrule
+\code{Basic.lean} & \code{ultrametric\_isosceles\_lt}, \code{pow\_dvd\_add}, \code{monna\_involution\_*}, \code{complement\_commutes\_monna\_*} & $12$ & \code{propext}, \code{Classical.choice}, \code{Quot.sound} (or none) \\
+\code{AdelicSymmetry.lean} & \code{hilbert\_sector\_completeness}, \code{conjugate\_residue\_mod\_p}, \code{odd\_prime\_conjugate\_sector\_disjoint} & $6$ & \code{propext}, \code{Classical.choice}, \code{Quot.sound} (or none) \\
+\code{HolographyCurvature.lean} & \code{btz\_curvature\_excess\_identity}, \code{btz\_flatter\_*}, \code{btz\_more\_negative\_for\_L\_ge\_6}, \code{gubser\_bf\_excess\_nonneg} & $12$ & \code{propext}, \code{Quot.sound} (or none) \\
+\code{SolitonAndSolver.lean} & \code{kozyrev\_exact\_nonlinear\_soliton}, \code{disjoint\_multi\_soliton\_no\_crosstalk}, \code{sherman\_morrison\_denominator\_ge\_one} & $6$ & \code{propext}, \code{Quot.sound} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Verification Boundaries.} The Lean~4 kernel formally certifies the $36$ discrete algebraic, ultrametric, combinatorial, rational-curvature, compacton-soliton, and Hermitian PSD/Sherman--Morrison theorems listed in \cref{tab:lean}. Independent exact-rational verification (\code{scripts/verify\_exact.py}) certifies exact \code{fractions.Fraction} optimal transport across $45$ $(p, L)$ BTZ horizons, $7{,}033$ conjugate Adelic frequency pairs, and exact $\Q(i)$ Kerr--BTZ linear solves with zero rounding error. Floating-point FFT/PDE conservation, Jacobi diagonalization, and dynamic gravity reside in the $9$-theorem executable suite (\code{test/verify.mjs}) and lie outside the Lean~4 kernel boundary.
+
+\textbf{AI-Assistance and Formal-Verification Disclosure.} Substantive AI assistance (Google DeepMind / Antigravity agent operating under the direction of Alexander Stephen Donahue) contributed to mathematical derivation, software implementation, numerical discovery benchmarks, Lean~4 formalization, and manuscript drafting. AI systems are disclosed as tools and are not listed as authors. Correctness of all formal statements is certified independently by the Lean~4 (\code{v4.35.0}) kernel and reproducible verification scripts rather than by authoring provenance. This research was self-funded by the author (sole operator of 0thernes LLC).
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}

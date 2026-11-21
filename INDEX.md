@@ -1,6 +1,6 @@
 # ULTRAMETRICA — Master Index & Table of Contents
 
-Complete navigational map of every manuscript, formal Lean 4 proof, engine module, benchmark artifact, test suite, and legal/governance record in `0thernes/ultrametrica` (`v1.0.0`).
+Complete navigational map of every manuscript, formal Lean 4 proof, engine module, benchmark artifact, test suite, and legal/governance record in `0thernes/ultrametrica` (`v1.1.0`).
 
 ---
 
@@ -8,9 +8,11 @@ Complete navigational map of every manuscript, formal Lean 4 proof, engine modul
 
 | Document | Purpose | Audience |
 |---|---|---|
+| [`dist/Donahue_2026_Ultrametrica.pdf`](dist/Donahue_2026_Ultrametrica.pdf) | **Frozen 11-page AMS-LaTeX White Paper PDF** (zero warnings, 3 vector figures) & [`dist/arxiv_submission.tar.gz`](dist/arxiv_submission.tar.gz) | Academic & independent researchers |
+| [`paper/main.tex`](paper/main.tex) & [`paper/refs.bib`](paper/refs.bib) | Publication-grade AMS-LaTeX manuscript source & 18 BibTeX primary citations | arXiv / LaTeX builders |
 | [`README.md`](README.md) | Flagship repository overview, quickstart, architecture, and live observatory guide | All readers |
 | [`SUMMARY.md`](SUMMARY.md) | Standalone 2-page Executive Summary Paper & Novelty Verdict | Physicists, mathematicians, reviewers |
-| [`paper/WHITE_PAPER.md`](paper/WHITE_PAPER.md) | Full 13-section Research White Paper with formal proofs, experimental tables, novelty audit & 18 primary citations | Academic & independent researchers |
+| [`paper/WHITE_PAPER.md`](paper/WHITE_PAPER.md) | Full 13-section Markdown White Paper with formal proofs, experimental tables, novelty audit & 18 primary citations | GitHub readers |
 | [`docs/MASTER_REPORT.md`](docs/MASTER_REPORT.md) | Deep-dive technical, mathematical, scientific, computational, functional & operational Master Report | Engineers, theorists, auditors |
 | [`VERIFICATION.md`](VERIFICATION.md) | Provable / Falsifiable / Verifiable / Authenticated protocol & SHA-256 checksums | Independent verifiers |
 | [`GLOSSARY.md`](GLOSSARY.md) | Comprehensive 45+ term mathematical, holographic & acoustic glossary | All readers |
@@ -19,8 +21,9 @@ Complete navigational map of every manuscript, formal Lean 4 proof, engine modul
 
 | File | Declarations & Scope | Audit Status |
 |---|---|---|
-| [`lean/README.md`](lean/README.md) | Proof architecture, build instructions & 24-theorem axiom table | — |
-| [`lean/UltrametricaProofs.lean`](lean/UltrametricaProofs.lean) | Root verification module + `#print axioms` audit for all 24 flagship theorems | Verified (`0` `sorryAx`) |
+| [`lean/README.md`](lean/README.md) | Proof architecture, build instructions & 36-theorem axiom table | — |
+| [`lean/UltrametricaProofs.lean`](lean/UltrametricaProofs.lean) | Clean root library module importing all 4 proof libraries | Verified (`0` `sorry`) |
+| [`lean/VerifyAxioms.lean`](lean/VerifyAxioms.lean) | Standalone `#print axioms` audit script for all 36 exported declarations | Verified (`0` `sorryAx`) |
 | [`lean/UltrametricaProofs/Basic.lean`](lean/UltrametricaProofs/Basic.lean) | Ultrametric isosceles triangle theorem, prime-power strong triangle inequality, Monna involution $R_p^2 = I$, digit-complement commutation | Verified |
 | [`lean/UltrametricaProofs/AdelicSymmetry.lean`](lean/UltrametricaProofs/AdelicSymmetry.lean) | **Theorem I**: Exact Hilbert-space completeness $1 + \sum (p-1)p^s = p^n$, valuation-preserving Fourier conjugacy, odd-prime doublet protection vs. $p=2$ self-conjugacy | Verified |
 | [`lean/UltrametricaProofs/HolographyCurvature.lean`](lean/UltrametricaProofs/HolographyCurvature.lean) | **Theorem II**: Exact cleared-denominator BTZ Ollivier-Ricci excess $(p+1)\max(0,6-L)-4$, complete $L \in \{3,4,5,\ge 6\}$ trichotomy, Gubser BF squared bound, RT horizon dominance | Verified |

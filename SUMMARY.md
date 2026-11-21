@@ -1,7 +1,7 @@
-# Executive Summary Paper — ULTRAMETRICA (v1.0.0)
+# Executive Summary Paper — ULTRAMETRICA (v1.1.0)
 
-**Author:** Alexander S. Donahue (0thernes LLC · `0_0@0thernes.art` · ORCID [0009-0006-8168-9648](https://orcid.org/0009-0006-8168-9648))  
-**Full Manuscript:** [paper/WHITE_PAPER.md](paper/WHITE_PAPER.md) · **Master Report:** [docs/MASTER_REPORT.md](docs/MASTER_REPORT.md) · **Lean 4 Audit:** [results/lean4-audit.txt](results/lean4-audit.txt)
+**Author:** Alexander Stephen Donahue (0thernes LLC, Spokane, WA, USA · `0_0@0thernes.art` · ORCID [0009-0006-8168-9648](https://orcid.org/0009-0006-8168-9648))  
+**Frozen PDF:** [dist/Donahue_2026_Ultrametrica.pdf](dist/Donahue_2026_Ultrametrica.pdf) · **Markdown Manuscript:** [paper/WHITE_PAPER.md](paper/WHITE_PAPER.md) · **Master Report:** [docs/MASTER_REPORT.md](docs/MASTER_REPORT.md) · **Lean 4 Audit:** [results/lean4-audit.txt](results/lean4-audit.txt)
 
 ---
 
@@ -23,7 +23,9 @@
 
 | Verification Layer | Tool / Artifact | Result |
 |---|---|---|
-| **Formal Kernel Proofs** | Lean 4 `v4.35.0` ([lean/](lean/), [results/lean4-audit.txt](results/lean4-audit.txt)) | **24/24 declarations verified**, `0` errors, `0` warnings, `0` `sorryAx` |
+| **Formal Kernel Proofs** | Lean 4 `v4.35.0` ([lean/VerifyAxioms.lean](lean/VerifyAxioms.lean), [results/lean4-audit.txt](results/lean4-audit.txt)) | **36/36 declarations verified**, `0` errors, `0` warnings, `0` `sorryAx` |
+| **Exact-Rational Falsifier** | `python scripts/verify_exact.py` (`fractions.Fraction` & $\mathbb{Q}(i)$) | **7,033 Adelic pairs + 45 BTZ horizons + exact $\mathbb{Q}(i)$ solve PASS** |
 | **Executable Theorem Suite** | `npm test` ([test/verify.mjs](test/verify.mjs)) | **9/9 theorems passed** ($10^{-11}$–$10^{-16}$ tolerances) |
+| **AMS-LaTeX PDF & arXiv Bundle** | Tectonic `0.17.0` ([dist/Donahue_2026_Ultrametrica.pdf](dist/Donahue_2026_Ultrametrica.pdf)) | **Zero warnings**, standalone `arxiv_submission.tar.gz` verified |
 | **Reproducible Discovery Benchmarks** | `npm run discover` ([results/discovery-benchmarks.json](results/discovery-benchmarks.json)) | **4/4 experiments archived** (exact Jacobi spectra, SPFA curvature, soliton sweep, AB flux parity) |
 | **Live WebGL2 + Browser Check** | `http://localhost:4174` | **0 console errors**, `||psi||^2 - 1 = 2.44e-15`, `Bulk KG Resid = 6.94e-17` |

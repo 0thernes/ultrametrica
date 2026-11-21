@@ -2,6 +2,14 @@
 
 All notable releases, mathematical proofs, verification suites, and engine changes in **ULTRAMETRICA** are documented here.
 
+## [1.1.0] — 2026-11-21
+
+### Added
+- **Publication-Grade AMS-LaTeX White Paper & Vector Figures** (`paper/main.tex`, `paper/refs.bib`, `scripts/generate_figures.py`, `paper/figures/*.pdf`): compiled via Tectonic `0.17.0` with zero warnings, zero overfull/underfull hboxes, and zero undefined references; packaged into frozen release PDF (`dist/Donahue_2026_Ultrametrica.pdf`) and standalone-verified arXiv bundle (`dist/arxiv_submission.tar.gz`) via `scripts/package_dist.py`.
+- **Standalone Lean 4 Axiom Auditor** (`lean/VerifyAxioms.lean`): audits all **36 exported declarations** across all four modules (`Basic`, `AdelicSymmetry`, `HolographyCurvature`, `SolitonAndSolver`) strictly within `[propext, Classical.choice, Quot.sound]` (14 declarations depend on zero axioms; archived in `results/lean4-audit.txt`).
+- **Independent Zero-Dependency Exact-Rational Python Falsifier** (`scripts/verify_exact.py`): verifies 7,033 conjugate Adelic frequency pairs across primes up to 19, exact `fractions.Fraction` bipartite 1-Wasserstein optimal transport across 45 $(p, L)$ BTZ horizons with zero rounding error, and exact $\mathbb{Q}(i)$ Rank-1 Sherman-Morrison Kerr-BTZ solves with zero residual.
+- **4-Job Verification CI** (`.github/workflows/ci.yml`): verifies Node 9-theorem suite, Python exact-rational falsifier, Lean 4 `lake build` + `VerifyAxioms.lean` strict axiom allowlist + zero `sorry`/`admit`/`axiom` grep, and Tectonic zero-warning AMS-LaTeX PDF build.
+
 ## [1.0.0] — 2026-11-18
 
 ### Added
