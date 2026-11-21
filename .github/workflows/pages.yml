@@ -1,0 +1,51 @@
+name: Deploy Live WebGL2 Observatory to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stage static observatory bundle
+        run: |
+          mkdir -p _site
+          cp -r src/engine src/web _site/
+          touch _site/.nojekyll
+          cat <<'HTML' > _site/index.html
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <title>ULTRAMETRICA — Launching Observatory</title>
+            <meta http-equiv="refresh" content="0; url=./web/" />
+            <script>
+              window.location.replace('./web/' + window.location.search + window.location.hash);
+            </script>
+          </head>
+          <body style="background:#06080d;color:#eef2f8;font-family:system-ui,sans-serif;display:grid;place-items:center;height:100vh;margin:0;">
+            <p>Launching <a href="./web/" style="color:#38bdf8;">ULTRAMETRICA Observatory</a>&hellip;</p>
+          </body>
+          </html>
+          HTML
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_site"
+      - id: deployment
+        uses: actions/deploy-pages@v4

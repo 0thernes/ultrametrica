@@ -52,7 +52,7 @@ export class PadicAudioEngine {
 
       if (!this.ctx) {
         this.ctx = new AudioCtx();
-        await this.ctx.audioWorklet.addModule('/web/audio-worklet.js');
+        await this.ctx.audioWorklet.addModule(new URL('./audio-worklet.js', import.meta.url).href);
         this.node = new AudioWorkletNode(this.ctx, 'padic-synth-processor', {
           numberOfInputs: 0,
           numberOfOutputs: 1,

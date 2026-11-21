@@ -1,17 +1,23 @@
 /**
- * ULTRAMETRICA — Reproducible Scientific Discovery & Falsification Benchmark Suite.
+ * ULTRAMETRICA — Reproducible Scientific Discovery & Falsification Benchmark Suite (v1.2.0).
  *
- * Runs 4 exact quantitative experiments and writes reproducible JSON results to results/:
+ * Runs 6 exact quantitative experiments and writes reproducible JSON results to results/:
  *   Exp A: Full exact eigenspectrum & level-spacing statistics (<r>, IPR, commutator norm)
  *          of the non-commuting Monna-conjugated Adelic Hybrid Hamiltonian:
  *            H(theta) = theta * D_p^alpha + (1 - theta) * R_p * (-Delta_R)^{alpha/2} * R_p
  *   Exp B: Exhaustive numerical verification of the unified BTZ Ollivier-Ricci curvature law:
  *            kappa_BTZ(p, L) = -(2p - max(0, 6 - L)) / (p + 2)
- *          across p in {2, 3, 5, 7} and L in {3, 4, 5, 6, 7, 8, 9, 16}.
+ *          across p in {2, 3, 5, 7} and L in {3, 4, 5, 7, 8, 9, 16}.
  *   Exp C: Exact Nonlinear Kozyrev Compacton-Soliton Invariance vs. Multi-Scale Breakdown
  *          under the p-adic Gross-Pitaevskii equation across g in [0, 500].
  *   Exp D: Rotating Kerr-BTZ Aharonov-Bohm Horizon Flux Current J(Omega) & Energy Spectrum
  *          across Omega in [-pi, pi].
+ *   Exp E: Large-N Single-Sector Complex Hermitian Intra-Block Spectral Statistics inside W_{0,1}
+ *          (resolving Open Frontier #1 up to N = 625, dim(W_{0,1}) up to 128) via exact complex
+ *          Hermitian Jacobi diagonalization!
+ *   Exp F: Parametric Scaling of Multi-Scale Resonant Self-Trapping Peak g_*(p, alpha) vs.
+ *          the Vladimirov Inter-Shell Eigenvalue Gap Delta_lambda = p^{2*alpha} - p^alpha
+ *          (resolving Open Frontier #2).
  */
 
 import fs from 'node:fs/promises';
@@ -83,7 +89,6 @@ function jacobiSymmetricEigen(Ain, N, maxSweeps = 80) {
   const evals = new Float64Array(N);
   for (let i = 0; i < N; i++) evals[i] = A[i * N + i];
 
-  // Sort eigenvalues & eigenvectors ascending
   const order = Array.from({ length: N }, (_, i) => i).sort((a, b) => evals[a] - evals[b]);
   const sortedVals = new Float64Array(N);
   const sortedVecs = new Float64Array(N * N);
@@ -99,10 +104,118 @@ function jacobiSymmetricEigen(Ain, N, maxSweeps = 80) {
 }
 
 /**
+ * Exact cyclic Jacobi eigensolver for dense complex Hermitian D x D matrix A = ARe + i AIm.
+ * Uses unitary 2x2 Givens congruence G^H A G preserving exact trace and Frobenius norm.
+ * Returns { eigenvalues (sorted ascending), traceErr, frobErr, sweeps }.
+ */
+function jacobiHermitianEigen(AReIn, AImIn, D, maxSweeps = 100) {
+  const ARe = new Float64Array(AReIn);
+  const AIm = new Float64Array(AImIn);
+
+  let initTrace = 0;
+  let initFrob2 = 0;
+  for (let i = 0; i < D; i++) {
+    initTrace += ARe[i * D + i];
+    for (let j = 0; j < D; j++) {
+      initFrob2 += ARe[i * D + j] ** 2 + AIm[i * D + j] ** 2;
+    }
+  }
+
+  let sweeps = 0;
+  for (let sweep = 0; sweep < maxSweeps; sweep++) {
+    sweeps = sweep + 1;
+    let offNorm2 = 0;
+    for (let i = 0; i < D; i++) {
+      for (let j = i + 1; j < D; j++) {
+        const re = ARe[i * D + j];
+        const im = AIm[i * D + j];
+        offNorm2 += re * re + im * im;
+      }
+    }
+    if (Math.sqrt(offNorm2) < 1e-12) break;
+
+    for (let p = 0; p < D - 1; p++) {
+      for (let q = p + 1; q < D; q++) {
+        const rePQ = ARe[p * D + q];
+        const imPQ = AIm[p * D + q];
+        const r = Math.hypot(rePQ, imPQ);
+        if (r < 1e-15) continue;
+
+        const uRe = rePQ / r;
+        const uIm = imPQ / r;
+        const app = ARe[p * D + p];
+        const aqq = ARe[q * D + q];
+        const tau = (aqq - app) / (2.0 * r);
+        const t = tau >= 0 ? 1.0 / (tau + Math.hypot(1.0, tau)) : -1.0 / (-tau + Math.hypot(1.0, tau));
+        const c = 1.0 / Math.hypot(1.0, t);
+        const s = t * c;
+
+        ARe[p * D + p] = app - t * r;
+        AIm[p * D + p] = 0;
+        ARe[q * D + q] = aqq + t * r;
+        AIm[q * D + q] = 0;
+        ARe[p * D + q] = 0;
+        AIm[p * D + q] = 0;
+        ARe[q * D + p] = 0;
+        AIm[q * D + p] = 0;
+
+        for (let k = 0; k < D; k++) {
+          if (k === p || k === q) continue;
+          const xRe = ARe[k * D + p];
+          const xIm = AIm[k * D + p];
+          const yRe = ARe[k * D + q];
+          const yIm = AIm[k * D + q];
+
+          // x' = c * x - s * conj(u) * y
+          // conj(u) * y = (uRe*yRe + uIm*yIm) + i*(uRe*yIm - uIm*yRe)
+          const cuyRe = uRe * yRe + uIm * yIm;
+          const cuyIm = uRe * yIm - uIm * yRe;
+          const nxRe = c * xRe - s * cuyRe;
+          const nxIm = c * xIm - s * cuyIm;
+
+          // y' = s * u * x + c * y
+          // u * x = (uRe*xRe - uIm*xIm) + i*(uRe*xIm + uIm*xRe)
+          const uxRe = uRe * xRe - uIm * xIm;
+          const uxIm = uRe * xIm + uIm * xRe;
+          const nyRe = s * uxRe + c * yRe;
+          const nyIm = s * uxIm + c * yIm;
+
+          ARe[k * D + p] = nxRe;
+          AIm[k * D + p] = nxIm;
+          ARe[p * D + k] = nxRe;
+          AIm[p * D + k] = -nxIm;
+
+          ARe[k * D + q] = nyRe;
+          AIm[k * D + q] = nyIm;
+          ARe[q * D + k] = nyRe;
+          AIm[q * D + k] = -nyIm;
+        }
+      }
+    }
+  }
+
+  const evals = new Float64Array(D);
+  let finTrace = 0;
+  let finFrob2 = 0;
+  for (let i = 0; i < D; i++) {
+    evals[i] = ARe[i * D + i];
+    finTrace += evals[i];
+    finFrob2 += evals[i] * evals[i];
+  }
+  evals.sort();
+
+  return {
+    eigenvalues: evals,
+    traceErr: Math.abs(finTrace - initTrace),
+    frobErr: Math.abs(Math.sqrt(finFrob2) - Math.sqrt(initFrob2)),
+    sweeps,
+  };
+}
+
+/**
  * Build exact dense real symmetric matrix of:
  *   H_Q = F^* diag(lambda_Qp) F   (Vladimirov D_p^alpha in p-adic x basis)
  *   H_R = R_p F^* diag(lambda_R) F R_p  (Monna-conjugated Archimedean (-Delta_R)^{alpha/2} in x basis)
- * Both are strictly real symmetric because lambda_k = lambda_{N-k} (even spectra)!
  */
 function buildAdelicOperators(p, n, alpha = 1.0) {
   const space = new PadicSpace(p, n);
@@ -122,7 +235,6 @@ function buildAdelicOperators(p, n, alpha = 1.0) {
   const outRe = new Float64Array(N);
   const outIm = new Float64Array(N);
 
-  // Build H_Q column by column
   for (let col = 0; col < N; col++) {
     eRe.fill(0); eIm.fill(0);
     eRe[col] = 1.0;
@@ -132,18 +244,16 @@ function buildAdelicOperators(p, n, alpha = 1.0) {
     for (let row = 0; row < N; row++) HQ[row * N + col] = outRe[row];
   }
 
-  // Build H_R = R_p F^* diag(specR) F R_p column by column
   const rev = space.revTable;
   for (let col = 0; col < N; col++) {
     eRe.fill(0); eIm.fill(0);
-    eRe[rev[col]] = 1.0; // R_p |col> = |rev[col]>
+    eRe[rev[col]] = 1.0;
     space.fft(eRe, eIm, fRe, fIm);
     for (let k = 0; k < N; k++) { fRe[k] *= specR[k]; fIm[k] *= specR[k]; }
     space.ifft(fRe, fIm, outRe, outIm);
     for (let row = 0; row < N; row++) HR[row * N + col] = outRe[rev[row]];
   }
 
-  // Compute exact Frobenius norm of commutator [H_Q, H_R] and operators
   let commFrob2 = 0;
   let hqFrob2 = 0;
   let hrFrob2 = 0;
@@ -172,21 +282,95 @@ function buildAdelicOperators(p, n, alpha = 1.0) {
 }
 
 /**
+ * Directly extract the exact complex Hermitian D x D block of H_Q^{leaf} = F R_p D_p^alpha R_p F^*
+ * restricted to valuation-residue sector W_{0, m} = span{e_k : k = m (mod p)} (1 <= m < p),
+ * of dimension D = p^{n-1}, along with the diagonal Archimedean energies specR[k] and exact
+ * cross-sector leakage verification.
+ */
+function buildSectorW0mBlock(p, n, mRes = 1, alpha = 1.0) {
+  const space = new PadicSpace(p, n);
+  const N = space.N;
+  const D = (N / p) | 0;
+  const q = new PadicQuantumEngine(space);
+  q.setAlpha(alpha);
+
+  const specQ = q.vladimirovSpec;
+  const specR = q.archimedeanSpec;
+  const rev = space.revTable;
+
+  const HQRe = new Float64Array(D * D);
+  const HQIm = new Float64Array(D * D);
+  const diagR = new Float64Array(D);
+
+  const eRe = new Float64Array(N);
+  const eIm = new Float64Array(N);
+  const fRe = new Float64Array(N);
+  const fIm = new Float64Array(N);
+  const oRe = new Float64Array(N);
+  const oIm = new Float64Array(N);
+
+  let maxCrossSectorLeak = 0;
+  for (let b = 0; b < D; b++) {
+    const kCol = b * p + mRes;
+    diagR[b] = specR[kCol];
+
+    eRe.fill(0); eIm.fill(0);
+    eRe[kCol] = 1.0;
+    space.ifft(eRe, eIm, oRe, oIm);
+    for (let i = 0; i < N; i++) {
+      eRe[i] = oRe[rev[i]];
+      eIm[i] = oIm[rev[i]];
+    }
+    space.fft(eRe, eIm, fRe, fIm);
+    for (let m = 0; m < N; m++) {
+      fRe[m] *= specQ[m];
+      fIm[m] *= specQ[m];
+    }
+    space.ifft(fRe, fIm, oRe, oIm);
+    for (let i = 0; i < N; i++) {
+      eRe[i] = oRe[rev[i]];
+      eIm[i] = oIm[rev[i]];
+    }
+    space.fft(eRe, eIm, fRe, fIm);
+
+    for (let j = 0; j < N; j++) {
+      if (j % p === mRes) {
+        const a = (j / p) | 0;
+        HQRe[a * D + b] = fRe[j];
+        HQIm[a * D + b] = fIm[j];
+      } else {
+        const mag = Math.hypot(fRe[j], fIm[j]);
+        if (mag > maxCrossSectorLeak) maxCrossSectorLeak = mag;
+      }
+    }
+  }
+
+  let maxHermErr = 0;
+  let maxImPart = 0;
+  for (let a = 0; a < D; a++) {
+    for (let b = 0; b < D; b++) {
+      maxImPart = Math.max(maxImPart, Math.abs(HQIm[a * D + b]));
+      const er = Math.abs(HQRe[a * D + b] - HQRe[b * D + a]);
+      const ei = Math.abs(HQIm[a * D + b] + HQIm[b * D + a]);
+      maxHermErr = Math.max(maxHermErr, er, ei);
+    }
+  }
+
+  return { N, D, mRes, HQRe, HQIm, diagR, maxCrossSectorLeak, maxHermErr, maxImPart };
+}
+
+/**
  * Compute Oganesyan-Huse adjacent level-spacing ratio <r> on non-degenerate unique levels
- * (filtering exact symmetry doublets/degeneracies at tol = 1e-9, plus reporting raw <r> and
- * distinct-level fraction!).
  * Benchmarks:
- *   Poisson (integrable): <r> = 2 ln 2 - 1 ~= 0.38629
- *   GOE (real symmetric quantum chaos): <r> ~= 0.5307
- *   GUE (Hermitian quantum chaos): <r> ~= 0.5996
+ *   Poisson (integrable):            <r> = 2 ln 2 - 1 ~= 0.38629
+ *   GOE (real symmetric chaos):      <r> ~= 0.5307
+ *   GUE (complex Hermitian chaos):   <r> ~= 0.5996
  */
 function levelSpacingStats(evals) {
   const N = evals.length;
-  // Raw spacings including degeneracies
   const rawSpacings = [];
   for (let i = 0; i < N - 1; i++) rawSpacings.push(Math.max(0, evals[i + 1] - evals[i]));
 
-  // Deduplicate exact symmetries (e.g., reflection parity doublets) to inspect symmetry-reduced spectrum
   const uniq = [evals[0]];
   for (let i = 1; i < N; i++) {
     if (evals[i] - uniq[uniq.length - 1] > 1e-8) uniq.push(evals[i]);
@@ -247,7 +431,6 @@ function runExperimentA() {
       const { eigenvalues, eigenvectors } = jacobiSymmetricEigen(H, N);
       const stats = levelSpacingStats(eigenvalues);
 
-      // Compute mean eigenstate IPR in position basis & mean Shannon participation entropy
       let meanIPR = 0;
       let meanEntropy = 0;
       for (let col = 0; col < N; col++) {
@@ -268,7 +451,7 @@ function runExperimentA() {
         theta,
         ...stats,
         meanIPR,
-        normalizedIPR: meanIPR * N, // 1.0 = plane wave, 3.0 = GOE random vector, >3 = localized!
+        normalizedIPR: meanIPR * N,
         meanShannonEntropy: meanEntropy,
         shannonFraction: meanEntropy / Math.log(N),
       });
@@ -336,7 +519,6 @@ function runExperimentC() {
   const rows = [];
 
   for (const g of gs) {
-    // 1. Single Kozyrev wavelet (exact compacton soliton for ALL g!)
     const qSolo = new PadicQuantumEngine(space);
     qSolo.setAlpha(1.0);
     qSolo.nonlinearity = g;
@@ -344,7 +526,6 @@ function runExperimentC() {
     qSolo.setState(w1.re, w1.im, w1.leafStart, w1.leafEnd);
     for (let s = 0; s < 150; s++) qSolo.step(0.015, 2);
 
-    // 2. Two disjoint Kozyrev wavelets on disjoint balls (exact non-interacting multi-soliton!)
     const qDisjoint = new PadicQuantumEngine(space);
     qDisjoint.setAlpha(1.0);
     qDisjoint.nonlinearity = g;
@@ -361,7 +542,6 @@ function runExperimentC() {
     for (let s = 0; s < 150; s++) qDisjoint.step(0.015, 2);
     const disjointBallADrift = Math.abs((1 - qDisjoint.leakagePadic) - initProbA);
 
-    // 3. Overlapping multi-scale packet inside ONE depth-1 ball (non-uniform |psi|^2 -> breaks soliton!)
     const qMulti = new PadicQuantumEngine(space);
     qMulti.setAlpha(1.0);
     qMulti.nonlinearity = g;
@@ -397,7 +577,6 @@ function runExperimentD() {
   const bulk = new BruhatTitsBulk(space, 2); // L = 9 horizon ring
   bulk.delta = 1.25;
 
-  // Real symmetric boundary pulse (zero intrinsic current at Omega = 0)
   const bRe = new Float64Array(space.N);
   const bIm = new Float64Array(space.N);
   const L = bulk.horizonLength;
@@ -426,7 +605,6 @@ function runExperimentD() {
     });
   }
 
-  // Verify exact odd parity J(-Omega) = -J(Omega) and even action E(-Omega) = E(Omega)
   let maxParityErrJ = 0;
   let maxParityErrE = 0;
   for (let i = 0; i < 8; i++) {
@@ -441,6 +619,153 @@ function runExperimentD() {
   return { rows, maxParityErrJ, maxParityErrE };
 }
 
+function runExperimentE() {
+  console.log('\n=== Experiment E: Large-N Intra-Block Spectral Statistics Inside Sectors W_{0,m} (Frontier #1) ===');
+  const configs = [
+    { p: 2, n: 7, m: 1, alpha: 1.0 }, // N = 128, dim(W_{0,1}) = 64, r0 = 0
+    { p: 2, n: 8, m: 1, alpha: 1.0 }, // N = 256, dim(W_{0,1}) = 128, r0 = 0
+    { p: 3, n: 5, m: 1, alpha: 1.0 }, // N = 243, dim(W_{0,1}) = 81, r0 = 1/2
+    { p: 5, n: 4, m: 1, alpha: 1.0 }, // N = 625, dim(W_{0,1}) = 125, r0 = 2/3
+    { p: 5, n: 4, m: 2, alpha: 1.0 }, // N = 625, dim(W_{0,2}) = 125, r0 = 1/4 (falsifies GUE mirage!)
+  ];
+  const thetas = [0.1, 0.25, 0.4, 0.5, 0.6, 0.75, 0.9];
+
+  // Cross-validation anchor: verify complex Hermitian W_{0,1} block eigenvalues match full real N x N Jacobi on p=3, n=4
+  const checkFull = buildAdelicOperators(3, 4, 1.0);
+  const Hfull = new Float64Array(81 * 81);
+  for (let i = 0; i < 81 * 81; i++) Hfull[i] = 0.5 * checkFull.HQ[i] + 0.5 * checkFull.HR[i];
+  const fullEig = jacobiSymmetricEigen(Hfull, 81).eigenvalues;
+  const checkBlk = buildSectorW0mBlock(3, 4, 1, 1.0);
+  const MRe0 = new Float64Array(checkBlk.D * checkBlk.D);
+  const MIm0 = new Float64Array(checkBlk.D * checkBlk.D);
+  for (let i = 0; i < checkBlk.D * checkBlk.D; i++) {
+    MRe0[i] = 0.5 * checkBlk.HQRe[i];
+    MIm0[i] = 0.5 * checkBlk.HQIm[i];
+  }
+  for (let a = 0; a < checkBlk.D; a++) MRe0[a * checkBlk.D + a] += 0.5 * checkBlk.diagR[a];
+  const blkEig = jacobiHermitianEigen(MRe0, MIm0, checkBlk.D).eigenvalues;
+  let maxBlockVsFullErr = 0;
+  for (let a = 0; a < checkBlk.D; a++) {
+    let best = Infinity;
+    for (let k = 0; k < 81; k++) best = Math.min(best, Math.abs(blkEig[a] - fullEig[k]));
+    maxBlockVsFullErr = Math.max(maxBlockVsFullErr, best);
+  }
+  console.log(`Cross-check W_{0,1} (27x27 complex Hermitian) vs full 81x81 real Jacobi at theta=0.5: max eig err = ${maxBlockVsFullErr.toExponential(2)}`);
+
+  const results = [];
+  for (const cfg of configs) {
+    const blk = buildSectorW0mBlock(cfg.p, cfg.n, cfg.m, cfg.alpha);
+    const { N, D, HQRe, HQIm, diagR, maxCrossSectorLeak, maxHermErr, maxImPart } = blk;
+    const modularPicketFenceR0 = Math.min(2 * cfg.m, cfg.p - 2 * cfg.m) / Math.max(2 * cfg.m, cfg.p - 2 * cfg.m);
+    const sweep = [];
+
+    for (const theta of thetas) {
+      const MRe = new Float64Array(D * D);
+      const MIm = new Float64Array(D * D);
+      for (let i = 0; i < D * D; i++) {
+        MRe[i] = theta * HQRe[i];
+        MIm[i] = theta * HQIm[i];
+      }
+      for (let a = 0; a < D; a++) {
+        MRe[a * D + a] += (1 - theta) * diagR[a];
+      }
+      const eig = jacobiHermitianEigen(MRe, MIm, D);
+      const stats = levelSpacingStats(eig.eigenvalues);
+      sweep.push({
+        theta,
+        dimBlock: D,
+        distinctInBlock: stats.distinctLevels,
+        meanR_block: stats.meanR_distinct,
+        meanR_raw_block: stats.meanR_raw,
+        spectralWidth: stats.spectralWidth,
+        traceErr: eig.traceErr,
+        frobErr: eig.frobErr,
+      });
+    }
+
+    const rHalf = sweep.find((r) => r.theta === 0.5).meanR_block;
+    console.log(
+      `p=${cfg.p}, n=${cfg.n}, W_{0,${cfg.m}} (N=${N}, D=${D}): crossLeak=${maxCrossSectorLeak.toExponential(2)} | r0(p,m)=${modularPicketFenceR0.toFixed(4)} | <r>(0.10)=${sweep[0].meanR_block.toFixed(4)} | <r>(0.50)=${rHalf.toFixed(4)} | <r>(0.90)=${sweep[sweep.length - 1].meanR_block.toFixed(4)}`
+    );
+    results.push({
+      ...cfg,
+      N,
+      dimBlock: D,
+      modularPicketFenceR0,
+      maxCrossSectorLeak,
+      maxHermErr,
+      maxImPart,
+      isStrictlyComplexBlock: maxImPart > 1e-6,
+      meanR_at_0_5: rHalf,
+      sweep,
+    });
+  }
+
+  return {
+    crossValidation_p3_n4_maxEigErr: maxBlockVsFullErr,
+    benchmarks: { poisson: 2 * Math.LN2 - 1, goe: 0.5307, gue: 0.5996 },
+    configs: results,
+  };
+}
+
+function runExperimentF() {
+  console.log('\n=== Experiment F: Parametric Scaling of Multi-Scale Resonant Self-Trapping Peak g_*(p, alpha) (Frontier #2) ===');
+  const cases = [
+    { p: 3, n: 5, alpha: 0.6 },
+    { p: 3, n: 5, alpha: 0.8 },
+    { p: 3, n: 5, alpha: 1.0 },
+    { p: 3, n: 5, alpha: 1.2 },
+    { p: 3, n: 5, alpha: 1.4 },
+    { p: 2, n: 7, alpha: 1.0 },
+    { p: 5, n: 3, alpha: 1.0 },
+  ];
+
+  const series = [];
+  for (const cfg of cases) {
+    const space = new PadicSpace(cfg.p, cfg.n);
+    const gap12 = cfg.p ** (2 * cfg.alpha) - cfg.p ** cfg.alpha;
+    const gScale = Math.max(10, Math.round(gap12 * 10));
+    const gMultipliers = [0, 0.1, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0, 8.0, 12.0, 20.0];
+    const m1 = space.createKozyrevWavelet(1, 0, 1);
+    const m2 = space.createKozyrevWavelet(2, 1, Math.min(2, cfg.p - 1));
+    const mRe = new Float64Array(space.N);
+    const mIm = new Float64Array(space.N);
+    for (let i = 0; i < space.N; i++) {
+      mRe[i] = 0.72 * m1.re[i] + 0.69 * m2.re[i];
+      mIm[i] = 0.72 * m1.im[i] + 0.69 * m2.im[i];
+    }
+
+    const curve = [];
+    for (const mult of gMultipliers) {
+      const g = Math.round(mult * gScale);
+      const q = new PadicQuantumEngine(space);
+      q.setAlpha(cfg.alpha);
+      q.nonlinearity = g;
+      q.setState(mRe, mIm, m1.leafStart, m1.leafEnd);
+      for (let s = 0; s < 150; s++) q.step(0.015, 2);
+      curve.push({ g, gOverGap: g / gap12, leakage: q.leakagePadic });
+    }
+
+    const peak = curve.reduce((best, r) => (r.leakage > best.leakage ? r : best), curve[0]);
+    const tail = curve[curve.length - 1];
+    console.log(
+      `p=${cfg.p}, n=${cfg.n}, alpha=${cfg.alpha.toFixed(1)} | gap=${gap12.toFixed(3)} | peakLeak=${(peak.leakage * 100).toFixed(3)}% at g*=${peak.g} (g*/gap=${peak.gOverGap.toFixed(1)}) | tailLeak(g=${tail.g})=${(tail.leakage * 100).toFixed(4)}%`
+    );
+    series.push({
+      ...cfg,
+      N: space.N,
+      vladimirovGap12: gap12,
+      peakG: peak.g,
+      peakGOverGap: peak.gOverGap,
+      peakLeakage: peak.leakage,
+      tailG: tail.g,
+      tailLeakage: tail.leakage,
+      curve,
+    });
+  }
+  return series;
+}
+
 async function main() {
   await fs.mkdir(RESULTS_DIR, { recursive: true });
   const results = {
@@ -450,6 +775,8 @@ async function main() {
     experimentB_btzOllivierRicciLaw: runExperimentB(),
     experimentC_kozyrevCompactonSolitons: runExperimentC(),
     experimentD_kerrBtzAharonovBohmFlux: runExperimentD(),
+    experimentE_intraBlockSpectralStats: runExperimentE(),
+    experimentF_selfTrappingScaling: runExperimentF(),
   };
 
   const outPath = path.join(RESULTS_DIR, 'discovery-benchmarks.json');

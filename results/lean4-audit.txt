@@ -1,30 +1,52 @@
-✔ [2/7] Built UltrametricaProofs.Basic (1.6s)
-✔ [3/7] Built UltrametricaProofs.AdelicSymmetry (1.6s)
-✔ [4/7] Built UltrametricaProofs.HolographyCurvature (1.6s)
-✔ [5/7] Built UltrametricaProofs.SolitonAndSolver (1.6s)
-✔ [6/7] Built UltrametricaProofs (715ms)
-Build completed successfully (7 jobs).
-
---- AXIOM AUDIT (VerifyAxioms.lean) ---
-
+ULTRAMETRICA — Lean 4 (v4.35.0) Standalone Kernel Axiom Audit
+Command: cd lean && lake clean && lake build && lake env lean VerifyAxioms.lean
+Audited declarations: 71 | Zero Mathlib | Zero native_decide | Zero sorryAx | Zero custom axioms
+Permitted axioms: subset of [propext, Classical.choice, Quot.sound]
+======================================================================
 'Ultrametrica.ultrametric_isosceles_lt' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ultrametric_two_longest_equal' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.pow_dvd_add' does not depend on any axioms
 'Ultrametrica.not_pow_dvd_add_of_dvd_left' depends on axioms: [propext, Quot.sound]
-'Ultrametrica.monna_involution_p2_n6' does not depend on any axioms
-'Ultrametrica.monna_involution_p3_n4' does not depend on any axioms
-'Ultrametrica.monna_involution_p5_n3' does not depend on any axioms
-'Ultrametrica.monna_involution_p7_n2' does not depend on any axioms
-'Ultrametrica.complement_commutes_monna_p2_n6' does not depend on any axioms
-'Ultrametrica.complement_commutes_monna_p3_n4' does not depend on any axioms
-'Ultrametrica.complement_commutes_monna_p5_n3' does not depend on any axioms
-'Ultrametrica.complement_commutes_monna_p7_n2' does not depend on any axioms
+'Ultrametrica.revBaseAux_eq' depends on axioms: [propext]
+'Ultrametrica.revBase_succ' depends on axioms: [propext]
+'Ultrametrica.revBase_lt' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.revBase_succ_high' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.monna_involution_universal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.complement_commutes_monna_universal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.revBase_div_eq_revBase_mod' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.padic_ball_monna_contiguity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.monna_involution_p2_n6' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.monna_involution_p3_n4' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.monna_involution_p5_n3' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.monna_involution_p7_n2' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.complement_commutes_monna_p2_n6' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.complement_commutes_monna_p3_n4' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.complement_commutes_monna_p5_n3' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.complement_commutes_monna_p7_n2' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.hilbert_sector_completeness' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.subtreeShift_preserves_ball' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.subtreeShift_preserves_offset' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.subtreeShift_child_digit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.subtreeShift_preserves_child_ancestor' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.subtreeShift_preserves_ultrametric_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.fourier_ball_periodicity' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.fourier_shift_phase_congruence' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.fourier_sector_nonconstant_phase' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.conjugate_sector_factor' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.conjugate_residue_mod_p' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.odd_prime_conjugate_sector_disjoint' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.even_prime_self_conjugate' does not depend on any axioms
+'Ultrametrica.odd_pow_is_odd' depends on axioms: [propext]
 'Ultrametrica.odd_prime_doublet_bound' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ads_dual_1lipschitz' does not depend on any axioms
+'Ultrametrica.ads_wasserstein_lower_bound' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ads_primal_cost_exact' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ads_kappa_from_wasserstein' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.btz_dual_1lipschitz' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.btz_wasserstein_lower_bound' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.btz_primal_feasible' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.btz_primal_cost_exact' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.btz_kappa_from_wasserstein' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.btz_curvature_excess_identity' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.btz_flatter_than_ads_L3_L4' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.btz_critical_L5_p2' does not depend on any axioms
@@ -37,9 +59,18 @@ Build completed successfully (7 jobs).
 'Ultrametrica.gubser_bf_excess_nonneg' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.rt_odd_prime_horizon_dominance' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.rt_dyadic_criticality' does not depend on any axioms
+'Ultrametrica.rt_uniform_odd_prime_all_arcs' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.rt_uniform_dyadic_two_arcs' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.rt_cut_complement_symmetry' depends on axioms: [propext]
 'Ultrametrica.kozyrev_exact_nonlinear_soliton' depends on axioms: [propext]
 'Ultrametrica.disjoint_multi_soliton_no_crosstalk' depends on axioms: [propext]
+'Ultrametrica.multi_ball_kozyrev_soliton_list' depends on axioms: [propext]
 'Ultrametrica.horizon_edge_laplacian_psd' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.horizon_edge_quadratic_expansion' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.sherman_morrison_denominator_ge_one' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.sherman_morrison_denominator_ne_zero' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.hermitianDot_sub' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.hermitianDot_smul' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.sherman_morrison_exact_identity' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.kerr_flux_edge_stress_even' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.kerr_flux_edge_current_odd' depends on axioms: [propext, Quot.sound]

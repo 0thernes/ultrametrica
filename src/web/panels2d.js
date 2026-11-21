@@ -211,7 +211,8 @@ export class PontryaginSpectrumPanel {
       ctx.fillRect(cx - barW * 0.5, padT, barW, plotH);
 
       // Exact Pontryagin dual shell power bar
-      const h = Math.min(1, Math.pow(Math.max(dualPow, kozPow), 0.58)) * (plotH - 2);
+      const rawPow = Math.max(0, Number.isFinite(dualPow) ? dualPow : 0, Number.isFinite(kozPow) ? kozPow : 0);
+      const h = Math.min(1, Math.pow(rawPow, 0.58)) * (plotH - 2);
       const grad = ctx.createLinearGradient(0, padT + plotH - h, 0, padT + plotH);
       if (s === 0) {
         grad.addColorStop(0, '#94a3b8');

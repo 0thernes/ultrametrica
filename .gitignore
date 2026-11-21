@@ -1,6 +1,8 @@
 node_modules/
 lean/.lake/
 paper/build/
+__pycache__/
+*.pyc
 .DS_Store
 Thumbs.db
 *.log

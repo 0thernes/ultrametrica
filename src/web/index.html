@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ULTRAMETRICA — p-adic Holographic AdS/CFT &amp; Quantum Gravity Engine</title>
-  <link rel="stylesheet" href="/web/styles.css" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -45,12 +45,15 @@
       </div>
 
       <div class="toolbar-actions">
-        <button id="btnAudio" class="action-btn" title="Enable 48kHz AudioWorklet non-octave prime-power harmonic synthesis">
+        <button id="btnAudio" class="action-btn" title="Enable 48kHz AudioWorklet non-octave prime-power harmonic synthesis (M)">
           <span class="dot"></span>
           <span id="audioLabel">Audio OFF</span>
         </button>
-        <button id="btnPause" class="action-btn">Pause</button>
-        <button id="btnReset" class="action-btn">Reset</button>
+        <button id="btnPause" class="action-btn" title="Pause / Resume simulation (Space)">Pause</button>
+        <button id="btnReset" class="action-btn" title="Reset active experiment (R)">Reset</button>
+        <button id="btnShare" class="action-btn" title="Copy reproducible URL permalink for current state">Share</button>
+        <button id="btnSnapshot" class="action-btn" title="Save 3D WebGL2 PNG snapshot">Shot</button>
+        <button id="btnHelp" class="action-btn" title="Keyboard shortcuts, Lean 4 proof audit &amp; publication links (?)">?</button>
       </div>
     </header>
 
@@ -170,6 +173,12 @@
       <main class="stage">
         <div class="viewport-wrap">
           <canvas id="canvas3d"></canvas>
+          <div id="webglFallback" class="webgl-fallback hidden">
+            <div class="fallback-card">
+              <h3>WebGL2 Unavailable</h3>
+              <p>The 3D hyperbolic Bruhat-Tits bulk shader requires WebGL2, while the exact p-adic quantum engine and 2D telemetry oscilloscopes below continue running live.</p>
+            </div>
+          </div>
 
           <!-- Floating Top-Left Shader Mode Switcher -->
           <div class="overlay-top-left">
@@ -213,6 +222,54 @@
     </div>
   </div>
 
-  <script type="module" src="/web/app.js"></script>
+  <!-- Reference, Hotkeys & Formal Verification Modal -->
+  <div id="helpModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h2 id="helpModalTitle">ULTRAMETRICA v1.2.0 — Observatory Guide &amp; Formal Proof Audit</h2>
+          <p class="modal-sub">Alexander Stephen Donahue &middot; 0thernes LLC &middot; ORCID <a href="https://orcid.org/0009-0006-8168-9648" target="_blank" rel="noopener">0009-0006-8168-9648</a></p>
+        </div>
+        <button id="btnCloseHelp" class="action-btn">Close (Esc)</button>
+      </div>
+
+      <div class="modal-grid">
+        <div class="modal-col">
+          <h3>Keyboard Shortcuts</h3>
+          <ul class="key-list mono">
+            <li><kbd>1</kbd>&ndash;<kbd>6</kbd> Load curated experiments 1&ndash;6</li>
+            <li><kbd>Space</kbd> Pause / resume Yoshida integrator</li>
+            <li><kbd>M</kbd> Toggle 48 kHz prime-power AudioWorklet</li>
+            <li><kbd>O</kbd> Toggle gentle 3D camera auto-orbit</li>
+            <li><kbd>R</kbd> Reset active experiment state</li>
+            <li><kbd>?</kbd> Toggle this reference &amp; audit modal</li>
+          </ul>
+          <h3>Interactive 3D Raycast Tools</h3>
+          <ul class="key-list">
+            <li><strong>Wavelet:</strong> Click any bulk node or rim ball to inject an exact Kozyrev eigenstate (<code>Shift</code> replaces).</li>
+            <li><strong>Wormhole:</strong> Click any bulk edge to stretch/pinch edge length <code>a_e</code> (<code>Shift</code>/right-click tightens).</li>
+            <li><strong>RT Cut:</strong> Click boundary balls to paint Ryu-Takayanagi region <code>A</code>.</li>
+            <li><strong>3-Pt Probe:</strong> Click 3 boundary leaves to verify the strong triangle inequality live.</li>
+          </ul>
+        </div>
+        <div class="modal-col">
+          <h3>Lean 4 (v4.35.0) Certified Theorems (71/71)</h3>
+          <ul class="key-list">
+            <li><strong>Theorem I (Adelic Parity-Doubling):</strong> Universal Monna involution, ball contiguity, subtree shift isometry &amp; odd-prime doublet protection.</li>
+            <li><strong>Theorem II (BTZ Ollivier-Ricci Law):</strong> First-principles Kantorovich primal-dual proof of <code>&kappa;_BTZ(p,L) = -(2p - max(0,6-L))/(p+2)</code> &amp; <code>L_c = 5</code> trichotomy.</li>
+            <li><strong>Theorem III (Kozyrev Solitons):</strong> Arbitrary finite <code>K</code>-ball zero-crosstalk nonlinear compacton-soliton invariance.</li>
+            <li><strong>Theorem IV (Kerr-BTZ Solver):</strong> Complex Hermitian Rank-1 Sherman-Morrison exactness, denominator <code>&ge; 1</code> &amp; Kerr flux parity laws.</li>
+          </ul>
+          <div class="modal-links">
+            <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica" target="_blank" rel="noopener">GitHub Repository</a>
+            <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/dist/Donahue_2026_Ultrametrica.pdf" target="_blank" rel="noopener">AMS-LaTeX PDF</a>
+            <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/docs/CLAIMS.md" target="_blank" rel="noopener">Claims &amp; Audit Map</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
 </body>
 </html>

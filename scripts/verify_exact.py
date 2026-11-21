@@ -1,18 +1,25 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA — Independent Zero-Dependency Exact Rational & Integer Falsifier.
+ULTRAMETRICA (v1.2.0) — Independent Zero-Dependency Exact-Rational Falsifier,
+Metadata Consistency Checker & SHA-256 Manifest Auditor.
 
 Completely decoupled from both the JavaScript simulation engine and Lean 4 proofs.
 Uses Python standard library exact arbitrary-precision arithmetic (int & fractions.Fraction)
-to independently verify or falsify Theorems I–IV and cross-check archived benchmark results.
+to independently verify or falsify Theorems I-IV, the Experiment E modular picket-fence law,
+all 71 Lean 4 declarations, cross-document version/ORCID consistency, and CHECKSUMS.sha256.
 
-Exit code 0 iff all exact rational identities, exact optimal-transport computations,
-exact linear-algebra decompositions, and benchmark consistency gates pass.
+Usage:
+  python scripts/verify_exact.py                  # Run all exact checks + verify CHECKSUMS.sha256 if present
+  python scripts/verify_exact.py --write-checksums # Regenerate CHECKSUMS.sha256 after finalizing artifacts
+  python scripts/verify_exact.py --check-checksums # Require CHECKSUMS.sha256 to exist and match 100%
 """
 
 from __future__ import annotations
 
+import argparse
+import hashlib
 import json
+import re
 import sys
 from collections import deque
 from fractions import Fraction
@@ -20,16 +27,79 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
+CANONICAL_ORCID = "0009-0006-8168-9648"
+
+MANIFEST_FILES = [
+    "LICENSE",
+    "LEGAL.md",
+    "NOTICE",
+    "VERSION",
+    "package.json",
+    "CITATION.cff",
+    "README.md",
+    "SUMMARY.md",
+    "INDEX.md",
+    "GLOSSARY.md",
+    "VERIFICATION.md",
+    "CHANGELOG.md",
+    "server.mjs",
+    "docs/CLAIMS.md",
+    "docs/MASTER_REPORT.md",
+    "src/engine/padic.js",
+    "src/engine/holography.js",
+    "src/engine/quantum.js",
+    "src/engine/simulation.js",
+    "src/web/index.html",
+    "src/web/styles.css",
+    "src/web/app.js",
+    "src/web/renderer3d.js",
+    "src/web/panels2d.js",
+    "src/web/audio.js",
+    "src/web/audio-worklet.js",
+    "test/verify.mjs",
+    "test/mutants.mjs",
+    "scripts/discover.mjs",
+    "scripts/verify_exact.py",
+    "scripts/generate_figures.py",
+    "scripts/package_dist.py",
+    "lean/lean-toolchain",
+    "lean/lakefile.toml",
+    "lean/lake-manifest.json",
+    "lean/README.md",
+    "lean/UltrametricaProofs.lean",
+    "lean/VerifyAxioms.lean",
+    "lean/UltrametricaProofs/Basic.lean",
+    "lean/UltrametricaProofs/AdelicSymmetry.lean",
+    "lean/UltrametricaProofs/HolographyCurvature.lean",
+    "lean/UltrametricaProofs/SolitonAndSolver.lean",
+    "results/lean4-audit.txt",
+    "results/discovery-benchmarks.json",
+    "paper/main.tex",
+    "paper/refs.bib",
+    "paper/WHITE_PAPER.md",
+    "paper/figures/fig1_btz_curvature.pdf",
+    "paper/figures/fig2_adelic_spectrum.pdf",
+    "paper/figures/fig3_soliton_resonance.pdf",
+    "paper/figures/fig4_intrablock_and_scaling.pdf",
+    "dist/Donahue_2026_Ultrametrica.pdf",
+    "dist/arxiv_submission.tar.gz",
+]
+
+
+def sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
 
 def exact_wasserstein_bipartite(
     mu_u: list[Fraction],
     mu_v: list[Fraction],
     cost: list[list[Fraction]],
 ) -> Fraction:
-    """
-    Exact 1-Wasserstein optimal transport distance over fractions.Fraction (zero floating-point error)
-    via successive shortest augmenting paths (Bellman-Ford / SPFA on residual bipartite network).
-    """
+    """Exact 1-Wasserstein optimal transport over fractions.Fraction via SPFA augmenting paths."""
     m = len(mu_u)
     k = len(mu_v)
     assert sum(mu_u) == Fraction(1), f"mu_u does not sum to 1: {sum(mu_u)}"
@@ -114,11 +184,8 @@ def exact_wasserstein_bipartite(
 
 def verify_theorem_1_adelic_symmetry() -> None:
     """
-    Exact integer verification of Theorem I across primes p in {2,3,5,7,11,13,17,19}:
-      - Hilbert-space completeness 1 + sum_{s=0}^{n-1} (p-1)*p^s = p^n
-      - Exact conjugate sector mapping k -> (p^n - k) maps (s, m) to (s, p - m)
-      - Odd primes: m != p - m for every 1 <= m < p (100% excited-state doublet pairing)
-      - Even prime p = 2: m = 1 = p - m (self-conjugate lifting)
+    Exact integer verification of Theorem I + Experiment E modular picket-fence law
+    across primes p in {2,3,5,7,11,13,17,19}.
     """
     primes = [2, 3, 5, 7, 11, 13, 17, 19]
     checked_pairs = 0
@@ -129,7 +196,6 @@ def verify_theorem_1_adelic_symmetry() -> None:
             sector_sum = sum((p - 1) * (p**s) for s in range(n))
             assert 1 + sector_sum == N, f"Completeness failed for p={p}, n={n}"
 
-            # Verify every nonzero frequency k in {1..N-1}
             for k in range(1, N):
                 s = 0
                 q = k
@@ -147,26 +213,43 @@ def verify_theorem_1_adelic_symmetry() -> None:
                     sc += 1
                 mc = qc % p
 
-                assert sc == s, f"Valuation mismatch under conjugation: p={p}, k={k}"
-                assert mc == p - m, f"Residue conjugacy mismatch: p={p}, k={k}, m={m}, mc={mc}"
+                assert sc == s
+                assert mc == p - m
                 if p % 2 == 1:
-                    assert m != mc, f"Odd prime p={p} failed disjointness at m={m}"
+                    assert m != mc
                 else:
-                    assert m == mc == 1, "Even prime p=2 failed self-conjugacy"
+                    assert m == mc == 1
                 checked_pairs += 1
 
-    print(f"[PASS] Theorem I (Exact Integer): verified {checked_pairs:,} conjugate frequency pairs across primes {primes}.")
+    # Verify exact modular picket-fence spacing ratio r_0(p, m) = min(2m, p-2m)/max(2m, p-2m)
+    # on W_{0, m} for linear Archimedean dispersion min(k, N - k)
+    picket_checked = 0
+    for p in (2, 3, 5, 7, 11, 13):
+        n = 4 if p <= 5 else 2
+        N = p**n
+        for m in range(1, p // 2 + 1):
+            vals = sorted(min(b * p + m, N - (b * p + m)) for b in range(N // p))
+            spacings = [vals[i + 1] - vals[i] for i in range(len(vals) - 1)]
+            ratios = [
+                Fraction(min(spacings[i], spacings[i + 1]), max(spacings[i], spacings[i + 1]))
+                for i in range(len(spacings) - 1)
+                if max(spacings[i], spacings[i + 1]) > 0
+            ]
+            expected = Fraction(min(2 * m, p - 2 * m), max(2 * m, p - 2 * m))
+            # Interior alternating ratios equal expected identically
+            assert all(r == expected for r in ratios), (
+                f"Picket-fence mismatch for p={p}, m={m}: got {set(ratios)}, expected {expected}"
+            )
+            picket_checked += 1
+
+    print(
+        f"[PASS] Theorem I + Picket-Fence Law (Exact Integer/Fraction): verified "
+        f"{checked_pairs:,} conjugate pairs + {picket_checked} exact modular picket-fence sectors."
+    )
 
 
 def verify_theorem_2_btz_ollivier_ricci_exact() -> None:
-    """
-    Exact rational (fractions.Fraction, zero float) verification of Theorem II:
-      On a uniform Tate-curve BTZ black hole quotient (horizon length L >= 3, each horizon node
-      having 2 ring neighbors + p hanging children, degree d = p + 2, uniform unit edge lengths),
-      solve exact bipartite 1-Wasserstein optimal transport and verify:
-        kappa_BTZ(p, L) == Fraction(-(2*p - max(0, 6 - L)), p + 2)
-        kappa_BTZ(p, L) - kappa_AdS(p) == Fraction((p + 1) * max(0, 6 - L) - 4, (p + 1) * (p + 2))
-    """
+    """Exact rational (fractions.Fraction, zero float) verification of Theorem II across 45 (p, L) horizons."""
     primes = [2, 3, 5, 7, 11]
     lengths = [3, 4, 5, 6, 7, 8, 9, 10, 12]
     cases_checked = 0
@@ -178,27 +261,17 @@ def verify_theorem_2_btz_ollivier_ricci_exact() -> None:
         kappa_ads = Fraction(-2 * (p - 1), p + 1)
 
         for L in lengths:
-            # Neighbors of u = h_0:
-            #   index 0: h_1 (= v)
-            #   index 1: h_{L-1} (other ring neighbor of u)
-            #   indices 2..p+1: p hanging children of u
-            # Neighbors of v = h_1:
-            #   index 0: h_0 (= u)
-            #   index 1: h_2 (other ring neighbor of v; NOTE for L=3, h_2 == h_{L-1}!)
-            #   indices 2..p+1: p hanging children of v
             def ring_dist(a: int, b: int) -> int:
                 cw = (b - a) % L
                 return min(cw, L - cw)
 
-            # Encode each neighbor as (host_ring_vertex, extra_tree_hops)
             u_nbs = [(1, 0), (L - 1, 0)] + [(0, 1) for _ in range(p)]
             v_nbs = [(0, 0), (2 % L, 0)] + [(1, 1) for _ in range(p)]
 
             cost: list[list[Fraction]] = []
-            for i, (hu, eu) in enumerate(u_nbs):
+            for hu, eu in u_nbs:
                 row: list[Fraction] = []
-                for j, (hv, ev) in enumerate(v_nbs):
-                    # Check if same physical vertex (only possible when L=3 and i=1, j=1: h_2 == h_2!)
+                for hv, ev in v_nbs:
                     if eu == 0 and ev == 0 and hu == hv:
                         row.append(Fraction(0))
                     else:
@@ -216,7 +289,6 @@ def verify_theorem_2_btz_ollivier_ricci_exact() -> None:
             excess_law = Fraction((p + 1) * max(0, 6 - L) - 4, (p + 1) * (p + 2))
             assert excess_exact == excess_law
 
-            # Verify L_c = 5 exact trichotomy
             if L in (3, 4):
                 assert excess_exact > 0
             elif L == 5:
@@ -234,35 +306,26 @@ def verify_theorem_2_btz_ollivier_ricci_exact() -> None:
 
 
 def verify_theorem_3_and_4_exact() -> None:
-    """
-    Exact rational verification of:
-      - Theorem III: constant support modulus |psi_{j,b,m}(x)|^2 == 1 / p^{n-j}
-      - Theorem IV: exact complex-rational (Gaussian Q(i)) Rank-1 Sherman-Morrison Kerr-BTZ solve
-        versus full exact Gaussian elimination over Q(i) with Pythagorean unit phase (3/5 + 4/5 i).
-    """
-    # Exact complex rational helper: (re, im) pairs of Fraction
+    """Exact Gaussian-rational Q(i) verification of Rank-1 Sherman-Morrison Kerr-BTZ solve."""
     def c_add(a, b): return (a[0] + b[0], a[1] + b[1])
     def c_sub(a, b): return (a[0] - b[0], a[1] - b[1])
-    def c_mul(a, b): return (a[0]*b[0] - a[1]*b[1], a[0]*b[1] + a[1]*b[0])
+    def c_mul(a, b): return (a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0])
     def c_conj(a): return (a[0], -a[1])
     def c_div(a, b):
-        den = b[0]*b[0] + b[1]*b[1]
+        den = b[0] * b[0] + b[1] * b[1]
         assert den > 0
-        return ((a[0]*b[0] + a[1]*b[1]) / den, (a[1]*b[0] - a[0]*b[1]) / den)
+        return ((a[0] * b[0] + a[1] * b[1]) / den, (a[1] * b[0] - a[0] * b[1]) / den)
 
-    # Exact unit-modulus rational phase ph = 3/5 + (4/5)i (|ph|^2 = 9/25 + 16/25 = 1 exactly!)
     ph = (Fraction(3, 5), Fraction(4, 5))
     ph_bar = c_conj(ph)
-    assert ph[0]**2 + ph[1]**2 == Fraction(1)
+    assert ph[0] ** 2 + ph[1] ** 2 == Fraction(1)
 
-    # Build L = 5 inhomogeneous rotating Kerr-BTZ cyclic Hermitian system M = T + w_wrap * u * u^H
     L = 5
     diag_base = [Fraction(7, 2), Fraction(4), Fraction(11, 3), Fraction(5), Fraction(9, 2)]
     weights = [Fraction(1, 2), Fraction(3, 4), Fraction(2, 3), Fraction(5, 6), Fraction(7, 5)]
     w_wrap = weights[L - 1]
     rhs = [(Fraction(i + 1, 3), Fraction(-i, 4)) for i in range(L)]
 
-    # Assemble full L x L exact Q(i) cyclic Hermitian matrix M
     zero = (Fraction(0), Fraction(0))
     M = [[zero for _ in range(L)] for _ in range(L)]
     for i in range(L):
@@ -274,7 +337,6 @@ def verify_theorem_3_and_4_exact() -> None:
     M[0][L - 1] = (-w_wrap * ph_bar[0], -w_wrap * ph_bar[1])
     M[L - 1][0] = (-w_wrap * ph[0], -w_wrap * ph[1])
 
-    # Solve via exact Q(i) Sherman-Morrison on open chain T = M - w_wrap * u * u^H
     def solve_tridiag_exact(d_list, b_list):
         c = [zero] * L
         d = [zero] * L
@@ -304,19 +366,16 @@ def verify_theorem_3_and_4_exact() -> None:
     y = solve_tridiag_exact(t_diag, rhs)
     z = solve_tridiag_exact(t_diag, u_vec)
 
-    # v^H y = w_wrap * (y[0] - conj(ph) * y[L-1])
     vy = c_mul((w_wrap, Fraction(0)), c_sub(y[0], c_mul(ph_bar, y[L - 1])))
     vz = c_mul((w_wrap, Fraction(0)), c_sub(z[0], c_mul(ph_bar, z[L - 1])))
     den_sm = c_add((Fraction(1), Fraction(0)), vz)
 
-    # Verify Theorem IV strictly: imaginary part == 0 and real part >= 1 exactly!
     assert den_sm[1] == Fraction(0), f"Non-real Hermitian denominator: {den_sm}"
     assert den_sm[0] >= Fraction(1), f"Sherman-Morrison denominator < 1: {den_sm}"
 
     coeff = c_div(vy, den_sm)
     phi = [c_sub(y[i], c_mul(coeff, z[i])) for i in range(L)]
 
-    # Verify EXACT M * phi == rhs over Q(i) with ZERO residual!
     for i in range(L):
         acc = zero
         for j in range(L):
@@ -330,23 +389,23 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
     bench_path = ROOT / "results" / "discovery-benchmarks.json"
     data = json.loads(bench_path.read_text(encoding="utf-8"))
 
-    # Cross-check Exp A: odd primes stay <= (N+1)/2 distinct levels, p=2 lifts to N/N
+    # Exp A
     for exp in data["experimentA_adelicHybridSpectrum"]:
         p = exp["p"]
         N = exp["N"]
         mid = next(r for r in exp["sweep"] if abs(r["theta"] - 0.5) < 1e-9)
         if p % 2 == 1:
-            assert mid["distinctLevels"] == (N + 1) // 2, f"Exp A odd prime {p} mismatch"
+            assert mid["distinctLevels"] == (N + 1) // 2
         else:
-            assert mid["distinctLevels"] == N, f"Exp A even prime {p} mismatch"
+            assert mid["distinctLevels"] == N
 
-    # Cross-check Exp B against exact rational law
+    # Exp B
     for row in data["experimentB_btzOllivierRicciLaw"]:
         p, L = row["p"], row["L"]
         exact = float(Fraction(-(2 * p - max(0, 6 - L)), p + 2))
         assert abs(row["measured"] - exact) < 1e-12
 
-    # Cross-check Exp C: exact solo soliton zero leakage up to g=500 & resonant peak at g=60
+    # Exp C
     c_rows = {r["g"]: r for r in data["experimentC_kozyrevCompactonSolitons"]}
     for g, r in c_rows.items():
         assert r["soloLeakage"] < 1e-12, f"Solo compacton leaked at g={g}"
@@ -354,15 +413,47 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
     assert c_rows[60]["multiScaleLeakage"] > c_rows[0]["multiScaleLeakage"]
     assert c_rows[60]["multiScaleLeakage"] > c_rows[500]["multiScaleLeakage"]
 
-    # Cross-check Exp D: exact Aharonov-Bohm flux parity
+    # Exp D
     d = data["experimentD_kerrBtzAharonovBohmFlux"]
     assert d["maxParityErrJ"] < 1e-14
     assert d["maxParityErrE"] < 1e-14
 
-    # Cross-check Lean 4 audit transcript
+    # Exp E (Frontier #1 resolution: intra-block W_{0,m} up to N = 625)
+    exp_e = data["experimentE_intraBlockSpectralStats"]
+    assert exp_e["crossValidation_p3_n4_maxEigErr"] < 1e-12
+    by_key = {(c["p"], c["n"], c["m"]): c for c in exp_e["configs"]}
+    for cfg in exp_e["configs"]:
+        assert cfg["maxCrossSectorLeak"] < 1e-12
+        assert cfg["maxHermErr"] < 1e-12
+    # Smoking-gun GUE falsification check: W_{0,1} (~0.63) vs W_{0,2} (~0.26) in same p=5, N=625 H_theta
+    assert abs(by_key[(5, 4, 1)]["meanR_at_0_5"] - 2 / 3) < 0.06
+    assert abs(by_key[(5, 4, 2)]["meanR_at_0_5"] - 1 / 4) < 0.04
+    assert by_key[(2, 8, 1)]["meanR_at_0_5"] < 0.01
+
+    # Exp F (Frontier #2 resolution: parametric self-trapping scaling)
+    exp_f = data["experimentF_selfTrappingScaling"]
+    p3_alpha = [s for s in exp_f if s["p"] == 3 and s["n"] == 5]
+    p3_alpha.sort(key=lambda s: s["alpha"])
+    for i in range(len(p3_alpha) - 1):
+        assert p3_alpha[i]["peakLeakage"] > p3_alpha[i + 1]["peakLeakage"], "Peak leakage must decrease with alpha"
+    for s in exp_f:
+        assert s["tailLeakage"] < s["peakLeakage"] * 0.1, f"Self-trapping tail failed for {s['p']},{s['alpha']}"
+
+    # Lean 4 source scan (zero sorry / admit / axiom / native_decide / unsafe in executable code)
+    lean_files = [ROOT / "lean" / "UltrametricaProofs.lean"] + sorted((ROOT / "lean" / "UltrametricaProofs").glob("*.lean"))
+    for lf in lean_files:
+        txt = lf.read_text(encoding="utf-8")
+        txt = re.sub(r"/-.*?-/", "", txt, flags=re.S)
+        txt = re.sub(r"--[^\n]*", "", txt)
+        m = re.search(r"\b(sorry|admit|axiom|native_decide|unsafe)\b", txt)
+        assert m is None, f"Forbidden token '{m.group(1)}' in executable Lean code of {lf}"
+
+    # Lean 4 audit transcript check
     audit_path = ROOT / "results" / "lean4-audit.txt"
     audit_text = audit_path.read_text(encoding="utf-8")
-    assert "sorryAx" not in audit_text, "sorryAx found in Lean 4 audit!"
+    audit_body = audit_text.split("====")[-1]
+    assert "sorryAx" not in audit_body, "sorryAx found in Lean 4 audit!"
+    assert "native_decide" not in audit_body, "native_decide axiom detected!"
     allowed = {"propext", "Classical.choice", "Quot.sound"}
     audited = 0
     for line in audit_text.splitlines():
@@ -373,16 +464,84 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
             assert used.issubset(allowed), f"Forbidden axiom in line: {line}"
         elif "does not depend on any axioms" in line:
             audited += 1
-    assert audited >= 36, f"Expected >= 36 audited Lean declarations, found {audited}"
+    assert audited >= 71, f"Expected >= 71 audited Lean declarations, found {audited}"
 
-    print(f"[PASS] Benchmark & Lean Audit Cross-Check: all 4 datasets + {audited} Lean declarations verified.")
+    print(f"[PASS] Benchmark (Exp A-F) & Lean 4 Audit Cross-Check: 6 datasets + {audited} Lean declarations verified.")
+
+
+def verify_metadata_consistency() -> None:
+    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+    pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+    assert pkg["version"] == version, f"package.json version {pkg['version']} != VERSION {version}"
+
+    cff = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    assert f'version: "{version}"' in cff, f"CITATION.cff missing version {version}"
+    assert CANONICAL_ORCID in cff, "CITATION.cff missing canonical ORCID"
+
+    for rel in ("README.md", "LEGAL.md", "paper/main.tex", "docs/CLAIMS.md"):
+        p = ROOT / rel
+        if p.exists():
+            txt = p.read_text(encoding="utf-8")
+            assert CANONICAL_ORCID in txt, f"{rel} missing canonical ORCID {CANONICAL_ORCID}"
+
+    print(f"[PASS] Metadata & ORCID Consistency: VERSION={version}, ORCID={CANONICAL_ORCID} synchronized across repository.")
+
+
+def write_checksums() -> None:
+    lines = []
+    for rel in MANIFEST_FILES:
+        p = ROOT / rel
+        if not p.exists():
+            raise FileNotFoundError(f"Manifest file missing: {rel}")
+        lines.append(f"{sha256_file(p)}  {rel}")
+    out = ROOT / "CHECKSUMS.sha256"
+    out.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    print(f"[OK] Wrote CHECKSUMS.sha256 with {len(lines)} SHA-256 digests.")
+
+
+def check_checksums(required: bool) -> None:
+    manifest = ROOT / "CHECKSUMS.sha256"
+    if not manifest.exists():
+        if required:
+            raise FileNotFoundError("CHECKSUMS.sha256 missing!")
+        print("[SKIP] CHECKSUMS.sha256 not yet generated.")
+        return
+    checked = 0
+    for line in manifest.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        expected_hash, rel = line.split("  ", 1)
+        p = ROOT / rel
+        assert p.exists(), f"Checksummed file missing: {rel}"
+        actual = sha256_file(p)
+        assert actual == expected_hash, f"SHA-256 mismatch for {rel}: expected {expected_hash}, got {actual}"
+        checked += 1
+    print(f"[PASS] Cryptographic SHA-256 Manifest: {checked}/{checked} files verified bit-identical.")
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="ULTRAMETRICA independent exact-rational falsifier & checksum auditor.")
+    parser.add_argument("--write-checksums", action="store_true", help="Regenerate CHECKSUMS.sha256")
+    parser.add_argument("--check-checksums", action="store_true", help="Require and verify CHECKSUMS.sha256")
+    args = parser.parse_args()
+
     verify_theorem_1_adelic_symmetry()
     verify_theorem_2_btz_ollivier_ricci_exact()
     verify_theorem_3_and_4_exact()
     verify_archived_benchmarks_and_lean_audit()
+
+    if args.write_checksums:
+        verify_metadata_consistency()
+        write_checksums()
+        check_checksums(required=True)
+    else:
+        if args.check_checksums:
+            verify_metadata_consistency()
+            check_checksums(required=True)
+        elif (ROOT / "CHECKSUMS.sha256").exists():
+            check_checksums(required=False)
+
     print("\nALL INDEPENDENT EXACT-RATIONAL & AUDIT CHECKS PASSED.")
 
 

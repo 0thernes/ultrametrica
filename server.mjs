@@ -22,8 +22,14 @@ const MIME = {
 
 const server = http.createServer(async (req, res) => {
   try {
-    const urlPath = new URL(req.url || '/', `http://127.0.0.1:${PORT}`).pathname;
-    const relPath = urlPath === '/' ? 'web/index.html' : urlPath.replace(/^\/+/, '');
+    const parsed = new URL(req.url || '/', `http://127.0.0.1:${PORT}`);
+    if (parsed.pathname === '/') {
+      res.writeHead(302, { Location: `/web/${parsed.search}` });
+      res.end();
+      return;
+    }
+    const urlPath = parsed.pathname.endsWith('/') ? `${parsed.pathname}index.html` : parsed.pathname;
+    const relPath = urlPath.replace(/^\/+/, '');
     const fullPath = path.resolve(SRC_ROOT, relPath);
 
     if (!fullPath.startsWith(SRC_ROOT + path.sep) && fullPath !== SRC_ROOT) {

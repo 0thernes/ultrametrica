@@ -111,18 +111,15 @@ export class UltrametricaSimulation {
   }
 
   /** Rebuild the universe with a new prime p, depth n, or BTZ horizon depth h. */
-  reconfigure({ p = this.p, n = null, horizonDepth = this.horizonDepth } = {}) {
+  reconfigure({ p = this.p, n = null, horizonDepth = this.horizonDepth, btz = null } = {}) {
     const def = PRIME_DEFAULTS[p] || PRIME_DEFAULTS[3];
     const targetN = n ?? def.n;
+    const targetH = btz === null ? horizonDepth : (btz ? def.btzDepth : 0);
     const prevExp = this.activeExperiment;
-    this._initUniverse(p, targetN, horizonDepth);
+    this._initUniverse(p, targetN, targetH);
 
     // Preserve active physics flavor cleanly
-    if (prevExp === 'btz_black_hole' || prevExp === 'page_transition') {
-      this.loadExperiment(prevExp, { keepTopology: true });
-    } else {
-      this.loadExperiment(prevExp, { keepTopology: true });
-    }
+    this.loadExperiment(prevExp, { keepTopology: true });
   }
 
   setBTZEnabled(enabled) {
@@ -191,12 +188,12 @@ export class UltrametricaSimulation {
 
       // Chiral multi-scale boundary pulse with azimuthal winding phase around the BTZ horizon
       // so energy penetrates deep to the horizon ring and drives strong circulating horizon flux J!
-      const L = this.bulk.horizonLength;
+      const L = Math.max(this.p, this.bulk.horizonLength || 0);
       const N = this.space.N;
       const rev = this.space.revTable;
       const re = new Float64Array(N);
       const im = new Float64Array(N);
-      const sectorSize = (N / L) | 0;
+      const sectorSize = Math.max(1, (N / L) | 0);
       for (let l = 0; l < N; l++) {
         const sec = Math.min(L - 1, (l / sectorSize) | 0);
         const ang = (2 * Math.PI * sec) / L;

@@ -1,4 +1,4 @@
-name: Formal Verification, Exact Rational Audit & Manuscript CI
+name: Formal Verification, Exact Rational Audit, Mutants & Manuscript CI
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  node-theorems:
-    name: Node.js 9-Theorem Suite & Discovery Benchmarks
+  node-theorems-and-mutants:
+    name: Node.js 9-Theorem Suite, 6 Planted Mutants & Benchmarks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,22 +18,26 @@ jobs:
           node-version: "22"
       - name: Run 9 automated mathematical & physical theorems
         run: npm test
-      - name: Run reproducible discovery benchmarks
+      - name: Run 6 planted negative-mutant falsification checks (6/6 killed)
+        run: npm run falsify
+      - name: Run all 6 reproducible discovery benchmarks (Exp A-F)
         run: npm run discover
 
-  python-exact-verify:
-    name: Independent Exact-Rational Falsifier (Python)
+  python-exact-and-checksums:
+    name: Independent Exact-Rational Falsifier & SHA-256 Audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run zero-dependency exact Fraction & Q(i) falsification script
-        run: python scripts/verify_exact.py
+      - name: Run zero-dependency exact Fraction, Q(i), metadata & checksum audit
+        run: python scripts/verify_exact.py --check-checksums
+      - name: Verify cryptographic SHA-256 manifest with standard sha256sum
+        run: sha256sum -c CHECKSUMS.sha256
 
   lean4-formal-proofs:
-    name: Lean 4 (v4.35.0) 36-Theorem Zero-Sorry & Axiom Allowlist Check
+    name: Lean 4 (v4.35.0) 71-Theorem Zero-Sorry & Axiom Allowlist Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +45,7 @@ jobs:
         run: |
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
-      - name: Verify zero sorry / admit / custom axiom declarations in library code
+      - name: Verify zero sorry / admit / axiom / native_decide / unsafe in Lean library
         run: |
           python3 - <<'PY'
           import re
@@ -49,17 +53,17 @@ jobs:
           files = [Path("lean/UltrametricaProofs.lean")] + sorted(Path("lean/UltrametricaProofs").glob("*.lean"))
           for p in files:
               txt = p.read_text(encoding="utf-8")
-              # Strip Lean block comments /- ... -/ and line comments -- ...
               txt = re.sub(r"/-.*?-/", "", txt, flags=re.S)
               txt = re.sub(r"--[^\n]*", "", txt)
-              m = re.search(r"\b(sorry|admit|axiom)\b", txt)
+              m = re.search(r"\b(sorry|admit|axiom|native_decide|unsafe)\b", txt)
               if m:
                   raise SystemExit(f"ERROR: Forbidden token '{m.group(1)}' in executable code of {p}")
-          print(f"PASS: Zero sorry/admit/axiom tokens in executable code across {len(files)} Lean library files.")
+          print(f"PASS: Zero sorry/admit/axiom/native_decide/unsafe across {len(files)} Lean library files.")
           PY
-      - name: Build Lean 4 library & audit all 36 declarations via VerifyAxioms.lean
+      - name: Clean-build Lean 4 library & audit all 71 declarations via VerifyAxioms.lean
         working-directory: lean
         run: |
+          lake clean
           lake build
           lake env lean VerifyAxioms.lean | tee axioms.log
           python3 - <<'PY'
@@ -67,8 +71,8 @@ jobs:
           count = 0
           for line in open("axioms.log", encoding="utf-8"):
               line = line.strip()
-              if "sorryAx" in line:
-                  raise SystemExit(f"ERROR: sorryAx detected: {line}")
+              if "sorryAx" in line or "native_decide" in line:
+                  raise SystemExit(f"ERROR: Forbidden axiom detected: {line}")
               if "depends on axioms:" in line:
                   count += 1
                   used = {t.strip() for t in line.split("[", 1)[1].rsplit("]", 1)[0].split(",") if t.strip()}
@@ -76,32 +80,27 @@ jobs:
                       raise SystemExit(f"ERROR: Forbidden axiom {used - allowed} in: {line}")
               elif "does not depend on any axioms" in line:
                   count += 1
-          assert count >= 36, f"Expected >= 36 audited declarations, got {count}"
+          assert count >= 71, f"Expected >= 71 audited declarations, got {count}"
           print(f"PASS: All {count} Lean 4 declarations strictly within {sorted(allowed)} (or zero axioms).")
           PY
 
-  latex-manuscript:
-    name: AMS-LaTeX White Paper PDF Build (Tectonic)
+  latex-manuscript-and-arxiv:
+    name: AMS-LaTeX PDF Build & Standalone arXiv Tarball Check (Tectonic)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - name: Install Tectonic
         run: |
           curl --proto '=https' --tlsv1.2 -fsSL https://drop-sh.fullyjustified.net | sh
           sudo mv tectonic /usr/local/bin/tectonic
           tectonic --version
-      - name: Compile paper/main.tex and verify zero warnings
-        working-directory: paper
-        run: |
-          mkdir -p build
-          tectonic -X compile main.tex --outdir build --keep-intermediates --keep-logs
-          if grep -E "Overfull \\\\hbox|Underfull \\\\hbox|Undefined|LaTeX Warning" build/main.log; then
-            echo "ERROR: LaTeX warning or overfull hbox detected!"
-            exit 1
-          fi
-          echo "PASS: Clean zero-warning AMS-LaTeX PDF build."
+      - name: Compile paper/main.tex, assert zero warnings, & test standalone arXiv bundle
+        run: python scripts/package_dist.py
       - name: Upload compiled manuscript PDF
         uses: actions/upload-artifact@v4
         with:
           name: Donahue_2026_Ultrametrica
-          path: paper/build/main.pdf
+          path: dist/Donahue_2026_Ultrametrica.pdf

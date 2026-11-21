@@ -2,7 +2,7 @@ cff-version: 1.2.0
 title: "ULTRAMETRICA — p-adic Holographic AdS/CFT, Rotating Kerr-BTZ Black Holes, Adelic Parity-Doubling Symmetries, & Lean 4 Verified Quantum Gravity Engine"
 message: "If you reference, verify, or build upon ULTRAMETRICA in academic or independent non-commercial research, please cite this software and preprint using the metadata below."
 type: software
-version: "1.1.0"
+version: "1.2.0"
 date-released: "2026-11-21"
 authors:
   - family-names: "Donahue"
@@ -10,11 +10,8 @@ authors:
     affiliation: "0thernes LLC, Spokane, WA, USA"
     email: "0_0@0thernes.art"
     orcid: "https://orcid.org/0009-0006-8168-9648"
-  - name: "0thernes LLC"
-    website: "https://0thernes.art"
-    email: "0_0@0thernes.art"
 repository-code: "https://github.com/0thernes/ultrametrica"
-url: "https://github.com/0thernes/ultrametrica"
+url: "https://0thernes.github.io/ultrametrica/"
 license: "NOASSERTION"
 license-url: "https://github.com/0thernes/ultrametrica/blob/main/LICENSE"
 keywords:
@@ -25,6 +22,7 @@ keywords:
   - kozyrev-wavelets
   - btz-black-hole
   - ollivier-ricci-curvature
+  - kantorovich-duality
   - ryu-takayanagi
   - adelic-physics
   - lean4

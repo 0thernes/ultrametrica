@@ -361,10 +361,8 @@ export class HyperbolicRenderer3D {
       alpha: false,
       powerPreference: 'high-performance',
     });
-    if (!gl) {
-      throw new Error('WebGL2 is required for ULTRAMETRICA 3D Hyperbolic Bulk Renderer.');
-    }
     this.gl = gl;
+    this.supported = Boolean(gl);
 
     // View mode: 'field' | 'ricci' | 'rt' | 'gravity'
     this.viewMode = 'field';
@@ -397,8 +395,10 @@ export class HyperbolicRenderer3D {
     this.viewProj = new Float32Array(16);
     this.invViewProj = new Float32Array(16);
 
-    this._initGL();
-    this._initPointerControls();
+    if (this.supported) {
+      this._initGL();
+      this._initPointerControls();
+    }
   }
 
   _initGL() {
@@ -801,6 +801,7 @@ export class HyperbolicRenderer3D {
   }
 
   render(sim, timeSec) {
+    if (!this.supported) return;
     this._lastSim = sim;
     this.resize();
     this._ensureLayout(sim);
@@ -1185,5 +1186,11 @@ export class HyperbolicRenderer3D {
 
     gl.depthMask(true);
     gl.bindVertexArray(null);
+  }
+
+  capturePNG(sim, timeSec) {
+    if (!this.supported) return null;
+    this.render(sim, timeSec);
+    return this.canvas.toDataURL('image/png');
   }
 }

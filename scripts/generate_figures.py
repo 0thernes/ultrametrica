@@ -235,6 +235,109 @@ def fig3_soliton_resonance_tex(data: dict) -> str:
 """
 
 
+def fig4_intrablock_and_scaling_tex(data: dict) -> str:
+    """Figure 4: Experiment E (Intra-Block W_{0,m} Modular Picket-Fence Law) & Experiment F (Alpha Scaling)."""
+    exp_e = data["experimentE_intraBlockSpectralStats"]
+    by_key = {(c["p"], c["n"], c["m"]): c for c in exp_e["configs"]}
+
+    def pts_e(key):
+        return " ".join(f"({r['theta']:.2f}, {r['meanR_block']:.5f})" for r in by_key[key]["sweep"])
+
+    c_p5_m1 = pts_e((5, 4, 1))
+    c_p3_m1 = pts_e((3, 5, 1))
+    c_p5_m2 = pts_e((5, 4, 2))
+    c_p2_m1 = pts_e((2, 8, 1))
+
+    exp_f = data["experimentF_selfTrappingScaling"]
+    p3_curves = {}
+    for s in exp_f:
+        if s["p"] == 3 and s["n"] == 5:
+            pts = " ".join(
+                f"({r['g']}, {r['leakage']*100:.4f})"
+                for r in s["curve"]
+                if r["g"] <= 550
+            )
+            p3_curves[round(s["alpha"], 1)] = pts
+
+    return r"""\documentclass[border=4pt]{standalone}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+  name=leftplot,
+  width=6.9cm,
+  height=5.9cm,
+  title={\small (a) Intra-Block $\langle r \rangle_{W_{0,m}}(\theta)$ ($N \le 625$)},
+  xlabel={Adelic morph $\theta$ ($\mathbb{R} \leftrightarrow \mathbb{Q}_p$)},
+  ylabel={Intra-sector spacing ratio $\langle r \rangle$},
+  xmin=0.05, xmax=1.08,
+  ymin=-0.04, ymax=0.96,
+  xtick={0.1,0.3,0.5,0.7,0.9},
+  ytick={0,0.25,0.5,0.6667},
+  yticklabels={$0$,$\tfrac{1}{4}$,$\tfrac{1}{2}$,$\tfrac{2}{3}$},
+  grid=major,
+  grid style={dashed, gray!25},
+  legend style={at={(0.50,0.97)}, anchor=north, legend columns=2, column sep=2pt, inner sep=2pt, font=\tiny, fill=white, fill opacity=0.95, draw=gray!50},
+  legend cell align=left,
+  label style={font=\footnotesize},
+  tick label style={font=\scriptsize},
+]
+  % Random-matrix reference lines
+  \addplot[gray!65, densely dotted, thick, forget plot] coordinates {(0.05, 0.5996) (1.08, 0.5996)};
+  \node[anchor=west, font=\tiny, text=gray!75!black, fill=white, inner sep=0.8pt] at (axis cs:0.935, 0.600) {GUE};
+  \addplot[gray!65, densely dotted, thick, forget plot] coordinates {(0.05, 0.5307) (1.08, 0.5307)};
+  \node[anchor=west, font=\tiny, text=gray!75!black, fill=white, inner sep=0.8pt] at (axis cs:0.935, 0.531) {GOE};
+  \addplot[gray!65, densely dotted, thick, forget plot] coordinates {(0.05, 0.3863) (1.08, 0.3863)};
+  \node[anchor=west, font=\tiny, text=gray!75!black, fill=white, inner sep=0.8pt] at (axis cs:0.935, 0.386) {Poiss.};
+
+  \addplot[color=teal!75!black, thick, mark=triangle*, mark size=2.1pt] coordinates { """ + c_p5_m1 + r""" };
+  \addlegendentry{$p{=}5,W_{0,1}\,(\tfrac{2}{3})$}
+  \addplot[color=blue!75!black, thick, mark=square*, mark size=1.8pt] coordinates { """ + c_p3_m1 + r""" };
+  \addlegendentry{$p{=}3,W_{0,1}\,(\tfrac{1}{2})$}
+  \addplot[color=orange!85!black, thick, mark=diamond*, mark size=2.2pt] coordinates { """ + c_p5_m2 + r""" };
+  \addlegendentry{$p{=}5,W_{0,2}\,(\tfrac{1}{4})$}
+  \addplot[color=red!75!black, thick, mark=*, mark size=1.8pt] coordinates { """ + c_p2_m1 + r""" };
+  \addlegendentry{$p{=}2,W_{0,1}\,(0)$}
+\end{axis}
+
+\begin{axis}[
+  at={(leftplot.east)},
+  anchor=west,
+  xshift=1.35cm,
+  width=6.9cm,
+  height=5.9cm,
+  title={\small (b) Multi-Scale Tunneling vs.\ $\alpha$ ($\mathbb{Q}_3$, $N{=}243$)},
+  xlabel={Gross--Pitaevskii nonlinearity $g$},
+  ylabel={Ball probability leakage (\%)},
+  xmin=-15, xmax=520,
+  ymin=-0.05, ymax=1.65,
+  grid=major,
+  grid style={dashed, gray!25},
+  legend pos=north east,
+  legend cell align=left,
+  legend style={font=\scriptsize, fill=white, fill opacity=0.92, draw=gray!50},
+  label style={font=\footnotesize},
+  tick label style={font=\scriptsize},
+]
+  \addplot[color=red!75!black, thick, mark=*, mark size=1.7pt] coordinates { """ + p3_curves[0.6] + r""" };
+  \addlegendentry{$\alpha = 0.6$ ($\Delta\lambda{=}1.80$)}
+  \addplot[color=orange!85!black, thick, mark=square*, mark size=1.7pt] coordinates { """ + p3_curves[0.8] + r""" };
+  \addlegendentry{$\alpha = 0.8$ ($\Delta\lambda{=}3.39$)}
+  \addplot[color=teal!75!black, thick, mark=triangle*, mark size=2.0pt] coordinates { """ + p3_curves[1.0] + r""" };
+  \addlegendentry{$\alpha = 1.0$ ($\Delta\lambda{=}6.00$)}
+  \addplot[color=blue!75!black, thick, mark=diamond*, mark size=2.0pt] coordinates { """ + p3_curves[1.2] + r""" };
+  \addlegendentry{$\alpha = 1.2$ ($\Delta\lambda{=}10.23$)}
+  \addplot[color=purple!80!black, thick, mark=pentagon*, mark size=1.8pt] coordinates { """ + p3_curves[1.4] + r""" };
+  \addlegendentry{$\alpha = 1.4$ ($\Delta\lambda{=}17.02$)}
+\end{axis}
+\end{tikzpicture}
+\end{document}
+"""
+
+
 def main() -> None:
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     data = json.loads(BENCH_PATH.read_text(encoding="utf-8"))
@@ -244,6 +347,7 @@ def main() -> None:
         "fig1_btz_curvature": fig1_btz_curvature_tex(),
         "fig2_adelic_spectrum": fig2_adelic_spectrum_tex(data),
         "fig3_soliton_resonance": fig3_soliton_resonance_tex(data),
+        "fig4_intrablock_and_scaling": fig4_intrablock_and_scaling_tex(data),
     }
 
     for stem, tex_src in sources.items():

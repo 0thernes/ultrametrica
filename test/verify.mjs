@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { PadicSpace } from '../src/engine/padic.js';
 import { BruhatTitsBulk } from '../src/engine/holography.js';
 import { PadicQuantumEngine } from '../src/engine/quantum.js';
-import { UltrametricaSimulation } from '../src/engine/simulation.js';
+import { UltrametricaSimulation, EXPERIMENTS } from '../src/engine/simulation.js';
 
 function mulberry32(seed) {
   let a = seed >>> 0;
@@ -279,6 +279,21 @@ test('Theorem 5: Exact O(V) Schur + Sherman-Morrison bulk Klein-Gordon solver on
       bulk.maxResidual < 1e-11,
       `Config ${JSON.stringify(cfg)}: bulk Klein-Gordon residual ${bulk.maxResidual} >= 1e-11`
     );
+  }
+
+  // Regression guard: every (prime x experiment) & live prime-switch under BTZ produces zero NaNs and < 1e-11 residuals
+  const sim = new UltrametricaSimulation(3, 4, 0);
+  for (const exp of EXPERIMENTS) {
+    sim.loadExperiment(exp.id);
+    for (const p of [2, 3, 5, 7]) {
+      sim.reconfigure({ p, btz: sim.bulk.isBTZ });
+      sim.step(0.016);
+      assert.ok(Number.isFinite(sim.quantum.normDriftPadic) && sim.quantum.normDriftPadic < 1e-11,
+        `NaN/drift in exp=${exp.id} p=${p}`);
+      assert.ok(Number.isFinite(sim.bulk.maxResidual) && sim.bulk.maxResidual < 1e-11,
+        `Bulk residual failure in exp=${exp.id} p=${p}`);
+      assert.ok(Number.isFinite(sim.quantum.energyPadic), `Non-finite energy in exp=${exp.id} p=${p}`);
+    }
   }
 });
 

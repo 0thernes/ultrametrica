@@ -4,14 +4,18 @@
  * high-DPI scientific panels, and 48 kHz AudioWorklet synthesizer.
  */
 
-import { UltrametricaSimulation, EXPERIMENTS } from '/engine/simulation.js';
-import { HyperbolicRenderer3D } from '/web/renderer3d.js';
-import { RealitySplitPanel, PontryaginSpectrumPanel, UltrametricTrianglePanel } from '/web/panels2d.js';
-import { PadicAudioEngine, primeScaleName } from '/web/audio.js';
+import { UltrametricaSimulation, EXPERIMENTS } from '../engine/simulation.js';
+import { HyperbolicRenderer3D } from './renderer3d.js';
+import { RealitySplitPanel, PontryaginSpectrumPanel, UltrametricTrianglePanel } from './panels2d.js';
+import { PadicAudioEngine, primeScaleName } from './audio.js';
 
 const sim = new UltrametricaSimulation(3, 5, 0);
 const renderer = new HyperbolicRenderer3D(document.getElementById('canvas3d'));
 const audio = new PadicAudioEngine();
+
+if (!renderer.supported) {
+  document.getElementById('webglFallback')?.classList.remove('hidden');
+}
 
 let activeTool = 'wavelet'; // 'wavelet' | 'surgery' | 'rt' | 'triangle'
 
@@ -27,6 +31,11 @@ const elBtnAudio = document.getElementById('btnAudio');
 const elAudioLabel = document.getElementById('audioLabel');
 const elBtnPause = document.getElementById('btnPause');
 const elBtnReset = document.getElementById('btnReset');
+const elBtnShare = document.getElementById('btnShare');
+const elBtnSnapshot = document.getElementById('btnSnapshot');
+const elBtnHelp = document.getElementById('btnHelp');
+const elBtnCloseHelp = document.getElementById('btnCloseHelp');
+const elHelpModal = document.getElementById('helpModal');
 const elBtnAutoOrbit = document.getElementById('btnAutoOrbit');
 
 const elChkGravity = document.getElementById('chkGravity');
@@ -217,8 +226,7 @@ document.getElementById('primeGroup').addEventListener('click', (e) => {
   const p = Number(btn.dataset.prime);
   if (p === sim.p) return;
   const keepBTZ = sim.bulk.isBTZ;
-  sim.reconfigure({ p, horizonDepth: 0 });
-  if (keepBTZ) sim.setBTZEnabled(true);
+  sim.reconfigure({ p, btz: keepBTZ });
   syncUIFromSim();
 });
 
@@ -260,6 +268,100 @@ elBtnPause.addEventListener('click', () => {
 elBtnReset.addEventListener('click', () => {
   sim.loadExperiment(sim.activeExperiment, { keepTopology: true });
   syncUIFromSim();
+});
+
+function buildPermalinkURL() {
+  const url = new URL(window.location.href);
+  url.searchParams.set('exp', sim.activeExperiment);
+  url.searchParams.set('p', String(sim.p));
+  url.searchParams.set('btz', sim.bulk.isBTZ ? '1' : '0');
+  url.searchParams.set('view', renderer.viewMode);
+  url.searchParams.set('alpha', sim.quantum.alpha.toFixed(2));
+  url.searchParams.set('theta', sim.quantum.adelicMix.toFixed(2));
+  url.searchParams.set('g', sim.quantum.nonlinearity.toFixed(1));
+  url.searchParams.set('delta', sim.bulk.delta.toFixed(2));
+  if (sim.bulk.isBTZ) url.searchParams.set('flux', sim.bulk.horizonFlux.toFixed(2));
+  else url.searchParams.delete('flux');
+  url.searchParams.set('rt', sim.rtFraction.toFixed(2));
+  return url;
+}
+
+function hydrateStateFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  if ([...params.keys()].length === 0) return;
+
+  const p = Number(params.get('p'));
+  if ([2, 3, 5, 7].includes(p) && p !== sim.p) {
+    sim.reconfigure({ p, btz: false });
+  }
+  const exp = params.get('exp');
+  if (exp && EXPERIMENTS.some((e) => e.id === exp)) {
+    sim.loadExperiment(exp);
+  }
+  const btz = params.get('btz');
+  if (btz === '0' || btz === '1') {
+    sim.setBTZEnabled(btz === '1');
+  }
+  const view = params.get('view');
+  if (['field', 'ricci', 'rt', 'gravity'].includes(view)) {
+    setShaderView(view);
+  }
+  const alpha = parseFloat(params.get('alpha'));
+  if (Number.isFinite(alpha) && alpha >= 0.25 && alpha <= 1.9) {
+    sim.quantum.setAlpha(alpha);
+  }
+  const theta = parseFloat(params.get('theta'));
+  if (Number.isFinite(theta) && theta >= 0 && theta <= 1) {
+    sim.quantum.adelicMix = theta;
+  }
+  const g = parseFloat(params.get('g'));
+  if (Number.isFinite(g) && g >= -180 && g <= 200) {
+    sim.quantum.nonlinearity = g;
+  }
+  const delta = parseFloat(params.get('delta'));
+  if (Number.isFinite(delta) && delta >= 0.52 && delta <= 2.4) {
+    sim.bulk.delta = delta;
+  }
+  const flux = parseFloat(params.get('flux'));
+  if (sim.bulk.isBTZ && Number.isFinite(flux) && flux >= -Math.PI && flux <= Math.PI) {
+    sim.bulk.horizonFlux = flux;
+  }
+  const rt = parseFloat(params.get('rt'));
+  if (Number.isFinite(rt) && rt >= 0.03 && rt <= 0.97) {
+    sim.setRTRegionFraction(rt);
+  }
+  sim.syncBulkAndMetrics();
+}
+
+elBtnShare.addEventListener('click', async () => {
+  const url = buildPermalinkURL();
+  window.history.replaceState(null, '', url.toString());
+  try {
+    await navigator.clipboard.writeText(url.toString());
+    elBtnShare.textContent = 'Copied!';
+    setTimeout(() => { elBtnShare.textContent = 'Share'; }, 1400);
+  } catch {
+    elHoverReadout.textContent = `Permalink updated in URL bar: ${url.search}`;
+  }
+});
+
+elBtnSnapshot.addEventListener('click', () => {
+  const png = renderer.capturePNG(sim, performance.now() * 0.001);
+  if (!png) return;
+  const link = document.createElement('a');
+  link.download = `ultrametrica-p${sim.p}-${sim.activeExperiment}.png`;
+  link.href = png;
+  link.click();
+});
+
+function setHelpModalOpen(open) {
+  elHelpModal.classList.toggle('hidden', !open);
+}
+
+elBtnHelp.addEventListener('click', () => setHelpModalOpen(elHelpModal.classList.contains('hidden')));
+elBtnCloseHelp.addEventListener('click', () => setHelpModalOpen(false));
+elHelpModal.addEventListener('click', (e) => {
+  if (e.target === elHelpModal) setHelpModalOpen(false);
 });
 
 // ---- Wire Up Physics Sliders ----
@@ -387,11 +489,19 @@ renderer.onPickClick = (hit, evt) => {
 // ---- Keyboard Shortcuts ----
 window.addEventListener('keydown', (e) => {
   if (e.target.tagName === 'INPUT') return;
-  if (e.code === 'Space') {
+  if (e.key === 'Escape') {
+    setHelpModalOpen(false);
+  } else if (e.key === '?') {
+    setHelpModalOpen(elHelpModal.classList.contains('hidden'));
+  } else if (e.code === 'Space') {
     e.preventDefault();
     elBtnPause.click();
   } else if (e.key === 'm' || e.key === 'M') {
     elBtnAudio.click();
+  } else if (e.key === 'r' || e.key === 'R') {
+    elBtnReset.click();
+  } else if (e.key === 'o' || e.key === 'O') {
+    elBtnAutoOrbit.click();
   } else if (e.key >= '1' && e.key <= '6') {
     const idx = Number(e.key) - 1;
     if (EXPERIMENTS[idx]) selectExperiment(EXPERIMENTS[idx].id);
@@ -426,6 +536,7 @@ function updateTelemetryDOM() {
 
 // ---- Boot & 60 FPS Simulation Loop ----
 buildExperimentCards();
+hydrateStateFromURL();
 syncUIFromSim();
 
 let lastTs = performance.now();

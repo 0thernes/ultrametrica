@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T02:20:26.771Z",
+  "generatedAt": "2026-11-21T10:41:45.940Z",
   "nodeVersion": "v25.8.2",
   "experimentA_adelicHybridSpectrum": [
     {
@@ -637,5 +637,1000 @@
     ],
     "maxParityErrJ": 0,
     "maxParityErrE": 0
-  }
+  },
+  "experimentE_intraBlockSpectralStats": {
+    "crossValidation_p3_n4_maxEigErr": 2.1316282072803006e-14,
+    "benchmarks": {
+      "poisson": 0.3862943611198906,
+      "goe": 0.5307,
+      "gue": 0.5996
+    },
+    "configs": [
+      {
+        "p": 2,
+        "n": 7,
+        "m": 1,
+        "alpha": 1,
+        "N": 128,
+        "dimBlock": 64,
+        "modularPicketFenceR0": 0,
+        "maxCrossSectorLeak": 2.6093699555672017e-15,
+        "maxHermErr": 1.318877665294371e-14,
+        "maxImPart": 5.058390583038341,
+        "isStrictlyComplexBlock": true,
+        "meanR_at_0_5": 0.0031059455226910976,
+        "sweep": [
+          {
+            "theta": 0.1,
+            "dimBlock": 64,
+            "distinctInBlock": 64,
+            "meanR_block": 0.0006895807994548093,
+            "meanR_raw_block": 0.0006895807994548093,
+            "spectralWidth": 24.770043143659294,
+            "traceErr": 4.547473508864641e-13,
+            "frobErr": 2.842170943040401e-14
+          },
+          {
+            "theta": 0.25,
+            "dimBlock": 64,
+            "distinctInBlock": 64,
+            "meanR_block": 0.001617009348613719,
+            "meanR_raw_block": 0.001617009348613719,
+            "spectralWidth": 23.883623969528408,
+            "traceErr": 1.1368683772161603e-13,
+            "frobErr": 1.9895196601282805e-13
+          },
+          {
+            "theta": 0.4,
+            "dimBlock": 64,
+            "distinctInBlock": 64,
+            "meanR_block": 0.002499848464982632,
+            "meanR_raw_block": 0.002499848464982632,
+            "spectralWidth": 23.00765373479747,
+            "traceErr": 4.547473508864641e-13,
+            "frobErr": 8.526512829121202e-14
+          },
+          {
+            "theta": 0.5,
+            "dimBlock": 64,
+            "distinctInBlock": 64,
+            "meanR_block": 0.0031059455226910976,
+            "meanR_raw_block": 0.0031059455226910976,
+            "spectralWidth": 22.430479727830896,
+            "traceErr": 1.1368683772161603e-13,
+            "frobErr": 7.105427357601002e-14
+          },
+          {
+            "theta": 0.6,
+            "dimBlock": 64,
+            "distinctInBlock": 64,
+            "meanR_block": 0.0037617035558478646,
+            "meanR_raw_block": 0.0037617035558478646,
+            "spectralWidth": 21.8599134937444,
+            "traceErr": 0,
+            "frobErr": 1.4210854715202004e-13
+          },
+          {
+            "theta": 0.75,
+            "dimBlock": 64,
+            "distinctInBlock": 64,
+            "meanR_block": 0.004938809176724268,
+            "meanR_raw_block": 0.004938809176724268,
+            "spectralWidth": 21.019989839962026,
+            "traceErr": 4.547473508864641e-13,
+            "frobErr": 1.4210854715202004e-14
+          },
+          {
+            "theta": 0.9,
+            "dimBlock": 64,
+            "distinctInBlock": 63,
+            "meanR_block": 0.0067074538200582205,
+            "meanR_raw_block": 0.00656805732135118,
+            "spectralWidth": 20.20714115117028,
+            "traceErr": 1.1368683772161603e-13,
+            "frobErr": 2.7000623958883807e-13
+          }
+        ]
+      },
+      {
+        "p": 2,
+        "n": 8,
+        "m": 1,
+        "alpha": 1,
+        "N": 256,
+        "dimBlock": 128,
+        "modularPicketFenceR0": 0,
+        "maxCrossSectorLeak": 5.03740642133605e-15,
+        "maxHermErr": 3.197442310920451e-14,
+        "maxImPart": 10.123022072796019,
+        "isStrictlyComplexBlock": true,
+        "meanR_at_0_5": 0.0014932079418211242,
+        "sweep": [
+          {
+            "theta": 0.1,
+            "dimBlock": 128,
+            "distinctInBlock": 128,
+            "meanR_block": 0.0003371625087159435,
+            "meanR_raw_block": 0.0003371625087159435,
+            "spectralWidth": 50.33818347934421,
+            "traceErr": 2.7284841053187847e-12,
+            "frobErr": 2.8421709430404007e-13
+          },
+          {
+            "theta": 0.25,
+            "dimBlock": 128,
+            "distinctInBlock": 128,
+            "meanR_block": 0.0007851020716673345,
+            "meanR_raw_block": 0.0007851020716673345,
+            "spectralWidth": 48.523261504459526,
+            "traceErr": 1.3642420526593924e-12,
+            "frobErr": 5.115907697472721e-13
+          },
+          {
+            "theta": 0.4,
+            "dimBlock": 128,
+            "distinctInBlock": 128,
+            "meanR_block": 0.0012065444843867522,
+            "meanR_raw_block": 0.0012065444843867522,
+            "spectralWidth": 46.7181513303077,
+            "traceErr": 1.8189894035458565e-12,
+            "frobErr": 7.389644451905042e-13
+          },
+          {
+            "theta": 0.5,
+            "dimBlock": 128,
+            "distinctInBlock": 128,
+            "meanR_block": 0.0014932079418211242,
+            "meanR_raw_block": 0.0014932079418211242,
+            "spectralWidth": 45.521130528726275,
+            "traceErr": 9.094947017729282e-13,
+            "frobErr": 8.526512829121202e-13
+          },
+          {
+            "theta": 0.6,
+            "dimBlock": 128,
+            "distinctInBlock": 127,
+            "meanR_block": 0.0018489835271286426,
+            "meanR_raw_block": 0.0018015236755312978,
+            "spectralWidth": 44.33042287682127,
+            "traceErr": 0,
+            "frobErr": 5.684341886080802e-14
+          },
+          {
+            "theta": 0.75,
+            "dimBlock": 128,
+            "distinctInBlock": 127,
+            "meanR_block": 0.002388808033133928,
+            "meanR_raw_block": 0.002356328134683346,
+            "spectralWidth": 42.560266980272786,
+            "traceErr": 4.547473508864641e-13,
+            "frobErr": 2.2737367544323206e-13
+          },
+          {
+            "theta": 0.9,
+            "dimBlock": 128,
+            "distinctInBlock": 123,
+            "meanR_block": 0.019266522716656277,
+            "meanR_raw_block": 0.0031584188676445552,
+            "spectralWidth": 40.81976963932345,
+            "traceErr": 2.2737367544323206e-12,
+            "frobErr": 5.684341886080801e-13
+          }
+        ]
+      },
+      {
+        "p": 3,
+        "n": 5,
+        "m": 1,
+        "alpha": 1,
+        "N": 243,
+        "dimBlock": 81,
+        "modularPicketFenceR0": 0.5,
+        "maxCrossSectorLeak": 5.639755268070535e-15,
+        "maxHermErr": 2.3075552236602765e-14,
+        "maxImPart": 5.993344887752889,
+        "isStrictlyComplexBlock": true,
+        "meanR_at_0_5": 0.5038799680157217,
+        "sweep": [
+          {
+            "theta": 0.1,
+            "dimBlock": 81,
+            "distinctInBlock": 81,
+            "meanR_block": 0.512967222460963,
+            "meanR_raw_block": 0.512967222460963,
+            "spectralWidth": 30.859544571578365,
+            "traceErr": 9.094947017729282e-13,
+            "frobErr": 0
+          },
+          {
+            "theta": 0.25,
+            "dimBlock": 81,
+            "distinctInBlock": 81,
+            "meanR_block": 0.5090638211341376,
+            "meanR_raw_block": 0.5090638211341376,
+            "spectralWidth": 29.167240536989812,
+            "traceErr": 2.2737367544323206e-13,
+            "frobErr": 5.115907697472721e-13
+          },
+          {
+            "theta": 0.4,
+            "dimBlock": 81,
+            "distinctInBlock": 81,
+            "meanR_block": 0.5065569121024933,
+            "meanR_raw_block": 0.5065569121024933,
+            "spectralWidth": 27.553898483702667,
+            "traceErr": 2.2737367544323206e-13,
+            "frobErr": 3.410605131648481e-13
+          },
+          {
+            "theta": 0.5,
+            "dimBlock": 81,
+            "distinctInBlock": 81,
+            "meanR_block": 0.5038799680157217,
+            "meanR_raw_block": 0.5038799680157217,
+            "spectralWidth": 26.529181282039975,
+            "traceErr": 4.547473508864641e-13,
+            "frobErr": 8.526512829121202e-14
+          },
+          {
+            "theta": 0.6,
+            "dimBlock": 81,
+            "distinctInBlock": 81,
+            "meanR_block": 0.4997617134324724,
+            "meanR_raw_block": 0.4997617134324724,
+            "spectralWidth": 25.550842962961163,
+            "traceErr": 2.2737367544323206e-13,
+            "frobErr": 1.4210854715202004e-13
+          },
+          {
+            "theta": 0.75,
+            "dimBlock": 81,
+            "distinctInBlock": 81,
+            "meanR_block": 0.49042580221715193,
+            "meanR_raw_block": 0.49042580221715193,
+            "spectralWidth": 24.182473776968056,
+            "traceErr": 4.547473508864641e-13,
+            "frobErr": 2.2737367544323206e-13
+          },
+          {
+            "theta": 0.9,
+            "dimBlock": 81,
+            "distinctInBlock": 81,
+            "meanR_block": 0.4808800519904711,
+            "meanR_raw_block": 0.4808800519904711,
+            "spectralWidth": 22.952278193677532,
+            "traceErr": 4.547473508864641e-13,
+            "frobErr": 1.7053025658242404e-13
+          }
+        ]
+      },
+      {
+        "p": 5,
+        "n": 4,
+        "m": 1,
+        "alpha": 1,
+        "N": 625,
+        "dimBlock": 125,
+        "modularPicketFenceR0": 0.6666666666666666,
+        "maxCrossSectorLeak": 1.7647546219585642e-14,
+        "maxHermErr": 5.371703082346358e-14,
+        "maxImPart": 12.395925728382768,
+        "isStrictlyComplexBlock": true,
+        "meanR_at_0_5": 0.6263335230020408,
+        "sweep": [
+          {
+            "theta": 0.1,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.6468822151250632,
+            "meanR_raw_block": 0.6468822151250632,
+            "spectralWidth": 92.77864553221718,
+            "traceErr": 3.637978807091713e-12,
+            "frobErr": 7.048583938740194e-12
+          },
+          {
+            "theta": 0.25,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.6351090795385087,
+            "meanR_raw_block": 0.6351090795385087,
+            "spectralWidth": 87.36245298539507,
+            "traceErr": 9.094947017729282e-13,
+            "frobErr": 5.684341886080801e-13
+          },
+          {
+            "theta": 0.4,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.6291939985815829,
+            "meanR_raw_block": 0.6291939985815829,
+            "spectralWidth": 82.03941921153968,
+            "traceErr": 1.8189894035458565e-12,
+            "frobErr": 2.0463630789890885e-12
+          },
+          {
+            "theta": 0.5,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.6263335230020408,
+            "meanR_raw_block": 0.6263335230020408,
+            "spectralWidth": 78.54870173797254,
+            "traceErr": 4.547473508864641e-12,
+            "frobErr": 1.1368683772161603e-12
+          },
+          {
+            "theta": 0.6,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.6239866968795023,
+            "meanR_raw_block": 0.6239866968795023,
+            "spectralWidth": 75.10973523601552,
+            "traceErr": 2.7284841053187847e-12,
+            "frobErr": 1.1368683772161603e-13
+          },
+          {
+            "theta": 0.75,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.6209173442170229,
+            "meanR_raw_block": 0.6209173442170229,
+            "spectralWidth": 70.06054614887981,
+            "traceErr": 3.637978807091713e-12,
+            "frobErr": 4.547473508864641e-13
+          },
+          {
+            "theta": 0.9,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.6179881633007182,
+            "meanR_raw_block": 0.6179881633007182,
+            "spectralWidth": 65.16359606341855,
+            "traceErr": 9.094947017729282e-13,
+            "frobErr": 1.3642420526593924e-12
+          }
+        ]
+      },
+      {
+        "p": 5,
+        "n": 4,
+        "m": 2,
+        "alpha": 1,
+        "N": 625,
+        "dimBlock": 125,
+        "modularPicketFenceR0": 0.25,
+        "maxCrossSectorLeak": 1.427112541771043e-14,
+        "maxHermErr": 5.876188424736028e-14,
+        "maxImPart": 12.408421233469872,
+        "isStrictlyComplexBlock": true,
+        "meanR_at_0_5": 0.2612168667620972,
+        "sweep": [
+          {
+            "theta": 0.1,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.26628640546404175,
+            "meanR_raw_block": 0.26628640546404175,
+            "spectralWidth": 92.71589511114935,
+            "traceErr": 1.8189894035458565e-12,
+            "frobErr": 2.0463630789890885e-12
+          },
+          {
+            "theta": 0.25,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.263516053905449,
+            "meanR_raw_block": 0.263516053905449,
+            "spectralWidth": 87.24591181692226,
+            "traceErr": 0,
+            "frobErr": 6.821210263296962e-13
+          },
+          {
+            "theta": 0.4,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.25998827651044026,
+            "meanR_raw_block": 0.25998827651044026,
+            "spectralWidth": 81.89632894739115,
+            "traceErr": 0,
+            "frobErr": 1.1368683772161603e-13
+          },
+          {
+            "theta": 0.5,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.2612168667620972,
+            "meanR_raw_block": 0.2612168667620972,
+            "spectralWidth": 78.3995787157946,
+            "traceErr": 3.637978807091713e-12,
+            "frobErr": 6.821210263296962e-13
+          },
+          {
+            "theta": 0.6,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.26180886408987275,
+            "meanR_raw_block": 0.26180886408987275,
+            "spectralWidth": 74.9638871589929,
+            "traceErr": 1.8189894035458565e-12,
+            "frobErr": 1.1368683772161603e-13
+          },
+          {
+            "theta": 0.75,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.26151734682540784,
+            "meanR_raw_block": 0.26151734682540784,
+            "spectralWidth": 69.93967822547158,
+            "traceErr": 4.547473508864641e-12,
+            "frobErr": 3.410605131648481e-13
+          },
+          {
+            "theta": 0.9,
+            "dimBlock": 125,
+            "distinctInBlock": 125,
+            "meanR_block": 0.2605258452127839,
+            "meanR_raw_block": 0.2605258452127839,
+            "spectralWidth": 65.09967925282328,
+            "traceErr": 9.094947017729282e-13,
+            "frobErr": 2.2737367544323206e-13
+          }
+        ]
+      }
+    ]
+  },
+  "experimentF_selfTrappingScaling": [
+    {
+      "p": 3,
+      "n": 5,
+      "alpha": 0.6,
+      "N": 243,
+      "vladimirovGap12": 1.804010773914789,
+      "peakG": 36,
+      "peakGOverGap": 19.95553492281994,
+      "peakLeakage": 0.014699823686505464,
+      "tailG": 360,
+      "tailLeakage": 0.00019923696261803236,
+      "curve": [
+        {
+          "g": 0,
+          "gOverGap": 0,
+          "leakage": 0
+        },
+        {
+          "g": 2,
+          "gOverGap": 1.1086408290455523,
+          "leakage": 0.00012834704360409344
+        },
+        {
+          "g": 5,
+          "gOverGap": 2.7716020726138804,
+          "leakage": 0.0007822991057528927
+        },
+        {
+          "g": 9,
+          "gOverGap": 4.988883730704985,
+          "leakage": 0.0023986526031296584
+        },
+        {
+          "g": 14,
+          "gOverGap": 7.760485803318866,
+          "leakage": 0.005218673814395447
+        },
+        {
+          "g": 18,
+          "gOverGap": 9.97776746140997,
+          "leakage": 0.0076914370069487425
+        },
+        {
+          "g": 27,
+          "gOverGap": 14.966651192114956,
+          "leakage": 0.01234734518408287
+        },
+        {
+          "g": 36,
+          "gOverGap": 19.95553492281994,
+          "leakage": 0.014699823686505464
+        },
+        {
+          "g": 54,
+          "gOverGap": 29.93330238422991,
+          "leakage": 0.014340272334118387
+        },
+        {
+          "g": 90,
+          "gOverGap": 49.88883730704985,
+          "leakage": 0.007787839628294546
+        },
+        {
+          "g": 144,
+          "gOverGap": 79.82213969127976,
+          "leakage": 0.009385625080422733
+        },
+        {
+          "g": 216,
+          "gOverGap": 119.73320953691965,
+          "leakage": 0.006237363486437775
+        },
+        {
+          "g": 360,
+          "gOverGap": 199.5553492281994,
+          "leakage": 0.00019923696261803236
+        }
+      ]
+    },
+    {
+      "p": 3,
+      "n": 5,
+      "alpha": 0.8,
+      "N": 243,
+      "vladimirovGap12": 3.3913214495145967,
+      "peakG": 51,
+      "peakGOverGap": 15.038385702806108,
+      "peakLeakage": 0.007898442820315599,
+      "tailG": 680,
+      "tailLeakage": 0.000042554064438204975,
+      "curve": [
+        {
+          "g": 0,
+          "gOverGap": 0,
+          "leakage": 0
+        },
+        {
+          "g": 3,
+          "gOverGap": 0.884610923694477,
+          "leakage": 0.00013572305101094972
+        },
+        {
+          "g": 9,
+          "gOverGap": 2.653832771083431,
+          "leakage": 0.0011446794790757053
+        },
+        {
+          "g": 17,
+          "gOverGap": 5.012795234268703,
+          "leakage": 0.003433510663433559
+        },
+        {
+          "g": 26,
+          "gOverGap": 7.666628005352134,
+          "leakage": 0.005954924102802406
+        },
+        {
+          "g": 34,
+          "gOverGap": 10.025590468537406,
+          "leakage": 0.007374933471251621
+        },
+        {
+          "g": 51,
+          "gOverGap": 15.038385702806108,
+          "leakage": 0.007898442820315599
+        },
+        {
+          "g": 68,
+          "gOverGap": 20.05118093707481,
+          "leakage": 0.00664990972112145
+        },
+        {
+          "g": 102,
+          "gOverGap": 30.076771405612217,
+          "leakage": 0.004870481655609216
+        },
+        {
+          "g": 170,
+          "gOverGap": 50.12795234268703,
+          "leakage": 0.0048755292827366015
+        },
+        {
+          "g": 272,
+          "gOverGap": 80.20472374829924,
+          "leakage": 0.0019650037931836506
+        },
+        {
+          "g": 408,
+          "gOverGap": 120.30708562244887,
+          "leakage": 0.00003955751888451431
+        },
+        {
+          "g": 680,
+          "gOverGap": 200.51180937074813,
+          "leakage": 0.000042554064438204975
+        }
+      ]
+    },
+    {
+      "p": 3,
+      "n": 5,
+      "alpha": 1,
+      "N": 243,
+      "vladimirovGap12": 6,
+      "peakG": 45,
+      "peakGOverGap": 7.5,
+      "peakLeakage": 0.003987261638095929,
+      "tailG": 1200,
+      "tailLeakage": 0.000011120337233050392,
+      "curve": [
+        {
+          "g": 0,
+          "gOverGap": 0,
+          "leakage": 0
+        },
+        {
+          "g": 6,
+          "gOverGap": 1,
+          "leakage": 0.0002398821839686427
+        },
+        {
+          "g": 15,
+          "gOverGap": 2.5,
+          "leakage": 0.0013048392457436497
+        },
+        {
+          "g": 30,
+          "gOverGap": 5,
+          "leakage": 0.0032882834297186525
+        },
+        {
+          "g": 45,
+          "gOverGap": 7.5,
+          "leakage": 0.003987261638095929
+        },
+        {
+          "g": 60,
+          "gOverGap": 10,
+          "leakage": 0.003661302343141326
+        },
+        {
+          "g": 90,
+          "gOverGap": 15,
+          "leakage": 0.0026738344650010237
+        },
+        {
+          "g": 120,
+          "gOverGap": 20,
+          "leakage": 0.0029013363932051117
+        },
+        {
+          "g": 180,
+          "gOverGap": 30,
+          "leakage": 0.0018363841940394199
+        },
+        {
+          "g": 300,
+          "gOverGap": 50,
+          "leakage": 0.0004161213340873049
+        },
+        {
+          "g": 480,
+          "gOverGap": 80,
+          "leakage": 0.000014501653178289331
+        },
+        {
+          "g": 720,
+          "gOverGap": 120,
+          "leakage": 5.575489669951139e-7
+        },
+        {
+          "g": 1200,
+          "gOverGap": 200,
+          "leakage": 0.000011120337233050392
+        }
+      ]
+    },
+    {
+      "p": 3,
+      "n": 5,
+      "alpha": 1.2,
+      "N": 243,
+      "vladimirovGap12": 10.229417346391683,
+      "peakG": 51,
+      "peakGOverGap": 4.985621201386382,
+      "peakLeakage": 0.0018745054844887532,
+      "tailG": 2040,
+      "tailLeakage": 0.000005289375203831881,
+      "curve": [
+        {
+          "g": 0,
+          "gOverGap": 0,
+          "leakage": 0
+        },
+        {
+          "g": 10,
+          "gOverGap": 0.9775727845855651,
+          "leakage": 0.00028230140822282923
+        },
+        {
+          "g": 26,
+          "gOverGap": 2.5416892399224693,
+          "leakage": 0.0013216618305528227
+        },
+        {
+          "g": 51,
+          "gOverGap": 4.985621201386382,
+          "leakage": 0.0018745054844887532
+        },
+        {
+          "g": 77,
+          "gOverGap": 7.527310441308852,
+          "leakage": 0.0014053647896007382
+        },
+        {
+          "g": 102,
+          "gOverGap": 9.971242402772765,
+          "leakage": 0.001275144389753513
+        },
+        {
+          "g": 153,
+          "gOverGap": 14.956863604159146,
+          "leakage": 0.0013206268289573941
+        },
+        {
+          "g": 204,
+          "gOverGap": 19.94248480554553,
+          "leakage": 0.0010500265317836543
+        },
+        {
+          "g": 306,
+          "gOverGap": 29.913727208318292,
+          "leakage": 0.0001978802966804416
+        },
+        {
+          "g": 510,
+          "gOverGap": 49.85621201386382,
+          "leakage": 0.00007173559636708404
+        },
+        {
+          "g": 816,
+          "gOverGap": 79.76993922218212,
+          "leakage": 0.0000024326373595506823
+        },
+        {
+          "g": 1224,
+          "gOverGap": 119.65490883327317,
+          "leakage": 0.000004917889201871972
+        },
+        {
+          "g": 2040,
+          "gOverGap": 199.42484805545527,
+          "leakage": 0.000005289375203831881
+        }
+      ]
+    },
+    {
+      "p": 3,
+      "n": 5,
+      "alpha": 1.4,
+      "N": 243,
+      "vladimirovGap12": 17.018485445780147,
+      "peakG": 43,
+      "peakGOverGap": 2.5266643225682666,
+      "peakLeakage": 0.0008664595965462984,
+      "tailG": 3400,
+      "tailLeakage": 2.2317732062404616e-7,
+      "curve": [
+        {
+          "g": 0,
+          "gOverGap": 0,
+          "leakage": 0
+        },
+        {
+          "g": 17,
+          "gOverGap": 0.9989138019455938,
+          "leakage": 0.00031889560673226125
+        },
+        {
+          "g": 43,
+          "gOverGap": 2.5266643225682666,
+          "leakage": 0.0008664595965462984
+        },
+        {
+          "g": 85,
+          "gOverGap": 4.994569009727969,
+          "leakage": 0.0005844877785226021
+        },
+        {
+          "g": 128,
+          "gOverGap": 7.5212333322962355,
+          "leakage": 0.0006727736944864837
+        },
+        {
+          "g": 170,
+          "gOverGap": 9.989138019455938,
+          "leakage": 0.0005245808591064494
+        },
+        {
+          "g": 255,
+          "gOverGap": 14.983707029183906,
+          "leakage": 0.0001920263032804126
+        },
+        {
+          "g": 340,
+          "gOverGap": 19.978276038911876,
+          "leakage": 0.00005979069665573711
+        },
+        {
+          "g": 510,
+          "gOverGap": 29.96741405836781,
+          "leakage": 0.00003552345288526659
+        },
+        {
+          "g": 850,
+          "gOverGap": 49.94569009727969,
+          "leakage": 0.000003554645905623488
+        },
+        {
+          "g": 1360,
+          "gOverGap": 79.9131041556475,
+          "leakage": 0.000007920692238094773
+        },
+        {
+          "g": 2040,
+          "gOverGap": 119.86965623347125,
+          "leakage": 0.0000027523103176552155
+        },
+        {
+          "g": 3400,
+          "gOverGap": 199.78276038911875,
+          "leakage": 2.2317732062404616e-7
+        }
+      ]
+    },
+    {
+      "p": 2,
+      "n": 7,
+      "alpha": 1,
+      "N": 128,
+      "vladimirovGap12": 2,
+      "peakG": 100,
+      "peakGOverGap": 50,
+      "peakLeakage": 0.012255719527150433,
+      "tailG": 400,
+      "tailLeakage": 0.0007530122821773899,
+      "curve": [
+        {
+          "g": 0,
+          "gOverGap": 0,
+          "leakage": 0
+        },
+        {
+          "g": 2,
+          "gOverGap": 1,
+          "leakage": 0.00010439897180702928
+        },
+        {
+          "g": 5,
+          "gOverGap": 2.5,
+          "leakage": 0.0006484927155749887
+        },
+        {
+          "g": 10,
+          "gOverGap": 5,
+          "leakage": 0.0024935374250816267
+        },
+        {
+          "g": 15,
+          "gOverGap": 7.5,
+          "leakage": 0.005171102762472901
+        },
+        {
+          "g": 20,
+          "gOverGap": 10,
+          "leakage": 0.008084427064781963
+        },
+        {
+          "g": 30,
+          "gOverGap": 15,
+          "leakage": 0.012142619893161566
+        },
+        {
+          "g": 40,
+          "gOverGap": 20,
+          "leakage": 0.012105449973311977
+        },
+        {
+          "g": 60,
+          "gOverGap": 30,
+          "leakage": 0.008052105615464988
+        },
+        {
+          "g": 100,
+          "gOverGap": 50,
+          "leakage": 0.012255719527150433
+        },
+        {
+          "g": 160,
+          "gOverGap": 80,
+          "leakage": 0.00831489306821298
+        },
+        {
+          "g": 240,
+          "gOverGap": 120,
+          "leakage": 0.0026535902150648383
+        },
+        {
+          "g": 400,
+          "gOverGap": 200,
+          "leakage": 0.0007530122821773899
+        }
+      ]
+    },
+    {
+      "p": 5,
+      "n": 3,
+      "alpha": 1,
+      "N": 125,
+      "vladimirovGap12": 20,
+      "peakG": 50,
+      "peakGOverGap": 2.5,
+      "peakLeakage": 0.00113529806311774,
+      "tailG": 4000,
+      "tailLeakage": 6.447553602129119e-9,
+      "curve": [
+        {
+          "g": 0,
+          "gOverGap": 0,
+          "leakage": 0
+        },
+        {
+          "g": 20,
+          "gOverGap": 1,
+          "leakage": 0.0009559198594578655
+        },
+        {
+          "g": 50,
+          "gOverGap": 2.5,
+          "leakage": 0.00113529806311774
+        },
+        {
+          "g": 100,
+          "gOverGap": 5,
+          "leakage": 0.00003404923946115357
+        },
+        {
+          "g": 150,
+          "gOverGap": 7.5,
+          "leakage": 0.00034114297524645565
+        },
+        {
+          "g": 200,
+          "gOverGap": 10,
+          "leakage": 0.000031125048160940416
+        },
+        {
+          "g": 300,
+          "gOverGap": 15,
+          "leakage": 0.000004811101472879109
+        },
+        {
+          "g": 400,
+          "gOverGap": 20,
+          "leakage": 0.00016989576924208993
+        },
+        {
+          "g": 600,
+          "gOverGap": 30,
+          "leakage": 0.00002008511649220779
+        },
+        {
+          "g": 1000,
+          "gOverGap": 50,
+          "leakage": 0.000001793994541698929
+        },
+        {
+          "g": 1600,
+          "gOverGap": 80,
+          "leakage": 0.000010999538557654454
+        },
+        {
+          "g": 2400,
+          "gOverGap": 120,
+          "leakage": 6.497480886658025e-7
+        },
+        {
+          "g": 4000,
+          "gOverGap": 200,
+          "leakage": 6.447553602129119e-9
+        }
+      ]
+    }
+  ]
 }
