@@ -398,6 +398,11 @@ export class HyperbolicRenderer3D {
     if (this.supported) {
       this._initGL();
       this._initPointerControls();
+      this.canvas.addEventListener('webglcontextlost', (e) => {
+        e.preventDefault();
+        this.supported = false;
+        document.getElementById('webglFallback')?.classList.remove('hidden');
+      });
     }
   }
 
@@ -408,6 +413,22 @@ export class HyperbolicRenderer3D {
     this.progHorizon = createProgram(gl, HORIZON_VS, HORIZON_FS);
     this.progEdge = createProgram(gl, EDGE_VS, EDGE_FS);
     this.progNode = createProgram(gl, NODE_VS, NODE_FS);
+
+    // Cache WebGL2 uniform locations once (zero per-frame GL string lookups)
+    this.uGridViewProj = gl.getUniformLocation(this.progGrid, 'uViewProj');
+    this.uHorViewProj = gl.getUniformLocation(this.progHorizon, 'uViewProj');
+    this.uHorRadius = gl.getUniformLocation(this.progHorizon, 'uRadius');
+    this.uHorY = gl.getUniformLocation(this.progHorizon, 'uY');
+    this.uHorTime = gl.getUniformLocation(this.progHorizon, 'uTime');
+    this.uHorFlux = gl.getUniformLocation(this.progHorizon, 'uFlux');
+    this.uHorCurrent = gl.getUniformLocation(this.progHorizon, 'uCurrent');
+    this.uHorActivity = gl.getUniformLocation(this.progHorizon, 'uActivity');
+    this.uEdgeViewProj = gl.getUniformLocation(this.progEdge, 'uViewProj');
+    this.uEdgeCamPos = gl.getUniformLocation(this.progEdge, 'uCamPos');
+    this.uEdgeTime = gl.getUniformLocation(this.progEdge, 'uTime');
+    this.uNodeViewProj = gl.getUniformLocation(this.progNode, 'uViewProj');
+    this.uNodeCamRight = gl.getUniformLocation(this.progNode, 'uCamRight');
+    this.uNodeCamUp = gl.getUniformLocation(this.progNode, 'uCamUp');
 
     // Static reference hyperbolic rings geometry
     this.gridVao = gl.createVertexArray();
@@ -646,6 +667,7 @@ export class HyperbolicRenderer3D {
     const maxEdgeSegs = bulk.numEdges + bulk.N + 16; // bulk edges + boundary wave pillars
     this._edgeData = new Float32Array(maxEdgeSegs * 6 * 18);
     this._nodeData = new Float32Array(V * 6 * 11);
+    this._triEdgeMask = new Uint8Array(bulk.numEdges);
   }
 
   /**
@@ -772,7 +794,7 @@ export class HyperbolicRenderer3D {
       let sN, sD = denom;
       let tN, tD = denom;
       if (denom < 1e-7) {
-        sN = 0; sD = 1; tN = eDot; tD = cDot;
+        sN = 0; sD = 1; tN = -dDot; tD = aDot;
       } else {
         tN = bDot * eDot - cDot * dDot;
         sN = aDot * eDot - bDot * dDot;
@@ -853,27 +875,27 @@ export class HyperbolicRenderer3D {
     gl.depthMask(false);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.useProgram(this.progGrid);
-    gl.uniformMatrix4fv(gl.getUniformLocation(this.progGrid, 'uViewProj'), false, this.viewProj);
+    gl.uniformMatrix4fv(this.uGridViewProj, false, this.viewProj);
     gl.bindVertexArray(this.gridVao);
     gl.drawArrays(gl.LINES, 0, this.gridVertexCount);
 
     // ---- Pass 2: Kerr-BTZ Black Hole Event Horizon Disc ----
     if (bulk.isBTZ) {
       gl.useProgram(this.progHorizon);
-      gl.uniformMatrix4fv(gl.getUniformLocation(this.progHorizon, 'uViewProj'), false, this.viewProj);
-      gl.uniform1f(gl.getUniformLocation(this.progHorizon, 'uRadius'), 0.69);
+      gl.uniformMatrix4fv(this.uHorViewProj, false, this.viewProj);
+      gl.uniform1f(this.uHorRadius, 0.69);
       // Match horizon ring vertical position (including average gravitational sag)
       let avgHy = 0;
       for (let j = 0; j < bulk.horizonLength; j++) {
         avgHy += this.nodePos[bulk.horizonNodes[j] * 3 + 1];
       }
       avgHy /= Math.max(1, bulk.horizonLength);
-      gl.uniform1f(gl.getUniformLocation(this.progHorizon, 'uY'), avgHy);
-      gl.uniform1f(gl.getUniformLocation(this.progHorizon, 'uTime'), timeSec);
-      gl.uniform1f(gl.getUniformLocation(this.progHorizon, 'uFlux'), bulk.horizonFlux);
-      gl.uniform1f(gl.getUniformLocation(this.progHorizon, 'uCurrent'), bulk.horizonFluxCurrent);
+      gl.uniform1f(this.uHorY, avgHy);
+      gl.uniform1f(this.uHorTime, timeSec);
+      gl.uniform1f(this.uHorFlux, bulk.horizonFlux);
+      gl.uniform1f(this.uHorCurrent, bulk.horizonFluxCurrent);
       gl.uniform1f(
-        gl.getUniformLocation(this.progHorizon, 'uActivity'),
+        this.uHorActivity,
         Math.min(1.0, Math.sqrt(bulk.totalGravEnergy * 0.08))
       );
       gl.bindVertexArray(this.horizonVao);
@@ -901,9 +923,11 @@ export class HyperbolicRenderer3D {
       }
     };
 
-    // Build set of edges on Ultrametric Triangle geodesics when overlay is active
-    const triEdgeMask = this.showTriangleOverlay ? new Uint8Array(E) : null;
-    if (triEdgeMask && sim.triangleGeodesics) {
+    // Build set of edges on Ultrametric Triangle geodesics when overlay is active (zero per-frame alloc)
+    let triEdgeMask = null;
+    if (this.showTriangleOverlay && sim.triangleGeodesics) {
+      triEdgeMask = this._triEdgeMask;
+      triEdgeMask.fill(0);
       for (let g = 0; g < sim.triangleGeodesics.length; g++) {
         const edges = sim.triangleGeodesics[g].edges;
         for (let i = 0; i < edges.length; i++) triEdgeMask[edges[i]] |= 1 << g;
@@ -1085,9 +1109,9 @@ export class HyperbolicRenderer3D {
     // Draw all volumetric ribbons with additive-weighted luminance blending
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     gl.useProgram(this.progEdge);
-    gl.uniformMatrix4fv(gl.getUniformLocation(this.progEdge, 'uViewProj'), false, this.viewProj);
-    gl.uniform3fv(gl.getUniformLocation(this.progEdge, 'uCamPos'), this.camPos);
-    gl.uniform1f(gl.getUniformLocation(this.progEdge, 'uTime'), timeSec);
+    gl.uniformMatrix4fv(this.uEdgeViewProj, false, this.viewProj);
+    gl.uniform3fv(this.uEdgeCamPos, this.camPos);
+    gl.uniform1f(this.uEdgeTime, timeSec);
     gl.bindVertexArray(this.edgeVao);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.edgeBuf);
     gl.bufferData(gl.ARRAY_BUFFER, edgeData.subarray(0, ribbonCount * 6 * 18), gl.DYNAMIC_DRAW);
@@ -1096,7 +1120,9 @@ export class HyperbolicRenderer3D {
     // ---- Pass 5: Volumetric Bulk & Boundary Nodes ----
     const nodeData = this._nodeData;
     let nOff = 0;
-    const triLeafSet = this.showTriangleOverlay ? new Set(sim.triangleLeaves.map((l) => bulk.leafNodes[l])) : null;
+    const triA = this.showTriangleOverlay && sim.triangleLeaves.length >= 3 ? bulk.leafNodes[sim.triangleLeaves[0]] : -1;
+    const triB = this.showTriangleOverlay && sim.triangleLeaves.length >= 3 ? bulk.leafNodes[sim.triangleLeaves[1]] : -1;
+    const triC = this.showTriangleOverlay && sim.triangleLeaves.length >= 3 ? bulk.leafNodes[sim.triangleLeaves[2]] : -1;
     const quadCorners = [
       [-1, -1], [1, -1], [1, 1],
       [-1, -1], [1, 1], [-1, 1],
@@ -1154,7 +1180,7 @@ export class HyperbolicRenderer3D {
         }
       }
 
-      if (triLeafSet && triLeafSet.has(u)) {
+      if (u === triA || u === triB || u === triC) {
         colA[0] = 1.0; colA[1] = 0.94; colA[2] = 0.55;
         rad = 0.145;
         glow = 1.3;
@@ -1176,9 +1202,9 @@ export class HyperbolicRenderer3D {
 
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.useProgram(this.progNode);
-    gl.uniformMatrix4fv(gl.getUniformLocation(this.progNode, 'uViewProj'), false, this.viewProj);
-    gl.uniform3fv(gl.getUniformLocation(this.progNode, 'uCamRight'), this.camRight);
-    gl.uniform3fv(gl.getUniformLocation(this.progNode, 'uCamUp'), this.camUp);
+    gl.uniformMatrix4fv(this.uNodeViewProj, false, this.viewProj);
+    gl.uniform3fv(this.uNodeCamRight, this.camRight);
+    gl.uniform3fv(this.uNodeCamUp, this.camUp);
     gl.bindVertexArray(this.nodeVao);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.nodeBuf);
     gl.bufferData(gl.ARRAY_BUFFER, nodeData.subarray(0, V * 6 * 11), gl.DYNAMIC_DRAW);

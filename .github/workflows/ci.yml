@@ -9,18 +9,18 @@ on:
 
 jobs:
   node-theorems-and-mutants:
-    name: Node.js 9-Theorem Suite, 6 Planted Mutants & Benchmarks
+    name: Node.js 10-Theorem Suite, 8 Planted Mutants & Benchmarks (Exp A-H)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Run 9 automated mathematical & physical theorems
+      - name: Run 10 automated mathematical & physical theorems
         run: npm test
-      - name: Run 6 planted negative-mutant falsification checks (6/6 killed)
+      - name: Run 8 planted negative-mutant falsification checks (8/8 killed)
         run: npm run falsify
-      - name: Run all 6 reproducible discovery benchmarks (Exp A-F)
+      - name: Run all 8 reproducible discovery benchmarks (Exp A-H)
         run: npm run discover
 
   python-exact-and-checksums:
@@ -37,7 +37,7 @@ jobs:
         run: sha256sum -c CHECKSUMS.sha256
 
   lean4-formal-proofs:
-    name: Lean 4 (v4.35.0) 71-Theorem Zero-Sorry & Axiom Allowlist Check
+    name: Lean 4 (v4.35.0) 101-Theorem Zero-Sorry & Axiom Allowlist Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -60,7 +60,7 @@ jobs:
                   raise SystemExit(f"ERROR: Forbidden token '{m.group(1)}' in executable code of {p}")
           print(f"PASS: Zero sorry/admit/axiom/native_decide/unsafe across {len(files)} Lean library files.")
           PY
-      - name: Clean-build Lean 4 library & audit all 71 declarations via VerifyAxioms.lean
+      - name: Clean-build Lean 4 library & audit all 101 declarations via VerifyAxioms.lean
         working-directory: lean
         run: |
           lake clean
@@ -80,7 +80,7 @@ jobs:
                       raise SystemExit(f"ERROR: Forbidden axiom {used - allowed} in: {line}")
               elif "does not depend on any axioms" in line:
                   count += 1
-          assert count >= 71, f"Expected >= 71 audited declarations, got {count}"
+          assert count >= 101, f"Expected >= 101 audited declarations, got {count}"
           print(f"PASS: All {count} Lean 4 declarations strictly within {sorted(allowed)} (or zero axioms).")
           PY
 

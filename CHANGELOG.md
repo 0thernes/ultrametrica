@@ -2,6 +2,32 @@
 
 All notable releases, mathematical proofs, verification suites, and engine changes in **ULTRAMETRICA** are documented here.
 
+## [1.3.0] — 2026-11-21
+
+### Added
+- **New Formal Theorem V (Non-Perturbative Curved AdS Discrete Gauss-Bonnet Curvature Conservation & Supercritical Pinch Deficit):** Discovered during curved-gradient auditing and proved from first-principles curved Kantorovich duality in `HolographyCurvature.lean`, verified with zero rounding error across **60 curved `Fraction` transport plans** in `scripts/verify_exact.py`, and matched to `7.77e-16`–`5.33e-15` in **Experiment H**: any finite interior stretch ($a_e \ge 1$) or subcritical pinch ($\sigma_e \ge -\ln p$) conserves integrated Ollivier-Ricci curvature identically ($\sum(\kappa_{e'} - \kappa_{\mathrm{AdS}}) \equiv 0$), while pinching past $\sigma_e^* = -\ln p$ triggers the exact negative deficit $-2(e^{-\sigma_e}-p)/(e^{-\sigma_e}+p) < 0$.
+- **Lean 4 Proof Suite Expanded to `101` Audited Declarations (`2,267` Lines, Zero Mathlib, Zero `sorryAx`, Zero `native_decide`, Zero Warnings):**
+  - `Basic.lean` (`26` decls): Added `padic_ball_cardinality`, `monna_injective`, `monna_surjective`, concrete Bruhat-Tits leaf metric `treeHopDist` / `bruhatTitsUltrametric`, and `bruhatTits_leaves_isosceles`.
+  - `AdelicSymmetry.lean` (`23` decls): Universally proved **Proposition 4.2 (Modular Picket-Fence Law)** (`picket_fence_monotone`, `picket_fence_even_gap`, `picket_fence_odd_gap`, `picket_fence_gap_sum`, `picket_fence_odd_prime_strictly_positive`, `picket_fence_dyadic_zero_gap`).
+  - `HolographyCurvature.lean` (`40` decls): Closed the cycle-graph metric bridge (`cycleDist`, `btzGraphDist`, `btz_graph_metric_eq_classDist`), proved BTZ monotonicity (`btz_curvature_monotone_in_L`), Gubser shadow duality (`gubser_shadow_duality`), exact Euler characteristics ($\chi(T_p) = 1$, $\chi(\text{BTZ}) = 0$), and full first-principles curved Kantorovich duality + Gauss-Bonnet theorems for Theorem V.
+- **Experiments G & H + Figure 5 (`scripts/discover.mjs`, `scripts/generate_figures.py`):**
+  - **Experiment G:** Sweeps $\alpha \in \{0.5, 1.0, 1.5, 2.0\}$ up to $N = 625$ ($\dim W_{0,m} = 125$), demonstrating universal $\alpha$-invariance of modular picket-fence locking even under quadratic Schrödinger dispersion ($\alpha = 2.0$, off-diagonal mixing `0.272–0.401`).
+  - **Experiment H:** Verifies Theorem V across $p \in \{2, 3, 5\}$ and audits the Breitenlohner-Freedman tachyonic margin down to $\Delta = 0.5001$ under curved gravity ($\sigma_e \in [-1.5, +1.5]$) and maximal Kerr flux ($\Omega = \pi$, worst residual `5.38e-15`, min Schur pivot `0.8637`).
+- **Comprehensive Multi-Layer Adversarial Audit & Contrast Comparative Report (`docs/AUDIT_AND_CONTRAST_ANALYSIS.md`)** covering all 7 layers, 8 substrates, dispersion/acoustic spectrums, curvature & BF margins, verification taxonomy, and the full 16-issue / 3-Lean-hole register.
+- **Expanded Verification & Mutation Gates:** `test/verify.mjs` (`10/10` theorems) and `test/mutants.mjs` (`8/8` planted negative mutants killed, adding M7 Gauss-Seidel gravity asymmetry and M8 Theorem V supercritical pinch breakdown).
+
+### Fixed (16-Issue Adversarial Audit)
+- `BUG-1`: Fixed `ultrametric_tunneling` `w3` index at `p = 7, n = 3` so initial superposition stays strictly inside depth-1 ball `b1` (`0.00%` initial leakage across all primes `{2,3,5,7}`).
+- `BUG-2`: Fixed `wormhole_surgery` silent no-op under BTZ `keepTopology` mode by pinching `horizonEdges[0]`.
+- `BUG-3`: Replaced in-place Gauss-Seidel loop in `BruhatTitsBulk.stepGravity` with preallocated `_sigmaSnap` symmetric Jacobi update (`< 1e-15` sibling symmetry).
+- `BUG-4`: Added exponential smoothing (`smoothBtzMix`, `smoothGain`) and `Number.isFinite` sanitization to `audio-worklet.js`, and passed canonical `shellFreqs` from `audio.js`.
+- `BUG-5, BUG-6, BUG-7`: Eliminated `1280px` `.topbar` horizontal clipping, `UltrametricTrianglePanel` header text overlap, and `1280×800` left `.sidebar` bottom telemetry clipping.
+- `BUG-8, BUG-9`: Raised `sldAlpha` max to `2.00` (quadratic Schrödinger dispersion) and added `grav`/`dyn` serialization & hydration to URL permalinks.
+- `BUG-10, BUG-12`: Cached WebGL2 uniform locations once in `renderer3d.js`, fixed parallel-ray fallback in `pickAtClient`, added `webglcontextlost` handler, and preallocated scratch TypedArrays in `holography.js` (`computeOllivierRicci` & `computeRyuTakayanagi`) and `renderer3d.js`.
+- `BUG-14`: Hardened `server.mjs` (`GET`/`HEAD` only, safe `decodeURIComponent`, null-byte/backslash/traversal guards, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Cross-Origin-Resource-Policy`).
+- `BUG-15, BUG-11`: Fully synchronized `paper/WHITE_PAPER.md` Sections 2–12 and the `?` observatory modal with `paper/main.tex` (`v1.3.0`, 15 pages, 5 figures, zero LaTeX warnings).
+- `BUG-16`: Fixed `UltrametricaSimulation` constructor calling `loadExperiment('kozyrev_trap')` without `{ keepTopology: true }`, which previously overwrote non-zero constructor `horizonDepth`.
+
 ## [1.2.0] — 2026-11-21
 
 ### Added

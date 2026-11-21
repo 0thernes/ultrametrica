@@ -30,17 +30,17 @@
         <span class="toolbar-label">BULK</span>
         <div class="seg-group" id="topoGroup">
           <button class="seg-btn active" data-btz="0">Pure AdS</button>
-          <button class="seg-btn" data-btz="1">BTZ Black Hole</button>
+          <button class="seg-btn" data-btz="1">BTZ Hole</button>
         </div>
       </div>
 
       <div class="toolbar-group">
-        <span class="toolbar-label">CLICK TOOL</span>
+        <span class="toolbar-label">TOOL</span>
         <div class="seg-group" id="toolGroup">
           <button class="seg-btn active" data-tool="wavelet" title="Click any bulk node or rim ball to inject an exact Kozyrev wavelet (Shift+Click replaces state)">Wavelet</button>
           <button class="seg-btn" data-tool="surgery" title="Click any bulk edge to pinch/stretch a_e (Shift/Right-Click reinforces)">Wormhole</button>
           <button class="seg-btn" data-tool="rt" title="Click boundary balls to toggle Ryu-Takayanagi region A">RT Cut</button>
-          <button class="seg-btn" data-tool="triangle" title="Click 3 boundary rim leaves to prove strong triangle inequality">3-Pt Probe</button>
+          <button class="seg-btn" data-tool="triangle" title="Click 3 boundary rim leaves to prove strong triangle inequality">3-Pt</button>
         </div>
       </div>
 
@@ -83,7 +83,7 @@
               <span>Vladimirov Exp &alpha;</span>
               <span id="valAlpha" class="mono">1.00</span>
             </div>
-            <input id="sldAlpha" type="range" min="0.25" max="1.90" step="0.05" value="1.00" />
+            <input id="sldAlpha" type="range" min="0.25" max="2.00" step="0.05" value="1.00" />
           </div>
 
           <div class="control-row">
@@ -227,7 +227,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <div>
-          <h2 id="helpModalTitle">ULTRAMETRICA v1.2.0 — Observatory Guide &amp; Formal Proof Audit</h2>
+          <h2 id="helpModalTitle">ULTRAMETRICA v1.3.0 — Observatory Guide &amp; Formal Proof Audit</h2>
           <p class="modal-sub">Alexander Stephen Donahue &middot; 0thernes LLC &middot; ORCID <a href="https://orcid.org/0009-0006-8168-9648" target="_blank" rel="noopener">0009-0006-8168-9648</a></p>
         </div>
         <button id="btnCloseHelp" class="action-btn">Close (Esc)</button>
@@ -249,21 +249,23 @@
             <li><strong>Wavelet:</strong> Click any bulk node or rim ball to inject an exact Kozyrev eigenstate (<code>Shift</code> replaces).</li>
             <li><strong>Wormhole:</strong> Click any bulk edge to stretch/pinch edge length <code>a_e</code> (<code>Shift</code>/right-click tightens).</li>
             <li><strong>RT Cut:</strong> Click boundary balls to paint Ryu-Takayanagi region <code>A</code>.</li>
-            <li><strong>3-Pt Probe:</strong> Click 3 boundary leaves to verify the strong triangle inequality live.</li>
+            <li><strong>3-Pt:</strong> Click 3 boundary leaves to verify the strong triangle inequality live.</li>
           </ul>
         </div>
         <div class="modal-col">
-          <h3>Lean 4 (v4.35.0) Certified Theorems (71/71)</h3>
+          <h3>Lean 4 (v4.35.0) Certified Theorems (101/101)</h3>
           <ul class="key-list">
-            <li><strong>Theorem I (Adelic Parity-Doubling):</strong> Universal Monna involution, ball contiguity, subtree shift isometry &amp; odd-prime doublet protection.</li>
-            <li><strong>Theorem II (BTZ Ollivier-Ricci Law):</strong> First-principles Kantorovich primal-dual proof of <code>&kappa;_BTZ(p,L) = -(2p - max(0,6-L))/(p+2)</code> &amp; <code>L_c = 5</code> trichotomy.</li>
+            <li><strong>Theorem I (Adelic Parity-Doubling):</strong> Universal Monna bijectivity, ball contiguity, subtree shift isometry, picket-fence law &amp; odd-prime doublet protection.</li>
+            <li><strong>Theorem II (BTZ Ollivier-Ricci Law):</strong> Cycle-metric bridge + Kantorovich primal-dual proof of <code>&kappa;_BTZ(p,L) = -(2p - max(0,6-L))/(p+2)</code> &amp; <code>L_c = 5</code> trichotomy.</li>
             <li><strong>Theorem III (Kozyrev Solitons):</strong> Arbitrary finite <code>K</code>-ball zero-crosstalk nonlinear compacton-soliton invariance.</li>
             <li><strong>Theorem IV (Kerr-BTZ Solver):</strong> Complex Hermitian Rank-1 Sherman-Morrison exactness, denominator <code>&ge; 1</code> &amp; Kerr flux parity laws.</li>
+            <li><strong>Theorem V (Curved Gauss-Bonnet):</strong> Non-perturbative curvature conservation for <code>&sigma;_e &ge; -ln p</code> &amp; exact supercritical pinch deficit past <code>&sigma;_e &lt; -ln p</code>.</li>
           </ul>
           <div class="modal-links">
             <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica" target="_blank" rel="noopener">GitHub Repository</a>
             <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/dist/Donahue_2026_Ultrametrica.pdf" target="_blank" rel="noopener">AMS-LaTeX PDF</a>
-            <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/docs/CLAIMS.md" target="_blank" rel="noopener">Claims &amp; Audit Map</a>
+            <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/docs/CLAIMS.md" target="_blank" rel="noopener">Claims Ledger</a>
+            <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/docs/AUDIT_AND_CONTRAST_ANALYSIS.md" target="_blank" rel="noopener">Audit &amp; Contrast</a>
           </div>
         </div>
       </div>

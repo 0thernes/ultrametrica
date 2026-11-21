@@ -355,4 +355,69 @@ theorem odd_prime_doublet_bound (p n : Nat) (hodd : p % 2 = 1) :
   have hp : (p ^ n) % 2 = 1 := odd_pow_is_odd p n hodd
   omega
 
+-- =====================================================================
+-- Proposition 4.2 (Universal Modular Picket-Fence Spacing Law for alpha = 1)
+-- =====================================================================
+
+/-- Exact folded Archimedean frequency sequence inside sector W_{0, m} (1 <= m, 2*m <= p):
+    interleaves ascending branch u(2a) = a*p + m and reflected branch u(2a + 1) = (a + 1)*p - m. -/
+def picketSeq (p m i : Nat) : Nat :=
+  if i % 2 = 0 then (i / 2) * p + m else (i / 2 + 1) * p - m
+
+theorem picket_fence_even_val (p m a : Nat) :
+    picketSeq p m (2 * a) = a * p + m := by
+  unfold picketSeq
+  have hmod : (2 * a) % 2 = 0 := by omega
+  have hdiv : (2 * a) / 2 = a := by omega
+  simp [hmod, hdiv]
+
+theorem picket_fence_odd_val (p m a : Nat) :
+    picketSeq p m (2 * a + 1) = (a + 1) * p - m := by
+  unfold picketSeq
+  have hmod : (2 * a + 1) % 2 = 1 := by omega
+  have hdiv : (2 * a + 1) / 2 = a := by omega
+  simp [hmod, hdiv]
+
+/-- Proposition 4.2a (Monotone Interlacing of Folded Frequencies Inside W_{0, m}):
+    For ALL p >= 2, ALL 1 <= m with 2*m <= p, and ALL a : Nat:
+      u(2a) <= u(2a + 1) < u(2a + 2). -/
+theorem picket_fence_monotone (p m a : Nat) (hm1 : 1 ≤ m) (hm2 : 2 * m ≤ p) :
+    picketSeq p m (2 * a) ≤ picketSeq p m (2 * a + 1) ∧
+    picketSeq p m (2 * a + 1) < picketSeq p m (2 * (a + 1)) := by
+  rw [picket_fence_even_val, picket_fence_odd_val, picket_fence_even_val]
+  have hmul : (a + 1) * p = a * p + p := by rw [Nat.add_mul, Nat.one_mul]
+  omega
+
+/-- Proposition 4.2b (Exact Alternating Picket-Fence Gaps):
+    The sorted folded frequencies in W_{0, m} have exact period-2 alternating gaps
+    (p - 2*m) and (2*m), summing identically to p. -/
+theorem picket_fence_even_gap (p m a : Nat) (hm2 : 2 * m ≤ p) :
+    picketSeq p m (2 * a + 1) - picketSeq p m (2 * a) = p - 2 * m := by
+  rw [picket_fence_odd_val, picket_fence_even_val]
+  have hmul : (a + 1) * p = a * p + p := by rw [Nat.add_mul, Nat.one_mul]
+  omega
+
+theorem picket_fence_odd_gap (p m a : Nat) (hm2 : 2 * m ≤ p) :
+    picketSeq p m (2 * (a + 1)) - picketSeq p m (2 * a + 1) = 2 * m := by
+  rw [picket_fence_even_val, picket_fence_odd_val]
+  have hmul : (a + 1) * p = a * p + p := by rw [Nat.add_mul, Nat.one_mul]
+  omega
+
+theorem picket_fence_gap_sum (p m a : Nat) (hm2 : 2 * m ≤ p) :
+    (picketSeq p m (2 * a + 1) - picketSeq p m (2 * a)) +
+    (picketSeq p m (2 * (a + 1)) - picketSeq p m (2 * a + 1)) = p := by
+  rw [picket_fence_even_gap p m a hm2, picket_fence_odd_gap p m a hm2]
+  omega
+
+/-- Proposition 4.2c (Zero-Gap Dyadic Degeneracy vs. Strictly Positive Odd-Prime Picket Ratio):
+    The smaller alternating gap min(2m, p - 2m) vanishes if and only if 2*m = p (unique prime p = 2, m = 1),
+    whereas for every odd prime p >= 3, min(2m, p - 2m) >= 1 strictly! -/
+theorem picket_fence_odd_prime_strictly_positive (p m : Nat) (hodd : p % 2 = 1)
+    (hm1 : 1 ≤ m) (hm2 : 2 * m ≤ p) :
+    1 ≤ min (2 * m) (p - 2 * m) := by
+  omega
+
+theorem picket_fence_dyadic_zero_gap :
+    min (2 * 1) (2 - 2 * 1) = 0 := by decide
+
 end Ultrametrica

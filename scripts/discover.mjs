@@ -1,7 +1,7 @@
 /**
- * ULTRAMETRICA — Reproducible Scientific Discovery & Falsification Benchmark Suite (v1.2.0).
+ * ULTRAMETRICA — Reproducible Scientific Discovery & Falsification Benchmark Suite (v1.3.0).
  *
- * Runs 6 exact quantitative experiments and writes reproducible JSON results to results/:
+ * Runs 8 exact quantitative experiments and writes reproducible JSON results to results/:
  *   Exp A: Full exact eigenspectrum & level-spacing statistics (<r>, IPR, commutator norm)
  *          of the non-commuting Monna-conjugated Adelic Hybrid Hamiltonian:
  *            H(theta) = theta * D_p^alpha + (1 - theta) * R_p * (-Delta_R)^{alpha/2} * R_p
@@ -12,12 +12,15 @@
  *          under the p-adic Gross-Pitaevskii equation across g in [0, 500].
  *   Exp D: Rotating Kerr-BTZ Aharonov-Bohm Horizon Flux Current J(Omega) & Energy Spectrum
  *          across Omega in [-pi, pi].
- *   Exp E: Large-N Single-Sector Complex Hermitian Intra-Block Spectral Statistics inside W_{0,1}
- *          (resolving Open Frontier #1 up to N = 625, dim(W_{0,1}) up to 128) via exact complex
- *          Hermitian Jacobi diagonalization!
+ *   Exp E: Large-N Single-Sector Complex Hermitian Intra-Block Spectral Statistics inside W_{0,m}
+ *          (resolving Open Frontier #1 up to N = 625, dim(W_{0,m}) up to 128) via exact complex
+ *          Hermitian Jacobi diagonalization.
  *   Exp F: Parametric Scaling of Multi-Scale Resonant Self-Trapping Peak g_*(p, alpha) vs.
- *          the Vladimirov Inter-Shell Eigenvalue Gap Delta_lambda = p^{2*alpha} - p^alpha
- *          (resolving Open Frontier #2).
+ *          the Vladimirov Inter-Shell Eigenvalue Gap Delta_lambda = p^{2*alpha} - p^alpha.
+ *   Exp G: Nonlinear Dispersion Spectrum alpha in {0.5, 1.0, 1.5, 2.0} Intra-Sector Contrast
+ *          (testing quadratic Schrodinger dispersion alpha = 2.0 vs. linear picket-fence locking).
+ *   Exp H: Theorem V Non-Perturbative Curved AdS Gauss-Bonnet Curvature Conservation,
+ *          Supercritical Pinch Deficit (sigma_e < -ln p), & BF Tachyonic Stability Margin (Delta -> 0.5+).
  */
 
 import fs from 'node:fs/promises';
@@ -766,6 +769,191 @@ function runExperimentF() {
   return series;
 }
 
+function runExperimentG() {
+  console.log('\n=== Experiment G: Nonlinear Dispersion alpha in {0.5, 1.0, 1.5, 2.0} Intra-Sector Spectral Contrast ===');
+  const sectors = [
+    { p: 2, n: 8, m: 1 }, // N = 256, D = 128
+    { p: 3, n: 5, m: 1 }, // N = 243, D = 81
+    { p: 5, n: 4, m: 1 }, // N = 625, D = 125
+    { p: 5, n: 4, m: 2 }, // N = 625, D = 125
+  ];
+  const alphas = [0.5, 1.0, 1.5, 2.0];
+  const theta = 0.5;
+  const rows = [];
+
+  for (const sec of sectors) {
+    for (const alpha of alphas) {
+      const blk = buildSectorW0mBlock(sec.p, sec.n, sec.m, alpha);
+      const { N, D, HQRe, HQIm, diagR, maxCrossSectorLeak, maxHermErr } = blk;
+
+      // Exact unperturbed Archimedean folded-spectrum <r> inside W_{0, m} at theta = 0
+      const sortedR = Float64Array.from(diagR).sort();
+      const statsR0 = levelSpacingStats(sortedR);
+
+      // Measure relative off-diagonal coupling strength inside W_{0, m}
+      let offFrob2 = 0;
+      let diagRFrob2 = 0;
+      for (let a = 0; a < D; a++) {
+        diagRFrob2 += diagR[a] * diagR[a];
+        for (let b = 0; b < D; b++) {
+          if (a !== b) offFrob2 += HQRe[a * D + b] ** 2 + HQIm[a * D + b] ** 2;
+        }
+      }
+      const offToArchRatio = Math.sqrt(offFrob2) / Math.max(1e-12, Math.sqrt(diagRFrob2));
+
+      // Diagonalize hybrid block at theta = 0.5
+      const MRe = new Float64Array(D * D);
+      const MIm = new Float64Array(D * D);
+      for (let i = 0; i < D * D; i++) {
+        MRe[i] = theta * HQRe[i];
+        MIm[i] = theta * HQIm[i];
+      }
+      for (let a = 0; a < D; a++) MRe[a * D + a] += (1 - theta) * diagR[a];
+      const eig = jacobiHermitianEigen(MRe, MIm, D);
+      const statsHyb = levelSpacingStats(eig.eigenvalues);
+
+      console.log(
+        `p=${sec.p}, n=${sec.n}, W_{0,${sec.m}}, alpha=${alpha.toFixed(1)} | crossLeak=${maxCrossSectorLeak.toExponential(1)} | ||HQ_off||/||HR||=${offToArchRatio.toFixed(4)} | <r>(theta=0)=${statsR0.meanR_distinct.toFixed(4)} | <r>(theta=0.5)=${statsHyb.meanR_distinct.toFixed(4)} | shift=${(statsHyb.meanR_distinct - statsR0.meanR_distinct >= 0 ? '+' : '') + (statsHyb.meanR_distinct - statsR0.meanR_distinct).toFixed(4)}`
+      );
+      rows.push({
+        p: sec.p,
+        n: sec.n,
+        m: sec.m,
+        N,
+        dimBlock: D,
+        alpha,
+        theta,
+        maxCrossSectorLeak,
+        maxHermErr,
+        offToArchRatio,
+        meanR_archimedean0: statsR0.meanR_distinct,
+        meanR_hybrid05: statsHyb.meanR_distinct,
+        deltaR: statsHyb.meanR_distinct - statsR0.meanR_distinct,
+        distinctInBlock: statsHyb.distinctLevels,
+      });
+    }
+  }
+  return rows;
+}
+
+function runExperimentH() {
+  console.log('\n=== Experiment H: Theorem V Curved AdS Gauss-Bonnet Conservation, Pinch Margin & BF Stability ===');
+
+  // Part H1: Non-perturbative curved AdS Gauss-Bonnet conservation & supercritical pinch deficit
+  const gbCurves = [];
+  const sigmas = [-2.2, -1.8, -1.4, -1.1, -0.8, -0.4, 0.0, 0.5, 1.0, 1.8, 2.5];
+  for (const [p, n] of [[2, 5], [3, 4], [5, 3]]) {
+    const kappaAdS = (-2 * (p - 1)) / (p + 1);
+    const sigmaCrit = -Math.log(p);
+
+    // Require BOTH endpoints AND all 2p adjacent edges to be strictly interior (degree p+1 at every vertex),
+    // which requires depth(u) >= 2 and depth(v) = depth(u) + 1 <= nDeep - 2, i.e. nDeep >= 5!
+    const nDeep = p === 2 ? 6 : 5;
+    const spaceDeep = new PadicSpace(p, nDeep);
+    const bulkDeep = new BruhatTitsBulk(spaceDeep, 0);
+    // Find an edge (u, v) with depth(u) >= 2 and depth(v) <= nDeep - 2
+    let targetEdge = -1;
+    for (let ei = 0; ei < bulkDeep.numEdges; ei++) {
+      const e = bulkDeep.edges[ei];
+      if (bulkDeep.nodeDepth[e.u] >= 2 && bulkDeep.nodeDepth[e.v] <= nDeep - 2) {
+        targetEdge = ei;
+        break;
+      }
+    }
+    const eObj = bulkDeep.edges[targetEdge];
+    const adjEdges = bulkDeep.edgeNeighbors[targetEdge];
+    const sweep = [];
+    let maxErr = 0;
+
+    for (const sig of sigmas) {
+      bulkDeep.sigma.fill(0);
+      bulkDeep.sigma[targetEdge] = sig;
+      bulkDeep._syncWeights();
+      bulkDeep.computeOllivierRicci();
+
+      const kEdge = bulkDeep.ricciCurvature[targetEdge];
+      let sumExcess = kEdge - kappaAdS;
+      let kAdjSample = 0;
+      for (let i = 0; i < adjEdges.length; i++) {
+        const ka = bulkDeep.ricciCurvature[adjEdges[i]];
+        kAdjSample = ka;
+        sumExcess += ka - kappaAdS;
+      }
+
+      const w = Math.exp(-sig);
+      const predictedTotalExcess = w <= p ? 0.0 : (-2.0 * (w - p)) / (w + p);
+      const err = Math.abs(sumExcess - predictedTotalExcess);
+      if (err > maxErr) maxErr = err;
+
+      sweep.push({
+        sigma: sig,
+        edgeLength: Math.exp(sig),
+        conductance: w,
+        regime: w <= p ? 'subcritical_conserved' : 'supercritical_deficit',
+        kappaEdge: kEdge,
+        kappaAdj: kAdjSample,
+        totalCurvatureExcess: sumExcess,
+        theoremVPrediction: predictedTotalExcess,
+        absError: err,
+      });
+    }
+
+    console.log(
+      `Theorem V (p=${p}, n=${nDeep}, sigma*=-ln(${p})=${sigmaCrit.toFixed(4)}): max |measured - law| = ${maxErr.toExponential(2)} | stretch(+2.5) sum=${sweep[sweep.length - 1].totalCurvatureExcess.toExponential(2)} | pinch(-2.2) sum=${sweep[0].totalCurvatureExcess.toFixed(6)}`
+    );
+    gbCurves.push({ p, n: nDeep, kappaAdS, sigmaCrit, maxErr, sweep });
+  }
+
+  // Part H2: Breitenlohner-Freedman Tachyonic Margin (Delta -> 0.5+) under curved gravity & maximal Kerr flux
+  const deltas = [1.5, 1.0, 0.7, 0.55, 0.51, 0.501, 0.5001];
+  const bfRows = [];
+  const spaceBF = new PadicSpace(3, 5);
+  const bRe = new Float64Array(spaceBF.N);
+  const bIm = new Float64Array(spaceBF.N);
+  for (let l = 0; l < spaceBF.N; l++) {
+    bRe[l] = Math.cos(l * 0.31) * 0.8 + 0.2;
+    bIm[l] = Math.sin(l * 0.47) * 0.6;
+  }
+
+  for (const isBTZ of [false, true]) {
+    const bulk = new BruhatTitsBulk(spaceBF, isBTZ ? 2 : 0);
+    // Deterministic inhomogeneous curved geometry sigma in [-1.5, +1.5]
+    for (let e = 0; e < bulk.numEdges; e++) {
+      bulk.sigma[e] = 1.5 * Math.sin(e * 1.61803398875);
+    }
+    bulk.horizonFlux = isBTZ ? Math.PI : 0.0;
+    bulk._syncWeights();
+
+    for (const delta of deltas) {
+      bulk.delta = delta;
+      bulk.solveBulkField(bRe, bIm);
+      const m2 = bulk.massSquared(delta);
+      const bf = bulk.bfBound();
+      let minPivot = Infinity;
+      for (let u = 0; u < bulk.numNodes; u++) {
+        if (!bulk.isLeaf[u]) minPivot = Math.min(minPivot, Math.abs(bulk._D[u]));
+      }
+      bfRows.push({
+        topology: isBTZ ? 'Curved_Kerr_BTZ_L9_OmegaPi' : 'Curved_Pure_AdS',
+        p: 3,
+        n: 5,
+        delta,
+        m2,
+        m2MinusBF: m2 - bf,
+        minSchurPivot: minPivot,
+        maxResidual: bulk.maxResidual,
+      });
+    }
+  }
+  const worstBFRes = Math.max(...bfRows.map((r) => r.maxResidual));
+  const minBFPivot = Math.min(...bfRows.map((r) => r.minSchurPivot));
+  console.log(
+    `BF Tachyonic Margin Sweep (Delta -> 0.5001, curved sigma in [-1.5,1.5], Omega=pi): worst KG residual = ${worstBFRes.toExponential(2)} | min Schur pivot = ${minBFPivot.toFixed(4)}`
+  );
+
+  return { gaussBonnetCurves: gbCurves, bfStabilityMargin: bfRows, worstBFResidual: worstBFRes, minBFPivot };
+}
+
 async function main() {
   await fs.mkdir(RESULTS_DIR, { recursive: true });
   const results = {
@@ -777,6 +965,8 @@ async function main() {
     experimentD_kerrBtzAharonovBohmFlux: runExperimentD(),
     experimentE_intraBlockSpectralStats: runExperimentE(),
     experimentF_selfTrappingScaling: runExperimentF(),
+    experimentG_nonlinearDispersionContrast: runExperimentG(),
+    experimentH_gaussBonnetAndBFMargin: runExperimentH(),
   };
 
   const outPath = path.join(RESULTS_DIR, 'discovery-benchmarks.json');

@@ -521,3 +521,83 @@ test('Theorem 9: Adelic Valuation-Residue Block Decomposition & Unified BTZ Olli
     }
   }
 });
+
+test('Theorem 10: Theorem V Curved AdS Gauss-Bonnet Conservation, BF Margin & Adversarial Audit Regressions', () => {
+  // Part A: Theorem V — Non-perturbative Gauss-Bonnet conservation (sigma >= -ln p) & exact supercritical pinch deficit (sigma < -ln p)
+  for (const [p, n] of [[2, 6], [3, 5]]) {
+    const space = new PadicSpace(p, n);
+    const bulk = new BruhatTitsBulk(space, 0);
+    const kappaAdS = (-2 * (p - 1)) / (p + 1);
+    let targetEdge = -1;
+    for (let ei = 0; ei < bulk.numEdges; ei++) {
+      const e = bulk.edges[ei];
+      if (bulk.nodeDepth[e.u] >= 2 && bulk.nodeDepth[e.v] <= n - 2) {
+        targetEdge = ei;
+        break;
+      }
+    }
+    assert.ok(targetEdge >= 0);
+    const adj = bulk.edgeNeighbors[targetEdge];
+    assert.equal(adj.length, 2 * p);
+
+    for (const sig of [-2.0, -1.2, -0.4, 0.0, 1.5, 2.6]) {
+      bulk.sigma.fill(0);
+      bulk.sigma[targetEdge] = sig;
+      bulk._syncWeights();
+      bulk.computeOllivierRicci();
+      let sumExcess = bulk.ricciCurvature[targetEdge] - kappaAdS;
+      for (let i = 0; i < adj.length; i++) sumExcess += bulk.ricciCurvature[adj[i]] - kappaAdS;
+      const w = Math.exp(-sig);
+      const expected = w <= p ? 0.0 : (-2.0 * (w - p)) / (w + p);
+      assert.ok(
+        Math.abs(sumExcess - expected) < 1e-12,
+        `Theorem V mismatch p=${p}, sigma=${sig}: got ${sumExcess}, expected ${expected}`
+      );
+    }
+  }
+
+  // Part B: Audit BUG-1 regression — ultrametric_tunneling starts with 0.00% initial leakage across ALL primes {2,3,5,7}
+  for (const p of [2, 3, 5, 7]) {
+    const sim = new UltrametricaSimulation(p, p === 2 ? 6 : p === 3 ? 5 : 3, 0);
+    sim.loadExperiment('ultrametric_tunneling');
+    assert.ok(
+      sim.quantum.leakagePadic < 1e-14,
+      `BUG-1 regression: ultrametric_tunneling at p=${p} has initial leakage ${sim.quantum.leakagePadic}`
+    );
+  }
+
+  // Part C: Audit BUG-2 regression — wormhole_surgery under BTZ keepTopology mode pinches horizon edge[0]
+  const simBtz = new UltrametricaSimulation(3, 5, 2);
+  simBtz.loadExperiment('wormhole_surgery', { keepTopology: true });
+  assert.equal(simBtz.bulk.isBTZ, true);
+  assert.ok(
+    simBtz.bulk.edgeLength[simBtz.bulk.horizonEdges[0]] > 20.0,
+    'BUG-2 regression: wormhole_surgery under BTZ must actively stretch horizonEdges[0]'
+  );
+
+  // Part D: Audit BUG-3 regression — stepGravity preserves exact sibling symmetry (zero Gauss-Seidel bias!)
+  const spSym = new PadicSpace(3, 4);
+  const bSym = new BruhatTitsBulk(spSym, 0);
+  // Excite all depth-1 edges identically; after multiple steps all 3 depth-1 edges must remain bit-identical!
+  const d1Edges = bSym.children[0].map((c) => bSym.parentEdge[c]);
+  for (const ei of d1Edges) bSym.edgeStress[ei] = 1.25;
+  for (let step = 0; step < 25; step++) bSym.stepGravity(0.02);
+  for (let i = 1; i < d1Edges.length; i++) {
+    assert.ok(
+      Math.abs(bSym.sigma[d1Edges[i]] - bSym.sigma[d1Edges[0]]) < 1e-15,
+      `BUG-3 regression: directional Gauss-Seidel asymmetry ${bSym.sigma[d1Edges[i]] - bSym.sigma[d1Edges[0]]}`
+    );
+  }
+
+  // Part E: BF Tachyonic margin stability (Delta = 0.501, curved sigma in [-1.5, 1.5], rotating BTZ Omega = pi)
+  const spBF = new PadicSpace(3, 5);
+  const bBF = new BruhatTitsBulk(spBF, 2);
+  for (let e = 0; e < bBF.numEdges; e++) bBF.sigma[e] = 1.5 * Math.sin(e * 1.61803398875);
+  bBF.delta = 0.501;
+  bBF.horizonFlux = Math.PI;
+  bBF._syncWeights();
+  const br = new Float64Array(spBF.N).fill(0.5);
+  const bi = new Float64Array(spBF.N).fill(-0.3);
+  bBF.solveBulkField(br, bi);
+  assert.ok(bBF.maxResidual < 1e-12, `BF tachyonic margin residual failed: ${bBF.maxResidual}`);
+});

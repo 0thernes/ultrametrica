@@ -153,12 +153,12 @@ function syncUIFromSim() {
   const bulk = sim.bulk;
   const q = sim.quantum;
 
-  // Manifold badge
+  // Manifold badge (compact for 1280px zero-clipping fit)
   if (bulk.isBTZ) {
-    elManifoldBadge.textContent = `T_${p} / ${p}^(${bulk.horizonDepth}Z) Kerr-BTZ · L=${bulk.horizonLength} · N=${sim.space.N}`;
+    elManifoldBadge.textContent = `T_${p}/${p}^(${bulk.horizonDepth}Z) BTZ · L=${bulk.horizonLength} · N=${sim.space.N}`;
     elManifoldBadge.className = 'badge badge-amber';
   } else {
-    elManifoldBadge.textContent = `Q_${p} / Bruhat-Tits AdS · N=${sim.space.N} leaves`;
+    elManifoldBadge.textContent = `Q_${p} AdS · N=${sim.space.N}`;
     elManifoldBadge.className = 'badge badge-cyan';
   }
 
@@ -280,6 +280,8 @@ function buildPermalinkURL() {
   url.searchParams.set('theta', sim.quantum.adelicMix.toFixed(2));
   url.searchParams.set('g', sim.quantum.nonlinearity.toFixed(1));
   url.searchParams.set('delta', sim.bulk.delta.toFixed(2));
+  url.searchParams.set('grav', sim.newtonG.toFixed(2));
+  url.searchParams.set('dyn', sim.gravityEnabled ? '1' : '0');
   if (sim.bulk.isBTZ) url.searchParams.set('flux', sim.bulk.horizonFlux.toFixed(2));
   else url.searchParams.delete('flux');
   url.searchParams.set('rt', sim.rtFraction.toFixed(2));
@@ -307,7 +309,7 @@ function hydrateStateFromURL() {
     setShaderView(view);
   }
   const alpha = parseFloat(params.get('alpha'));
-  if (Number.isFinite(alpha) && alpha >= 0.25 && alpha <= 1.9) {
+  if (Number.isFinite(alpha) && alpha >= 0.25 && alpha <= 2.0) {
     sim.quantum.setAlpha(alpha);
   }
   const theta = parseFloat(params.get('theta'));
@@ -321,6 +323,15 @@ function hydrateStateFromURL() {
   const delta = parseFloat(params.get('delta'));
   if (Number.isFinite(delta) && delta >= 0.52 && delta <= 2.4) {
     sim.bulk.delta = delta;
+  }
+  const grav = parseFloat(params.get('grav'));
+  if (Number.isFinite(grav) && grav >= 0 && grav <= 3.5) {
+    sim.newtonG = grav;
+    sim.backreactionStrength = Math.min(1.5, grav * 0.65);
+  }
+  const dyn = params.get('dyn');
+  if (dyn === '0' || dyn === '1') {
+    sim.gravityEnabled = dyn === '1';
   }
   const flux = parseFloat(params.get('flux'));
   if (sim.bulk.isBTZ && Number.isFinite(flux) && flux >= -Math.PI && flux <= Math.PI) {

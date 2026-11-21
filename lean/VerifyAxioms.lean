@@ -1,13 +1,13 @@
 /-
-  ULTRAMETRICA — Standalone Kernel Axiom Audit (v4.35.0)
-  Audits all 71 exported theorems across the four proof libraries via `#print axioms`.
+  ULTRAMETRICA — Standalone Kernel Axiom Audit (v4.35.0, release v1.3.0)
+  Audits all 101 exported theorems across the four proof libraries via `#print axioms`.
   Every theorem must depend strictly on a subset of [propext, Classical.choice, Quot.sound]
   (or no axioms at all) with zero `sorryAx`, zero `native_decide`, and zero custom axioms.
 -/
 
 import UltrametricaProofs
 
--- Module 1: Basic Ultrametric Geometry, Universal Monna Involution & Ball Contiguity (20 theorems)
+-- Module 1: Basic Ultrametric Geometry, Universal Monna Involution, Ball Contiguity & Concrete Tree Metric (26 theorems)
 #print axioms Ultrametrica.ultrametric_isosceles_lt
 #print axioms Ultrametrica.ultrametric_two_longest_equal
 #print axioms Ultrametrica.pow_dvd_add
@@ -28,8 +28,14 @@ import UltrametricaProofs
 #print axioms Ultrametrica.complement_commutes_monna_p3_n4
 #print axioms Ultrametrica.complement_commutes_monna_p5_n3
 #print axioms Ultrametrica.complement_commutes_monna_p7_n2
+#print axioms Ultrametrica.padic_ball_cardinality
+#print axioms Ultrametrica.monna_injective
+#print axioms Ultrametrica.monna_surjective
+#print axioms Ultrametrica.treeHopDist_symm
+#print axioms Ultrametrica.treeHopDist_strong_tri
+#print axioms Ultrametrica.bruhatTits_leaves_isosceles
 
--- Module 2: Adelic Parity-Doubling Dichotomy, Subtree Isometry & Fourier Separation (15 theorems)
+-- Module 2: Adelic Parity-Doubling Dichotomy, Subtree Isometry, Fourier Separation & Picket-Fence Law (23 theorems)
 #print axioms Ultrametrica.hilbert_sector_completeness
 #print axioms Ultrametrica.subtreeShift_preserves_ball
 #print axioms Ultrametrica.subtreeShift_preserves_offset
@@ -45,12 +51,21 @@ import UltrametricaProofs
 #print axioms Ultrametrica.even_prime_self_conjugate
 #print axioms Ultrametrica.odd_pow_is_odd
 #print axioms Ultrametrica.odd_prime_doublet_bound
+#print axioms Ultrametrica.picket_fence_even_val
+#print axioms Ultrametrica.picket_fence_odd_val
+#print axioms Ultrametrica.picket_fence_monotone
+#print axioms Ultrametrica.picket_fence_even_gap
+#print axioms Ultrametrica.picket_fence_odd_gap
+#print axioms Ultrametrica.picket_fence_gap_sum
+#print axioms Ultrametrica.picket_fence_odd_prime_strictly_positive
+#print axioms Ultrametrica.picket_fence_dyadic_zero_gap
 
--- Module 3: First-Principles Optimal-Transport Curvature, BF Bound & RT Theorems (24 theorems)
+-- Module 3: First-Principles Optimal-Transport Curvature, Cycle Bridge, BF Bound, RT & Theorem V Gauss-Bonnet (40 theorems)
 #print axioms Ultrametrica.ads_dual_1lipschitz
 #print axioms Ultrametrica.ads_wasserstein_lower_bound
 #print axioms Ultrametrica.ads_primal_cost_exact
 #print axioms Ultrametrica.ads_kappa_from_wasserstein
+#print axioms Ultrametrica.btz_graph_metric_eq_classDist
 #print axioms Ultrametrica.btz_dual_1lipschitz
 #print axioms Ultrametrica.btz_wasserstein_lower_bound
 #print axioms Ultrametrica.btz_primal_feasible
@@ -71,6 +86,21 @@ import UltrametricaProofs
 #print axioms Ultrametrica.rt_uniform_odd_prime_all_arcs
 #print axioms Ultrametrica.rt_uniform_dyadic_two_arcs
 #print axioms Ultrametrica.rt_cut_complement_symmetry
+#print axioms Ultrametrica.btz_curvature_monotone_in_L
+#print axioms Ultrametrica.gubser_shadow_duality
+#print axioms Ultrametrica.geomSum_pos
+#print axioms Ultrametrica.ads_vertex_count_identity
+#print axioms Ultrametrica.ads_euler_characteristic_one
+#print axioms Ultrametrica.btz_euler_characteristic_zero
+#print axioms Ultrametrica.curved_sub_dual_1lipschitz
+#print axioms Ultrametrica.curved_sub_wasserstein_lower_bound
+#print axioms Ultrametrica.curved_sub_primal_cost_exact
+#print axioms Ultrametrica.curved_sup_dual_1lipschitz
+#print axioms Ultrametrica.curved_sup_wasserstein_lower_bound
+#print axioms Ultrametrica.curved_sup_primal_cost_exact
+#print axioms Ultrametrica.curved_ads_gauss_bonnet_subcritical
+#print axioms Ultrametrica.curved_ads_supercritical_pinch_deficit
+#print axioms Ultrametrica.curved_ads_supercritical_strictly_negative
 
 -- Module 4: Multi-Ball Solitons, Exact Complex Sherman-Morrison & Kerr Parity Laws (12 theorems)
 #print axioms Ultrametrica.kozyrev_exact_nonlinear_soliton

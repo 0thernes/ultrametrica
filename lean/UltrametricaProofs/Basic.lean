@@ -300,4 +300,80 @@ theorem complement_commutes_monna_p7_n2 :
     ∀ x : Fin 49, revBase 7 2 (48 - x.val) = 48 - revBase 7 2 x.val :=
   fun x => complement_commutes_monna_universal 7 2 x.val (by omega) x.isLt
 
+-- =====================================================================
+-- Part B: Monna Bijectivity, Ball Cardinality & Concrete Tree Ultrametric
+-- =====================================================================
+
+/-- Exact ball partition cardinality: p^j disjoint depth-j balls of size p^(n-j) partition p^n leaves. -/
+theorem padic_ball_cardinality (p n j : Nat) (hj : j ≤ n) :
+    p ^ j * p ^ (n - j) = p ^ n := by
+  rw [← Nat.pow_add]
+  have h : j + (n - j) = n := by omega
+  rw [h]
+
+/-- Exact injectivity of the discrete Monna map R_p on {0, ..., p^n - 1}. -/
+theorem monna_injective (p n x y : Nat) (hp : 2 ≤ p) (hx : x < p ^ n) (hy : y < p ^ n)
+    (heq : revBase p n x = revBase p n y) : x = y := by
+  have h1 := monna_involution_universal p n x hp hx
+  have h2 := monna_involution_universal p n y hp hy
+  rw [← h1, ← h2, heq]
+
+/-- Exact surjectivity of the discrete Monna map R_p onto {0, ..., p^n - 1}. -/
+theorem monna_surjective (p n y : Nat) (hp : 2 ≤ p) (hy : y < p ^ n) :
+    ∃ x : Nat, x < p ^ n ∧ revBase p n x = y :=
+  ⟨revBase p n y, revBase_lt p n y hp, monna_involution_universal p n y hp hy⟩
+
+/-- Exact Bruhat-Tits tree hop distance between two depth-d leaves:
+    climbs up to the lowest common ancestor, adding 2 hops per mismatched level. -/
+def treeHopDist (p : Nat) : Nat → Nat → Nat → Nat
+  | 0, _, _ => 0
+  | d + 1, x, y => if x = y then 0 else 2 + treeHopDist p d (x / p) (y / p)
+
+theorem treeHopDist_symm (p d x y : Nat) :
+    treeHopDist p d x y = treeHopDist p d y x := by
+  induction d generalizing x y with
+  | zero => rfl
+  | succ d ih =>
+    simp only [treeHopDist]
+    by_cases h : x = y
+    · subst h; simp
+    · have h' : y ≠ x := Ne.symm h
+      simp only [h, h', ite_false, ih (x / p) (y / p)]
+
+theorem treeHopDist_strong_tri (p d x y z : Nat) :
+    treeHopDist p d x z ≤ max (treeHopDist p d x y) (treeHopDist p d y z) := by
+  induction d generalizing x y z with
+  | zero =>
+    simp [treeHopDist]
+  | succ d ih =>
+    simp only [treeHopDist]
+    by_cases hxz : x = z
+    · simp [hxz]
+    · simp only [hxz, ite_false]
+      by_cases hxy : x = y
+      · subst hxy
+        simp only [ite_true, hxz, ite_false]
+        omega
+      · by_cases hyz : y = z
+        · subst hyz
+          simp only [hxy, ite_false, ite_true]
+          omega
+        · simp only [hxy, hyz, ite_false]
+          have hsub := ih (x / p) (y / p) (z / p)
+          omega
+
+/-- Concrete kernel-verified `Ultrametric Nat` instance for the Bruhat-Tits tree T_p
+    at arbitrary prime p >= 2 and arbitrary cutoff depth n : Nat. -/
+def bruhatTitsUltrametric (p n : Nat) : Ultrametric Nat where
+  dist := treeHopDist p n
+  symm := treeHopDist_symm p n
+  strong_tri := treeHopDist_strong_tri p n
+
+/-- Concrete Bruhat-Tits Isosceles Theorem: every triple of leaves on T_p forms an isosceles triangle. -/
+theorem bruhatTits_leaves_isosceles (p n x y z : Nat) :
+    (treeHopDist p n x y = treeHopDist p n y z ∧ treeHopDist p n x z ≤ treeHopDist p n x y) ∨
+    (treeHopDist p n x y = treeHopDist p n x z ∧ treeHopDist p n y z ≤ treeHopDist p n x y) ∨
+    (treeHopDist p n y z = treeHopDist p n x z ∧ treeHopDist p n x y ≤ treeHopDist p n y z) :=
+  ultrametric_two_longest_equal (bruhatTitsUltrametric p n) x y z
+
 end Ultrametrica

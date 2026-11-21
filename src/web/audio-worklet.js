@@ -21,6 +21,8 @@ class PadicSynthProcessor extends AudioWorkletProcessor {
     this.alpha = 1.0;
     this.isBTZ = false;
     this.masterGain = 0.24;
+    this.smoothGain = 0.24;
+    this.smoothBtzMix = 0.0;
 
     this.targetAmp = new Float32Array(MAX_SHELLS);
     this.smoothAmp = new Float32Array(MAX_SHELLS);
@@ -48,16 +50,29 @@ class PadicSynthProcessor extends AudioWorkletProcessor {
       if (!msg) return;
 
       if (msg.type === 'state') {
-        const changedTuning = msg.p !== this.p || msg.n !== this.n || Math.abs(msg.alpha - this.alpha) > 1e-4;
-        this.p = msg.p;
-        this.n = msg.n;
-        this.alpha = msg.alpha;
+        const nextP = Number.isFinite(msg.p) && msg.p >= 2 ? msg.p : this.p;
+        const nextN = Number.isFinite(msg.n) && msg.n >= 1 ? msg.n : this.n;
+        const nextAlpha = Number.isFinite(msg.alpha) ? msg.alpha : this.alpha;
+        const changedTuning = nextP !== this.p || nextN !== this.n || Math.abs(nextAlpha - this.alpha) > 1e-4;
+        this.p = nextP;
+        this.n = nextN;
+        this.alpha = nextAlpha;
         this.isBTZ = !!msg.isBTZ;
-        this.horizonCurrent = msg.horizonCurrent || 0;
-        this.gravStrain = msg.gravStrain || 0;
-        if (typeof msg.masterGain === 'number') this.masterGain = msg.masterGain;
+        this.horizonCurrent = Number.isFinite(msg.horizonCurrent) ? msg.horizonCurrent : 0;
+        this.gravStrain = Number.isFinite(msg.gravStrain) ? Math.max(0, msg.gravStrain) : 0;
+        if (Number.isFinite(msg.masterGain)) {
+          this.masterGain = Math.max(0, Math.min(1.0, msg.masterGain));
+        }
 
-        if (changedTuning) this._recomputeFrequencies();
+        if (Array.isArray(msg.shellFreqs) && msg.shellFreqs.length > 0) {
+          const countF = Math.min(MAX_SHELLS, msg.shellFreqs.length);
+          for (let s = 0; s < countF; s++) {
+            const f = msg.shellFreqs[s];
+            if (Number.isFinite(f) && f > 10 && f < 16000) this.targetFreq[s] = f;
+          }
+        } else if (changedTuning) {
+          this._recomputeFrequencies();
+        }
 
         const powers = msg.shellPower;
         const centroids = msg.shellCentroid;
@@ -65,9 +80,11 @@ class PadicSynthProcessor extends AudioWorkletProcessor {
           const count = Math.min(MAX_SHELLS, powers.length);
           for (let s = 0; s < MAX_SHELLS; s++) {
             if (s < count) {
+              const pwr = Number.isFinite(powers[s]) ? Math.max(0, powers[s]) : 0;
+              const cen = centroids && Number.isFinite(centroids[s]) ? centroids[s] : 0.5;
               // Sqrt maps quantum probability |c|^2 -> acoustic amplitude |c|
-              this.targetAmp[s] = Math.sqrt(Math.max(0, powers[s]));
-              this.targetPan[s] = centroids ? centroids[s] : 0.5;
+              this.targetAmp[s] = Math.sqrt(pwr);
+              this.targetPan[s] = Math.max(0.05, Math.min(0.95, cen));
             } else {
               this.targetAmp[s] = 0;
             }
@@ -75,9 +92,10 @@ class PadicSynthProcessor extends AudioWorkletProcessor {
         }
       } else if (msg.type === 'pluck') {
         const s = Math.max(0, Math.min(MAX_SHELLS - 1, msg.shell | 0));
-        this.pluckEnv[s] = Math.min(1.0, this.pluckEnv[s] + (msg.intensity ?? 0.85));
-        if (typeof msg.pan === 'number') {
-          this.targetPan[s] = msg.pan;
+        const inten = Number.isFinite(msg.intensity) ? Math.max(0, Math.min(1.5, msg.intensity)) : 0.85;
+        this.pluckEnv[s] = Math.min(1.0, this.pluckEnv[s] + inten);
+        if (Number.isFinite(msg.pan)) {
+          this.targetPan[s] = Math.max(0.05, Math.min(0.95, msg.pan));
         }
       }
     };
@@ -163,22 +181,25 @@ class PadicSynthProcessor extends AudioWorkletProcessor {
         mixR += sig * amp * gainR;
       }
 
-      // Rotating BTZ Black Hole sub-horizon resonant undertone
-      if (this.isBTZ) {
-        const subF = this.targetFreq[0] * 0.5;
+      // Rotating BTZ Black Hole sub-horizon resonant undertone (smoothly crossfaded to avoid click)
+      const targetBtz = this.isBTZ ? 1.0 : 0.0;
+      this.smoothBtzMix += (targetBtz - this.smoothBtzMix) * 0.0012;
+      if (this.smoothBtzMix > 1e-4) {
+        const subF = this.smoothFreq[0] * 0.5;
         this.dronePhase += TWO_PI * subF * invSr;
         if (this.dronePhase > TWO_PI) this.dronePhase -= TWO_PI;
         this.droneModPhase += TWO_PI * (0.8 + Math.abs(this.smoothHorizon) * 14.0) * invSr;
         if (this.droneModPhase > TWO_PI) this.droneModPhase -= TWO_PI;
 
         const btzWave = Math.sin(this.dronePhase + 0.45 * Math.sin(this.droneModPhase));
-        const btzAmp = 0.14 + Math.min(0.18, Math.abs(this.smoothHorizon) * 2.5);
+        const btzAmp = (0.14 + Math.min(0.18, Math.abs(this.smoothHorizon) * 2.5)) * this.smoothBtzMix;
         mixL += btzWave * btzAmp * (0.72 + 0.28 * Math.cos(this.droneModPhase));
         mixR += btzWave * btzAmp * (0.72 - 0.28 * Math.cos(this.droneModPhase));
       }
 
-      // Soft analog tanh limiter for clean headroom
-      const g = this.masterGain;
+      // Soft analog tanh limiter for clean headroom with smoothed master gain
+      this.smoothGain += (this.masterGain - this.smoothGain) * 0.002;
+      const g = this.smoothGain;
       left[i] = Math.tanh(mixL * g);
       if (right) right[i] = Math.tanh(mixR * g);
     }

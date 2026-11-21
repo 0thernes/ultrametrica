@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA (v1.2.0) — Independent Zero-Dependency Exact-Rational Falsifier,
+ULTRAMETRICA (v1.3.0) — Independent Zero-Dependency Exact-Rational Falsifier,
 Metadata Consistency Checker & SHA-256 Manifest Auditor.
 
 Completely decoupled from both the JavaScript simulation engine and Lean 4 proofs.
 Uses Python standard library exact arbitrary-precision arithmetic (int & fractions.Fraction)
-to independently verify or falsify Theorems I-IV, the Experiment E modular picket-fence law,
-all 71 Lean 4 declarations, cross-document version/ORCID consistency, and CHECKSUMS.sha256.
+to independently verify or falsify Theorems I-V, the Experiment E/G modular picket-fence law,
+all 101 Lean 4 declarations, cross-document version/ORCID consistency, and CHECKSUMS.sha256.
 
 Usage:
   python scripts/verify_exact.py                  # Run all exact checks + verify CHECKSUMS.sha256 if present
@@ -45,6 +45,7 @@ MANIFEST_FILES = [
     "server.mjs",
     "docs/CLAIMS.md",
     "docs/MASTER_REPORT.md",
+    "docs/AUDIT_AND_CONTRAST_ANALYSIS.md",
     "src/engine/padic.js",
     "src/engine/holography.js",
     "src/engine/quantum.js",
@@ -81,6 +82,7 @@ MANIFEST_FILES = [
     "paper/figures/fig2_adelic_spectrum.pdf",
     "paper/figures/fig3_soliton_resonance.pdf",
     "paper/figures/fig4_intrablock_and_scaling.pdf",
+    "paper/figures/fig5_spectrum_and_gaussbonnet.pdf",
     "dist/Donahue_2026_Ultrametrica.pdf",
     "dist/arxiv_submission.tar.gz",
 ]
@@ -385,6 +387,74 @@ def verify_theorem_3_and_4_exact() -> None:
     print(f"[PASS] Theorem IV (Exact Q(i) Sherman-Morrison): M*phi == rhs with ZERO error, denom = {den_sm[0]} >= 1.")
 
 
+def verify_theorem_5_curved_gauss_bonnet_exact() -> None:
+    """
+    Independent exact-rational (fractions.Fraction, zero float) optimal-transport verification
+    of Theorem V (Non-Perturbative Curved AdS Gauss-Bonnet Conservation & Supercritical Pinch Deficit)
+    across 60 (p, w) pairs spanning both stretches (w < 1), subcritical pinches (1 <= w <= p),
+    and supercritical pinches (w > p).
+    """
+    primes = [2, 3, 5, 7, 11]
+    conductances = [
+        Fraction(1, 10), Fraction(1, 3), Fraction(1, 2), Fraction(1),
+        Fraction(3, 2), Fraction(2), Fraction(3), Fraction(5),
+        Fraction(7), Fraction(9), Fraction(12), Fraction(20),
+    ]
+    checked = 0
+    for p in primes:
+        kappa_ads = Fraction(-2 * (p - 1), p + 1)
+        for w in conductances:
+            a_e = Fraction(1, w)
+            W_u = Fraction(p) + w
+            # Exact bipartite optimal transport on perturbed edge e (degree p+1 at both ends)
+            mu = [w / W_u] + [Fraction(1) / W_u] * p
+            cost = []
+            for i in range(p + 1):
+                row = []
+                for j in range(p + 1):
+                    if i == 0 and j == 0:
+                        row.append(a_e)
+                    elif i == 0 or j == 0:
+                        row.append(Fraction(1))
+                    else:
+                        row.append(Fraction(2) + a_e)
+                cost.append(row)
+            w1_e = exact_wasserstein_bipartite(mu, mu, cost)
+            kappa_e = Fraction(1) - w1_e / a_e
+
+            # Exact bipartite optimal transport on an adjacent edge e' = (u, z) (a_{e'} = 1, w_{e'} = 1)
+            # N(u) has conductance w on perturbed edge, 1 on e', and (p-1) ones on other edges
+            # N(z) has uniform conductance 1 on all (p+1) edges
+            mu_u_adj = [Fraction(1) / W_u, w / W_u] + [Fraction(1) / W_u] * (p - 1)
+            mu_z_adj = [Fraction(1, p + 1)] * (p + 1)
+            # Lengths from u: e' (1), perturbed edge (a_e), other edges (1)
+            len_u = [Fraction(0), a_e] + [Fraction(1)] * (p - 1)
+            cost_adj = []
+            for i in range(p + 1):
+                row = []
+                for j in range(p + 1):
+                    if i == 0 and j == 0:
+                        row.append(Fraction(1))  # z to u
+                    elif i == 0:
+                        row.append(Fraction(1))  # z to child of z
+                    elif j == 0:
+                        row.append(len_u[i])     # neighbor of u to u
+                    else:
+                        row.append(len_u[i] + Fraction(1) + Fraction(1))  # across e'
+                cost_adj.append(row)
+            w1_adj = exact_wasserstein_bipartite(mu_u_adj, mu_z_adj, cost_adj)
+            kappa_adj = Fraction(1) - w1_adj
+
+            total_excess = (kappa_e - kappa_ads) + 2 * p * (kappa_adj - kappa_ads)
+            expected = Fraction(0) if w <= p else Fraction(-2) * (w - p) / (w + p)
+            assert total_excess == expected, (
+                f"FALSIFIED Theorem V at p={p}, w={w}: got {total_excess}, expected {expected}"
+            )
+            checked += 1
+
+    print(f"[PASS] Theorem V (Exact Fraction Curved Gauss-Bonnet): verified {checked} curved (p, w) transport plans with ZERO rounding error.")
+
+
 def verify_archived_benchmarks_and_lean_audit() -> None:
     bench_path = ROOT / "results" / "discovery-benchmarks.json"
     data = json.loads(bench_path.read_text(encoding="utf-8"))
@@ -439,6 +509,24 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
     for s in exp_f:
         assert s["tailLeakage"] < s["peakLeakage"] * 0.1, f"Self-trapping tail failed for {s['p']},{s['alpha']}"
 
+    # Exp G (Nonlinear dispersion alpha in {0.5, 1.0, 1.5, 2.0} intra-sector contrast)
+    exp_g = data["experimentG_nonlinearDispersionContrast"]
+    assert len(exp_g) == 16
+    for row in exp_g:
+        assert row["maxCrossSectorLeak"] < 1e-11
+        assert row["maxHermErr"] < 1e-11
+    g_p5_m1_a2 = next(r for r in exp_g if (r["p"], r["m"], r["alpha"]) == (5, 1, 2.0))
+    g_p5_m2_a2 = next(r for r in exp_g if (r["p"], r["m"], r["alpha"]) == (5, 2, 2.0))
+    assert abs(g_p5_m1_a2["meanR_hybrid05"] - 2 / 3) < 0.06
+    assert abs(g_p5_m2_a2["meanR_hybrid05"] - 1 / 4) < 0.04
+
+    # Exp H (Theorem V curved AdS Gauss-Bonnet & BF tachyonic stability margin)
+    exp_h = data["experimentH_gaussBonnetAndBFMargin"]
+    for c in exp_h["gaussBonnetCurves"]:
+        assert c["maxErr"] < 1e-12, f"Theorem V benchmark error {c['maxErr']}"
+    assert exp_h["worstBFResidual"] < 1e-12
+    assert exp_h["minBFPivot"] > 0.5
+
     # Lean 4 source scan (zero sorry / admit / axiom / native_decide / unsafe in executable code)
     lean_files = [ROOT / "lean" / "UltrametricaProofs.lean"] + sorted((ROOT / "lean" / "UltrametricaProofs").glob("*.lean"))
     for lf in lean_files:
@@ -464,9 +552,9 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
             assert used.issubset(allowed), f"Forbidden axiom in line: {line}"
         elif "does not depend on any axioms" in line:
             audited += 1
-    assert audited >= 71, f"Expected >= 71 audited Lean declarations, found {audited}"
+    assert audited >= 101, f"Expected >= 101 audited Lean declarations, found {audited}"
 
-    print(f"[PASS] Benchmark (Exp A-F) & Lean 4 Audit Cross-Check: 6 datasets + {audited} Lean declarations verified.")
+    print(f"[PASS] Benchmark (Exp A-H) & Lean 4 Audit Cross-Check: 8 datasets + {audited} Lean declarations verified.")
 
 
 def verify_metadata_consistency() -> None:
@@ -529,6 +617,7 @@ def main() -> None:
     verify_theorem_1_adelic_symmetry()
     verify_theorem_2_btz_ollivier_ricci_exact()
     verify_theorem_3_and_4_exact()
+    verify_theorem_5_curved_gauss_bonnet_exact()
     verify_archived_benchmarks_and_lean_audit()
 
     if args.write_checksums:

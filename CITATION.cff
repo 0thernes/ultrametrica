@@ -2,7 +2,7 @@ cff-version: 1.2.0
 title: "ULTRAMETRICA — p-adic Holographic AdS/CFT, Rotating Kerr-BTZ Black Holes, Adelic Parity-Doubling Symmetries, & Lean 4 Verified Quantum Gravity Engine"
 message: "If you reference, verify, or build upon ULTRAMETRICA in academic or independent non-commercial research, please cite this software and preprint using the metadata below."
 type: software
-version: "1.2.0"
+version: "1.3.0"
 date-released: "2026-11-21"
 authors:
   - family-names: "Donahue"

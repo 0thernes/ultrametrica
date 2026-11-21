@@ -270,14 +270,20 @@ export class UltrametricTrianglePanel {
     const p = sim.p;
     const padL = 8;
 
-    ctx.font = '600 10px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+    ctx.font = '600 9.5px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+    const rightBadge = proof.isIsosceles ? 'ISOSCELES EXACT' : 'VIOLATION';
+    const rightW = ctx.measureText(rightBadge).width;
+    const fullTitle = `ULTRAMETRIC |x+y|_${p} <= max`;
+    const shortTitle = `ULTRAMETRIC Q_${p}`;
+    const titleStr = ctx.measureText(fullTitle).width + rightW + 24 <= W ? fullTitle : shortTitle;
+
     ctx.fillStyle = '#94a3b8';
     ctx.textAlign = 'left';
-    ctx.fillText(`ULTRAMETRIC PROVER  |x+y|_${p} <= max`, padL, 12);
+    ctx.fillText(titleStr, padL, 12);
 
     ctx.textAlign = 'right';
     ctx.fillStyle = proof.isIsosceles && proof.strongTriangleHolds ? '#34d399' : '#f87171';
-    ctx.fillText(proof.isIsosceles ? 'ISOSCELES EXACT' : 'VIOLATION', W - 8, 12);
+    ctx.fillText(rightBadge, W - 8, 12);
 
     // Draw an actual isosceles ultrametric triangle diagram on the left half
     const triW = Math.min(118, W * 0.44);

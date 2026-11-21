@@ -85,7 +85,7 @@ export class UltrametricaSimulation {
     this.triangleGeodesics = [];
 
     this._initUniverse(this.p, this.n, this.horizonDepth);
-    this.loadExperiment('kozyrev_trap');
+    this.loadExperiment('kozyrev_trap', { keepTopology: true });
   }
 
   _initUniverse(p, n, horizonDepth) {
@@ -222,8 +222,13 @@ export class UltrametricaSimulation {
       // (non-uniform |psi|^2 breaks exact Kozyrev soliton trapping -> violent discontinuous tunneling!)
       const b1 = 0;
       const w1 = this.space.createKozyrevWavelet(1, b1, 1);
-      const w2 = this.space.createKozyrevWavelet(Math.min(n - 1, 2), b1 * p + 1, Math.min(p - 1, 2));
-      const w3 = this.space.createKozyrevWavelet(Math.min(n - 1, 3), (b1 * p + 1) * p + 0, 1);
+      const j2 = Math.min(n - 1, 2);
+      const b2 = j2 === 2 ? b1 * p + 1 : b1;
+      const w2 = this.space.createKozyrevWavelet(j2, b2, Math.min(p - 1, 2));
+      const j3 = Math.min(n - 1, 3);
+      // Keep w3 strictly inside depth-1 ball b1 across ALL primes (including p=7, n=3 where j3=2!)
+      const b3 = j3 === 3 ? (b1 * p + 1) * p + 0 : j3 === 2 ? b1 * p + Math.min(p - 1, 2) : b1;
+      const w3 = this.space.createKozyrevWavelet(j3, b3, 1);
       const re = new Float64Array(this.space.N);
       const im = new Float64Array(this.space.N);
       for (let i = 0; i < this.space.N; i++) {
@@ -271,10 +276,15 @@ export class UltrametricaSimulation {
       this.bulk.delta = 1.35;
       this.bulk.horizonFlux = 0.0;
 
-      // Sever / pinch a depth-1 bulk bridge strongly (a_e -> e^3.2 ~ 24.5x!)
-      const depth1Off = this.bulk.levelOffset[1];
-      const targetNode = depth1Off + 0;
-      const bridgeEdge = this.bulk.parentEdge[targetNode];
+      // Sever / pinch a top bulk bridge strongly (a_e -> e^3.2 ~ 24.5x!)
+      // Supports both pure AdS (depth-1 bridge) and BTZ keepTopology mode (first horizon bridge)
+      let bridgeEdge = -1;
+      if (this.bulk.isBTZ) {
+        bridgeEdge = this.bulk.horizonEdges.length > 0 ? this.bulk.horizonEdges[0] : -1;
+      } else {
+        const depth1Off = this.bulk.levelOffset[1];
+        bridgeEdge = this.bulk.parentEdge[depth1Off];
+      }
       if (bridgeEdge >= 0) {
         this.bulk.pinchEdge(bridgeEdge, 3.2);
       }

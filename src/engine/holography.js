@@ -292,8 +292,13 @@ export class BruhatTitsBulk {
     this._bRe = new Float64Array(V);
     this._bIm = new Float64Array(V);
     this._mu = new Float64Array(V);
+    this._sigmaSnap = new Float64Array(E);
+    this._sumW = new Float64Array(V);
+    this._rtDp0 = new Float64Array(V);
+    this._rtDp1 = new Float64Array(V);
+    this._rtPickSide = new Uint8Array(V * 2);
 
-    // Horizon ring Sherman-Morrison scratch arrays
+    // Horizon ring Sherman-Morrison & Ricci/RT scratch arrays
     const L = Math.max(1, this.horizonLength);
     this._hDiag = new Float64Array(L);
     this._hSupRe = new Float64Array(L);
@@ -312,6 +317,17 @@ export class BruhatTitsBulk {
     this._tCIm = new Float64Array(L);
     this._tDRe = new Float64Array(L);
     this._tDIm = new Float64Array(L);
+    this._hDist = new Float64Array(L * L);
+    this._ringCum = new Float64Array(L + 1);
+    this._rtBestAssign = new Uint8Array(L);
+    this._rtRDp0 = new Float64Array(L);
+    this._rtRDp1 = new Float64Array(L);
+    this._rtRPrev0 = new Uint8Array(L);
+    this._rtRPrev1 = new Uint8Array(L);
+    const maxDeg = this.p + 2;
+    this._wMuU = new Float64Array(maxDeg);
+    this._wMuV = new Float64Array(maxDeg);
+    this._wCost = new Float64Array(maxDeg * maxDeg);
 
     // Ryu-Takayanagi state
     this.rtRegionA = new Uint8Array(this.N);
@@ -666,6 +682,11 @@ export class BruhatTitsBulk {
     const stress = this.edgeStress;
     const neighbors = this.edgeNeighbors;
 
+    // Snapshot sigma before updating so the discrete line-graph wave operator is strictly symmetric
+    // (zero directional Gauss-Seidel edge-ordering bias!)
+    const snap = this._sigmaSnap;
+    snap.set(sigma);
+
     // Normalize stress scale to boundary size N so gravity responds consistently across primes
     const gEff = newtonG * this.N * 0.18;
     let gravE = 0;
@@ -673,18 +694,19 @@ export class BruhatTitsBulk {
     for (let ei = 0; ei < E; ei++) {
       const nb = neighbors[ei];
       let avgNb = 0;
-      for (let i = 0; i < nb.length; i++) avgNb += sigma[nb[i]];
+      for (let i = 0; i < nb.length; i++) avgNb += snap[nb[i]];
       if (nb.length > 0) avgNb /= nb.length;
 
       // Stress-energy stretches local edge length (gravitational redshift / throat elongation)
+      const sig0 = snap[ei];
       const acc =
-        -stiffness * sigma[ei] +
-        coupling * (avgNb - sigma[ei]) -
+        -stiffness * sig0 +
+        coupling * (avgNb - sig0) -
         damping * vel[ei] +
         gEff * Math.min(stress[ei], 2.5);
 
       vel[ei] += dt * acc;
-      sigma[ei] += dt * vel[ei];
+      sigma[ei] = sig0 + dt * vel[ei];
       if (sigma[ei] < -2.5) {
         sigma[ei] = -2.5;
         vel[ei] *= -0.3;
@@ -743,7 +765,7 @@ export class BruhatTitsBulk {
     const w = this.edgeWeight;
 
     // Precompute weighted degree W_u = sum_{z ~ u} w_{uz}
-    const sumW = new Float64Array(V);
+    const sumW = this._sumW;
     for (let u = 0; u < V; u++) {
       let s = 0;
       const nb = this.adj[u];
@@ -755,8 +777,9 @@ export class BruhatTitsBulk {
     let hDist = null;
     if (this.isBTZ) {
       const L = this.horizonLength;
-      hDist = new Float64Array(L * L);
-      const ringCum = new Float64Array(L + 1);
+      hDist = this._hDist;
+      const ringCum = this._ringCum;
+      ringCum[0] = 0;
       for (let j = 0; j < L; j++) {
         ringCum[j + 1] = ringCum[j] + a[this.horizonEdges[j]];
       }
@@ -819,8 +842,8 @@ export class BruhatTitsBulk {
         const nbV = this.adj[v];
         const m = nbU.length;
         const k = nbV.length;
-        const muU = new Float64Array(m);
-        const muV = new Float64Array(k);
+        const muU = this._wMuU.subarray(0, m);
+        const muV = this._wMuV.subarray(0, k);
         const invWu = 1.0 / sumW[u];
         const invWv = 1.0 / sumW[v];
         for (let i = 0; i < m; i++) muU[i] = w[nbU[i].edge] * invWu;
@@ -829,7 +852,7 @@ export class BruhatTitsBulk {
         const L = this.horizonLength;
         const hu = this.nodeIndexInLevel[u];
         const hv = this.nodeIndexInLevel[v];
-        const cost = new Float64Array(m * k);
+        const cost = this._wCost.subarray(0, m * k);
 
         for (let i = 0; i < m; i++) {
           const x = nbU[i].to;
@@ -881,10 +904,10 @@ export class BruhatTitsBulk {
     const lnP = Math.log(this.p);
     const INF = 1e18;
 
-    const dp0 = new Float64Array(V);
-    const dp1 = new Float64Array(V);
+    const dp0 = this._rtDp0;
+    const dp1 = this._rtDp1;
     // Track child choice given parent side: pickChildSide[c * 2 + parentSide] in {0, 1}
-    const pickSide = new Uint8Array(V * 2);
+    const pickSide = this._rtPickSide;
 
     // 1. Leaves have fixed boundary labels
     for (let l = 0; l < this.N; l++) {
@@ -951,13 +974,17 @@ export class BruhatTitsBulk {
       // Exact cyclic DP around BTZ horizon ring h_0..h_{L-1}
       const L = this.horizonLength;
       let bestCost = INF;
-      let bestAssign = new Uint8Array(L);
+      const bestAssign = this._rtBestAssign;
+      const rDp0 = this._rtRDp0;
+      const rDp1 = this._rtRDp1;
+      const rPrev0 = this._rtRPrev0;
+      const rPrev1 = this._rtRPrev1;
 
       for (let firstSide = 0; firstSide <= 1; firstSide++) {
-        const rDp0 = new Float64Array(L).fill(INF);
-        const rDp1 = new Float64Array(L).fill(INF);
-        const rPrev0 = new Uint8Array(L);
-        const rPrev1 = new Uint8Array(L);
+        rDp0.fill(INF);
+        rDp1.fill(INF);
+        rPrev0.fill(0);
+        rPrev1.fill(0);
 
         const h0 = this.horizonNodes[0];
         if (firstSide === 0) rDp0[0] = dp0[h0];

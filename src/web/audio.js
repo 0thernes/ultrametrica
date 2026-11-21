@@ -126,6 +126,7 @@ export class PadicAudioEngine {
 
   update(sim) {
     if (!this.enabled || !this.node) return;
+    const shellFreqs = computeShellFrequencies(sim.p, sim.n, sim.quantum.alpha);
     this.node.port.postMessage({
       type: 'state',
       p: sim.p,
@@ -135,6 +136,7 @@ export class PadicAudioEngine {
       horizonCurrent: sim.bulk.horizonFluxCurrent,
       gravStrain: Math.sqrt(sim.bulk.totalGravEnergy / Math.max(1, sim.bulk.numEdges)),
       masterGain: this.masterGain,
+      shellFreqs: Array.from(shellFreqs),
       shellPower: Array.from(sim.quantum.kozyrevShellPower),
       shellCentroid: Array.from(sim.quantum.kozyrevShellCentroid),
     });
