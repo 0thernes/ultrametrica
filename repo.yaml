@@ -1,0 +1,128 @@
+# ULTRAMETRICA — Build Standard v1.2.0 Compliance Manifest (repo.yaml)
+# Audited automatically by scripts/Audit-Repo.ps1 and scripts/audit-repo.sh
+
+standard: "1.2.0"
+name: "ultrametrica"
+version: "1.4.0"
+project_type: "research"
+owner: "Alexander Stephen Donahue (0thernes)"
+orcid: "0009-0006-8168-9648"
+license: "COSMOGONIC-NONCOMMERCIAL"
+stack:
+  - node
+  - python
+  - lean
+  - latex
+
+flags:
+  public: true
+  package: true
+  visual: true
+  ui: true
+  native: false
+  ai: false
+  personal_data: false
+  service: true
+  deployed: true
+  api: true
+  perf: true
+  concurrent: false
+  numeric: true
+  experimental: true
+  ml: false
+  formal: true
+
+items:
+  # ---- Part A: Repository Structure, Docs, Hygiene & Operations (A01-A45) ----
+  A01: { status: done, evidence: "LICENSE (Cosmogonic Non-Commercial) + LEGAL.md + NOTICE" }
+  A02: { status: done, evidence: "README.md with clear summary, badges, 5-second Lean audit, quickstart" }
+  A03: { status: done, evidence: "README.md Quickstart + zero-dependency clone/run commands" }
+  A04: { status: done, evidence: "README.md ## Usage section + examples/ scripts" }
+  A05: { status: done, evidence: "docs/media/ultrametrica-observatory.png embedded in README.md" }
+  A06: { status: done, evidence: "CITATION.cff v1.4.0 with canonical ORCID 0009-0006-8168-9648" }
+  A07: { status: done, evidence: "CHANGELOG.md (Keep a Changelog format with ## [Unreleased] + v1.4.0)" }
+  A08: { status: done, evidence: "VERSION (1.4.0) synchronized across package.json, CITATION.cff, paper/main.tex" }
+  A09: { status: done, evidence: ".gitignore covering .lake, paper/build, node_modules, OS artifacts" }
+  A10: { status: done, evidence: "Linear direct-to-main workflow (R1/R2); zero branch protection or git hooks" }
+  A11: { status: done, evidence: ".github/workflows/release.yml attaching frozen PDF, arXiv tarball, SHA256SUMS" }
+  A12: { status: done, evidence: ".gitattributes enforcing LF line endings and binary PDF/PNG handling" }
+  A13: { status: done, evidence: ".editorconfig enforcing UTF-8, LF, 2/4-space indentation" }
+  A14: { status: done, evidence: "CONTRIBUTING.md aligned with solo-dev direct-to-main & issue workflow" }
+  A15: { status: done, evidence: "CODE_OF_CONDUCT.md" }
+  A16: { status: done, evidence: "SECURITY.md with disclosure contact 0_0@0thernes.art" }
+  A17: { status: done, evidence: "SUPPORT.md" }
+  A18: { status: done, evidence: ".github/ISSUE_TEMPLATE/{bug,falsification,feature,replication}.yml with 10-class finding_class dropdown" }
+  A19: { status: done, evidence: "GitHub About description, homepage https://0thernes.github.io/ultrametrica/, >= 5 topics" }
+  A20: { status: done, evidence: "docs/architecture.md with Mermaid system diagram" }
+  A21: { status: done, evidence: "docs/adr/README.md + ADR-0001..ADR-0005" }
+  A22: { status: done, evidence: "src/engine/ & server.mjs public API documented in docs/architecture.md & docs/configuration.md" }
+  A23: { status: done, evidence: "docs/INDEX.md, root INDEX.md, README.md navigation links" }
+  A24: { status: done, evidence: "docs/run-log.md & CHANGELOG.md maintain full chronological history" }
+  A25: { status: done, evidence: ".github/workflows/ci.yml cross-platform matrix (ubuntu-24.04, macos-latest, windows-latest, fail-fast: false)" }
+  A26: { status: done, evidence: "docs/media/social-preview.png (1280x640, < 1 MB)" }
+  A27: { status: done, evidence: "Zero external runtime npm/pip dependencies (package.json + pyproject.toml)" }
+  A28: { status: done, evidence: ".nvmrc (22), .python-version (3.13), lean/lean-toolchain (v4.35.0)" }
+  A29: { status: done, evidence: "ROADMAP.md" }
+  A30: { status: done, evidence: ".github/labels.tsv (all 10 finding classes + area labels synced to GitHub)" }
+  A31: { status: done, evidence: "justfile with setup/test/falsify/properties/examples/bench/stats/discover/oracle/lint/lean/paper/reproduce/audit/serve/rollback" }
+  A32: { status: done, evidence: "AGENTS.md (<32 KiB), CLAUDE.md, GEMINI.md, .cursor/rules/build-standard.mdc, llms.txt, llms-full.txt" }
+  A33: { status: done, evidence: ".env.example, server.mjs fail-fast parsePort(), docs/configuration.md" }
+  A34: { status: done, evidence: "server.mjs GET /healthz JSON probe + structured JSON logging (LOG_FORMAT=json)" }
+  A35: { status: done, evidence: "docs/operations.md (git bundle backups, 0thernes-research-archive pin, Software Heritage offsite mirror)" }
+  A36: { status: done, evidence: "justfile rollback target + docs/operations.md safe forward-revert runbook" }
+  A37: { status: done, evidence: "scripts/bench.mjs, results/perf-benchmarks.json, docs/benchmarks.md with hard budgets" }
+  A38: { status: done, evidence: "WCAG 2.2 AA UI in src/web/index.html, styles.css, app.js (labels, aria-pressed, aria-live, focus-visible, prefers-reduced-motion)" }
+  A39: { status: done, evidence: "NOTICE documents zero third-party runtime dependencies & external toolchain attributions" }
+  A40: { status: n/a, reason: "Not a generative AI/LLM inference application (ai: false; AI assistance disclosed in LEGAL.md & paper)" }
+  A41: { status: done, evidence: "UPGRADING.md covering v1.1.0 -> v1.4.0 migrations and breaking input-guard changes" }
+  A42: { status: done, evidence: "Status: active declared clearly in README.md and ROADMAP.md" }
+  A43: { status: done, evidence: "examples/{README.md,01_kozyrev_compacton.mjs,02_btz_curvature_and_rt.mjs,03_global_gauss_bonnet.mjs} smoke-tested in CI" }
+  A44: { status: done, evidence: "docs/faq.md (7 skeptical Q&As) and docs/glossary.md + root GLOSSARY.md" }
+  A45: { status: n/a, reason: "Zero personal data / accounts / telemetry collected (personal_data: false)" }
+
+  # ---- Part B: Scientific Verification, Formal Proofs & Rigor (B01-B45) ----
+  B01: { status: done, evidence: "just reproduce runs full test/oracle/benchmark/stats/Lean/LaTeX pipeline" }
+  B02: { status: done, evidence: "package-lock.json + lean/lake-manifest.json + lean/lean-toolchain pinned" }
+  B03: { status: done, evidence: "test/properties.mjs bit-exact SHA-256 determinism & seeded stats_eval.mjs" }
+  B04: { status: done, evidence: "Root CLAIMS.md + docs/CLAIMS.md mapping every claim to tier, command, test & falsification condition" }
+  B05: { status: done, evidence: "test/verify.mjs (10 core mathematical/numerical theorem suites)" }
+  B06: { status: done, evidence: "test/properties.mjs B06 negative input rejection across PadicSpace, BruhatTitsBulk, PadicQuantumEngine, Simulation" }
+  B07: { status: done, evidence: "Regression tests per fixed bug in test/verify.mjs (BUG-1..16) & test/server.mjs (F14 EIO)" }
+  B08: { status: done, evidence: "test/golden.mjs pinned against test/golden/baseline-snapshot.json" }
+  B09: { status: done, evidence: "test/server.mjs HTTP contract suite (/healthz, 302, 200, HEAD, 405, 400, 403, 404, CSP headers)" }
+  B10: { status: done, evidence: "test/properties.mjs runs 3,200+ seeded property checks (ultrametric, FFT, Thm V-Global, Thm VI SSA)" }
+  B11: { status: done, evidence: "reference/padic_oracle.py textbook differential oracle (1,000+ queries vs JS engine)" }
+  B12: { status: done, evidence: "scripts/verify_exact.py exact int/Fraction/Q(i) zero-rounding-error oracle (Thm I-VI)" }
+  B13: { status: done, evidence: "test/mutants.mjs kills 8/8 planted mathematical & algorithmic defects (M1-M8)" }
+  B14: { status: done, evidence: "test/properties.mjs B14 metamorphic checks (U(1) gauge phase invariance, Yoshida time-reversibility)" }
+  B15: { status: n/a, reason: "No C/C++/Rust native binary parsers exposed (native: false)" }
+  B16: { status: n/a, reason: "Zero C/C++/Rust/WASM native memory code (native: false)" }
+  B17: { status: done, evidence: "pyproject.toml (ruff) + node --check run report-only in CI (.github/workflows/ci.yml)" }
+  B18: { status: done, evidence: "jsconfig.json (strict checkJs) + pyproject.toml (mypy) run report-only in CI" }
+  B19: { status: n/a, reason: "Single-threaded deterministic JS engine & lock-free AudioWorklet ring (concurrent: false)" }
+  B20: { status: done, evidence: "Finite/positive/bounds guards across src/engine/*.js & audio-worklet.js verified in test/properties.mjs" }
+  B21: { status: done, evidence: "test/server.mjs B21 injects disk EIO failure -> verifies clean 500, stack trace log & server survival" }
+  B22: { status: done, evidence: "lean/UltrametricaProofs/ (120 decls) + Challenge/Solution 6-kernel lake comparator --paranoid" }
+  B23: { status: n/a, reason: "Formal verification uses Lean 4.35.0 theorem proving (B22) rather than TLA+/SPIN model checking" }
+  B24: { status: n/a, reason: "Formal verification uses Lean 4.35.0 (B22) rather than Dafny/F* contract provers" }
+  B25: { status: n/a, reason: "Zero C/Rust code (native: false); Lean 4 kernel + 6-kernel comparator provides formal soundness" }
+  B26: { status: done, evidence: "scripts/bench.mjs -> results/perf-benchmarks.json & docs/benchmarks.md with hardware/median/IQR/checksums" }
+  B27: { status: done, evidence: "docs/benchmarks.md & LIMITATIONS.md honestly document small-N overhead, JIT variance & O(N^2) visual ceiling" }
+  B28: { status: done, evidence: "scripts/stats_eval.mjs Experiment I 20-seed GUE/GOE control arm (results/stats-eval.json)" }
+  B29: { status: done, evidence: "scripts/stats_eval.mjs runs 10,000-resample Monte Carlo permutation significance tests" }
+  B30: { status: done, evidence: "scripts/stats_eval.mjs reports 10,000-resample 95% bootstrap CIs, Cliff's delta & Cohen's d" }
+  B31: { status: done, evidence: "scripts/stats_eval.mjs applies Holm-Bonferroni FWER correction across all 4 hypotheses (p_holm = 0.0004)" }
+  B32: { status: done, evidence: "docs/preregistration.md git-sealed at commit c171b1b before running scripts/stats_eval.mjs" }
+  B33: { status: n/a, reason: "No machine-learning models or train/test dataset splits (ml: false)" }
+  B34: { status: n/a, reason: "Not a generative AI inference application (ai: false)" }
+  B35: { status: done, evidence: "Report-only gitleaks secret scan in .github/workflows/ci.yml (continue-on-error: true)" }
+  B36: { status: done, evidence: "docs/threat-model.md STRIDE matrix mapped 1-to-1 to test/server.mjs & CI gates" }
+  B37: { status: done, evidence: "CHECKSUMS.sha256 + .github/workflows/release.yml SHA256SUMS" }
+  B38: { status: done, evidence: ".github/workflows/release.yml actions/attest-build-provenance@v2 (soft SLSA attestation)" }
+  B39: { status: done, evidence: "data/MANIFEST.sha256 verified by scripts/verify_exact.py --check-checksums" }
+  B40: { status: done, evidence: "docs/run-log.md append-only chronological execution & audit trail" }
+  B41: { status: done, evidence: "LIMITATIONS.md + README.md ## Limitations section with literal-vs-metaphor table" }
+  B42: { status: done, evidence: "CLAIMS.md includes explicit 'What Would Prove Us Wrong' falsification column for every claim" }
+  B43: { status: done, evidence: "REPLICATION.md specifies hardware, clean-clone commands, runtimes & exact tolerances" }
+  B44: { status: done, evidence: "REPLICATION.md dated replication log table covering v1.1.0 through v1.4.0 local + CI runners" }
+  B45: { status: done, evidence: "docs/reviews/2026-11-25-hardening-cycles.md 3-cycle red-team dossier with all 10 finding classes" }

@@ -94,6 +94,9 @@ export class PadicQuantumEngine {
   }
 
   setAlpha(alpha) {
+    if (!Number.isFinite(alpha) || alpha <= 0) {
+      throw new RangeError(`Vladimirov exponent alpha must be a finite positive number, got ${alpha}.`);
+    }
     const clamped = Math.max(0.15, Math.min(2.2, alpha));
     if (Math.abs(clamped - this.alpha) > 1e-12) {
       this.alpha = clamped;
@@ -171,6 +174,21 @@ export class PadicQuantumEngine {
    * (provided in p-adic x order), and set tracked support ball [leafStart, leafEnd).
    */
   setState(rePadic, imPadic, trackedLeafStart = 0, trackedLeafEnd = this.N) {
+    if (!rePadic || !imPadic || rePadic.length !== this.N || imPadic.length !== this.N) {
+      throw new RangeError(`setState requires real/imag arrays of exact length ${this.N}.`);
+    }
+    let norm2 = 0;
+    for (let i = 0; i < this.N; i++) {
+      const r = rePadic[i];
+      const m = imPadic[i];
+      if (!Number.isFinite(r) || !Number.isFinite(m)) {
+        throw new RangeError(`setState received non-finite amplitude at index ${i}.`);
+      }
+      norm2 += r * r + m * m;
+    }
+    if (norm2 <= 1e-30) {
+      throw new RangeError('setState requires a non-zero normalizable quantum state.');
+    }
     this.psiRe.set(rePadic);
     this.psiIm.set(imPadic);
     this._normalize(this.psiRe, this.psiIm);
@@ -326,6 +344,12 @@ export class PadicQuantumEngine {
    *   S_4(dt) = S_2(w_1 * dt) o S_2(w_0 * dt) o S_2(w_1 * dt).
    */
   step(dt, substeps = 1) {
+    if (!Number.isFinite(dt)) {
+      throw new RangeError(`step dt must be finite, got ${dt}.`);
+    }
+    if (!Number.isInteger(substeps) || substeps < 1) {
+      throw new RangeError(`step substeps must be an integer >= 1, got ${substeps}.`);
+    }
     const h = dt / substeps;
     for (let s = 0; s < substeps; s++) {
       for (let y = 0; y < 3; y++) {

@@ -1,8 +1,22 @@
-ULTRAMETRICA v1.3.0 — Lean 4 Kernel Axiom Audit
-Toolchain: Lean (version 4.35.0, x86_64-w64-windows-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)
-Command: lake build && lake env lean VerifyAxioms.lean
-Audited declarations: 101 (zero Mathlib, zero sorryAx, zero native_decide, zero custom axioms)
-======================================================================
+ULTRAMETRICA (v1.4.0) — Pure Lean 4.35.0 Kernel & Multi-Kernel Axiom Audit
+Toolchain: leanprover/lean4:v4.35.0 (zero Mathlib, autoImplicit = false, relaxedAutoImplicit = false)
+Author: Alexander Stephen Donahue (ORCID 0009-0006-8168-9648) — Independent Researcher, Spokane, WA, USA
+
+Independent Kernel Checks Executed:
+  1. lake build UltrametricaProofs Challenge Solution     -> PASS (0 warnings/errors in UltrametricaProofs & Solution)
+  2. lake env lean VerifyAxioms.lean                      -> PASS (120/120 declarations strictly in [propext, Classical.choice, Quot.sound])
+  3. lake env leanchecker --fresh UltrametricaProofs      -> PASS (EXIT 0)
+  4. lake env leanchecker --fresh Solution                -> PASS (EXIT 0)
+  5. lake env leanchecker-paranoid --fresh UltrametricaProofs & Solution -> PASS (EXIT 0)
+  6. con-leche --verified .lake/solution-targets.ndjson   -> PASS (accepted 1886 pruned target decls & 58743 full decls, EXIT 0)
+  7. con-ron --verified .lake/solution-targets.ndjson     -> PASS (accepted 1886 pruned target decls & 58743 full decls, EXIT 0)
+  8. nanoda_bin .lake/nanoda-config.json (pruned targets) -> PASS (independent Rust kernel 0.4.19, strict [propext, Quot.sound, Classical.choice], EXIT 0)
+  9. lake comparator --config comparator.json --paranoid  -> Enforced inside bubblewrap Linux sandbox in GitHub Actions CI (.github/workflows/ci.yml, adds 6th kernel lean4lean)
+
+==============================================================================
+Verbatim `lake env lean VerifyAxioms.lean` Output (120 Audited Declarations):
+==============================================================================
+
 'Ultrametrica.ultrametric_isosceles_lt' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ultrametric_two_longest_equal' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.pow_dvd_add' does not depend on any axioms
@@ -92,6 +106,25 @@ Audited declarations: 101 (zero Mathlib, zero sorryAx, zero native_decide, zero 
 'Ultrametrica.curved_ads_gauss_bonnet_subcritical' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.curved_ads_supercritical_pinch_deficit' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.curved_ads_supercritical_strictly_negative' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.eqv_refl' does not depend on any axioms
+'Ultrametrica.RatQ.eqv_symm' does not depend on any axioms
+'Ultrametrica.RatQ.eqv_trans' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.add_congr' depends on axioms: [propext]
+'Ultrametrica.RatQ.add_zero_right' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.add_same_den' depends on axioms: [propext]
+'Ultrametrica.sumInt_map_mul' depends on axioms: [propext]
+'Ultrametrica.ratq_sumList_same_den' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.vertex_half_charge_conserved' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.curved_gen_kappa_charge_decomp' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.global_multi_edge_vertex_charge_conservation' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.global_multi_edge_nonvacuous_witness' does not depend on any axioms
+'Ultrametrica.rt_edge_cut_submodular' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.rt_cut_submodular' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.rt_union_homologous' does not depend on any axioms
+'Ultrametrica.rt_inter_homologous_disjoint' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.rt_strong_subadditivity' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.rt_subadditivity' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.rt_ssa_nonvacuous_witness' does not depend on any axioms
 'Ultrametrica.kozyrev_exact_nonlinear_soliton' depends on axioms: [propext]
 'Ultrametrica.disjoint_multi_soliton_no_crosstalk' depends on axioms: [propext]
 'Ultrametrica.multi_ball_kozyrev_soliton_list' depends on axioms: [propext]

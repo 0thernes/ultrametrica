@@ -1,5 +1,12 @@
 /**
- * ULTRAMETRICA — Hardened Zero-Dependency Local HTTP Server.
+ * ULTRAMETRICA — Hardened Zero-Dependency Local HTTP Observatory Server.
+ *
+ * Provides:
+ *   - GET / HEAD static serving strictly sandboxed inside src/
+ *   - GET /healthz structured JSON observability probe (Build Standard A34)
+ *   - Structured JSON access/error logging with request ids (LOG_FORMAT=json)
+ *   - Fail-fast PORT/HOST validation (Build Standard A33)
+ *   - Defense-in-depth headers (CSP, nosniff, CORP, Referrer-Policy)
  */
 
 import http from 'node:http';
@@ -8,8 +15,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const SRC_ROOT = path.resolve(__dirname, 'src');
-const PORT = Number(process.env.PORT || 4173);
+const DEFAULT_SRC_ROOT = path.resolve(__dirname, 'src');
+const VERSION_PATH = path.resolve(__dirname, 'VERSION');
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -24,84 +31,206 @@ const MIME = {
   '.txt': 'text/plain; charset=utf-8',
 };
 
-const SECURITY_HEADERS = {
+export const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'no-referrer',
   'Cross-Origin-Resource-Policy': 'same-origin',
+  'Content-Security-Policy':
+    "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'",
 };
 
-const server = http.createServer(async (req, res) => {
-  try {
-    if (req.method !== 'GET' && req.method !== 'HEAD') {
-      res.writeHead(405, { 'Content-Type': 'text/plain; charset=utf-8', Allow: 'GET, HEAD', ...SECURITY_HEADERS });
-      res.end('Method Not Allowed');
-      return;
-    }
-
-    const parsed = new URL(req.url || '/', `http://127.0.0.1:${PORT}`);
-    if (parsed.pathname === '/') {
-      res.writeHead(302, { Location: `/web/${parsed.search}`, ...SECURITY_HEADERS });
-      res.end();
-      return;
-    }
-
-    let decodedPath;
-    try {
-      decodedPath = decodeURIComponent(parsed.pathname);
-    } catch {
-      res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
-      res.end('Bad Request');
-      return;
-    }
-
-    if (decodedPath.includes('\0') || decodedPath.includes('\\')) {
-      res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
-      res.end('Bad Request');
-      return;
-    }
-
-    const urlPath = decodedPath.endsWith('/') ? `${decodedPath}index.html` : decodedPath;
-    const relPath = urlPath.replace(/^\/+/, '');
-    const fullPath = path.resolve(SRC_ROOT, relPath);
-    const relativeToRoot = path.relative(SRC_ROOT, fullPath);
-
-    if (relativeToRoot.startsWith('..') || path.isAbsolute(relativeToRoot)) {
-      res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
-      res.end('Forbidden');
-      return;
-    }
-
-    const stat = await fs.stat(fullPath);
-    if (!stat.isFile()) {
-      res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
-      res.end('Forbidden');
-      return;
-    }
-
-    const ext = path.extname(fullPath).toLowerCase();
-    res.writeHead(200, {
-      'Content-Type': MIME[ext] || 'application/octet-stream',
-      'Content-Length': stat.size,
-      'Cache-Control': 'no-store',
-      ...SECURITY_HEADERS,
-    });
-    if (req.method === 'HEAD') {
-      res.end();
-      return;
-    }
-    const data = await fs.readFile(fullPath);
-    res.end(data);
-  } catch (err) {
-    if (err && (err.code === 'ENOENT' || err.code === 'ENOTDIR')) {
-      res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
-      res.end('Not Found');
-    } else {
-      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
-      res.end('Internal Server Error');
-    }
+export function parsePort(raw = process.env.PORT) {
+  if (raw === undefined || raw === '') return 4173;
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n < 0 || n > 65535) {
+    throw new RangeError(`Invalid PORT='${raw}'. Expected integer in [0, 65535].`);
   }
-});
+  return n;
+}
 
-server.listen(PORT, () => {
-  console.log(`ULTRAMETRICA running at http://localhost:${PORT} (http://127.0.0.1:${PORT})`);
-});
+export function createUltrametricaServer({
+  srcRoot = DEFAULT_SRC_ROOT,
+  fsImpl = fs,
+  logFn = null,
+  version = '1.4.0',
+} = {}) {
+  const rootAbs = path.resolve(srcRoot);
+  const startedAt = Date.now();
+  let reqSeq = 0;
+
+  const emitLog = (level, fields) => {
+    if (typeof logFn === 'function') {
+      logFn({ ts: new Date().toISOString(), level, ...fields });
+    }
+  };
+
+  return http.createServer(async (req, res) => {
+    const reqId = ++reqSeq;
+    const method = req.method || 'GET';
+    const rawUrl = req.url || '/';
+
+    try {
+      if (method !== 'GET' && method !== 'HEAD') {
+        res.writeHead(405, {
+          'Content-Type': 'text/plain; charset=utf-8',
+          Allow: 'GET, HEAD',
+          ...SECURITY_HEADERS,
+        });
+        res.end('Method Not Allowed');
+        emitLog('warn', { reqId, method, url: rawUrl, status: 405 });
+        return;
+      }
+
+      let parsed;
+      try {
+        parsed = new URL(rawUrl, 'http://127.0.0.1');
+      } catch {
+        res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
+        res.end('Bad Request');
+        emitLog('warn', { reqId, method, url: rawUrl, status: 400, reason: 'invalid_url' });
+        return;
+      }
+
+      if (parsed.pathname === '/healthz') {
+        const body = JSON.stringify({
+          status: 'ok',
+          service: 'ultrametrica',
+          version,
+          uptime_s: Number(((Date.now() - startedAt) / 1000).toFixed(3)),
+        });
+        res.writeHead(200, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Content-Length': Buffer.byteLength(body),
+          'Cache-Control': 'no-store',
+          ...SECURITY_HEADERS,
+        });
+        res.end(method === 'HEAD' ? undefined : body);
+        emitLog('info', { reqId, method, path: '/healthz', status: 200 });
+        return;
+      }
+
+      if (parsed.pathname === '/') {
+        res.writeHead(302, { Location: `/web/${parsed.search}`, ...SECURITY_HEADERS });
+        res.end();
+        emitLog('info', { reqId, method, path: '/', status: 302 });
+        return;
+      }
+
+      let decodedPath;
+      try {
+        decodedPath = decodeURIComponent(parsed.pathname);
+      } catch {
+        res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
+        res.end('Bad Request');
+        emitLog('warn', { reqId, method, path: parsed.pathname, status: 400, reason: 'bad_uri_encoding' });
+        return;
+      }
+
+      if (decodedPath.includes('\0') || decodedPath.includes('\\')) {
+        res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
+        res.end('Bad Request');
+        emitLog('warn', { reqId, method, path: decodedPath, status: 400, reason: 'forbidden_char' });
+        return;
+      }
+
+      const urlPath = decodedPath.endsWith('/') ? `${decodedPath}index.html` : decodedPath;
+      const relPath = urlPath.replace(/^\/+/, '');
+      const fullPath = path.resolve(rootAbs, relPath);
+      const relativeToRoot = path.relative(rootAbs, fullPath);
+
+      if (relativeToRoot.startsWith('..') || path.isAbsolute(relativeToRoot)) {
+        res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
+        res.end('Forbidden');
+        emitLog('warn', { reqId, method, path: decodedPath, status: 403, reason: 'traversal' });
+        return;
+      }
+
+      const stat = await fsImpl.stat(fullPath);
+      if (!stat.isFile()) {
+        res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
+        res.end('Forbidden');
+        emitLog('warn', { reqId, method, path: decodedPath, status: 403, reason: 'not_a_file' });
+        return;
+      }
+
+      const ext = path.extname(fullPath).toLowerCase();
+      if (method === 'HEAD') {
+        res.writeHead(200, {
+          'Content-Type': MIME[ext] || 'application/octet-stream',
+          'Content-Length': stat.size,
+          'Cache-Control': 'no-store',
+          ...SECURITY_HEADERS,
+        });
+        res.end();
+        emitLog('info', { reqId, method, path: decodedPath, status: 200 });
+        return;
+      }
+      const data = await fsImpl.readFile(fullPath);
+      res.writeHead(200, {
+        'Content-Type': MIME[ext] || 'application/octet-stream',
+        'Content-Length': data.length,
+        'Cache-Control': 'no-store',
+        ...SECURITY_HEADERS,
+      });
+      res.end(data);
+      emitLog('info', { reqId, method, path: decodedPath, status: 200, bytes: data.length });
+    } catch (err) {
+      if (err && (err.code === 'ENOENT' || err.code === 'ENOTDIR')) {
+        if (!res.headersSent) {
+          res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
+          res.end('Not Found');
+        } else {
+          res.destroy();
+        }
+        emitLog('info', { reqId, method, url: rawUrl, status: 404 });
+      } else {
+        if (!res.headersSent) {
+          res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
+          res.end('Internal Server Error');
+        } else {
+          res.destroy();
+        }
+        emitLog('error', {
+          reqId,
+          method,
+          url: rawUrl,
+          status: 500,
+          error: err instanceof Error ? err.message : String(err),
+          stack: err instanceof Error ? err.stack : undefined,
+        });
+      }
+    }
+  });
+}
+
+// Start listener only when executed directly as CLI entry point
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMain) {
+  const PORT = parsePort(process.env.PORT);
+  const HOST = process.env.HOST || '127.0.0.1';
+  const jsonLogs = process.env.LOG_FORMAT === 'json';
+  let version = '1.4.0';
+  try {
+    version = (await fs.readFile(VERSION_PATH, 'utf8')).trim() || version;
+  } catch {}
+
+  const logFn = (entry) => {
+    if (jsonLogs || entry.level === 'error') {
+      const stream = entry.level === 'error' ? process.stderr : process.stdout;
+      stream.write(`${JSON.stringify(entry)}\n`);
+    }
+  };
+
+  const server = createUltrametricaServer({ srcRoot: DEFAULT_SRC_ROOT, logFn, version });
+  server.listen(PORT, HOST, () => {
+    const addr = server.address();
+    const actualPort = typeof addr === 'object' && addr ? addr.port : PORT;
+    if (jsonLogs) {
+      process.stdout.write(
+        `${JSON.stringify({ ts: new Date().toISOString(), level: 'info', event: 'listen', host: HOST, port: actualPort, version })}\n`
+      );
+    } else {
+      console.log(`ULTRAMETRICA v${version} running at http://${HOST}:${actualPort} (health: /healthz)`);
+    }
+  });
+}

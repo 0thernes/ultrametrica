@@ -1,6 +1,16 @@
 name = "UltrametricaProofs"
-version = "1.0.0"
-defaultTargets = ["UltrametricaProofs"]
+version = "1.4.0"
+defaultTargets = ["UltrametricaProofs", "Solution"]
+
+[leanOptions]
+autoImplicit = false
+relaxedAutoImplicit = false
 
 [[lean_lib]]
 name = "UltrametricaProofs"
+
+[[lean_lib]]
+name = "Challenge"
+
+[[lean_lib]]
+name = "Solution"

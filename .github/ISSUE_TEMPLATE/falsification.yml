@@ -1,23 +1,43 @@
-name: Proof Challenge / Falsification Report
-description: Submit a counterexample, priority citation, Lean 4 scope critique, or numerical falsification test against any claim in ULTRAMETRICA
-title: "[Falsification]: "
-labels: ["verification", "falsification"]
+name: Mathematical / Scientific Falsification Report
+description: Submit a counterexample, statement-fidelity mismatch, numerical discrepancy, or falsification against Theorems I-VI or Experiments A-I.
+title: "[falsification]: "
+labels: ["falsification"]
 body:
-  - type: markdown
+  - type: dropdown
+    id: finding_class
     attributes:
-      value: |
-        Every theorem, invariant, and novelty boundary in **ULTRAMETRICA** is explicitly falsifiable (see `VERIFICATION.md` and `paper/WHITE_PAPER.md`). Counterexamples, prior-literature citations, and formal proof audits are strongly welcomed.
+      label: Finding Class (10-Class Taxonomy)
+      options:
+        - error
+        - hole
+        - bug
+        - problem
+        - conflict
+        - blindspot
+        - concern
+        - gap
+        - issue
+        - dilemma
+    validations:
+      required: true
   - type: input
-    id: target
+    id: claim_id
     attributes:
-      label: Target Claim, Theorem, or Equation
-      placeholder: "e.g., Theorem I (Adelic Parity-Doubling Dichotomy), Theorem II (BTZ Ollivier-Ricci L=5 trichotomy), or White Paper Section 6.2"
+      label: Claim ID / Theorem / Experiment
+      placeholder: "e.g., C-THM-2, Theorem V-Global, Experiment I H2"
     validations:
       required: true
   - type: textarea
-    id: evidence
+    id: counterexample
     attributes:
-      label: Counterexample, Prior Citation, or Reproducible Script
-      description: Provide exact parameters (p, n, L, theta, g, Omega), Lean 4 proof term, or bibliographic DOI/arXiv reference.
+      label: Counterexample or Discrepancy Details
+      description: Exact parameters (p, n, L, sigma, alpha, seed) and observed vs. claimed values.
+    validations:
+      required: true
+  - type: textarea
+    id: script
+    attributes:
+      label: Reproducible Verification Script / Lean Snippet
+      render: shell
     validations:
       required: true

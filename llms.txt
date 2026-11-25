@@ -1,0 +1,37 @@
+# ULTRAMETRICA
+
+> Zero-dependency real-time $p$-adic AdS/CFT holographic quantum gravity, rotating Tate-curve Kerr-BTZ black hole, Kozyrev wavelet, 48 kHz AudioWorklet, and pure Lean 4.35.0 formal verification laboratory (120 kernel-audited declarations, verified across 6 independent Lean kernels via `lake comparator --paranoid`).
+
+- Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID `0009-0006-8168-9648`)
+- Version: `1.4.0`
+- Repository: https://github.com/0thernes/ultrametrica
+- Live Observatory: https://0thernes.github.io/ultrametrica/
+- License: `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` ([`LICENSE`](LICENSE))
+
+## Core Documentation
+
+- [README.md](README.md): Executive overview, 5-second `#print axioms` verification block, usage, and architecture
+- [AGENTS.md](AGENTS.md): Canonical engineering rules, verification commands, and technical traps
+- [CLAIMS.md](CLAIMS.md): Complete 1-to-1 claim ledger with verification tier and explicit falsification conditions
+- [LIMITATIONS.md](LIMITATIONS.md): Honest scope boundaries, literal-vs-metaphor table, and finite-$N$ limits
+- [REPLICATION.md](REPLICATION.md): Independent replication protocol and dated replication log
+- [VERIFICATION.md](VERIFICATION.md): Multi-layer verification architecture (Lean 4, 6-kernel comparator, Python exact rational, Node tests/mutants/properties)
+- [SUMMARY.md](SUMMARY.md): Concise executive research summary
+- [ERRATA.md](ERRATA.md): Correction ledger and withdrawal policy
+
+## Scientific Papers & Audits
+
+- [paper/main.tex](paper/main.tex): Publication-grade AMS-LaTeX preprint (`dist/Donahue_2026_Ultrametrica.pdf`)
+- [paper/WHITE_PAPER.md](paper/WHITE_PAPER.md): Markdown white paper synchronized with `paper/main.tex`
+- [docs/MEGA_ATLAS_CROSSCHECK.md](docs/MEGA_ATLAS_CROSSCHECK.md): Honest cross-check against all 1,900 problems in `0thernes/unsolved-problems-mega-atlas` (`0/1,900` full solutions; discrete sub-results on `SUB-032`)
+- [docs/preregistration.md](docs/preregistration.md): Git-sealed preregistration for Experiment I (`c171b1b`)
+- [docs/statement-fidelity.md](docs/statement-fidelity.md): Line-by-line Lean 4 statement fidelity & non-vacuity audit
+- [docs/reviews/2026-11-25-hardening-cycles.md](docs/reviews/2026-11-25-hardening-cycles.md): 3-cycle adversarial hardening dossier with 10-class finding taxonomy
+
+## Architecture, Formal Proofs & Engine
+
+- [docs/architecture.md](docs/architecture.md): System architecture with Mermaid diagram
+- [docs/benchmarks.md](docs/benchmarks.md): Hardware-tagged performance benchmarks & speedups
+- [docs/threat-model.md](docs/threat-model.md): STRIDE security analysis of local HTTP server & browser sandbox
+- [lean/README.md](lean/README.md): Pure Lean 4.35.0 proof architecture & 6-kernel comparator guide
+- [examples/README.md](examples/README.md): Runnable engine examples

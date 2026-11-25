@@ -403,6 +403,16 @@ export class HyperbolicRenderer3D {
         this.supported = false;
         document.getElementById('webglFallback')?.classList.remove('hidden');
       });
+      this.canvas.addEventListener('webglcontextrestored', () => {
+        try {
+          this._topoKey = '';
+          this._initGL();
+          this.supported = true;
+          document.getElementById('webglFallback')?.classList.add('hidden');
+        } catch {
+          this.supported = false;
+        }
+      });
     }
   }
 

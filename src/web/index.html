@@ -16,44 +16,44 @@
         <span id="manifoldBadge" class="badge badge-cyan">Q_3 / Bruhat-Tits AdS</span>
       </div>
 
-      <div class="toolbar-group">
+      <div class="toolbar-group" role="group" aria-label="Prime field">
         <span class="toolbar-label">PRIME</span>
         <div class="seg-group" id="primeGroup">
-          <button class="seg-btn" data-prime="2">p=2</button>
-          <button class="seg-btn active" data-prime="3">p=3</button>
-          <button class="seg-btn" data-prime="5">p=5</button>
-          <button class="seg-btn" data-prime="7">p=7</button>
+          <button type="button" class="seg-btn" data-prime="2" aria-pressed="false">p=2</button>
+          <button type="button" class="seg-btn active" data-prime="3" aria-pressed="true">p=3</button>
+          <button type="button" class="seg-btn" data-prime="5" aria-pressed="false">p=5</button>
+          <button type="button" class="seg-btn" data-prime="7" aria-pressed="false">p=7</button>
         </div>
       </div>
 
-      <div class="toolbar-group">
+      <div class="toolbar-group" role="group" aria-label="Bulk geometry topology">
         <span class="toolbar-label">BULK</span>
         <div class="seg-group" id="topoGroup">
-          <button class="seg-btn active" data-btz="0">Pure AdS</button>
-          <button class="seg-btn" data-btz="1">BTZ Hole</button>
+          <button type="button" class="seg-btn active" data-btz="0" aria-pressed="true">Pure AdS</button>
+          <button type="button" class="seg-btn" data-btz="1" aria-pressed="false">BTZ Hole</button>
         </div>
       </div>
 
-      <div class="toolbar-group">
+      <div class="toolbar-group" role="group" aria-label="Interactive raycast tool">
         <span class="toolbar-label">TOOL</span>
         <div class="seg-group" id="toolGroup">
-          <button class="seg-btn active" data-tool="wavelet" title="Click any bulk node or rim ball to inject an exact Kozyrev wavelet (Shift+Click replaces state)">Wavelet</button>
-          <button class="seg-btn" data-tool="surgery" title="Click any bulk edge to pinch/stretch a_e (Shift/Right-Click reinforces)">Wormhole</button>
-          <button class="seg-btn" data-tool="rt" title="Click boundary balls to toggle Ryu-Takayanagi region A">RT Cut</button>
-          <button class="seg-btn" data-tool="triangle" title="Click 3 boundary rim leaves to prove strong triangle inequality">3-Pt</button>
+          <button type="button" class="seg-btn active" data-tool="wavelet" aria-pressed="true" title="Click any bulk node or rim ball to inject an exact Kozyrev wavelet (Shift+Click replaces state)">Wavelet</button>
+          <button type="button" class="seg-btn" data-tool="surgery" aria-pressed="false" title="Click any bulk edge to pinch/stretch a_e (Shift/Right-Click reinforces)">Wormhole</button>
+          <button type="button" class="seg-btn" data-tool="rt" aria-pressed="false" title="Click boundary balls to toggle Ryu-Takayanagi region A">RT Cut</button>
+          <button type="button" class="seg-btn" data-tool="triangle" aria-pressed="false" title="Click 3 boundary rim leaves to prove strong triangle inequality">3-Pt</button>
         </div>
       </div>
 
       <div class="toolbar-actions">
-        <button id="btnAudio" class="action-btn" title="Enable 48kHz AudioWorklet non-octave prime-power harmonic synthesis (M)">
+        <button type="button" id="btnAudio" class="action-btn" aria-pressed="false" title="Enable 48kHz AudioWorklet non-octave prime-power harmonic synthesis (M)">
           <span class="dot"></span>
           <span id="audioLabel">Audio OFF</span>
         </button>
-        <button id="btnPause" class="action-btn" title="Pause / Resume simulation (Space)">Pause</button>
-        <button id="btnReset" class="action-btn" title="Reset active experiment (R)">Reset</button>
-        <button id="btnShare" class="action-btn" title="Copy reproducible URL permalink for current state">Share</button>
-        <button id="btnSnapshot" class="action-btn" title="Save 3D WebGL2 PNG snapshot">Shot</button>
-        <button id="btnHelp" class="action-btn" title="Keyboard shortcuts, Lean 4 proof audit &amp; publication links (?)">?</button>
+        <button type="button" id="btnPause" class="action-btn" aria-pressed="false" title="Pause / Resume simulation (Space)">Pause</button>
+        <button type="button" id="btnReset" class="action-btn" title="Reset active experiment (R)">Reset</button>
+        <button type="button" id="btnShare" class="action-btn" title="Copy reproducible URL permalink for current state">Share</button>
+        <button type="button" id="btnSnapshot" class="action-btn" title="Save 3D WebGL2 PNG snapshot">Shot</button>
+        <button type="button" id="btnHelp" class="action-btn" aria-haspopup="dialog" title="Keyboard shortcuts, Lean 4 proof audit &amp; publication links (?)">?</button>
       </div>
     </header>
 
@@ -80,7 +80,7 @@
 
           <div class="control-row">
             <div class="control-meta">
-              <span>Vladimirov Exp &alpha;</span>
+              <label for="sldAlpha">Vladimirov Exp &alpha;</label>
               <span id="valAlpha" class="mono">1.00</span>
             </div>
             <input id="sldAlpha" type="range" min="0.25" max="2.00" step="0.05" value="1.00" />
@@ -88,7 +88,7 @@
 
           <div class="control-row">
             <div class="control-meta">
-              <span>Adelic Morph &theta; (R &harr; Q<sub>p</sub>)</span>
+              <label for="sldAdelic">Adelic Morph &theta; (R &harr; Q<sub>p</sub>)</label>
               <span id="valAdelic" class="mono">1.00</span>
             </div>
             <input id="sldAdelic" type="range" min="0.00" max="1.00" step="0.01" value="1.00" />
@@ -96,7 +96,7 @@
 
           <div class="control-row">
             <div class="control-meta">
-              <span>Nonlinearity g (|&psi;|&sup2;&psi;)</span>
+              <label for="sldNonlin">Nonlinearity g (|&psi;|&sup2;&psi;)</label>
               <span id="valNonlin" class="mono">0.0</span>
             </div>
             <input id="sldNonlin" type="range" min="-180" max="200" step="5" value="0" />
@@ -104,7 +104,7 @@
 
           <div class="control-row">
             <div class="control-meta">
-              <span>CFT Dim &Delta; <span id="valMass" class="dim-sub">m&sup2;=+0.93</span></span>
+              <label for="sldDelta">CFT Dim &Delta; <span id="valMass" class="dim-sub">m&sup2;=+0.93</span></label>
               <span id="valDelta" class="mono">1.50</span>
             </div>
             <input id="sldDelta" type="range" min="0.52" max="2.40" step="0.02" value="1.50" />
@@ -112,7 +112,7 @@
 
           <div class="control-row">
             <div class="control-meta">
-              <span>Newton Coupling G<sub>N</sub></span>
+              <label for="sldGravity">Newton Coupling G<sub>N</sub></label>
               <span id="valGravity" class="mono">0.00</span>
             </div>
             <input id="sldGravity" type="range" min="0.00" max="3.50" step="0.05" value="0.00" />
@@ -120,7 +120,7 @@
 
           <div class="control-row" id="rowFlux">
             <div class="control-meta">
-              <span>Kerr-BTZ Flux &Omega;</span>
+              <label for="sldFlux">Kerr-BTZ Flux &Omega;</label>
               <span id="valFlux" class="mono">0.00 rad</span>
             </div>
             <input id="sldFlux" type="range" min="-3.14" max="3.14" step="0.02" value="0.00" />
@@ -128,7 +128,7 @@
 
           <div class="control-row">
             <div class="control-meta">
-              <span>RT Region |A|/N <span id="rtPhaseBadge" class="rt-pill">DETACHED</span></span>
+              <label for="sldRT">RT Region |A|/N <span id="rtPhaseBadge" class="rt-pill">DETACHED</span></label>
               <span id="valRT" class="mono">38%</span>
             </div>
             <input id="sldRT" type="range" min="0.03" max="0.97" step="0.01" value="0.38" />
@@ -172,7 +172,7 @@
       <!-- Right Stage: 3D Hyperbolic Bulk + Bottom Scientific Oscilloscopes -->
       <main class="stage">
         <div class="viewport-wrap">
-          <canvas id="canvas3d"></canvas>
+          <canvas id="canvas3d" role="img" aria-label="Interactive 3D WebGL2 visualization of the Bruhat-Tits tree and rotating Kerr-BTZ black hole bulk"></canvas>
           <div id="webglFallback" class="webgl-fallback hidden">
             <div class="fallback-card">
               <h3>WebGL2 Unavailable</h3>
@@ -181,18 +181,18 @@
           </div>
 
           <!-- Floating Top-Left Shader Mode Switcher -->
-          <div class="overlay-top-left">
+          <div class="overlay-top-left" role="group" aria-label="3D shader visualization mode">
             <div class="seg-group overlay-seg" id="shaderGroup">
-              <button class="seg-btn active" data-view="field">Quantum Field</button>
-              <button class="seg-btn" data-view="ricci">Ollivier-Ricci &kappa;</button>
-              <button class="seg-btn" data-view="rt">Ryu-Takayanagi</button>
-              <button class="seg-btn" data-view="gravity">Grav Strain a<sub>e</sub></button>
+              <button type="button" class="seg-btn active" data-view="field" aria-pressed="true">Quantum Field</button>
+              <button type="button" class="seg-btn" data-view="ricci" aria-pressed="false">Ollivier-Ricci &kappa;</button>
+              <button type="button" class="seg-btn" data-view="rt" aria-pressed="false">Ryu-Takayanagi</button>
+              <button type="button" class="seg-btn" data-view="gravity" aria-pressed="false">Grav Strain a<sub>e</sub></button>
             </div>
-            <button id="btnAutoOrbit" class="mini-pill active" title="Toggle gentle orbital drift">Orbit</button>
+            <button type="button" id="btnAutoOrbit" class="mini-pill active" aria-pressed="true" title="Toggle gentle orbital drift">Orbit</button>
           </div>
 
           <!-- Floating Top-Right Hover Probe Readout -->
-          <div id="hoverReadout" class="overlay-top-right mono">
+          <div id="hoverReadout" class="overlay-top-right mono" aria-live="polite">
             Drag to orbit &middot; Scroll to zoom &middot; Click any node/edge
           </div>
 
@@ -209,13 +209,13 @@
         <!-- Bottom 3-Panel Scientific Telemetry Dock -->
         <div class="bottom-dock">
           <div class="dock-card dock-wide">
-            <canvas id="canvasReality"></canvas>
+            <canvas id="canvasReality" role="img" aria-label="Reality Split oscilloscope comparing Q_p non-Archimedean probability density against synchronized Euclidean R twin"></canvas>
           </div>
           <div class="dock-card dock-mid">
-            <canvas id="canvasSpectrum"></canvas>
+            <canvas id="canvasSpectrum" role="img" aria-label="Pontryagin-dual Vladimirov valuation shell power spectrum and prime-power frequencies"></canvas>
           </div>
           <div class="dock-card dock-right">
-            <canvas id="canvasTriangle"></canvas>
+            <canvas id="canvasTriangle" role="img" aria-label="Ultrametric strong triangle inequality and Bruhat-Tits geodesic prover"></canvas>
           </div>
         </div>
       </main>
@@ -227,10 +227,10 @@
     <div class="modal-card">
       <div class="modal-header">
         <div>
-          <h2 id="helpModalTitle">ULTRAMETRICA v1.3.0 — Observatory Guide &amp; Formal Proof Audit</h2>
-          <p class="modal-sub">Alexander Stephen Donahue &middot; 0thernes LLC &middot; ORCID <a href="https://orcid.org/0009-0006-8168-9648" target="_blank" rel="noopener">0009-0006-8168-9648</a></p>
+          <h2 id="helpModalTitle">ULTRAMETRICA v1.4.0 — Observatory Guide &amp; Formal Proof Audit</h2>
+          <p class="modal-sub">Alexander Stephen Donahue &middot; Independent Researcher (0thernes) &middot; ORCID <a href="https://orcid.org/0009-0006-8168-9648" target="_blank" rel="noopener">0009-0006-8168-9648</a></p>
         </div>
-        <button id="btnCloseHelp" class="action-btn">Close (Esc)</button>
+        <button type="button" id="btnCloseHelp" class="action-btn">Close (Esc)</button>
       </div>
 
       <div class="modal-grid">
@@ -253,19 +253,20 @@
           </ul>
         </div>
         <div class="modal-col">
-          <h3>Lean 4 (v4.35.0) Certified Theorems (101/101)</h3>
+          <h3>Lean 4 (v4.35.0) 6-Kernel Certified Theorems</h3>
           <ul class="key-list">
             <li><strong>Theorem I (Adelic Parity-Doubling):</strong> Universal Monna bijectivity, ball contiguity, subtree shift isometry, picket-fence law &amp; odd-prime doublet protection.</li>
             <li><strong>Theorem II (BTZ Ollivier-Ricci Law):</strong> Cycle-metric bridge + Kantorovich primal-dual proof of <code>&kappa;_BTZ(p,L) = -(2p - max(0,6-L))/(p+2)</code> &amp; <code>L_c = 5</code> trichotomy.</li>
             <li><strong>Theorem III (Kozyrev Solitons):</strong> Arbitrary finite <code>K</code>-ball zero-crosstalk nonlinear compacton-soliton invariance.</li>
             <li><strong>Theorem IV (Kerr-BTZ Solver):</strong> Complex Hermitian Rank-1 Sherman-Morrison exactness, denominator <code>&ge; 1</code> &amp; Kerr flux parity laws.</li>
-            <li><strong>Theorem V (Curved Gauss-Bonnet):</strong> Non-perturbative curvature conservation for <code>&sigma;_e &ge; -ln p</code> &amp; exact supercritical pinch deficit past <code>&sigma;_e &lt; -ln p</code>.</li>
+            <li><strong>Theorem V (Global Curved Gauss-Bonnet):</strong> Arbitrary multi-edge curved AdS curvature conservation (<code>w_e/W_u + w_e/W_v &le; 1</code>) &amp; exact supercritical pinch deficit.</li>
+            <li><strong>Theorem VI (Holographic SSA):</strong> Universal Ryu-Takayanagi min-cut submodularity &amp; Strong Subadditivity <code>S(AB)+S(BC) &ge; S(ABC)+S(B)</code> on arbitrary weighted graphs.</li>
           </ul>
           <div class="modal-links">
             <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica" target="_blank" rel="noopener">GitHub Repository</a>
             <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/dist/Donahue_2026_Ultrametrica.pdf" target="_blank" rel="noopener">AMS-LaTeX PDF</a>
-            <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/docs/CLAIMS.md" target="_blank" rel="noopener">Claims Ledger</a>
-            <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/docs/AUDIT_AND_CONTRAST_ANALYSIS.md" target="_blank" rel="noopener">Audit &amp; Contrast</a>
+            <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/CLAIMS.md" target="_blank" rel="noopener">Claims Ledger</a>
+            <a class="modal-link-btn" href="https://github.com/0thernes/ultrametrica/blob/main/docs/MEGA_ATLAS_CROSSCHECK.md" target="_blank" rel="noopener">Mega-Atlas Check</a>
           </div>
         </div>
       </div>

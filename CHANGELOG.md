@@ -2,6 +2,29 @@
 
 All notable releases, mathematical proofs, verification suites, and engine changes in **ULTRAMETRICA** are documented here.
 
+## [Unreleased]
+
+- Future genus-$g \ge 2$ Mumford-Schottky wormhole curvature generalization and finite multi-prime adelic product lattice ($\mathbb{A}_{\mathbb{Q}}$ truncation) planned for `v1.5.0+` (see [`ROADMAP.md`](ROADMAP.md)).
+
+## [1.4.0] — 2026-11-25
+
+### Added
+- **New Formal Theorem V-Global (Arbitrary Simultaneous Multi-Edge Curved AdS Gauss-Bonnet):** Proved in `lean/UltrametricaProofs/HolographyCurvature.lean` (`curved_gen_kappa_charge_decomp`, `global_multi_edge_vertex_charge_conservation`) that every interior vertex's curvature half-charges $-(p-1)w_e/W_u$ sum identically to $-(p-1)$ regardless of arbitrary positive conductances $w_e > 0$, generalizing Theorem V to simultaneous multi-edge perturbations (verified across `9` multi-edge exact `Fraction` trees and `1,000` random JS trees to `< 1e-11`).
+- **New Formal Theorem VI (Universal Holographic Ryu-Takayanagi Strong Subadditivity):** Proved discrete graph-theoretic Strong Subadditivity $S(A \cup B \cup C) + S(B) \le S(A \cup B) + S(B \cup C)$ on arbitrary finite weighted graphs (`rt_edge_cut_submodular`, `rt_cut_submodular`, `rt_strong_subadditivity`, `rt_subadditivity`), independently verified across `4,352` exhaustive brute-force partitions and `1,000` random AdS/BTZ graphs.
+- **Multi-Kernel Lean 4.35.0 Verification (`120` Audited Declarations + Isolated `Spec`/`Challenge`/`Solution` Comparator):** Enabled `autoImplicit = false` / `relaxedAutoImplicit = false`, added statement-only `UltrametricaProofs/Spec.lean`, `Challenge.lean`, `Solution.lean`, `comparator.json`, `formalization.yaml`, `docs/statement-fidelity.md`, and `scripts/check_readme_axioms.py`; verified across `Lean 4.35.0`, `leanchecker`, `leanchecker-paranoid`, `con-leche`, `con-ron`, `nanoda_bin 0.4.19`, plus `lean4lean` via `bubblewrap`-sandboxed `lake comparator --paranoid` in GitHub Actions CI.
+- **Pre-Registered Confirmatory Experiment I (`docs/preregistration.md` git-sealed at `c171b1b` -> `scripts/stats_eval.mjs` -> `results/stats-eval.json`):** Confirmed all `4/4` hypotheses rejecting Wigner-Dyson GOE/GUE thermalization against 20-seed controls at `p_holm = 0.0004` (`20/20` seeds each, 10,000-resample bootstrap CIs, Cliff's $\delta$, Cohen's $d$).
+- **Unsolved-Problems Mega-Atlas Honest Cross-Check (`docs/MEGA_ATLAS_CROSSCHECK.md`):** Audited all `1,900` problems in `0thernes/unsolved-problems-mega-atlas` (`0/1,900` full solutions; discrete sub-results on `SUB-032` and negative-result falsification on `ANL-065`/`QM-016`).
+- **Expanded Verification Suites (`26/26` Node Tests + Independent Python Oracle + Perf Benchmarks):** Added `test/properties.mjs` (`3,200+` property, metamorphic, determinism, and negative-input checks), `test/server.mjs` (HTTP contract, CSP security headers, `/healthz`, and disk `EIO` failure injection), `test/golden.mjs`, `reference/padic_oracle.py` (`1,000+` textbook differential checks), `scripts/bench.mjs` (`0.388 ms` coupled BTZ frame, `319.9×` FFT speedup at $N=625$), and `examples/01..03`.
+- **Full Build Standard `v1.2.0` (90-Item) & Playbook `v1.3` Compliance:** Added `package-lock.json`, `AGENTS.md`/`CLAUDE.md`/`GEMINI.md`/`llms.txt`/`llms-full.txt`, `justfile`, `repo.yaml`, root `CLAIMS.md`, `LIMITATIONS.md`, `REPLICATION.md`, `ROADMAP.md`, `UPGRADING.md`, `ERRATA.md`, `SUPPORT.md`, `.editorconfig`, `.env.example`, `.nvmrc`, `.python-version`, `pyproject.toml`, `jsconfig.json`, `docs/{architecture,benchmarks,configuration,operations,threat-model,faq,glossary,statement-fidelity,run-log}.md`, `docs/adr/0001..0005`, `docs/reviews/2026-11-25-hardening-cycles.md`, `data/MANIFEST.sha256`, `.github/labels.tsv`, 10-class issue forms, cross-platform CI matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`), and `.github/workflows/release.yml` with `SHA256SUMS` + SLSA attestation.
+- **WCAG 2.2 AA Observatory Accessibility:** Added `<label for>`, `aria-pressed`, `role="group"`, `role="img"`, `aria-live="polite"`, `:focus-visible`, and `prefers-reduced-motion` support across `src/web/`.
+
+### Fixed
+- **Affiliation metadata (`F01`):** Standardized affiliation from unformed `"0thernes LLC"` to `"Independent Researcher, Spokane, WA, USA"` matching ORCID `0009-0006-8168-9648` (logged in `ERRATA.md`).
+- **Engine input validation (`F02`, `F04`, `F05`):** Rejected negative `horizonDepth`, invalid primes/depths, non-finite parameters, unknown experiment IDs, and negative `dt` loudly; extended URL `delta` lower bound to `0.5001`.
+- **Server error-path header bug (`F14`):** Fixed `server.mjs` calling `res.writeHead(200)` before `await fsImpl.readFile()` (caught by B21 EIO failure injection); added `/healthz`, strict CSP, structured JSON logging, and fail-fast `parsePort`.
+- **Lean static audit (`F09`):** Replaced non-nested block-comment regex with proper nested-comment/string-literal lexer scanning `UltrametricaProofs` and `Solution.lean`.
+- **WebGL2 & DOM hardening (`F10`–`F13`):** Added `webglcontextrestored` recovery, eliminated `innerHTML` in `app.js`, unified `rawPow`, and clarified `3-Pt mode` copy.
+
 ## [1.3.0] — 2026-11-21
 
 ### Added

@@ -9,6 +9,7 @@
 \usepackage{array}
 \usepackage{graphicx}
 \usepackage{xcolor}
+\usepackage{xurl}
 \usepackage{enumitem}
 \usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=teal!60!black,urlcolor=blue!60!black]{hyperref}
 \usepackage[nameinlink,capitalise]{cleveref}
@@ -40,34 +41,35 @@
 \newcommand{\lca}{\mathrm{lca}}
 \newcommand{\Aut}{\mathrm{Aut}}
 \newcommand{\code}[1]{{\ttfamily\footnotesize\def\_{\textunderscore\penalty0\hskip0pt}#1}}
-\emergencystretch=2em
+\emergencystretch=4em
 
-\title{\Large\bfseries ULTRAMETRICA: Exact Non-Archimedean Holography, Recursive Adelic Valuation-Residue Symmetries, Tate-Curve BTZ Ollivier--Ricci Curvature, and Lean~4 Formal Verification}
+\title{\Large\bfseries ULTRAMETRICA: Exact Non-Archimedean Holography, Recursive Adelic Valuation-Residue Symmetries, Multi-Edge Curved Gauss--Bonnet Curvature, Holographic Strong Subadditivity, and Multi-Kernel Lean~4 Verification}
 
 \author{
-  Alexander Stephen Donahue\thanks{0thernes LLC, Spokane, WA, USA. Email: \href{mailto:0_0@0thernes.art}{\texttt{0\_0@0thernes.art}}. ORCID: \href{https://orcid.org/0009-0006-8168-9648}{\texttt{0009-0006-8168-9648}}. Source code, formal proofs, and claim ledger: \url{https://github.com/0thernes/ultrametrica}. Live WebGL2 observatory: \url{https://0thernes.github.io/ultrametrica/}.}\\[0.35em]
-  \normalsize 0thernes LLC
+  Alexander Stephen Donahue\thanks{Independent Researcher (project handle \texttt{0thernes}), Spokane, WA, USA. Email: \href{mailto:0_0@0thernes.art}{\texttt{0\_0@0thernes.art}}. ORCID: \href{https://orcid.org/0009-0006-8168-9648}{\texttt{0009-0006-8168-9648}}. Source code, formal proofs, claim ledger, and preregistration: \url{https://github.com/0thernes/ultrametrica}. Live WebGL2 observatory: \url{https://0thernes.github.io/ultrametrica/}.}\\[0.35em]
+  \normalsize Independent Researcher, Spokane, WA, USA
 }
 
-\date{November 21, 2026 (Version 1.3.0)}
+\date{November 25, 2026 (Version 1.4.0)}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-We present \textbf{ULTRAMETRICA} (\code{v1.3.0}), a zero-dependency computational laboratory and formal mathematical framework coupling discrete $p$-adic quantum dynamics on $\Zp / p^n \Zp$ ($p \in \{2,3,5,7\}$) to exact holographic bulk gravity on the Bruhat--Tits tree $\Tp$ and its rotating Tate-curve BTZ black hole quotients $\Tp / p^{h\Z}$. Beyond implementing established non-Archimedean constructions to machine precision ($10^{-12}$--$10^{-17}$)---including native Radix-$p$ Pontryagin fast Fourier transforms, Vladimirov fractional pseudo-differential operators $\Dp$, orthonormal Kozyrev wavelets, fourth-order Yoshida symplectic nonlinear integration, symmetric Jacobi dynamic edge-length gravitational backreaction, and exact $O(V)$ Ryu--Takayanagi minimal cuts---we derive, independently cross-check in exact rational arithmetic, stress-test against eight planted negative mutants, and formally machine-verify across $101$ exported declarations ($2{,}267$ lines) in pure Lean~4 (\code{v4.35.0}, zero Mathlib, zero \code{native\_decide}, zero \code{sorry}) five sharp mathematical and algorithmic results together with eight reproducible benchmark experiments (Experiments~A--H):
+We present \textbf{ULTRAMETRICA} (\code{v1.4.0}), a zero-dependency computational laboratory and formal mathematical framework coupling discrete $p$-adic quantum dynamics on $\Zp / p^n \Zp$ ($p \in \{2,3,5,7\}$) to exact holographic bulk gravity on the Bruhat--Tits tree $\Tp$ and its rotating Tate-curve BTZ black hole quotients $\Tp / p^{h\Z}$. Beyond implementing established non-Archimedean constructions to machine precision ($10^{-12}$--$10^{-17}$)---including native Radix-$p$ Pontryagin fast Fourier transforms ($320\times$ faster than naive DFT at $N=625$), Vladimirov fractional pseudo-differential operators $\Dp$, orthonormal Kozyrev wavelets, fourth-order Yoshida symplectic nonlinear integration, symmetric Jacobi dynamic edge-length gravitational backreaction, and exact $O(V)$ Ryu--Takayanagi minimal cuts---we derive, independently cross-check in exact arbitrary-precision rational arithmetic, stress-test against eight planted negative mutants and $3{,}200+$ seeded property checks, confirm via a git-sealed pre-registered $20$-seed statistical falsification experiment, and formally machine-verify across $120$ exported declarations in pure Lean~4 (\code{v4.35.0}, zero Mathlib, \code{autoImplicit = false}, zero \code{native\_decide}, zero \code{sorry}) plus an isolated \code{Spec}/\code{Challenge}/\code{Solution} comparator suite verified across independent external kernels (\code{leanchecker}, \code{leanchecker-paranoid}, \code{con-leche}, \code{con-ron}, \code{nanoda\_bin}, and sandboxed $6$-kernel \code{lake comparator --paranoid} in CI) six exact mathematical and algorithmic results together with nine reproducible experiments (Experiments~A--I):
 \begin{enumerate}[leftmargin=1.8em,itemsep=2pt]
-  \item \emph{Adelic Parity-Doubling Dichotomy, Valuation-Residue Decomposition, and $\alpha$-Invariant Modular Picket-Fence Locking (\cref{thm:adelic}, \cref{prop:picket}):} Conjugating $\Dp$ by the discrete $p$-adic Monna digit-reversal involution $R_p$ (proved universally bijective for all $p \ge 2, n \in \N$) and adding any real even Archimedean circulant operator $H_{\R}$ produces a non-commuting hybrid Hamiltonian $H_\theta = \theta R_p \Dp R_p + (1-\theta) H_{\R}$ that block-diagonalizes identically into $1 + n(p-1)$ Fourier valuation-residue sectors $W_{s,m}$ (off-block leak $\le 4.5\times 10^{-13}$ up to $N = 625$). Complex conjugation maps $W_{s,m} \xrightarrow{\sim} W_{s,p-m}$, forcing exact even multiplicity ($\ge 2$) for every odd prime $p \ge 3$ while uniquely lifting all doublets to $2^n$ simple levels at $p = 2$. Single-sector complex Hermitian diagonalization up to $N = 625$ across $\alpha \in \{0.5, 1.0, 1.5, 2.0\}$ \emph{falsifies} GOE/GUE thermalization: every sector stays locked near the formally proved modular picket-fence ratio $r_0(p, m) = \min(2m, p-2m)/\max(2m, p-2m)$, even under quadratic Schr\"odinger dispersion ($\alpha = 2.0$).
-  \item \emph{First-Principles Tate-Curve BTZ Ollivier--Ricci Law and $L_c = 5$ Trichotomy (\cref{thm:btz-ricci}):} Bridging the literal $L$-cycle graph metric (\code{btz\_graph\_metric\_eq\_classDist}) to an explicit Kantorovich primal--dual $1$-Wasserstein certificate in Lean~4 for all $p \ge 2, L \ge 3$, every horizon edge obeys $\kappa_{\mathrm{BTZ}}(p, L) = -(2p - \max(0, 6-L))/(p+2)$, establishing Planck-scale flattening ($L \in \{3,4\}$, and $L=5$ for $p \ge 4$), exact cancellation at $(p, L) = (3, 5)$, and macroscopic deficit $-4/((p+1)(p+2))$ for $L \ge 6$.
-  \item \emph{Non-Perturbative Curved AdS Discrete Gauss--Bonnet Conservation and Supercritical Pinch Deficit (\cref{thm:gauss-bonnet}):} Proved from first-principles curved Kantorovich duality in Lean~4 and verified over $60$ exact rational transport plans, any finite single-edge length stretch ($a_e \ge 1$) or subcritical pinch ($a_e \ge 1/p$, $\sigma_e \ge -\ln p$) on an interior edge of $\Tp$ conserves total Ollivier--Ricci curvature identically ($\sum_{e'}(\kappa_{e'} - \kappa_{\mathrm{AdS}}) \equiv 0$); pinching strictly past the critical margin $\sigma_e^* = -\ln p$ breaks conservation with exact negative deficit $-2(e^{-\sigma_e}-p)/(e^{-\sigma_e}+p) < 0$.
-  \item \emph{Multi-Ball Kozyrev Compacton-Soliton Invariance and Self-Trapping Scaling (\cref{thm:soliton}):} Arbitrary finite $K$-ball disjoint Kozyrev superpositions are exact radiation-free nonlinear solitons of $i\partial_t \psi = (\Dp + F(|\psi|^2))\psi$ ($0.00\%$ leakage up to $g = 500$), whereas overlapping multi-scale packets show monotonic $\alpha$-decaying resonant peaks and universal large-$g$ self-trapping.
+  \item \emph{Adelic Parity-Doubling, Valuation-Residue Sectors, and Pre-Registered GOE/GUE Falsification (\cref{thm:adelic}, \cref{prop:picket}, \cref{tab:expi}):} Conjugating $\Dp$ by the universal base-$p$ Monna digit-reversal involution $R_p$ and adding any real even circulant operator $H_{\R}$ produces a non-commuting hybrid $H_\theta = \theta R_p \Dp R_p + (1-\theta) H_{\R}$ that block-diagonalizes identically into $1 + n(p-1)$ Fourier sectors $W_{s,m}$ (off-block leak $\le 1.8\times 10^{-14}$ up to $N = 625$), enforcing exact even multiplicity for odd primes $p \ge 3$ while uniquely lifting all doublets to $2^n$ simple levels at $p = 2$. Inside each sector, folded frequencies lock to the formally proved modular picket-fence ratio $r_0(p, m) = \min(2m, p-2m)/\max(2m, p-2m)$ across $\alpha \in \{0.5, 1.0, 1.5, 2.0\}$; pre-registered Experiment~I rejects Wigner--Dyson GOE/GUE thermalization across all $4/4$ hypotheses ($20/20$ seeds each, Holm--Bonferroni $p_{\mathrm{Holm}} = 0.0004$).
+  \item \emph{First-Principles Tate-Curve BTZ Ollivier--Ricci Law and $L_c = 5$ Trichotomy (\cref{thm:btz-ricci}):} Bridging the literal $L$-cycle graph metric to an explicit Kantorovich primal--dual $1$-Wasserstein certificate in Lean~4 for all $p \ge 2, L \ge 3$, every horizon edge obeys $\kappa_{\mathrm{BTZ}}(p, L) = -(2p - \max(0, 6-L))/(p+2)$, establishing Planck-scale flattening ($L \in \{3,4\}$, and $L=5$ for $p \ge 4$), exact zero excess at $(p, L) = (3, 5)$, and macroscopic deficit $-4/((p+1)(p+2))$ for $L \ge 6$.
+  \item \emph{Single-Edge and Global Multi-Edge Curved AdS Discrete Gauss--Bonnet Conservation and Pinch Deficit (\cref{thm:gauss-bonnet}, \cref{thm:gauss-bonnet-global}):} Extending single-edge curved Kantorovich duality to \emph{arbitrary simultaneous finite multi-edge positive conductances} $w_e > 0$ on strictly interior bridge edges of $\Tp$, every vertex's incident curvature half-charges $-(p-1)w_e/W_u$ sum identically to $-(p-1)$, yielding exact zero global excess whenever $w_e/W_u + w_e/W_v \le 1$ on all edges and exact negative deficit $-2\sum_{w_e/W_u + w_e/W_v > 1}(\frac{w_e}{W_u} + \frac{w_e}{W_v} - 1)$ otherwise (verified in Lean~4, exact \code{Fraction} optimal transport, and $1{,}000$ random multi-edge curved trees to $< 10^{-11}$).
+  \item \emph{Multi-Ball Kozyrev Compacton-Soliton Invariance and Self-Trapping (\cref{thm:soliton}):} Any finite $K$-ball disjoint Kozyrev superposition is an exact radiation-free nonlinear soliton of $i\partial_t \psi = (\Dp + F(|\psi|^2))\psi$ ($0.00\%$ leakage up to $g = 500$), whereas overlapping multi-scale packets show monotonic $\alpha$-decaying resonant peaks and universal large-$g$ self-trapping.
   \item \emph{Unconditional Positive-Definite Rank-$1$ Kerr--BTZ Bulk Solver, Flux Parity, and BF Margin (\cref{thm:solver}):} Decomposing the rotating horizon wrap edge as $w_{L-1} u u^\dagger \succeq 0$ yields an arbitrary-dimension exact complex Hermitian Sherman--Morrison solver with $\mathrm{den} \ge 1$ unconditionally, exact parity $E(-\Omega) = E(\Omega)$ and $J(-\Omega) = -J(\Omega)$, and verified stability down to $\Delta = 0.5001$ under curved gravity and maximal flux $\Omega = \pi$ (residual $\le 5.38\times 10^{-15}$).
+  \item \emph{Universal Discrete Holographic Ryu--Takayanagi Strong Subadditivity (\cref{thm:rt-ssa}):} Formalized in Lean~4 for \emph{arbitrary} finite non-negative weighted graphs (covering pure AdS trees, curved BTZ black holes, and higher-genus quotients), minimal homologous cuts obey $S(A \cup B \cup C) + S(B) \le S(A \cup B) + S(B \cup C)$ for all disjoint boundary regions $A, C$ (discrete formalization of Headrick--Takayanagi~\cite{HeadrickTakayanagi2007}, independently confirmed over $4{,}352$ exhaustive brute-force partitions and $1{,}000$ random JS graphs).
 \end{enumerate}
 \end{abstract}
 
 \medskip
-\noindent\textbf{Keywords:} $p$-adic AdS/CFT; Bruhat--Tits tree; Vladimirov operator; Kozyrev wavelets; adelic physics; Ollivier--Ricci curvature; Kantorovich duality; discrete BTZ black hole; Ryu--Takayanagi entropy; Lean~4 formal verification.
+\noindent\textbf{Keywords:} $p$-adic AdS/CFT; Bruhat--Tits tree; Vladimirov operator; Kozyrev wavelets; adelic physics; Ollivier--Ricci curvature; Kantorovich duality; BTZ black hole; Ryu--Takayanagi strong subadditivity; Lean~4 verification.
 
 \smallskip
 \noindent\textbf{MSC 2020:} 11S80; 81T40; 83E05; 05C12; 42C40; 68V20.
@@ -75,13 +77,36 @@ We present \textbf{ULTRAMETRICA} (\code{v1.3.0}), a zero-dependency computationa
 \tableofcontents
 
 % =====================================================================
-\section{Introduction and Epistemic Scope}
+\section{Introduction, Epistemic Scope, and Claims Summary}
 \label{sec:intro}
 % =====================================================================
 
 By Ostrowski's theorem, every non-trivial absolute value on $\Q$ is equivalent either to the Archimedean norm $|\cdot|_\infty$ (completing to $\R$) or to a $p$-adic ultrametric norm $|x|_p = p^{-v_p(x)}$ for some prime $p$ (completing to $\Qp$), obeying the strong triangle inequality $|x + y|_p \le \max(|x|_p, |y|_p)$. Non-Archimedean and adelic models of Planck-scale geometry and string amplitudes were pioneered by Volovich~\cite{Volovich1987}, Freund and Witten~\cite{FreundWitten1987}, and Vladimirov, Volovich, and Zelenov~\cite{Vladimirov1994}, with comprehensive modern surveys in~\cite{Dragovich2017}. A structural resurgence followed the formulation of \emph{$p$-adic AdS/CFT} by Gubser et~al.~\cite{Gubser2017,GubserEdge2017} and Heydeman, Marcolli, Saberi, and Stoica~\cite{Heydeman2018,Heydeman2021}, establishing the $(p+1)$-regular Bruhat--Tits tree $\Tp$ as a discrete hyperbolic holographic bulk dual to $\mathbb{P}^1(\Qp)$ and its Tate-curve Schottky quotients $\Tp / q^{\Z}$ as discrete BTZ black holes.
 
-\textbf{Epistemic and Priority Scope.} This manuscript is a mathematical-physics, formal-verification, and computational engineering preprint; it is \emph{not} a peer-reviewed journal article and makes no claim of empirical discovery of new physical laws of nature. Foundational $p$-adic analysis, Kozyrev wavelets~\cite{Kozyrev2002}, $p$-adic AdS/CFT~\cite{Gubser2017,Heydeman2018}, dynamic edge-length gravity~\cite{GubserEdge2017}, Ollivier--Ricci curvature on regular trees~\cite{Ollivier2009,LinLuYau2011}, holographic tensor-network entanglement~\cite{RyuTakayanagi2006,Pastawski2015}, and fourth-order Yoshida splitting~\cite{Yoshida1990} are credited to their original authors. Our original contributions are restricted strictly to the five exact mathematical and algorithmic results in \cref{sec:solitons,sec:adelic,sec:bulk,sec:ricci}, the eight reproducible spectral and stability-margin experiments in \cref{sec:benchmarks}, their $101$-theorem pure Lean~4 formalizations~\cite{deMouraUllrich2021}, independent exact-rational and $8$-mutant falsification checks, the comprehensive adversarial audit in \code{docs/AUDIT\_AND\_CONTRAST\_ANALYSIS.md}, and their real-time coupled WebGL2/AudioWorklet synthesis (mapped 1-to-1 in \code{docs/CLAIMS.md}).
+\textbf{Epistemic and Priority Scope.} This manuscript is an independent mathematical-physics, formal-verification, and computational engineering preprint; it is \emph{not} a peer-reviewed journal article and makes no claim of empirical discovery of new physical laws of nature. Foundational $p$-adic analysis, Kozyrev wavelets~\cite{Kozyrev2002}, $p$-adic AdS/CFT~\cite{Gubser2017,Heydeman2018}, dynamic edge-length gravity~\cite{GubserEdge2017}, Ollivier--Ricci curvature on regular trees~\cite{Ollivier2009,LinLuYau2011}, holographic entanglement entropy and strong subadditivity~\cite{RyuTakayanagi2006,HeadrickTakayanagi2007,Pastawski2015}, random-matrix spacing ratios~\cite{OganesyanHuse2007,Atas2013}, Holm--Bonferroni correction~\cite{Holm1979}, and fourth-order Yoshida splitting~\cite{Yoshida1990} are credited to their original authors. Furthermore, a systematic cross-check against all $1{,}900$ open problems in \code{0thernes/unsolved-problems-mega-atlas} (archived in \code{docs/\allowbreak MEGA\_ATLAS\_CROSSCHECK.md}) establishes honestly that ULTRAMETRICA solves \emph{zero} ($0/1{,}900$) open problems completely; it supplies exact discrete finite-cutoff sub-results related to \code{SUB-032} ($p$-adic AdS/CFT) and a pre-registered negative result falsifying naive GOE/GUE thermalization in Monna-conjugated adelic hybrids. \Cref{tab:claims} summarizes every original claim together with its exact verification tier.
+
+\begin{table}[ht]
+\centering
+\caption{Numbered Claims Summary Table separating verification tiers explicitly (mapped 1-to-1 with falsification criteria in root \code{CLAIMS.md}).}
+\label{tab:claims}
+\footnotesize
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{5.2cm}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{4.3cm}@{}}
+\toprule
+ID & Statement Summary & Verification Tier & Primary Artifact \\
+\midrule
+C1 & Universal Monna involution $R_p$, ball contiguity, subtree isometry, and parity dichotomy (\cref{thm:adelic}) & kernel-checked, exact-rational, numerical & \code{Basic.lean}, \code{AdelicSymmetry.lean}, \code{Solution.lean} \\
+C2 & Alternating picket-fence gaps $p-2m, 2m$ and $\alpha$-invariant ratio $r_0(p,m)$ (\cref{prop:picket}) & kernel-checked, exact-rational, numerical & \code{AdelicSymmetry.lean}, Exp~E \& G \\
+C3 & Pre-registered 20-seed rejection of GOE/GUE thermalization across H1--H4 ($p_{\mathrm{Holm}} = 0.0004$) & pre-registered statistical & \code{docs/preregistration.md} (\code{c171b1b}), \code{stats-eval.json} \\
+C4 & First-principles $L$-cycle BTZ Ollivier--Ricci law and $L_c = 5$ trichotomy (\cref{thm:btz-ricci}) & kernel-checked, exact-rational, numerical & \code{HolographyCurvature.lean}, 45 \code{Fraction} plans, Mutant M3 \\
+C5 & Single-edge and global multi-edge curved AdS Gauss--Bonnet law (\cref{thm:gauss-bonnet,thm:gauss-bonnet-global}) & kernel-checked, exact-rational, numerical & \code{HolographyCurvature.lean}, 69 \code{Fraction} plans, 1,000 props \\
+C6 & Arbitrary $K$-ball Kozyrev compacton-soliton invariance \& $\alpha$-scaling (\cref{thm:soliton}) & kernel-checked, numerical & \code{SolitonAndSolver.lean}, Exp~C \& F \\
+C7 & Unconditional Rank-1 Kerr--BTZ solver ($\mathrm{den} \ge 1$), flux parity, and BF stability ($\Delta = 0.5001$) (\cref{thm:solver}) & kernel-checked, exact-rational, numerical & \code{SolitonAndSolver.lean}, exact $\Q(i)$ solve, Exp~D \& H \\
+C8 & Universal weighted-graph holographic RT Strong Subadditivity (\cref{thm:rt-ssa}) & kernel-checked, exact-rational, numerical & \code{HolographyCurvature.lean}, 4,352 brute-force + 1,000 props \\
+C9 & Real-time zero-dependency engine ($0.388\text{ ms}$ frame, $320\times$ FFT speedup) & numerical (contract + EIO) & \code{test/*.mjs} (26/26), \code{padic\_oracle.py}, \code{bench.mjs} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 % =====================================================================
 \section{Discrete \texorpdfstring{$p$}{p}-adic Harmonic Analysis and Universal Monna Geometry}
@@ -110,7 +135,7 @@ The Pontryagin dual of $\Zp / p^n\Zp$ is $p^{-n}\Z / \Z$, indexed by $k \in \{0,
   (\mathcal{F}_p \psi)[k] = \frac{1}{\sqrt{p^n}} \sum_{x=0}^{p^n-1} \psi(x) e^{-2\pi i x k / p^n}
   \label{eq:radix-fft}
 \end{equation}
-in $O(p N \log_p N)$ operations, verified against naive $O(N^2)$ DFT and Parseval's identity to $< 10^{-11}$ across $p \in \{2,3,5,7\}$. The Vladimirov fractional pseudo-differential operator $\Dp$~\cite{Vladimirov1994} acts diagonally in Pontryagin dual space via
+in $O(p N \log_p N)$ operations, verified against naive $O(N^2)$ DFT, an independent textbook Python differential oracle (\code{reference/padic\_oracle.py}, $1{,}000$ Monna/ultrametric queries + $40$ full Vladimirov DFTs, max error $1.23\times 10^{-12}$), and Parseval's identity across $p \in \{2,3,5,7\}$, achieving $6.94\times$ ($N=9$), $122.9\times$ ($N=243$), and $319.9\times$ ($N=625$) median speedups over naive DFT (\code{results/perf-benchmarks.json}). The Vladimirov fractional pseudo-differential operator $\Dp$~\cite{Vladimirov1994} acts diagonally in Pontryagin dual space via
 \begin{equation}
   \widehat{(\Dp \psi)}[k] = |\xi_k|_p^\alpha \, \hat{\psi}[k], \qquad
   |\xi_k|_p = \begin{cases} 0 & k = 0, \\ p^{n - v_p(k)} & 1 \le k < p^n, \end{cases}
@@ -147,7 +172,7 @@ For each $r$, $|\psi_{j_r,b_r,m_r}(x)|^2 = p^{-(n-j_r)}$ everywhere on $B_{j_r}(
 \[
   F(|\Psi(x,t)|^2)\Psi(x,t) = \sum_{r=1}^K F\!\bigl(|c_r|^2 p^{-(n-j_r)}\bigr)\, c_r e^{-i\omega_r t}\psi_{j_r,b_r,m_r}(x).
 \]
-Combining this with linearity of $\Dp$ and~\eqref{eq:kozyrev} gives $i\partial_t \Psi = (\Dp + F(|\Psi|^2))\Psi$ pointwise identically. This result is formalized for single packets, pairs, and arbitrary finite lists of $K$ packets in \code{SolitonAndSolver.lean} via \code{kozyrev\_exact\_nonlinear\_soliton}, \code{disjoint\_multi\_soliton\_no\_crosstalk}, and \code{multi\_ball\_kozyrev\_soliton\_list}, depending solely on \code{propext}.
+Combining this with linearity of $\Dp$ and~\eqref{eq:kozyrev} gives $i\partial_t \Psi = (\Dp + F(|\Psi|^2))\Psi$ pointwise identically. This result is formalized for single packets, pairs, and arbitrary finite lists of $K$ packets in \code{SolitonAndSolver.lean} via \code{kozyrev\_exact\_nonlinear\_soliton}, \code{disjoint\_multi\_soliton\_no\_crosstalk}, and \code{multi\_ball\_kozyrev\_soliton\_list} (and audited in \code{Solution.lean} as \code{target\_thm3\_multiball\_soliton}), depending solely on \code{propext}.
 \end{proof}
 
 \begin{remark}[Empirical Self-Trapping Resonance and $\alpha$-Scaling]
@@ -168,7 +193,7 @@ Inspired by adelic physics~\cite{FreundWitten1987,Dragovich2017}, we couple Arch
 \end{equation}
 where $\Lambda_{\R}[k] \propto (2\pi \min(k, N-k))^\alpha$ is RMS-calibrated to $\Lambda_{\Qp}$. Because $R_p$ is the digit-reversal involution, $[H_Q^{\mathrm{leaf}}, H_R^{\mathrm{leaf}}] \ne 0$ (normalized Frobenius commutator $0.02187$ at $p=3, n=4$; $0.02524$ at $p=2, n=6$; $0.01353$ at $p=5, n=3$).
 
-A naïve quantum-chaos expectation (motivated by the structural resemblance of $R_p$ to a quantum Baker's map and Oganesyan--Huse level statistics~\cite{OganesyanHuse2007}) would anticipate global GOE/GUE degeneracy lifting across all $N$ levels for $0 < \theta < 1$. Exact diagonalization (\cref{tab:adelic,tab:frontier}, \cref{fig:adelic,fig:frontier}) \emph{falsifies} that hypothesis on two distinct levels: global block-symmetry protection (\cref{thm:adelic}) and intra-block modular picket-fence locking (\cref{prop:picket}).
+A na\"ive quantum-chaos expectation (motivated by the structural resemblance of $R_p$ to a quantum Baker's map and Oganesyan--Huse / Atas et~al.\ level-spacing statistics~\cite{OganesyanHuse2007,Atas2013}) would anticipate global GOE/GUE degeneracy lifting across all $N$ levels for $0 < \theta < 1$. Exact diagonalization (\cref{tab:adelic,tab:frontier}, \cref{fig:adelic,fig:frontier}) and our pre-registered confirmatory Experiment~I (\cref{tab:expi}) \emph{falsify} that hypothesis on two distinct levels: global block-symmetry protection (\cref{thm:adelic}) and intra-block modular picket-fence locking (\cref{prop:picket}).
 
 \begin{theorem}[Recursive Valuation-Residue Decomposition and Adelic Parity-Doubling Dichotomy]
 \label{thm:adelic}
@@ -195,7 +220,7 @@ Since $H_\theta$ is real symmetric in position space, $C H_\theta = H_\theta C$ 
 
 \begin{proposition}[Intra-Sector Modular Picket-Fence Spacing Law and $\alpha$-Invariance]
 \label{prop:picket}
-For any $p \ge 2$ and residue $1 \le m \le \lfloor p/2 \rfloor$, folding the Archimedean frequencies in top-level sector $W_{0, m}$ ($\dim W_{0,m} = p^{n-1}$) via $k \mapsto \min(k, p^n - k)$ interleaves $u_{2a} = a p + m$ and $u_{2a+1} = (a+1)p - m$ monotonically ($u_{2a} \le u_{2a+1} < u_{2a+2}$) with exact period-$2$ alternating gaps $p - 2m$ and $2m$ (proved universally in \code{AdelicSymmetry.lean}: \code{picket\_fence\_monotone}, \code{picket\_fence\_even\_gap}, \code{picket\_fence\_odd\_gap}, \code{picket\_fence\_odd\_prime\_strictly\_positive}, \code{picket\_fence\_dyadic\_zero\_gap}). Under any smooth power-law dispersion $f(u) = u^\alpha$ ($\alpha > 0$), Mean-Value-Theorem density cancellation $\frac{f(u_{2a+1}) - f(u_{2a})}{f(u_{2a+2}) - f(u_{2a+1})} \to \frac{p-2m}{2m}$ preserves the exact asymptotic spacing ratio
+For any $p \ge 2$ and residue $1 \le m \le \lfloor p/2 \rfloor$, folding the Archimedean frequencies in top-level sector $W_{0, m}$ ($\dim W_{0,m} = p^{n-1}$) via $k \mapsto \min(k, p^n - k)$ interleaves $u_{2a} = a p + m$ and $u_{2a+1} = (a+1)p - m$ monotonically ($u_{2a} \le u_{2a+1} < u_{2a+2}$) with exact period-$2$ alternating gaps $p - 2m$ and $2m$ (proved universally in \code{AdelicSymmetry.lean}: \code{picket\_fence\_monotone}, \code{picket\_fence\_even\_gap}, \code{picket\_fence\_odd\_gap}, \code{picket\_fence\_odd\_prime\_strictly\_positive}, \code{picket\_fence\_dyadic\_zero\_gap}, and comparator target \code{target\_thm1\_picket\_fence\_law}). Under any smooth power-law dispersion $f(u) = u^\alpha$ ($\alpha > 0$), Mean-Value-Theorem density cancellation $\frac{f(u_{2a+1}) - f(u_{2a})}{f(u_{2a+2}) - f(u_{2a+1})} \to \frac{p-2m}{2m}$ preserves the exact asymptotic spacing ratio
 \begin{equation}
   r_0(p, m) = \frac{\min(2m,\, p - 2m)}{\max(2m,\, p - 2m)}
   \in \left\{0\;\text{at }(2,1),\; \tfrac{1}{2}\;\text{at }(3,1),\; \tfrac{2}{3}\;\text{at }(5,1),\; \tfrac{1}{4}\;\text{at }(5,2)\right\}
@@ -204,7 +229,7 @@ For any $p \ge 2$ and residue $1 \le m \le \lfloor p/2 \rfloor$, folding the Arc
 independently of $\alpha > 0$.
 \end{proposition}
 
-Single-sector complex Hermitian diagonalization up to $N = 625$ (Experiments~E and~G, \cref{tab:frontier}, \cref{fig:frontier}(a), \cref{fig:gaussbonnet}(a)) shows that $\langle r \rangle_{W_{0,m}}(\theta)$ does \emph{not} thermalize to GOE ($0.5307$) or GUE ($0.5996$) across the entire dispersion spectrum $\alpha \in \{0.5, 1.0, 1.5, 2.0\}$: even under quadratic Schr\"odinger dispersion ($\alpha = 2.0$, where intra-sector off-diagonal mixing reaches $\|H_{Q,\mathrm{off}}\|_F/\|H_R\|_F = 0.272$--$0.401$), $p=5, W_{0,1}$ stays at $0.6334 \approx \frac{2}{3}$ while its sibling sector $W_{0,2}$ stays locked at $0.2562 \approx \frac{1}{4}$, and $p=2, N=256$ collapses to $0.0004$.
+Single-sector complex Hermitian diagonalization up to $N = 625$ (Experiments~E and~G, \cref{tab:frontier}, \cref{fig:frontier}(a), \cref{fig:gaussbonnet}(a)) shows that $\langle r \rangle_{W_{0,m}}(\theta)$ does \emph{not} thermalize to GOE ($0.5307$) or GUE ($0.5996$)~\cite{Atas2013} across $\alpha \in \{0.5, 1.0, 1.5, 2.0\}$: even under quadratic Schr\"odinger dispersion ($\alpha = 2.0$, where intra-sector off-diagonal mixing reaches $\|H_{Q,\mathrm{off}}\|_F/\|H_R\|_F = 0.272$--$0.401$), $p=5, W_{0,1}$ stays at $0.6334 \approx \frac{2}{3}$ while its sibling sector $W_{0,2}$ stays locked at $0.2562 \approx \frac{1}{4}$, and $p=2, N=256$ collapses to $0.0004$.
 
 % =====================================================================
 \section[Bruhat--Tits AdS and Rotating Kerr--BTZ Bulk Solver]{Bruhat--Tits AdS, Unconditional Rotating Kerr--BTZ Bulk Solver, and Flux Parity}
@@ -219,12 +244,12 @@ With positive dynamic edge lengths $a_e > 0$ and conductances $w_e = 1/a_e$, the
   m^2(\Delta) = p^\Delta + p^{1-\Delta} - (p+1),
   \label{eq:kg}
 \end{equation}
-with Dirichlet boundary data $\phi(v_\ell) = \psi_{\mathrm{boundary}}(\ell)$ and local conductance volume $\mu_v = \frac{1}{\deg(v)}\sum_{e\ni v} w_e$. At the root $d = 0$ of pure AdS, adding the exact asymptotic infinity-branch Robin impedance $\mu_0(1 - p^{-\Delta})$ reproduces Gubser's infinite-tree analytic propagator $K_\Delta(v, y) = p^{(2\lca(v,y)-d)\Delta}$~\cite{Gubser2017} to $< 10^{-12}$ (\code{Theorem~6}; dropping it causes a $6.01\times 10^{-4}$ violation caught by Mutant~M2). Writing $x = p^{\Delta/2}$, $y = p^{(1-\Delta)/2}$, and $s = \sqrt{p} = xy$, the Breitenlohner--Freedman bound $m_{\mathrm{BF}}^2 = -(\sqrt{p}-1)^2$ satisfies the exact squared excess identity
+with Dirichlet data $\phi(v_\ell) = \psi_{\mathrm{bdry}}(\ell)$ and local conductance volume $\mu_v = \frac{1}{\deg(v)}\sum_{e\ni v} w_e$. At the root $d = 0$ of pure AdS, adding the asymptotic infinity-branch Robin impedance $\mu_0(1 - p^{-\Delta})$ reproduces Gubser's propagator $K_\Delta(v, y) = p^{(2\lca(v,y)-d)\Delta}$~\cite{Gubser2017} to $< 10^{-12}$ (\code{Theorem~6}; dropping it gives a $6.01\times 10^{-4}$ error caught by Mutant~M2). Letting $x = p^{\Delta/2}$, $y = p^{(1-\Delta)/2}$, and $s = \sqrt{p} = xy$, the Breitenlohner--Freedman bound $m_{\mathrm{BF}}^2 = -(\sqrt{p}-1)^2$ satisfies
 \begin{equation}
   m^2(\Delta) - m_{\mathrm{BF}}^2 = \bigl(p^{\Delta/2} - p^{(1-\Delta)/2}\bigr)^2 \ge 0,
   \label{eq:bf-square}
 \end{equation}
-which is machine-checked in \code{HolographyCurvature.lean} through the declarations \code{gubser\_bf\_bound\_exact\_square} and \code{gubser\_bf\_excess\_nonneg}.
+which is machine-checked in \code{HolographyCurvature.lean} through \code{gubser\_bf\_bound\_exact\_square} and \code{gubser\_bf\_excess\_nonneg}.
 
 \begin{theorem}[Unconditional Positive-Definite Rank-$1$ Kerr--BTZ Solver and Flux Parity]
 \label{thm:solver}
@@ -243,11 +268,11 @@ where $T$ is the open-chain Hermitian tridiagonal matrix obtained by deleting ed
 \end{theorem}
 
 \begin{proof}
-Direct expansion of $|z_0 - e^{i\theta}z_{L-1}|^2$ for $|e^{i\theta}|^2 = 1$ matches the exact diagonal and wrap-around off-diagonal entries of $M$ (Lean~4: \code{horizon\_edge\_quadratic\_expansion}), confirming $w_{L-1} u u^\dagger \succeq 0$ via \code{horizon\_edge\_laplacian\_psd}. Since $T \succ 0 \implies q := u^\dagger T^{-1} u \ge 0$, we obtain $\mathrm{den} = 1 + w_{L-1} q \ge 1 > 0$ (\code{sherman\_morrison\_denominator\_ge\_one}). The cleared-denominator arbitrary-dimension complex Hermitian Sherman--Morrison identity~\cite{ShermanMorrison1950} is proved in \code{SolitonAndSolver.lean} via \code{sherman\_morrison\_exact\_identity}, alongside the edge-level parity laws \code{kerr\_flux\_edge\_stress\_even} and \code{kerr\_flux\_edge\_current\_odd}. Independent exact Gaussian-rational $\Q(i)$ verification in \code{scripts/verify\_exact.py} confirms $M\phi = b$ with literally zero residual ($\mathrm{den} = 30290594521/18671790625 \ge 1$).
+Direct expansion of $|z_0 - e^{i\theta}z_{L-1}|^2$ for $|e^{i\theta}|^2 = 1$ matches the exact diagonal and wrap-around entries of $M$ (Lean~4: \code{horizon\_edge\_quadratic\_expansion}), confirming $w_{L-1} u u^\dagger \succeq 0$ via \code{horizon\_edge\_laplacian\_psd}. Since $T \succ 0 \implies q := u^\dagger T^{-1} u \ge 0$, we obtain $\mathrm{den} = 1 + w_{L-1} q \ge 1 > 0$ (\code{sherman\_morrison\_denominator\_ge\_one}). The cleared-denominator complex Hermitian Sherman--Morrison identity~\cite{ShermanMorrison1950} is proved in \code{SolitonAndSolver.lean} via \code{sherman\_morrison\_exact\_identity}, alongside \code{kerr\_flux\_edge\_stress\_even}, \code{kerr\_flux\_edge\_current\_odd}, and comparator target \code{target\_thm4\_kerr\_solver\_and\_parity}. Exact $\Q(i)$ verification in \code{scripts/\allowbreak verify\_exact.py} confirms $M\phi = b$ with zero residual ($\mathrm{den} = 30290594521/18671790625 \ge 1$).
 \end{proof}
 
 % =====================================================================
-\section{First-Principles Tate-Curve BTZ Ollivier--Ricci Curvature Law}
+\section[Ollivier--Ricci Curvature and Multi-Edge Gauss--Bonnet]{First-Principles BTZ Ollivier--Ricci Law and Multi-Edge Curved Gauss--Bonnet Conservation}
 \label{sec:ricci}
 % =====================================================================
 
@@ -275,39 +300,55 @@ Consequently, there is an exact three-regime geometric trichotomy across all $p 
 \end{theorem}
 
 \begin{proof}
-Partition the $d = p + 2$ neighbors of $h_0$ into three graph-symmetry classes: $\{\text{\code{opp}} = h_1\}$ (multiplicity $1$), $\{\text{\code{back}} = h_{L-1}\}$ (multiplicity $1$), and $\{\text{\code{child}}\}$ ($p$ hanging children of $h_0$), and similarly for $h_1$ ($\{h_0\}, \{h_2\}, p$ children of $h_1$). Letting $s := \max(0, 6 - L)$, the literal $L$-cycle shortest-path metric \code{btzGraphDist} on $\Tp / p^{h\Z}$ agrees identically with the distance matrix \code{btzClassDist} across all $L \ge 3$ and all $9$ class pairs (proved in \code{HolographyCurvature.lean} as \code{btz\_graph\_metric\_eq\_classDist}; Euler characteristics $\chi(\Tp) = 1$ and $\chi(\Tp/p^{h\Z}) = 0$ are likewise proved via \code{ads\_euler\_characteristic\_one} and \code{btz\_euler\_characteristic\_zero}). Define the dual potentials
+Partition the $d = p + 2$ neighbors of $h_0$ into three graph-symmetry classes: $\{\text{\code{opp}} = h_1\}$ (multiplicity $1$), $\{\text{\code{back}} = h_{L-1}\}$ (multiplicity $1$), and $\{\text{\code{child}}\}$ ($p$ hanging children of $h_0$), and similarly for $h_1$ ($\{h_0\}, \{h_2\}, p$ children of $h_1$). Letting $s := \max(0, 6 - L)$, the literal $L$-cycle shortest-path metric \code{btzGraphDist} on $\Tp / p^{h\Z}$ agrees identically with \code{btzClassDist} across all $L \ge 3$ and all $9$ class pairs (Lean~4: \code{btz\_graph\_metric\_eq\_classDist}; Euler characteristics $\chi(\Tp) = 1$ and $\chi(\Tp/p^{h\Z}) = 0$ are proved via \code{ads\_euler\_characteristic\_one} and \code{btz\_euler\_characteristic\_zero}). Define the dual potentials
 \[
   \phi_U = \bigl(0,\; \mathbf{1}_{L \ne 3}(2 - s),\; 2\bigr), \qquad
   \phi_V = \bigl(1,\; -\mathbf{1}_{L \ne 3},\; -1\bigr).
 \]
-For every $L \ge 3$ and all $9$ class pairs $(i, j)$, $\phi_U(i) - \phi_V(j) \le d_{\mathrm{BTZ}}(L; i, j)$ (\code{btz\_dual\_1lipschitz}). By Kantorovich weak duality over \emph{all} non-negative rational bipartite transport plans $P$ (scaled by any common integer denominator $M \ge 1$), the scaled cost obeys $\mathrm{cost}(P) \ge M(3p + 2 - s)$ (\code{btz\_wasserstein\_lower\_bound}). Conversely, the explicit primal matching sending $h_1 \to c(h_1)$ (cost $1$), $c(h_0) \to h_0$ (cost $1$), $h_{L-1} \to h_2$ (cost $3-s$), and the remaining $p-1$ children pairwise (cost $3(p-1)$) is feasible (\code{btz\_primal\_feasible}) and attains cost $M(3p + 2 - s)$ identically (\code{btz\_primal\_cost\_exact}). Therefore $(p + 2) W_1^{\mathrm{BTZ}}(p, L) = 3p + 2 - s$ and $(p + 2)\kappa_{\mathrm{BTZ}}(p, L) = (p + 2) - (3p + 2 - s) = -(2p - s)$ (\code{btz\_kappa\_from\_wasserstein}), proving~\eqref{eq:btz-ricci} end-to-end inside Lean~4. Clearing denominators yields~\eqref{eq:btz-excess}, monotonicity in $L$ (\code{btz\_curvature\_monotone\_in\_L}), and all three trichotomy regimes (\code{btz\_curvature\_excess\_identity} through \code{btz\_more\_negative\_for\_L\_ge\_6}). Independently, \code{scripts/verify\_exact.py} solves exact \code{fractions.Fraction} bipartite optimal transport across $45$ $(p, L)$ pairs ($p \in \{2,3,5,7,11\}$, $L \in \{3..12\}$) with zero rounding error.
+For every $L \ge 3$ and all $9$ class pairs $(i, j)$, $\phi_U(i) - \phi_V(j) \le d_{\mathrm{BTZ}}(L; i, j)$ (\code{btz\_dual\_1lipschitz}). By Kantorovich weak duality over \emph{all} non-negative rational bipartite transport plans $P$ (scaled by any common integer denominator $M \ge 1$), $\mathrm{cost}(P) \ge M(3p + 2 - s)$ (\code{btz\_wasserstein\_lower\_bound}), matched identically by the explicit feasible primal plan (\code{btz\_primal\_feasible}, \code{btz\_primal\_cost\_exact}). Therefore $(p + 2)\kappa_{\mathrm{BTZ}}(p, L) = -(2p - s)$ (\code{btz\_kappa\_from\_wasserstein} and \code{target\_thm2\_btz\_ollivier\_ricci}), proving~\eqref{eq:btz-ricci}--\eqref{eq:btz-excess} end-to-end inside Lean~4. Independently, \code{scripts/verify\_exact.py} solves exact \code{fractions.Fraction} bipartite optimal transport across $45$ $(p, L)$ pairs ($p \in \{2,3,5,7,11\}$, $L \in \{3..12\}$) with zero rounding error.
 \end{proof}
 
-\begin{theorem}[Non-Perturbative Curved AdS Discrete Gauss--Bonnet Conservation and Pinch Deficit]
+\begin{theorem}[Single-Edge Curved AdS Discrete Gauss--Bonnet Conservation and Pinch Deficit]
 \label{thm:gauss-bonnet}
-Let $e = (u, v)$ be any strictly interior bridge edge of the $(p+1)$-regular Bruhat--Tits tree $\Tp$ ($p \ge 2$, with both endpoints and all $2p$ adjacent edges $e' \sim e$ strictly interior), perturbed to finite edge length $a_e = e^{\sigma_e} > 0$ (conductance $w_e = 1/a_e = e^{-\sigma_e}$, all other edges uniform with length $1$). Then exact non-lazy conductance Ollivier--Ricci curvature satisfies the sharp two-branch law:
+Let $e = (u, v)$ be any strictly interior bridge edge of $\Tp$ ($p \ge 2$), perturbed to finite edge length $a_e = e^{\sigma_e} > 0$ (conductance $w_e = 1/a_e = e^{-\sigma_e}$, all other edges uniform with length $1$). Then exact non-lazy conductance Ollivier--Ricci curvature satisfies
 \begin{equation}
   \kappa_e(\sigma_e) = \begin{cases}
-    -\dfrac{2(p-1)}{p e^{\sigma_e} + 1}, & \sigma_e \ge -\ln p \;\; (a_e \ge 1/p), \\[9pt]
-    \dfrac{2p(1 - e^{-\sigma_e})}{p + e^{-\sigma_e}}, & \sigma_e < -\ln p \;\; (a_e < 1/p),
+    -\dfrac{2(p-1)}{p e^{\sigma_e} + 1}, & \sigma_e \ge -\ln p, \\[9pt]
+    \dfrac{2p(1 - e^{-\sigma_e})}{p + e^{-\sigma_e}}, & \sigma_e < -\ln p,
   \end{cases}
   \qquad
   \kappa_{e'}(\sigma_e) = -\frac{p-1}{p + e^{-\sigma_e}} - \frac{p-1}{p+1},
   \label{eq:curved-kappa}
 \end{equation}
-and the total integrated curvature excess across the entire tree satisfies non-perturbatively:
-\begin{equation}
-  \sum_{e'' \in E(\Tp)} \bigl(\kappa_{e''}(\sigma_e) - \kappa_{\mathrm{AdS}}(p)\bigr)
-  = \begin{cases}
-    0 & \forall\, \sigma_e \ge -\ln p \quad (\text{exact conservation}), \\[6pt]
-    -\dfrac{2(e^{-\sigma_e} - p)}{e^{-\sigma_e} + p} < 0 & \forall\, \sigma_e < -\ln p \quad (\text{supercritical pinch deficit}).
-  \end{cases}
-  \label{eq:gauss-bonnet}
-\end{equation}
+and $\sum_{e'' \in E(\Tp)} (\kappa_{e''}(\sigma_e) - \kappa_{\mathrm{AdS}}(p))$ equals $0$ identically for all $\sigma_e \ge -\ln p$ and strictly $-2(e^{-\sigma_e}-p)/(e^{-\sigma_e}+p) < 0$ for all $\sigma_e < -\ln p$.
+\end{theorem}
+
+\begin{theorem}[Global Multi-Edge Curved AdS Gauss--Bonnet Charge Conservation]
+\label{thm:gauss-bonnet-global}
+Let $w : E(\Tp) \to \R_{>0}$ be \emph{any} simultaneous finite-support positive conductance metric on strictly interior edges of $\Tp$ ($a_e = 1/w_e$, with $W_u := \sum_{x \sim u} w_{ux}$ at every interior vertex $u$ of degree $p+1$). For every interior bridge edge $e = (u, v)$, define its two endpoint vertex half-charges $q(u, e) := -(p-1)\frac{w_e}{W_u}$ and $q(v, e) := -(p-1)\frac{w_e}{W_v}$. Then:
+\begin{enumerate}[leftmargin=1.8em,itemsep=2pt]
+  \item Every interior edge curvature decomposes identically as
+  \begin{equation}
+    \kappa_e(w) = q(u, e) + q(v, e) - 2\max\!\left(0,\; \frac{w_e}{W_u} + \frac{w_e}{W_v} - 1\right);
+    \label{eq:global-charge-decomp}
+  \end{equation}
+  \item At every interior vertex $u$, the incident half-charges sum to a metric-independent topological constant:
+  \begin{equation}
+    \sum_{e \ni u} q(u, e) = -(p - 1)\frac{\sum_{e \ni u} w_e}{W_u} = -(p - 1);
+    \label{eq:vertex-charge-conservation}
+  \end{equation}
+  \item Summing over all interior edges whose perturbations have finite support yields the exact global multi-edge Gauss--Bonnet identity
+  \begin{equation}
+    \sum_{e \in E_{\mathrm{int}}(\Tp)} \bigl(\kappa_e(w) - \kappa_{\mathrm{AdS}}(p)\bigr)
+    = -2 \sum_{\substack{e=(u,v) \\ \frac{w_e}{W_u} + \frac{w_e}{W_v} > 1}} \left(\frac{w_e}{W_u} + \frac{w_e}{W_v} - 1\right),
+    \label{eq:global-gauss-bonnet}
+  \end{equation}
+  which vanishes identically whenever $w_e/W_u + w_e/W_v \le 1$ on every edge, reducing to \cref{thm:gauss-bonnet} when a single edge is perturbed ($W_u = W_v = p + w_e \implies 2 w_e/(p + w_e) \le 1 \iff w_e \le p$).
+\end{enumerate}
 \end{theorem}
 
 \begin{proof}
-Because every edge $e$ of $\Tp$ is a bridge and $a_{ux} w_{ux} = 1$, exact Kantorovich primal--dual transport yields $W_1(e) = \frac{p}{W_u} + \frac{p}{W_v} + a_e\bigl|1 - \frac{w_e}{W_u} - \frac{w_e}{W_v}\bigr|$ with $W_u = W_v = p + w_e$. Scaling by rational denominators $w_e = w/M$, we construct explicit $1$-Lipschitz dual certificates and matching primal plans in \code{HolographyCurvature.lean} for both the subcritical branch $w \le p M$ (\code{curved\_sub\_dual\_1lipschitz}, \code{curved\_sub\_wasserstein\_lower\_bound}, \code{curved\_sub\_primal\_cost\_exact}) and the supercritical branch $w > p M$ (\code{curved\_sup\_dual\_1lipschitz}, \code{curved\_sup\_wasserstein\_lower\_bound}, \code{curved\_sup\_primal\_cost\_exact}). Summing the cleared-denominator curvature excess on $e$ with its $2p$ adjacent edges $e'$ cancels identically to $0$ throughout $w \le p M$ (\code{curved\_ads\_gauss\_bonnet\_subcritical}) and evaluates strictly to $-2(p+1)(w - pM) < 0$ for $w > p M$ (\code{curved\_ads\_supercritical\_pinch\_deficit}, \code{curved\_ads\_supercritical\_strictly\_negative}). Independently, \code{scripts/verify\_exact.py} solves exact \code{fractions.Fraction} optimal transport across $60$ curved $(p, w)$ configurations with zero rounding error.
+Because every edge $e=(u,v)$ of $\Tp$ is a bridge and $a_{ux} w_{ux} = 1$ on every incident edge, non-lazy optimal transport across $e$ incurs cost $\sum_{x \sim u, x \ne v} \frac{w_{ux}}{W_u} a_{ux} = \frac{p}{W_u}$ on $u$'s outer arms, $\frac{p}{W_v}$ on $v$'s outer arms, and $a_e\bigl|1 - \frac{w_e}{W_u} - \frac{w_e}{W_v}\bigr|$ across $e$ itself. Dividing by $a_e = 1/w_e$ and subtracting from $1$ yields~\eqref{eq:global-charge-decomp} identically in both branches (proved in Lean~4 as \code{curved\_gen\_kappa\_charge\_decomp} and \code{target\_thm5\_global\_curved\_gauss\_bonnet}; single-edge Kantorovich primal--dual certificates in \code{curved\_sub\_*} and \code{curved\_sup\_*}). Factoring $-(p-1)$ out of any finite incident weight list proves~\eqref{eq:vertex-charge-conservation} (\code{global\_multi\_edge\_vertex\_charge\_conservation}, \code{vertex\_half\_charge\_conserved}). Because the uniform metric assigns $-\frac{p-1}{p+1}$ per half-edge (also summing to $-(p-1)$ at each interior vertex), the vertex-charge contribution cancels term-by-term across all finite-support perturbations, leaving strictly the sum of non-positive supercritical pinch deficits in~\eqref{eq:global-gauss-bonnet}. Independently verified across $60$ single-edge + $9$ simultaneous $3$-edge curved trees in exact \code{fractions.Fraction} SPFA transport (\code{scripts/verify\_exact.py}) and $1{,}000$ random multi-edge curved JS trees (\code{test/properties.mjs}, error $< 10^{-11}$).
 \end{proof}
 
 \begin{figure}[t]
@@ -318,20 +359,40 @@ Because every edge $e$ of $\Tp$ is a bridge and $a_{ux} w_{ux} = 1$, exact Kanto
 \end{figure}
 
 % =====================================================================
-\section[Ryu--Takayanagi Minimal Cuts and Real-Time Observatory]{Ryu--Takayanagi Minimal Cuts, Edge-Length Gravity, and Real-Time Observatory}
+\section[Ryu--Takayanagi Strong Subadditivity and Observatory]{Universal Holographic Ryu--Takayanagi Strong Subadditivity, Gravity, and Observatory}
 \label{sec:rt-gravity}
 % =====================================================================
 
-In discrete holographic tensor networks~\cite{RyuTakayanagi2006,Heydeman2018,Pastawski2015}, each bulk edge carries entanglement capacity $\mathrm{cap}(e) = w_e \ln p$. For any boundary subset $A \subset \Zp / p^n\Zp$, \code{computeRyuTakayanagi} computes the global minimum homologous edge cut $\gamma_A$ and entanglement wedge $\mathcal{E}(A)$ in exact $O(V)$ time via bottom-up tree dynamic programming plus a $2$-case cycle DP around the BTZ horizon ring (verified against exhaustive $2^{|V_{\mathrm{int}}|}$ brute-force minimization on random weighted trees and $4{,}096$-state BTZ graphs in \code{Theorem~8}). On uniform BTZ rings, engulfing a connected arc of $k \ge 1$ full horizon subtrees cuts $2$ horizon edges (cost $2 w \ln p$) versus $k p$ child edges (cost $k p w \ln p$): Lean~4 formally certifies $2w < kpw$ for all odd primes $p \ge 3$ and all $k \ge 1$ (\code{rt\_uniform\_odd\_prime\_all\_arcs}), exact dyadic criticality $2 = p$ at $p = 2, k = 1$ lifting strictly at $k \ge 2$ (\code{rt\_uniform\_dyadic\_two\_arcs}), and universal pure-state complement symmetry $S(A) = S(A^c)$ on arbitrary weighted graphs (\code{rt\_cut\_complement\_symmetry}).
+In discrete holographic tensor networks~\cite{RyuTakayanagi2006,Heydeman2018,Pastawski2015}, each bulk edge $e = (u, v)$ carries entanglement capacity $c_e = w_e \ln p \ge 0$, and the holographic entanglement entropy of a boundary region $A \subset \partial G$ is the minimum homologous cut capacity $S(A) := \min_{W \sim A} \mathrm{cut}(W)$ where $W \sim A$ means $W|_{\partial G} = A$. Our \code{computeRyuTakayanagi} computes $\gamma_A$ and $\mathcal{E}(A)$ in exact $O(V)$ time via bottom-up tree DP plus a $2$-case BTZ cycle DP (verified against $4{,}096$-state brute-force search in \code{Theorem~8}; Lean~4 certifies exact uniform BTZ engulfing thresholds \code{rt\_uniform\_odd\_prime\_all\_arcs}, \code{rt\_uniform\_dyadic\_two\_arcs}, and complement symmetry $S(A) = S(A^c)$ via \code{rt\_cut\_complement\_symmetry}). In \code{v1.4.0}, we also machine-verify the discrete graph-theoretic form of Headrick and Takayanagi's holographic strong subadditivity theorem~\cite{HeadrickTakayanagi2007}:
 
-Motivated by Gubser--Heydeman--Jepsen--Marcolli edge-length dynamics~\cite{GubserEdge2017}, each edge carries a dynamical log-length $\sigma_e = \ln a_e$ obeying a damped second-order gravitational wave equation on the bulk line graph driven by covariant stress-energy $T_e = w_e|\phi_u - e^{i A_{uv}}\phi_v|^2$, feeding radial redshift backreaction $V_{\mathrm{grav}}(\ell)$ into a fourth-order Yoshida symplectic boundary integrator~\cite{Yoshida1990} (norm drift $\sim 10^{-15}$, verified $\Delta t^4$ energy scaling). The full coupled system runs live at $60\text{ FPS}$ in custom zero-dependency WebGL2 GLSL~300~es shaders (\code{src/web/renderer3d.js})---hosted live via GitHub Pages at \url{https://0thernes.github.io/ultrametrica/} with reproducible URL permalinks, PNG capture, a synchronized Euclidean $\R$ twin oscilloscope (\code{src/web/panels2d.js}), and a lock-free $48\text{ kHz}$ \code{AudioWorklet} synthesizer (\code{src/web/audio-worklet.js}) tuned to prime-power Vladimirov harmonic shells ($3^x$ Bohlen--Pierce tritaves, $5^x$ pentaves, $7^x$ heptaves).
+\begin{theorem}[Universal Discrete Holographic Ryu--Takayanagi Strong Subadditivity]
+\label{thm:rt-ssa}
+Let $G = (V, E, c)$ be \emph{any} finite graph with non-negative edge capacities $c_e \ge 0$ and boundary vertex set $\partial G \subseteq V$ (including pure Bruhat--Tits trees, curved AdS metrics, rotating Tate-curve BTZ black holes, and higher-genus Schottky quotients). For any boundary subsets $A, B, C \subseteq \partial G$ with $A \cap C = \emptyset$, and any homologous bulk wedges $W_{AB} \sim A \cup B$ and $W_{BC} \sim B \cup C$,
+\begin{equation}
+  S(A \cup B \cup C) + S(B) \;\le\; \mathrm{cut}(W_{AB}) + \mathrm{cut}(W_{BC}),
+  \label{eq:rt-ssa}
+\end{equation}
+and hence $S(A \cup B \cup C) + S(B) \le S(A \cup B) + S(B \cup C)$ (setting $B = \emptyset$ gives subadditivity $S(A \cup C) \le S(A) + S(C)$).
+\end{theorem}
+
+\begin{proof}
+For every single edge $e = (u, v)$ and arbitrary Boolean vertex cuts $X, Y : V \to \{0, 1\}$, exhaustive Boolean case analysis proves pointwise edge submodularity:
+\[
+  \mathbf{1}_{(X \cup Y)(u) \ne (X \cup Y)(v)} + \mathbf{1}_{(X \cap Y)(u) \ne (X \cap Y)(v)}
+  \;\le\;
+  \mathbf{1}_{X(u) \ne X(v)} + \mathbf{1}_{Y(u) \ne Y(v)}
+\]
+(\code{rt\_edge\_cut\_submodular}). Summing over any finite weighted edge list yields global cut submodularity $\mathrm{cut}(W_{AB} \cup W_{BC}) + \mathrm{cut}(W_{AB} \cap W_{BC}) \le \mathrm{cut}(W_{AB}) + \mathrm{cut}(W_{BC})$ (\code{rt\_cut\_submodular}). Because $A \cap C = \emptyset$ on $\partial G$, $(W_{AB} \cup W_{BC})|_{\partial G} = A \cup B \cup C$ (\code{rt\_union\_homologous}) and $(W_{AB} \cap W_{BC})|_{\partial G} = B$ (\code{rt\_inter\_homologous\_disjoint}). By minimality of $S(A \cup B \cup C)$ and $S(B)$, inequality~\eqref{eq:rt-ssa} follows immediately (\code{rt\_strong\_subadditivity}, \code{rt\_subadditivity}, and comparator target \code{target\_thm6\_holographic\_ssa}, zero custom axioms). Independently verified over all $4{,}352$ exhaustive boundary partitions on weighted tree and cyclic BTZ graphs (\code{scripts/verify\_exact.py}) and $1{,}000$ random curved/BTZ JS graphs (\code{test/properties.mjs}).
+\end{proof}
+
+Motivated by Gubser--Heydeman--Jepsen--Marcolli edge-length dynamics~\cite{GubserEdge2017}, each edge carries a dynamical log-length $\sigma_e = \ln a_e$ obeying a damped second-order wave equation updated via symmetric Jacobi snapshots (\code{\_sigmaSnap}, Mutant~M7) driven by covariant stress-energy $T_e = w_e|\phi_u - e^{i A_{uv}}\phi_v|^2$, feeding radial redshift backreaction $V_{\mathrm{grav}}(\ell)$ into a fourth-order Yoshida symplectic boundary integrator~\cite{Yoshida1990} (norm drift $\sim 10^{-15}$, verified $\Delta t^4$ energy scaling, Mutant~M5). The full coupled system runs live at $60\text{ FPS}$ ($0.388\text{ ms}$ median step on Intel Core Ultra 9 275HX vs.\ $16.67\text{ ms}$ frame budget) in custom zero-dependency WebGL2 GLSL~300~es shaders (\code{src/web/renderer3d.js})---hosted live via GitHub Pages at \url{https://0thernes.github.io/ultrametrica/} with WCAG~2.2~AA accessibility, reproducible URL permalinks, PNG capture, a synchronized Euclidean $\R$ twin oscilloscope, and a lock-free $48\text{ kHz}$ \code{AudioWorklet} synthesizer tuned to prime-power Vladimirov harmonic shells ($3^x$ tritaves, $5^x$ pentaves, $7^x$ heptaves).
 
 % =====================================================================
-\section{Reproducible Benchmarks, Frontier Resolutions, and Visual Data}
+\section{Reproducible Benchmarks and Pre-Registered Statistical Falsification}
 \label{sec:benchmarks}
 % =====================================================================
 
-All eight benchmark datasets (Experiments~A--H) are deterministically reproduced by \code{npm run discover} and archived in \code{results/discovery-benchmarks.json}.
+All reproducible benchmark outputs are archived in \code{results/}: Experiments~A--H via \code{npm run discover} (\code{discovery-\allowbreak benchmarks.json}), latency budgets via \code{npm run bench} (\code{perf-\allowbreak benchmarks.json}), and pre-registered Experiment~I via \code{npm run stats} (\code{stats-\allowbreak eval.json}).
 
 \begin{table}[ht]
 \centering
@@ -359,7 +420,7 @@ $5$ & $125$ & $0.01353$ & $63/125$ & $\mathbf{63/125}$ (doublets)& $4/125$ & $1.
 
 \begin{table}[ht]
 \centering
-\caption{Experiment~E: Large-$N$ single-sector complex Hermitian Jacobi statistics inside $W_{0,m}$ (cross-validated against full $81\times 81$ real Jacobi to $2.13\times 10^{-14}$), confirming \cref{prop:picket} and falsifying Wigner--Dyson GOE/GUE thermalization.}
+\caption{Experiment~E: Large-$N$ single-sector complex Hermitian Jacobi statistics inside $W_{0,m}$ (cross-validated against full $81\times 81$ real Jacobi to $2.13\times 10^{-14}$), confirming \cref{prop:picket}.}
 \label{tab:frontier}
 \footnotesize
 \setlength{\tabcolsep}{4.5pt}
@@ -372,6 +433,24 @@ $(2, 8, 1)$ & $256$ & $128$ & $5.04\times 10^{-15}$ & $0.0000$ & $0.0015$ & $0.0
 $(3, 5, 1)$ & $243$ & $81$  & $5.64\times 10^{-15}$ & $0.5000$ & $0.5039$ & $0.4809$ \\
 $(5, 4, 1)$ & $625$ & $125$ & $1.76\times 10^{-14}$ & $0.6667$ & $0.6263$ & $0.6180$ \\
 $(5, 4, 2)$ & $625$ & $125$ & $1.43\times 10^{-14}$ & $0.2500$ & $\mathbf{0.2612}$ & $0.2605$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Pre-registered Experiment~I (sealed in git commit \code{c171b1b} prior to execution): $20$-seed GUE/GOE control comparison (\code{seeds 1001..1020}) with $10{,}000$-resample permutation tests, $95\%$ bootstrap CIs, Cliff's $\delta$, Cohen's $d$, and Holm--Bonferroni correction~\cite{Holm1979}. All $4/4$ hypotheses confirmed ($20/20$ seeds each).}
+\label{tab:expi}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Hypothesis (Sector vs.\ Control) & $\Delta\langle r\rangle$ & $95\%$ Bootstrap CI & Cliff's $\delta$ & Cohen's $d$ & Seeds & $p_{\mathrm{Holm}}$ & Verdict \\
+\midrule
+H1: $W_{0,2}$ ($p{=}5,\alpha{=}1.0$) vs.\ GUE & $-0.3330$ & $[-0.3497, -0.3150]$ & $-0.8035$ & $-1.4786$ & $20/20$ & $0.0004$ & Confirmed \\
+H2: $W_{0,1}$ ($p{=}5,\alpha{=}1.0$) vs.\ GOE & $+0.1004$ & $[+0.0698, +0.1282]$ & $+0.2686$ & $+0.4059$ & $20/20$ & $0.0004$ & Confirmed \\
+H3: $W_{0,1}$ ($p{=}2,\alpha{=}1.0$) vs.\ GOE & $-0.5433$ & $[-0.5578, -0.5283]$ & $-0.9980$ & $-2.2329$ & $20/20$ & $0.0004$ & Confirmed \\
+H4: $W_{0,2}$ ($p{=}5,\alpha{=}2.0$) vs.\ GUE & $-0.3380$ & $[-0.3512, -0.3248]$ & $-0.8184$ & $-1.5037$ & $20/20$ & $0.0004$ & Confirmed \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -422,31 +501,34 @@ In Experiment~B, exact SPFA bipartite Wasserstein measurements match \cref{thm:b
 In Experiment~H, curved AdS Gauss--Bonnet sums match \cref{thm:gauss-bonnet} to $7.77\times 10^{-16}$ ($p=2$), $1.33\times 10^{-15}$ ($p=3$), and $5.33\times 10^{-15}$ ($p=5$), while sweeping the conformal dimension down to $\Delta = 0.5001$ ($m^2 - m_{\mathrm{BF}}^2 \approx 2.09\times 10^{-8}$) under inhomogeneous curved gravity ($\sigma_e \in [-1.5, 1.5]$) and maximal Kerr flux ($\Omega = \pi$) maintains worst uneliminated Klein--Gordon residual $5.38\times 10^{-15}$ and minimum Schur pivot $0.8637 > 0$.
 
 % =====================================================================
-\section[Formal Verification Audit and AI Disclosure]{Formal Verification Audit, Planted Mutants, Verification Boundaries, and AI Disclosure}
+\section[Formal Audit, Limitations, and Provenance]{Multi-Kernel Lean~4 Audit, Limitations, Reproducibility, and Governance}
 \label{sec:audit}
 % =====================================================================
 
 \begin{table}[ht]
 \centering
-\caption{Lean~4 (\code{v4.35.0}) formalization map: $101$ audited declarations ($2{,}267$ lines) across $4$ pure core modules (zero Mathlib, zero \code{native\_decide}, zero \code{sorryAx}, zero custom axioms; audited via \code{lake env lean VerifyAxioms.lean}).}
+\caption{Lean~4 (\code{v4.35.0}, \code{autoImplicit = false}) formalization map: $120$ audited declarations in \code{UltrametricaProofs/} plus $8$ isolated \code{Challenge}/\code{Solution} comparator targets (zero Mathlib, zero \code{native\_decide}, zero \code{sorryAx}, zero custom axioms).}
 \label{tab:lean}
 \footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}p{4.0cm}>{\raggedright\arraybackslash}p{6.0cm}r>{\raggedright\arraybackslash}p{3.6cm}@{}}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{5.7cm}r>{\raggedright\arraybackslash}p{3.6cm}@{}}
 \toprule
 Module & Key Audited Declarations & Count & Axioms Used \\
 \midrule
-\code{Basic.lean} & \code{monna\_involution\_universal}, \code{monna\_injective}, \code{monna\_surjective}, \code{padic\_ball\_monna\_contiguity}, \code{bruhatTits\_leaves\_isosceles} & $26$ & \code{propext}, \code{Classical.choice}, \code{Quot.sound} (or none) \\
+\code{Basic.lean} & \code{monna\_involution\_universal}, \code{monna\_injective}, \code{padic\_ball\_monna\_contiguity}, \code{bruhatTits\_leaves\_isosceles} & $26$ & \code{propext}, \code{Classical.choice}, \code{Quot.sound} (or none) \\
 \code{AdelicSymmetry.lean} & \code{hilbert\_sector\_completeness}, \code{subtreeShift\_preserves\_ultrametric\_prefix}, \code{picket\_fence\_monotone}, \code{picket\_fence\_even\_gap}, \code{odd\_prime\_conjugate\_sector\_disjoint} & $23$ & \code{propext}, \code{Classical.choice}, \code{Quot.sound} (or none) \\
-\code{HolographyCurvature.lean} & \code{btz\_graph\_metric\_eq\_classDist}, \code{btz\_wasserstein\_lower\_bound}, \code{ads\_euler\_characteristic\_one}, \code{curved\_ads\_gauss\_bonnet\_subcritical}, \code{curved\_ads\_supercritical\_pinch\_deficit} & $40$ & \code{propext}, \code{Quot.sound} (or none) \\
+\code{HolographyCurvature.lean} & \code{btz\_graph\_metric\_eq\_classDist}, \code{btz\_wasserstein\_lower\_bound}, \code{curved\_ads\_gauss\_bonnet\_subcritical}, \code{global\_multi\_edge\_vertex\_charge\_conservation}, \code{rt\_strong\_subadditivity} & $59$ & \code{propext}, \code{Quot.sound} (or none) \\
 \code{SolitonAndSolver.lean} & \code{multi\_ball\_kozyrev\_soliton\_list}, \code{horizon\_edge\_quadratic\_expansion}, \code{sherman\_morrison\_exact\_identity}, \code{kerr\_flux\_edge\_stress\_even}, \code{kerr\_flux\_edge\_current\_odd} & $12$ & \code{propext}, \code{Quot.sound} \\
+\code{Spec}, \code{Challenge}, \code{Solution} & $8$ isolated targets (\code{target\_thm1\_*}--\code{target\_thm6\_holographic\_ssa} + \code{target\_nonvacuity\_witnesses}) & $8$ & Verified across $6$ independent kernels \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Verification Boundaries and Negative-Mutant Integrity.} The Lean~4 kernel formally certifies all $101$ discrete algebraic, ultrametric, combinatorial, cycle-metric, Kantorovich optimal-transport, curved Gauss--Bonnet, compacton-soliton, and complex Hermitian Sherman--Morrison/parity theorems listed in \cref{tab:lean} and mapped 1-to-1 in \code{docs/CLAIMS.md}. Independent exact-rational verification (\code{scripts/verify\_exact.py}) certifies exact \code{fractions.Fraction} optimal transport across $45$ $(p, L)$ BTZ horizons and $60$ curved AdS Gauss--Bonnet configurations, $7{,}033$ conjugate Adelic frequency pairs, $18$ modular picket-fence sectors, exact $\Q(i)$ Kerr--BTZ linear solves, cross-document version/ORCID consistency, and the root \code{CHECKSUMS.sha256} cryptographic manifest. Floating-point FFT/PDE conservation, Jacobi diagonalization, and dynamic gravity reside in the $10$-theorem executable suite (\code{test/verify.mjs}) and lie outside the Lean~4 kernel boundary; to verify that these tests cannot pass vacuously, \code{test/mutants.mjs} injects $8$ deliberate mathematical and algorithmic defects (corrupted Monna table, dropped root Robin impedance, wrong BTZ deficit $-2$, flipped Kerr gauge phase, $2$nd-order Strang downgrade, horizon-blind RT cut, asymmetric Gauss--Seidel gravity update, and naive zero-deficit extrapolation past $\sigma_e < -\ln p$) and confirms all $8/8$ mutants are killed. Full multi-layer substrate, spectral, gradient, and margin contrasts plus the complete $16$-issue audit register are archived in \code{docs/AUDIT\_AND\_CONTRAST\_ANALYSIS.md}.
+\textbf{Multi-Kernel Statement Fidelity and Verification Boundaries.} To eliminate single-kernel trust risks, \code{Spec.lean} isolates pure definitions ($101$ lines, zero proofs), \code{Challenge.lean} states all $8$ targets importing only \code{Spec}, and sorry-free \code{Solution.lean} proves them identically. Locally, the build and pruned target export ($1{,}886$ transitive declarations) pass Lean~\code{v4.35.0}, \code{leanchecker}, \code{leanchecker-paranoid}, \code{con-leche}, \code{con-ron}, and \code{nanoda\_bin} (\code{0.4.19}) under strict \code{[propext, Quot.sound, Classical.choice]}, while GitHub Actions CI adds \code{lean4lean} inside a Linux \code{bubblewrap} sandbox via \code{lake comparator --paranoid} (\code{docs/statement-fidelity.md}). A nested-comment- and string-aware scanner in \code{verify\_exact.py} confirms zero forbidden tokens (\code{sorry}, \code{admit}, \code{axiom}, \code{native\_decide}, \code{unsafe}, \code{implemented\_by}, \code{@[extern}) across all sorry-free Lean files, while \code{check\_readme\_axioms.py} checks the verbatim \code{\#print axioms} lines in \code{README.md} against \code{lean4-audit.txt}. Outside the Lean kernel, \code{verify\_exact.py} checks exact \code{Fraction}, $\Q(i)$, and brute-force invariants ($7{,}033$ pairs, $45$ BTZ horizons, $69$ curved trees, $4{,}352$ RT SSA partitions), \code{padic\_oracle.py} cross-checks $1{,}000+$ differential queries, and \code{test/*.mjs} runs $26$ Node suites ($10$ theorems, $8/8$ killed mutants, $3{,}200+$ property, metamorphic, and negative checks, HTTP contract plus disk \code{EIO} failure injection, and golden snapshots).
 
-\textbf{AI-Assistance and Formal-Verification Disclosure.} Substantive AI assistance (Google DeepMind / Antigravity agent operating under the direction of Alexander Stephen Donahue) contributed to mathematical derivation, software implementation, numerical discovery benchmarks, Lean~4 formalization, and manuscript drafting. AI systems are disclosed as tools and are not listed as authors. Correctness of all formal statements is certified independently by the Lean~4 (\code{v4.35.0}) kernel and reproducible verification scripts rather than by authoring provenance. This research was self-funded by the author (sole operator of 0thernes LLC).
+\textbf{Limitations, Relation to Open Problems, and Threats to Validity.} Full limitations and a literal-vs.-metaphor separation table are documented in \code{LIMITATIONS.md}. Specifically: (1)~no full solution to any open problem in \code{unsolved-problems-mega-atlas} is claimed ($0/1{,}900$; \code{docs/\allowbreak MEGA\_ATLAS\_CROSSCHECK.md}); (2)~asymptotic $n \to \infty$ analytic convergence of $\langle r\rangle_{W_{0,m}} \to r_0(p,m)$ for $\alpha \ne 1$ is verified numerically and statistically up to $N = 625$ rather than proved in Lean; (3)~\cref{thm:gauss-bonnet-global} applies to strictly interior vertices of full degree $p+1$ (excluding finite-cutoff root and leaf boundary edges); and (4)~real-time WebGL2 visualization is capped at $N \le 343$ due to $O(N^2)$ visual panels, while \code{PadicSpace} enforces $N \le 65{,}536$.
+
+\textbf{Reproducibility, Authorship (CRediT), Funding, COI, and AI Disclosure.} Every theorem, figure, benchmark, statistical test, and PDF is reproduced from a clean clone via \code{just reproduce} (logged in \code{REPLICATION.md} and cryptographically pinned in \code{CHECKSUMS.sha256} and \code{data/\allowbreak MANIFEST.sha256}). \emph{CRediT roles:} Alexander Stephen Donahue (ORCID \code{0009-0006-8168-9648})---Conceptualization, Supervision, Validation, Project Administration, Software \& Formal Verification Direction, and Writing -- Review \& Editing. \emph{AI-Assistance Disclosure:} Substantive AI assistance (Google DeepMind / Antigravity agent under the author's direction) contributed to mathematical derivation, software implementation, Lean~4 formalization, test engineering, and manuscript drafting; AI systems are disclosed as tools and are not listed as authors. \emph{Funding \& COI:} Self-funded independent research (Independent Researcher, Spokane, WA, USA; handle \code{0thernes}; no LLC, corporate, or institutional affiliation asserted); no competing financial interests declared. \emph{Code \& Data Availability:} Publicly archived at \url{https://github.com/0thernes/ultrametrica} and \url{https://github.com/0thernes/0thernes-research-archive} (entry \code{0TH-BUILD-003}) under the Cosmogonic Non-Commercial Research \& Play License (see \code{LICENSE}; corrections and withdrawal ledger in \code{ERRATA.md}).
 
 \clearpage
 \bibliographystyle{plain}

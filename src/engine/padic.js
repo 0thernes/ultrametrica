@@ -21,15 +21,19 @@ export function isPrimeSmall(p) {
 export class PadicSpace {
   constructor(p = 3, n = 6) {
     if (!isPrimeSmall(p)) {
-      throw new Error(`Unsupported prime p=${p}. Supported primes: 2, 3, 5, 7.`);
+      throw new RangeError(`Unsupported prime p=${p}. Supported primes: 2, 3, 5, 7.`);
     }
-    if (n < 2 || !Number.isInteger(n)) {
-      throw new Error(`Precision depth n must be integer >= 2, got ${n}.`);
+    if (!Number.isInteger(n) || n < 2) {
+      throw new RangeError(`Precision depth n must be an integer >= 2, got ${n}.`);
+    }
+    const N = p ** n;
+    if (!Number.isSafeInteger(N) || N > 65536) {
+      throw new RangeError(`Space size N = ${p}^${n} = ${N} exceeds safe engine bound 65536.`);
     }
 
     this.p = p;
     this.n = n;
-    this.N = p ** n;
+    this.N = N;
     this.invSqrtN = 1 / Math.sqrt(this.N);
 
     // Powers of p: powP[k] = p^k
@@ -148,11 +152,17 @@ export class PadicSpace {
 
   /** Map Bruhat-Tits leaf index l -> p-adic integer x in Z_p / p^n Z_p. */
   leafToPadic(leaf) {
+    if (!Number.isInteger(leaf) || leaf < 0 || leaf >= this.N) {
+      throw new RangeError(`Leaf index ${leaf} out of range [0, ${this.N - 1}].`);
+    }
     return this.revTable[leaf];
   }
 
   /** Map p-adic integer x -> Bruhat-Tits leaf index l. */
   padicToLeaf(x) {
+    if (!Number.isInteger(x)) {
+      throw new RangeError(`p-adic integer x must be an integer, got ${x}.`);
+    }
     return this.revTable[((x % this.N) + this.N) % this.N];
   }
 
@@ -171,7 +181,7 @@ export class PadicSpace {
 
   /** Exact ultrametric distance between two Bruhat-Tits tree leaves l1, l2. */
   leafDistance(l1, l2) {
-    return this.distance(this.revTable[l1], this.revTable[l2]);
+    return this.distance(this.leafToPadic(l1), this.leafToPadic(l2));
   }
 
   /**
@@ -186,6 +196,9 @@ export class PadicSpace {
     const p = this.p;
     const n = this.n;
     const N = this.N;
+    if (!inRe || !inIm || !outRe || !outIm || inRe.length < N || inIm.length < N || outRe.length < N || outIm.length < N) {
+      throw new RangeError(`Radix-p FFT requires input/output arrays of length >= ${N}.`);
+    }
     const rev = this.revTable;
 
     // Handle aliasing cleanly
@@ -282,6 +295,9 @@ export class PadicSpace {
    *   lambda_k = |k / p^n|_p^alpha = p^{alpha * (n - v_p(k))}  for k != 0,  0 for k = 0.
    */
   vladimirovSpectrum(alpha) {
+    if (!Number.isFinite(alpha) || alpha <= 0) {
+      throw new RangeError(`Vladimirov exponent alpha must be finite and > 0, got ${alpha}.`);
+    }
     const spec = new Float64Array(this.N);
     spec[0] = 0;
     const p = this.p;
@@ -298,6 +314,9 @@ export class PadicSpace {
    * mapped to unit circle circumference: (2*pi*min(k, N-k))^alpha.
    */
   archimedeanSpectrum(alpha) {
+    if (!Number.isFinite(alpha) || alpha <= 0) {
+      throw new RangeError(`Archimedean exponent alpha must be finite and > 0, got ${alpha}.`);
+    }
     const spec = new Float64Array(this.N);
     spec[0] = 0;
     const N = this.N;
@@ -338,8 +357,14 @@ export class PadicSpace {
   createKozyrevWavelet(j, ballIndex, characterM = 1) {
     const p = this.p;
     const n = this.n;
-    if (j < 0 || j >= n) {
-      throw new Error(`Wavelet scale j=${j} out of range [0, ${n - 1}]`);
+    if (!Number.isInteger(j) || j < 0 || j >= n) {
+      throw new RangeError(`Wavelet scale j=${j} must be an integer in [0, ${n - 1}].`);
+    }
+    if (!Number.isInteger(ballIndex)) {
+      throw new RangeError(`Wavelet ballIndex must be an integer, got ${ballIndex}.`);
+    }
+    if (!Number.isInteger(characterM)) {
+      throw new RangeError(`Wavelet characterM must be an integer, got ${characterM}.`);
     }
     const numBalls = this.powP[j];
     const b = ((ballIndex % numBalls) + numBalls) % numBalls;
@@ -480,9 +505,9 @@ export class PadicSpace {
    * for any 3 boundary leaves (leafA, leafB, leafC).
    */
   proveUltrametricTriangle(leafA, leafB, leafC) {
-    const xA = this.revTable[leafA];
-    const xB = this.revTable[leafB];
-    const xC = this.revTable[leafC];
+    const xA = this.leafToPadic(leafA);
+    const xB = this.leafToPadic(leafB);
+    const xC = this.leafToPadic(leafC);
 
     const vAB = this.diffValuation(xA, xB);
     const vBC = this.diffValuation(xB, xC);

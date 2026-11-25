@@ -226,11 +226,11 @@ export class PontryaginSpectrumPanel {
       ctx.fillRect(cx - barW * 0.5, padT + plotH - h, barW, h);
 
       // Percentage readout above bar if active
-      if (dualPow > 0.01) {
+      if (rawPow > 0.01) {
         ctx.fillStyle = '#e2e8f0';
         ctx.textAlign = 'center';
         ctx.font = '600 9px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
-        ctx.fillText(`${(dualPow * 100).toFixed(0)}%`, cx, Math.max(padT + 9, padT + plotH - h - 4));
+        ctx.fillText(`${(rawPow * 100).toFixed(0)}%`, cx, Math.max(padT + 9, padT + plotH - h - 4));
       }
 
       // Stereo Monna centroid indicator dot inside bar base
@@ -390,6 +390,6 @@ export class UltrametricTrianglePanel {
 
     ctx.fillStyle = '#64748b';
     ctx.font = '500 9px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
-    ctx.fillText('Click 3 rim nodes in Probe mode', padL, H - 5);
+    ctx.fillText('Click 3 rim nodes in 3-Pt mode', padL, H - 5);
   }
 }

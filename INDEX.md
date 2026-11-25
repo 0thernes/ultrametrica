@@ -1,6 +1,6 @@
-# ULTRAMETRICA — Master Index & Table of Contents (`v1.3.0`)
+# ULTRAMETRICA — Master Index & Table of Contents (`v1.4.0`)
 
-Complete navigational map of every manuscript, formal Lean 4 proof, adversarial audit report, claim ledger, engine module, benchmark artifact, mutant test suite, and legal/governance record in `0thernes/ultrametrica` (`v1.3.0`).
+Complete navigational map of every manuscript, formal Lean 4 proof (`120` declarations + `8` isolated 6-kernel comparator targets), 3-cycle hardening dossier, Mega-Atlas cross-check (`0/1,900`), pre-registered statistical audit, claim ledger, engine module, benchmark artifact, runnable example, and governance record in `0thernes/ultrametrica` (`v1.4.0`).
 
 ---
 
@@ -72,7 +72,7 @@ Complete navigational map of every manuscript, formal Lean 4 proof, adversarial 
 | [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) | Bug report, research proposal, and dedicated **Proof Challenge / Falsification** templates |
 | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | 4-job automated CI (Node 10 theorems + 8 mutants + Exp A–H, Python exact + `sha256sum`, Lean 4 101-theorem build, Tectonic zero-warning PDF + standalone arXiv check) |
 | [`.github/workflows/pages.yml`](.github/workflows/pages.yml) | Automated static GitHub Pages deployment to `https://0thernes.github.io/ultrametrica/` |
-| [`.github/SECURITY.md`](.github/SECURITY.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) | Security disclosure policy, contribution standards, and research conduct |
+| [`.github/SECURITY.md`](.github/SECURITY.md), [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md), [`.github/CODE_OF_CONDUCT.md`](.github/CODE_OF_CONDUCT.md) | Security disclosure policy, contribution standards, and research conduct |
 
 ## 6. Cross-Reference Index of Main Theorems
 

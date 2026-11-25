@@ -101,6 +101,25 @@ import UltrametricaProofs
 #print axioms Ultrametrica.curved_ads_gauss_bonnet_subcritical
 #print axioms Ultrametrica.curved_ads_supercritical_pinch_deficit
 #print axioms Ultrametrica.curved_ads_supercritical_strictly_negative
+#print axioms Ultrametrica.RatQ.eqv_refl
+#print axioms Ultrametrica.RatQ.eqv_symm
+#print axioms Ultrametrica.RatQ.eqv_trans
+#print axioms Ultrametrica.RatQ.add_congr
+#print axioms Ultrametrica.RatQ.add_zero_right
+#print axioms Ultrametrica.RatQ.add_same_den
+#print axioms Ultrametrica.sumInt_map_mul
+#print axioms Ultrametrica.ratq_sumList_same_den
+#print axioms Ultrametrica.vertex_half_charge_conserved
+#print axioms Ultrametrica.curved_gen_kappa_charge_decomp
+#print axioms Ultrametrica.global_multi_edge_vertex_charge_conservation
+#print axioms Ultrametrica.global_multi_edge_nonvacuous_witness
+#print axioms Ultrametrica.rt_edge_cut_submodular
+#print axioms Ultrametrica.rt_cut_submodular
+#print axioms Ultrametrica.rt_union_homologous
+#print axioms Ultrametrica.rt_inter_homologous_disjoint
+#print axioms Ultrametrica.rt_strong_subadditivity
+#print axioms Ultrametrica.rt_subadditivity
+#print axioms Ultrametrica.rt_ssa_nonvacuous_witness
 
 -- Module 4: Multi-Ball Solitons, Exact Complex Sherman-Morrison & Kerr Parity Laws (12 theorems)
 #print axioms Ultrametrica.kozyrev_exact_nonlinear_soliton

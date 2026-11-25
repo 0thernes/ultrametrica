@@ -1,5 +1,5 @@
-ULTRAMETRICA
-Copyright (c) 2026 0thernes (0thernes LLC) <0_0@0thernes.art>.
+ULTRAMETRICA (v1.4.0)
+Copyright (c) 2026 Alexander Stephen Donahue (0thernes) <0_0@0thernes.art>.
 All commercial rights reserved. Licensed under the COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY (see LICENSE).
 
 Third-Party Runtime Dependencies:
@@ -9,10 +9,15 @@ Third-Party Runtime Dependencies:
   npm packages or vendored libraries.
 
 External Toolchains Used for Execution & Formal Proof Checking (not vendored):
-  - Node.js (MIT License) — executes the local server, automated 9-theorem verification suite,
-    and reproducible discovery benchmarks.
-  - Lean 4 v4.35.0 & Lake (Apache License 2.0) — machine-checks all formal proofs in lean/
-    using core Lean 4 only (no Mathlib dependency).
+  - Node.js (MIT License) — executes the local server, automated 26-test verification suite
+    (10 theorems, 8 killed mutants, 3,200+ properties, HTTP contract/EIO, golden snapshot),
+    runnable examples, performance benchmarks, pre-registered Experiment I, and Exp A-H.
+  - Python 3 standard library (PSF License) — executes the independent textbook differential
+    oracle (reference/padic_oracle.py), exact-rational falsifier (scripts/verify_exact.py),
+    and verbatim README axiom checker (scripts/check_readme_axioms.py).
+  - Lean 4 v4.35.0 & Lake + bundled external checkers (Apache License 2.0) — machine-checks
+    all 120 formal proofs in lean/ plus isolated Spec/Challenge/Solution 6-kernel comparator
+    using core Lean 4 only (zero Mathlib dependency).
 
-Mention of Node.js, Lean, WebGL2, WebAudio, or any cited academic authors does not imply
-institutional sponsorship, endorsement, or relicensing of this work.
+Mention of Node.js, Python, Lean, Tectonic, WebGL2, WebAudio, or any cited academic authors
+does not imply institutional sponsorship, endorsement, or relicensing of this work.

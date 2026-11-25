@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "noEmit": true
+  },
+  "include": [
+    "server.mjs",
+    "src/**/*.js",
+    "test/**/*.mjs",
+    "examples/**/*.mjs",
+    "scripts/**/*.mjs"
+  ],
+  "exclude": [
+    "node_modules",
+    "lean/.lake",
+    "paper/build",
+    "dist"
+  ]
+}

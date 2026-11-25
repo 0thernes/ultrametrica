@@ -137,6 +137,9 @@ export class UltrametricaSimulation {
 
   /** Load one of the 6 curated alien physics experiments. */
   loadExperiment(id, { keepTopology = false } = {}) {
+    if (!EXPERIMENTS.some((e) => e.id === id)) {
+      throw new RangeError(`Unknown experiment id '${id}'. Valid ids: ${EXPERIMENTS.map((e) => e.id).join(', ')}.`);
+    }
     this.activeExperiment = id;
     const def = PRIME_DEFAULTS[this.p] || PRIME_DEFAULTS[3];
 
@@ -388,11 +391,8 @@ export class UltrametricaSimulation {
     if (effDt <= 0) return;
 
     // 1. Feed gravitational redshift potential from curved Bruhat-Tits bulk to boundary CFT
-    if (this.gravityEnabled && this.backreactionStrength > 1e-6) {
-      this.bulk.computeBoundaryPotential(this._potScratch, this.backreactionStrength * 4.5);
-      this.quantum.setPotentialLeaf(this._potScratch);
-    } else if (this.backreactionStrength > 1e-6) {
-      // Even if dynamic gravity is off, user-pinched wormhole throats still exert static redshift!
+    //    (includes static pinned wormhole throat redshift even when dynamic gravity is toggled off)
+    if (this.backreactionStrength > 1e-6) {
       this.bulk.computeBoundaryPotential(this._potScratch, this.backreactionStrength * 4.5);
       this.quantum.setPotentialLeaf(this._potScratch);
     } else {

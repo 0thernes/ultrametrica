@@ -125,13 +125,19 @@ export class BruhatTitsBulk {
    * @param {number} horizonDepth 0 for pure Bruhat-Tits AdS tree, >=1 for BTZ black hole ring of L = p^horizonDepth
    */
   constructor(space, horizonDepth = 0) {
+    if (!space || !Number.isInteger(space.p) || !Number.isInteger(space.n)) {
+      throw new TypeError('BruhatTitsBulk requires a valid PadicSpace instance.');
+    }
+    if (!Number.isInteger(horizonDepth) || horizonDepth < 0) {
+      throw new RangeError(`horizonDepth must be a non-negative integer, got ${horizonDepth}.`);
+    }
     this.space = space;
     this.p = space.p;
     this.n = space.n;
     this.N = space.N;
 
     // Validate horizonDepth: for BTZ black hole we need a cycle of length L = p^h >= 3 and h < n
-    let h = horizonDepth | 0;
+    let h = horizonDepth;
     if (h > 0) {
       while (h < this.n && this.p ** h < 3) h++;
       if (h >= this.n) h = 0;
@@ -370,7 +376,10 @@ export class BruhatTitsBulk {
 
   /** User wormhole surgery: pinch (positive deltaSigma -> longer/weaker edge) or amplify bulk edge. */
   pinchEdge(edgeId, deltaSigma) {
-    if (edgeId < 0 || edgeId >= this.numEdges) return;
+    if (!Number.isInteger(edgeId) || edgeId < 0 || edgeId >= this.numEdges) return;
+    if (!Number.isFinite(deltaSigma)) {
+      throw new RangeError(`deltaSigma must be finite, got ${deltaSigma}.`);
+    }
     this.pinSigma[edgeId] = Math.max(-3.0, Math.min(4.2, this.pinSigma[edgeId] + deltaSigma));
     this._syncWeights();
   }
@@ -442,6 +451,12 @@ export class BruhatTitsBulk {
    * Complexity: O(V) exact to machine precision (~1e-14).
    */
   solveBulkField(boundaryLeafRe, boundaryLeafIm) {
+    if (!boundaryLeafRe || !boundaryLeafIm || boundaryLeafRe.length < this.N || boundaryLeafIm.length < this.N) {
+      throw new RangeError(`solveBulkField requires boundary arrays of length >= ${this.N}.`);
+    }
+    if (!Number.isFinite(this.delta)) {
+      throw new RangeError(`Conformal dimension delta must be finite, got ${this.delta}.`);
+    }
     this._syncWeights();
 
     const V = this.numNodes;
@@ -1093,6 +1108,12 @@ export class BruhatTitsBulk {
    * (used for the Ultrametric Triangle & Geodesic Prover).
    */
   shortestGeodesic(leafA, leafB) {
+    if (!Number.isInteger(leafA) || leafA < 0 || leafA >= this.N) {
+      throw new RangeError(`shortestGeodesic leafA=${leafA} out of range [0, ${this.N - 1}].`);
+    }
+    if (!Number.isInteger(leafB) || leafB < 0 || leafB >= this.N) {
+      throw new RangeError(`shortestGeodesic leafB=${leafB} out of range [0, ${this.N - 1}].`);
+    }
     const start = this.leafNodes[leafA];
     const goal = this.leafNodes[leafB];
     const V = this.numNodes;

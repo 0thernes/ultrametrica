@@ -101,12 +101,21 @@ function getExperimentFormula(id) {
 
 // ---- Render Experiment Cards ----
 function buildExperimentCards() {
-  elExperimentList.innerHTML = '';
+  elExperimentList.replaceChildren();
   for (const exp of EXPERIMENTS) {
     const btn = document.createElement('button');
-    btn.className = 'exp-card' + (exp.id === sim.activeExperiment ? ' active' : '');
+    btn.type = 'button';
+    const isActive = exp.id === sim.activeExperiment;
+    btn.className = 'exp-card' + (isActive ? ' active' : '');
     btn.dataset.exp = exp.id;
-    btn.innerHTML = `<span class="exp-card-title">${exp.name}</span><span class="exp-card-sub">${exp.subtitle}</span>`;
+    btn.setAttribute('aria-pressed', String(isActive));
+    const titleSpan = document.createElement('span');
+    titleSpan.className = 'exp-card-title';
+    titleSpan.textContent = exp.name;
+    const subSpan = document.createElement('span');
+    subSpan.className = 'exp-card-sub';
+    subSpan.textContent = exp.subtitle;
+    btn.append(titleSpan, subSpan);
     btn.addEventListener('click', () => selectExperiment(exp.id));
     elExperimentList.appendChild(btn);
   }
@@ -129,7 +138,9 @@ function selectExperiment(id) {
 function setShaderView(view) {
   renderer.viewMode = view;
   for (const btn of document.querySelectorAll('#shaderGroup .seg-btn')) {
-    btn.classList.toggle('active', btn.dataset.view === view);
+    const active = btn.dataset.view === view;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
   }
 }
 
@@ -137,13 +148,15 @@ function setActiveTool(tool) {
   activeTool = tool;
   renderer.showTriangleOverlay = tool === 'triangle';
   for (const btn of document.querySelectorAll('#toolGroup .seg-btn')) {
-    btn.classList.toggle('active', btn.dataset.tool === tool);
+    const active = btn.dataset.tool === tool;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
   }
   const hints = {
     wavelet: 'Wavelet Mode: Click any node or rim ball to inject Kozyrev eigenstate (Shift = replace)',
     surgery: 'Wormhole Surgery: Click any bulk edge to stretch/pinch a_e (Shift or Right-Click = tighten)',
     rt: 'RT Cut Mode: Click boundary balls to toggle entanglement region A',
-    triangle: '3-Pt Probe Mode: Click 3 boundary rim leaves to prove strong triangle inequality',
+    triangle: '3-Pt Mode: Click 3 boundary rim leaves to prove strong triangle inequality',
   };
   elHoverReadout.textContent = hints[tool];
 }
@@ -164,13 +177,19 @@ function syncUIFromSim() {
 
   // Prime & topology segmented buttons
   for (const btn of document.querySelectorAll('#primeGroup .seg-btn')) {
-    btn.classList.toggle('active', Number(btn.dataset.prime) === p);
+    const active = Number(btn.dataset.prime) === p;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
   }
   for (const btn of document.querySelectorAll('#topoGroup .seg-btn')) {
-    btn.classList.toggle('active', (btn.dataset.btz === '1') === bulk.isBTZ);
+    const active = (btn.dataset.btz === '1') === bulk.isBTZ;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
   }
   for (const btn of document.querySelectorAll('#experimentList .exp-card')) {
-    btn.classList.toggle('active', btn.dataset.exp === sim.activeExperiment);
+    const active = btn.dataset.exp === sim.activeExperiment;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
   }
 
   // Sliders & exact labels
@@ -252,10 +271,12 @@ document.getElementById('shaderGroup').addEventListener('click', (e) => {
 elBtnAutoOrbit.addEventListener('click', () => {
   renderer.autoRotate = !renderer.autoRotate;
   elBtnAutoOrbit.classList.toggle('active', renderer.autoRotate);
+  elBtnAutoOrbit.setAttribute('aria-pressed', String(renderer.autoRotate));
 });
 
 elBtnAudio.addEventListener('click', async () => {
   await audio.toggle();
+  elBtnAudio.setAttribute('aria-pressed', String(audio.enabled));
   syncUIFromSim();
 });
 
@@ -263,6 +284,7 @@ elBtnPause.addEventListener('click', () => {
   sim.paused = !sim.paused;
   elBtnPause.textContent = sim.paused ? 'Resume' : 'Pause';
   elBtnPause.classList.toggle('active', sim.paused);
+  elBtnPause.setAttribute('aria-pressed', String(sim.paused));
 });
 
 elBtnReset.addEventListener('click', () => {
@@ -321,7 +343,7 @@ function hydrateStateFromURL() {
     sim.quantum.nonlinearity = g;
   }
   const delta = parseFloat(params.get('delta'));
-  if (Number.isFinite(delta) && delta >= 0.52 && delta <= 2.4) {
+  if (Number.isFinite(delta) && delta >= 0.5001 && delta <= 2.4) {
     sim.bulk.delta = delta;
   }
   const grav = parseFloat(params.get('grav'));
@@ -404,7 +426,11 @@ elSldNonlin.addEventListener('input', () => {
 elSldDelta.addEventListener('input', () => {
   sim.bulk.delta = parseFloat(elSldDelta.value);
   sim.syncBulkAndMetrics();
-  syncUIFromSim();
+  elValDelta.textContent = sim.bulk.delta.toFixed(2);
+  const m2 = sim.bulk.massSquared();
+  const bf = sim.bulk.bfBound();
+  elValMass.textContent = m2 < 0 ? `m²=${m2.toFixed(2)} (BF>${bf.toFixed(2)})` : `m²=+${m2.toFixed(2)}`;
+  updateTelemetryDOM();
 });
 
 elSldGravity.addEventListener('input', () => {
@@ -546,6 +572,11 @@ function updateTelemetryDOM() {
 }
 
 // ---- Boot & 60 FPS Simulation Loop ----
+if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+  renderer.autoRotate = false;
+  elBtnAutoOrbit.classList.remove('active');
+  elBtnAutoOrbit.setAttribute('aria-pressed', 'false');
+}
 buildExperimentCards();
 hydrateStateFromURL();
 syncUIFromSim();
@@ -554,7 +585,7 @@ let lastTs = performance.now();
 let telemetryFrame = 0;
 
 function tick(now) {
-  const dt = Math.min(0.032, (now - lastTs) * 0.001);
+  const dt = Math.max(0, Math.min(0.032, (now - lastTs) * 0.001));
   lastTs = now;
 
   sim.step(dt);

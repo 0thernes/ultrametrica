@@ -745,3 +745,18 @@ input[type="range"]::-webkit-slider-thumb {
 .modal-link-btn:hover {
   background: rgba(56, 189, 248, 0.24);
 }
+
+/* ---- WCAG 2.2 AA Focus Visibility & Reduced Motion (Build Standard A38) ---- */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

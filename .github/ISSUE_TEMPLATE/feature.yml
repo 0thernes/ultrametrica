@@ -1,19 +1,35 @@
-name: Research / Feature proposal
-description: Propose a new non-Archimedean theorem, Lean 4 formalization, bulk gravity kernel, experiment, or shader/DSP enhancement
-title: "[Research]: "
-labels: ["enhancement"]
+name: Feature / Mathematical Extension Proposal
+description: Propose a new theorem formalization, experiment, preset, or architectural improvement.
+title: "[proposal]: "
+labels: ["gap"]
 body:
-  - type: textarea
-    id: proposal
+  - type: dropdown
+    id: finding_class
     attributes:
-      label: Mathematical / Computational Proposal
-      description: Describe the proposed equation, theorem, operator, or visualization and how it couples rigorously into ULTRAMETRICA.
+      label: Finding Class (10-Class Taxonomy)
+      options:
+        - gap
+        - issue
+        - dilemma
+        - concern
+        - blindspot
+        - problem
+        - conflict
+        - bug
+        - error
+        - hole
     validations:
       required: true
   - type: textarea
-    id: verification
+    id: motivation
     attributes:
-      label: Verification & Falsifiability Criteria
-      description: Specify the exact Lean 4 theorem statement, closed-form invariant, or numerical precision threshold required to validate or falsify the proposal.
+      label: Scientific or Engineering Motivation
+    validations:
+      required: true
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Falsifiable Acceptance Criteria
+      description: How can this addition be independently verified (Lean theorem, exact Fraction check, property test)?
     validations:
       required: true

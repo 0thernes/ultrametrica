@@ -1,0 +1,16 @@
+name	color	description
+bug	d73a4a	Finding class 1/10: Incorrect executable code behavior
+error	b60205	Finding class 2/10: Factual, mathematical, build, or runtime failure
+issue	fbca04	Finding class 3/10: Operational, UX, accessibility, or maintainability defect
+problem	d93f0b	Finding class 4/10: High-level credibility, governance, or scientific-framing flaw
+concern	fef2c0	Finding class 5/10: Risk or sensitivity worth bounding/monitoring
+dilemma	5319e7	Finding class 6/10: Genuine trade-off requiring explicit owner decision
+conflict	e99695	Finding class 7/10: Direct contradiction between documents, specs, or versions
+gap	0075ca	Finding class 8/10: Missing required artifact, test category, or checklist item
+hole	c5def5	Finding class 9/10: Structural weakness in a verification or security check
+blindspot	bfd4f2	Finding class 10/10: Unexamined assumption or untested invariant class
+falsification	b60205	Counterexample or falsification report against a theorem or benchmark
+replication	0e8a16	Independent reproduction or replication log submission
+lean4	1d76db	Pure Lean 4.35.0 formalization & 6-kernel comparator
+paper	5319e7	AMS-LaTeX white paper, citations, or figures
+observatory	006b75	WebGL2 3D renderer, 2D panels, AudioWorklet, or WCAG 2.2 AA UI

@@ -1,77 +1,136 @@
-name: Formal Verification, Exact Rational Audit, Mutants & Manuscript CI
+name: Formal Verification, 6-Kernel Lean Audit, Cross-Platform Tests & Manuscript CI
 
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
   workflow_dispatch:
 
+concurrency:
+  group: ultrametrica-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
 jobs:
-  node-theorems-and-mutants:
-    name: Node.js 10-Theorem Suite, 8 Planted Mutants & Benchmarks (Exp A-H)
-    runs-on: ubuntu-latest
+  cross-platform-tests:
+    name: Node & Python Full Verification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest, windows-latest]
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Run 10 automated mathematical & physical theorems
-        run: npm test
-      - name: Run 8 planted negative-mutant falsification checks (8/8 killed)
-        run: npm run falsify
-      - name: Run all 8 reproducible discovery benchmarks (Exp A-H)
-        run: npm run discover
-
-  python-exact-and-checksums:
-    name: Independent Exact-Rational Falsifier & SHA-256 Audit
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-      - name: Run zero-dependency exact Fraction, Q(i), metadata & checksum audit
+          python-version: "3.13"
+      - name: Run all 26 Node tests (10 theorems, 8 killed mutants, properties, server contract/EIO, golden)
+        run: npm run verify:all
+      - name: Run all 3 runnable examples
+        run: npm run examples
+      - name: Run independent Python textbook differential oracle (1,000+ cases)
+        run: python reference/padic_oracle.py
+      - name: Run verbatim README #print axioms guard
+        run: python scripts/check_readme_axioms.py
+      - name: Run independent exact-rational falsifier (Thm I-VI) & SHA-256 checksums
         run: python scripts/verify_exact.py --check-checksums
-      - name: Verify cryptographic SHA-256 manifest with standard sha256sum
-        run: sha256sum -c CHECKSUMS.sha256
+      - name: Verify cryptographic SHA-256 manifests with standard sha256sum (before fresh benchmark regeneration)
+        if: runner.os == 'Linux'
+        run: |
+          sha256sum -c CHECKSUMS.sha256
+          sha256sum -c data/MANIFEST.sha256
+      - name: Regenerate discovery benchmarks (Exp A-H), perf benchmarks & pre-registered Exp I stats
+        if: runner.os == 'Linux'
+        run: |
+          npm run discover
+          npm run bench
+          npm run stats
 
-  lean4-formal-proofs:
-    name: Lean 4 (v4.35.0) 101-Theorem Zero-Sorry & Axiom Allowlist Check
-    runs-on: ubuntu-latest
+  report-only-static:
+    name: Report-Only Static Analysis, Secret Scan & Repo Audit (R1/R3 Non-Blocking)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Install elan & Lean 4 toolchain
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Node syntax check (report-only)
+        continue-on-error: true
         run: |
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-      - name: Verify zero sorry / admit / axiom / native_decide / unsafe in Lean library
+          node --check server.mjs src/engine/*.js src/web/*.js test/*.mjs examples/*.mjs scripts/*.mjs
+      - name: Python ruff & mypy report-only static checks
+        continue-on-error: true
+        run: |
+          python -m pip install --quiet ruff mypy
+          ruff check scripts reference
+          mypy --config-file pyproject.toml
+      - name: Secret scan via gitleaks (report-only)
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Standard v1.2.0 90-item repo audit (report-only)
+        continue-on-error: true
+        run: bash scripts/audit-repo.sh .
+
+  lean4-six-kernel-audit:
+    name: Lean 4 (v4.35.0) 120-Decl Audit & 6-Kernel lake comparator --paranoid
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan, Lean 4.35.0 & bubblewrap
+        run: |
+          sudo apt-get update && sudo apt-get install -y bubblewrap
+          toolchain="$(tr -d '[:space:]' < lean/lean-toolchain)"
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain "$toolchain"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Nested-comment & string-safe forbidden-token scan (UltrametricaProofs + Solution)
         run: |
           python3 - <<'PY'
-          import re
+          import re, sys
           from pathlib import Path
-          files = [Path("lean/UltrametricaProofs.lean")] + sorted(Path("lean/UltrametricaProofs").glob("*.lean"))
+          sys.path.insert(0, "scripts")
+          from verify_exact import strip_lean_comments_and_strings
+
+          files = [Path("lean/UltrametricaProofs.lean"), Path("lean/Solution.lean")] + sorted(Path("lean/UltrametricaProofs").glob("*.lean"))
+          forb = re.compile(r"\b(sorry|admit|axiom|native_decide|unsafe|implemented_by)\b|@\[extern")
           for p in files:
-              txt = p.read_text(encoding="utf-8")
-              txt = re.sub(r"/-.*?-/", "", txt, flags=re.S)
-              txt = re.sub(r"--[^\n]*", "", txt)
-              m = re.search(r"\b(sorry|admit|axiom|native_decide|unsafe)\b", txt)
+              cleaned = strip_lean_comments_and_strings(p.read_text(encoding="utf-8"))
+              m = forb.search(cleaned)
               if m:
-                  raise SystemExit(f"ERROR: Forbidden token '{m.group(1)}' in executable code of {p}")
-          print(f"PASS: Zero sorry/admit/axiom/native_decide/unsafe across {len(files)} Lean library files.")
+                  raise SystemExit(f"ERROR: Forbidden token '{m.group(0)}' in executable code of {p}")
+          print(f"PASS: Zero forbidden Lean tokens across {len(files)} sorry-free files.")
           PY
-      - name: Clean-build Lean 4 library & audit all 101 declarations via VerifyAxioms.lean
+      - name: Clean-build UltrametricaProofs, Challenge & Solution + audit 120 axioms + leanchecker
         working-directory: lean
+        shell: bash
         run: |
+          set -o pipefail
           lake clean
-          lake build
-          lake env lean VerifyAxioms.lean | tee axioms.log
+          lake build UltrametricaProofs Challenge Solution
+          lake env lean VerifyAxioms.lean | tee ../results/lean-audit-ci.log
+          lake env leanchecker --fresh UltrametricaProofs
+          lake env leanchecker --fresh Solution
           python3 - <<'PY'
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           count = 0
-          for line in open("axioms.log", encoding="utf-8"):
+          for line in open("../results/lean-audit-ci.log", encoding="utf-8"):
               line = line.strip()
-              if "sorryAx" in line or "native_decide" in line:
+              if any(bad in line for bad in ("sorryAx", "Lean.ofReduceBool", "_native")):
                   raise SystemExit(f"ERROR: Forbidden axiom detected: {line}")
               if "depends on axioms:" in line:
                   count += 1
@@ -80,26 +139,37 @@ jobs:
                       raise SystemExit(f"ERROR: Forbidden axiom {used - allowed} in: {line}")
               elif "does not depend on any axioms" in line:
                   count += 1
-          assert count >= 101, f"Expected >= 101 audited declarations, got {count}"
+          assert count >= 120, f"Expected >= 120 audited declarations, got {count}"
           print(f"PASS: All {count} Lean 4 declarations strictly within {sorted(allowed)} (or zero axioms).")
           PY
+      - name: Run 6-kernel lake comparator --config comparator.json --paranoid (bubblewrap sandbox)
+        working-directory: lean
+        run: |
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+          lake comparator --config comparator.json --paranoid
+      - name: SLSA build provenance attestation for Lean audit log
+        uses: actions/attest-build-provenance@v2
+        continue-on-error: true
+        with:
+          subject-path: results/lean-audit-ci.log
 
   latex-manuscript-and-arxiv:
-    name: AMS-LaTeX PDF Build & Standalone arXiv Tarball Check (Tectonic)
-    runs-on: ubuntu-latest
+    name: AMS-LaTeX Zero-Warning PDF & Standalone arXiv Tarball Check (Tectonic)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
       - name: Install Tectonic
         run: |
           curl --proto '=https' --tlsv1.2 -fsSL https://drop-sh.fullyjustified.net | sh
           sudo mv tectonic /usr/local/bin/tectonic
           tectonic --version
-      - name: Compile paper/main.tex, assert zero warnings, & test standalone arXiv bundle
+      - name: Compile paper/main.tex (zero warnings) & verify standalone arXiv tarball
         run: python scripts/package_dist.py
-      - name: Upload compiled manuscript PDF
+      - name: Upload compiled manuscript PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: Donahue_2026_Ultrametrica

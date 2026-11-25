@@ -1,0 +1,11 @@
+---
+description: ULTRAMETRICA Build Standard v1.2.0 & Verification Discipline (solo dev, direct-to-main, zero fabrication)
+alwaysApply: true
+---
+
+Follow `AGENTS.md` and `docs/build-standard.md` strictly:
+- Commit and push directly to `main` (zero PRs, zero feature branches, zero git hooks, zero branch protection, zero commit/tag signing).
+- Keep linters, typecheckers, and secret scanners report-only (`continue-on-error: true`); keep mathematical, mutant, property, contract, golden, oracle, Lean 4 kernel/comparator, and Tectonic zero-warning PDF checks blocking.
+- Classify every audit finding into one of the exact 10 classes: `bug`, `error`, `issue`, `problem`, `concern`, `dilemma`, `conflict`, `gap`, `hole`, `blindspot`.
+- Never fabricate measurements, p-values, DOIs, peer-review claims, or badges; never assert `"0thernes LLC"` as a legal entity (author affiliation is `Independent Researcher, Spokane, WA, USA`, ORCID `0009-0006-8168-9648`).
+- Run `npm run verify:all`, `python reference/padic_oracle.py`, `python scripts/verify_exact.py`, and `lake build` before finalizing edits.

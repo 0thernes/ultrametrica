@@ -1,0 +1,92 @@
+{
+  "generated_at": "2026-11-25T23:39:39.848Z",
+  "version": "1.4.0",
+  "environment": {
+    "node": "v25.8.2",
+    "platform": "win32-x64",
+    "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+    "cores": 24
+  },
+  "budgets": {
+    "coupled_btz_frame_step_p3_n5_L9_ms": 16.67,
+    "bulk_kg_ricci_rt_p5_n4_N625_BTZ_ms": 10,
+    "radix_p_fft_p5_n4_N625_single_ms": 1
+  },
+  "benchmarks": [
+    {
+      "name": "radix_p_fft_p3_n2_N9_x200",
+      "runs": 15,
+      "median_ms": 0.0288,
+      "iqr_ms": 0.0041,
+      "min_ms": 0.0286,
+      "max_ms": 0.1736,
+      "checksum": "maxErr=1.02e-15"
+    },
+    {
+      "name": "naive_dft_p3_n2_N9_x20",
+      "runs": 10,
+      "median_ms": 0.02,
+      "iqr_ms": 0,
+      "min_ms": 0.0197,
+      "max_ms": 0.0212,
+      "checksum": "N=9",
+      "speedup_fft_vs_dft": 6.94
+    },
+    {
+      "name": "radix_p_fft_p3_n5_N243_x20",
+      "runs": 15,
+      "median_ms": 0.1505,
+      "iqr_ms": 0.0269,
+      "min_ms": 0.1476,
+      "max_ms": 0.2529,
+      "checksum": "maxErr=1.12e-14"
+    },
+    {
+      "name": "naive_dft_p3_n5_N243_x2",
+      "runs": 10,
+      "median_ms": 1.8497,
+      "iqr_ms": 0.0602,
+      "min_ms": 1.8338,
+      "max_ms": 2.0056,
+      "checksum": "N=243",
+      "speedup_fft_vs_dft": 122.9
+    },
+    {
+      "name": "radix_p_fft_p5_n4_N625_x10",
+      "runs": 15,
+      "median_ms": 0.1829,
+      "iqr_ms": 0.0012,
+      "min_ms": 0.1827,
+      "max_ms": 0.1875,
+      "checksum": "maxErr=1.07e-14"
+    },
+    {
+      "name": "naive_dft_p5_n4_N625_x1",
+      "runs": 10,
+      "median_ms": 5.8508,
+      "iqr_ms": 0.0924,
+      "min_ms": 5.7924,
+      "max_ms": 6.0517,
+      "checksum": "N=625",
+      "speedup_fft_vs_dft": 319.89
+    },
+    {
+      "name": "coupled_btz_frame_step_p3_n5_L9",
+      "runs": 15,
+      "median_ms": 0.3882,
+      "iqr_ms": 0.1318,
+      "min_ms": 0.3407,
+      "max_ms": 0.7412,
+      "checksum": "kgRes=1.20e-16,normDrift=3.11e-14"
+    },
+    {
+      "name": "bulk_kg_ricci_rt_p5_n4_N625_BTZ",
+      "runs": 15,
+      "median_ms": 0.2223,
+      "iqr_ms": 0.1284,
+      "min_ms": 0.1398,
+      "max_ms": 0.4895,
+      "checksum": "kgRes=1.78e-15,S_A=12.8755"
+    }
+  ]
+}

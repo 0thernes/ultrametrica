@@ -1,6 +1,6 @@
 # ULTRAMETRICA — Comprehensive Technical, Mathematical, Scientific, Computational, Functional & Operational Master Report (`v1.3.0`)
 
-**Author:** Alexander Stephen Donahue (0thernes LLC, Spokane, WA, USA · `0_0@0thernes.art` · ORCID [0009-0006-8168-9648](https://orcid.org/0009-0006-8168-9648))  
+**Author:** Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA · handle `0thernes` · `0_0@0thernes.art` · ORCID [0009-0006-8168-9648](https://orcid.org/0009-0006-8168-9648))  
 **Date:** November 21, 2026 · **Scope:** End-to-End Audit of Mathematics (Theorems I–V), Novelty, Algorithms, Error Budgets, WebGL2 Shaders, AudioWorklet DSP, 101-Theorem Pure Lean 4 Formalization, 8 Planted Negative Mutants, Experiments A–H & Operations  
 **Claim Ledger:** [docs/CLAIMS.md](CLAIMS.md) · **Adversarial Audit & Contrast Report:** [docs/AUDIT_AND_CONTRAST_ANALYSIS.md](AUDIT_AND_CONTRAST_ANALYSIS.md) · **Live Observatory:** [https://0thernes.github.io/ultrametrica/](https://0thernes.github.io/ultrametrica/)
 

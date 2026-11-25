@@ -1,0 +1,904 @@
+# ULTRAMETRICA — Complete Offline LLM Context Bundle (`llms-full.txt`)
+
+Generated deterministically by `python scripts/build_llms_full.py`.
+
+
+---
+
+## FILE: `llms.txt`
+
+# ULTRAMETRICA
+
+> Zero-dependency real-time $p$-adic AdS/CFT holographic quantum gravity, rotating Tate-curve Kerr-BTZ black hole, Kozyrev wavelet, 48 kHz AudioWorklet, and pure Lean 4.35.0 formal verification laboratory (120 kernel-audited declarations, verified across 6 independent Lean kernels via `lake comparator --paranoid`).
+
+- Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID `0009-0006-8168-9648`)
+- Version: `1.4.0`
+- Repository: https://github.com/0thernes/ultrametrica
+- Live Observatory: https://0thernes.github.io/ultrametrica/
+- License: `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` ([`LICENSE`](LICENSE))
+
+## Core Documentation
+
+- [README.md](README.md): Executive overview, 5-second `#print axioms` verification block, usage, and architecture
+- [AGENTS.md](AGENTS.md): Canonical engineering rules, verification commands, and technical traps
+- [CLAIMS.md](CLAIMS.md): Complete 1-to-1 claim ledger with verification tier and explicit falsification conditions
+- [LIMITATIONS.md](LIMITATIONS.md): Honest scope boundaries, literal-vs-metaphor table, and finite-$N$ limits
+- [REPLICATION.md](REPLICATION.md): Independent replication protocol and dated replication log
+- [VERIFICATION.md](VERIFICATION.md): Multi-layer verification architecture (Lean 4, 6-kernel comparator, Python exact rational, Node tests/mutants/properties)
+- [SUMMARY.md](SUMMARY.md): Concise executive research summary
+- [ERRATA.md](ERRATA.md): Correction ledger and withdrawal policy
+
+## Scientific Papers & Audits
+
+- [paper/main.tex](paper/main.tex): Publication-grade AMS-LaTeX preprint (`dist/Donahue_2026_Ultrametrica.pdf`)
+- [paper/WHITE_PAPER.md](paper/WHITE_PAPER.md): Markdown white paper synchronized with `paper/main.tex`
+- [docs/MEGA_ATLAS_CROSSCHECK.md](docs/MEGA_ATLAS_CROSSCHECK.md): Honest cross-check against all 1,900 problems in `0thernes/unsolved-problems-mega-atlas` (`0/1,900` full solutions; discrete sub-results on `SUB-032`)
+- [docs/preregistration.md](docs/preregistration.md): Git-sealed preregistration for Experiment I (`c171b1b`)
+- [docs/statement-fidelity.md](docs/statement-fidelity.md): Line-by-line Lean 4 statement fidelity & non-vacuity audit
+- [docs/reviews/2026-11-25-hardening-cycles.md](docs/reviews/2026-11-25-hardening-cycles.md): 3-cycle adversarial hardening dossier with 10-class finding taxonomy
+
+## Architecture, Formal Proofs & Engine
+
+- [docs/architecture.md](docs/architecture.md): System architecture with Mermaid diagram
+- [docs/benchmarks.md](docs/benchmarks.md): Hardware-tagged performance benchmarks & speedups
+- [docs/threat-model.md](docs/threat-model.md): STRIDE security analysis of local HTTP server & browser sandbox
+- [lean/README.md](lean/README.md): Pure Lean 4.35.0 proof architecture & 6-kernel comparator guide
+- [examples/README.md](examples/README.md): Runnable engine examples
+
+
+---
+
+## FILE: `AGENTS.md`
+
+# AGENTS.md — ULTRAMETRICA Engineering & Scientific Verification Guide
+
+> Canonical agent instruction entry point (`A32` of Build Standard `v1.2.0`). `CLAUDE.md`, `GEMINI.md`, and `.cursor/rules/build-standard.mdc` reference this file.
+
+## 1. Project Identity & Scope
+
+- **Project:** **ULTRAMETRICA** (`0thernes/ultrametrica`, `v1.4.0`) — zero-dependency real-time $p$-adic AdS/CFT holographic quantum gravity, rotating Tate-curve Kerr-BTZ black hole, Kozyrev wavelet, 48 kHz prime-power AudioWorklet, and pure Lean 4 (`v4.35.0`) formal verification laboratory.
+- **Author & Affiliation:** Alexander Stephen Donahue (`Alexander S. Donahue`), ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648), **Independent Researcher, Spokane, WA, USA** (`0_0@0thernes.art`, `https://0thernes.art`, `https://github.com/0thernes`). Never assert `"0thernes LLC"` as a legal entity.
+- **License:** `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` ([`LICENSE`](LICENSE)). Keep attribution intact; see [`LEGAL.md`](LEGAL.md) and [`docs/adr/0005-cosmogonic-noncommercial-license.md`](docs/adr/0005-cosmogonic-noncommercial-license.md).
+
+## 2. Hard Rules (Non-Negotiable — Build Standard R1–R8)
+
+- **R1 — Solo Dev Ergonomics:** Never install git hooks, branch protection, commit/tag signing, or blocking lint/SAST/SBOM CI gates. Lint/type/secret checks in CI must remain **report-only** (`continue-on-error: true`).
+- **R2 — Direct to `main`:** Commit and push directly to `main`. Zero PRs, zero feature branches, zero `.github/pull_request_template.md`.
+- **R3 — Tests Block; Linters Report:** Functional, mutant, property, contract, golden, oracle, Lean 4 kernel/comparator, and Tectonic zero-warning PDF checks fail CI on broken invariants; style/static linters report without blocking.
+- **R4 — No Banned Files:** Never add Dependabot, Renovate, PR templates, Copilot instructions, `FUNDING.yml`, or `CODEOWNERS`.
+- **R5 — Ten-Class Finding Taxonomy:** Every audit or review finding MUST be tagged with one of the exact 10 classes: `bug`, `error`, `issue`, `problem`, `concern`, `dilemma`, `conflict`, `gap`, `hole`, `blindspot`.
+- **R6 — Never Fabricate:** Never invent measurements, p-values, citations/DOIs, peer-review claims, or badges. Distinguish strictly between `kernel-checked`, `exact-rational`, `numerical`, `pre-registered statistical`, and `prior work` tiers.
+- **R7 — Lean 4 Kernel Integrity:** Zero `sorry`, `admit`, `axiom`, `native_decide`, `unsafe`, `implemented_by`, or `@[extern` in `lean/UltrametricaProofs.lean`, `lean/UltrametricaProofs/*.lean`, and `lean/Solution.lean` (`lean/Challenge.lean` intentionally holds specification `sorry`s matched by `lake comparator --paranoid`). All audited axioms strictly inside `[propext, Classical.choice, Quot.sound]`.
+- **R8 — Preserve Author License & Identity:** Keep `LICENSE` and canonical ORCID `0009-0006-8168-9648` synchronized everywhere.
+
+## 3. Repository Map
+
+| Path | Responsibility |
+|---|---|
+| `src/engine/` | Pure zero-dependency ES modules (`padic.js`, `holography.js`, `quantum.js`, `simulation.js`) |
+| `src/web/` | WebGL2 3D observatory (`renderer3d.js`), 2D panels (`panels2d.js`), 48 kHz AudioWorklet (`audio*.js`), WCAG 2.2 AA UI (`index.html`, `styles.css`, `app.js`) |
+| `server.mjs` | Hardened static server with `/healthz`, strict CSP, fail-fast `PORT` validation, structured JSON logging |
+| `lean/` | Pure Lean `v4.35.0` formalization (0 Mathlib): `UltrametricaProofs/{Spec,Basic,AdelicSymmetry,HolographyCurvature,SolitonAndSolver}.lean`, `VerifyAxioms.lean` (120 decls), `Challenge.lean`, `Solution.lean`, `comparator.json` |
+| `test/` | `verify.mjs` (10 theorems), `mutants.mjs` (8 killed mutants), `properties.mjs` (3,200+ property/metamorphic/negative cases), `server.mjs` (HTTP contract + EIO failure injection), `golden.mjs` |
+| `reference/` | Independent textbook Python oracle (`padic_oracle.py`) |
+| `scripts/` | `verify_exact.py`, `check_readme_axioms.py`, `discover.mjs`, `bench.mjs`, `stats_eval.mjs`, `generate_figures.py`, `package_dist.py`, `Audit-Repo.ps1`, `audit-repo.sh` |
+| `paper/` & `dist/` | AMS-LaTeX white paper (`main.tex`, `refs.bib`, `WHITE_PAPER.md`), 5 PGFPlots vector figures, frozen `dist/Donahue_2026_Ultrametrica.pdf` & `dist/arxiv_submission.tar.gz` |
+| `docs/` | `CLAIMS.md`, `MASTER_REPORT.md`, `AUDIT_AND_CONTRAST_ANALYSIS.md`, `MEGA_ATLAS_CROSSCHECK.md`, `preregistration.md`, `statement-fidelity.md`, `architecture.md`, `adr/`, `benchmarks.md`, `threat-model.md`, `configuration.md`, `operations.md`, `faq.md`, `glossary.md`, `run-log.md`, `reviews/` |
+
+## 4. Exact Verification Commands
+
+```bash
+# 1. All Node test suites (26 tests: 10 theorems + 8 mutants + properties + server + golden)
+npm run verify:all
+
+# 2. Runnable examples + benchmarks + pre-registered statistics + discovery
+npm run examples
+npm run bench
+npm run stats
+npm run discover
+
+# 3. Independent Python differential oracle & exact-rational falsifier + checksums
+python reference/padic_oracle.py
+python scripts/check_readme_axioms.py
+python scripts/verify_exact.py --check-checksums
+
+# 4. Lean 4.35.0 full build, 120-declaration axiom audit, leanchecker & 6-kernel comparator
+cd lean
+lake clean && lake build UltrametricaProofs Challenge Solution
+lake env lean VerifyAxioms.lean
+lake env leanchecker --fresh UltrametricaProofs
+lake env leanchecker --fresh Solution
+lake comparator --config comparator.json --paranoid   # Ubuntu/Linux with bubblewrap
+
+# 5. White paper figures, zero-warning PDF, and standalone arXiv check
+python scripts/generate_figures.py
+python scripts/package_dist.py
+
+# 6. Build Standard v1.2.0 90-item repo audit
+pwsh -NoProfile -File scripts/Audit-Repo.ps1 -Path .   # Windows
+bash scripts/audit-repo.sh .                           # Linux/macOS
+```
+
+## 5. Known Technical Traps
+
+1. **PowerShell Bracket Paths:** On Windows dev machines with literal brackets in parent paths (e.g. `Z:\[Vibe Coded (AI)]\...`), always use `-LiteralPath` in PowerShell file cmdlets.
+2. **LF Line Endings & SHA-256:** `CHECKSUMS.sha256` and `data/MANIFEST.sha256` hash exact bytes; preserve Unix `LF` (`\n`) endings on all text files (enforced by `.editorconfig` and `.gitattributes`).
+3. **HTTP Keep-Alive & `headersSent`:** In `server.mjs`, always `await fsImpl.readFile(...)` *before* calling `res.writeHead(200, ...)` on `GET`, and close keep-alive sockets in tests via `agent: false` + `server.closeAllConnections?.()`.
+4. **Finite-Cutoff Boundary Edges on $T_p$:** Theorem V / V-Global holds on strictly interior edges whose endpoints both have full degree $p + 1$; finite cutoff trees have root degree $p$ (depth $0$) and leaf degree $1$ (depth $n$), so interior perturbations require `nodeDepth[u] >= 2 && nodeDepth[v] <= n - 2` (`n >= 4`).
+5. **Pre-Registration Discipline:** Never edit `docs/preregistration.md` retroactively after running `scripts/stats_eval.mjs`; commit any new experiment preregistration *before* execution.
+
+
+---
+
+## FILE: `README.md`
+
+# ULTRAMETRICA
+
+> **Zero-dependency real-time $p$-adic AdS/CFT Holographic Quantum Gravity, Rotating Kerr-BTZ Black Holes, Adelic Parity-Doubling Symmetries, Global Multi-Edge Curved Gauss-Bonnet Conservation, Universal Holographic RT Strong Subadditivity, 48 kHz Prime-Power AudioWorklet DSP, and 120 Pure Lean 4 (`v4.35.0`) Proofs Verified Across Independent Kernels.**
+
+[![CI Verification](https://github.com/0thernes/ultrametrica/actions/workflows/ci.yml/badge.svg)](https://github.com/0thernes/ultrametrica/actions/workflows/ci.yml)
+[![Live Observatory](https://img.shields.io/badge/Live_Observatory-GitHub_Pages-38bdf8)](https://0thernes.github.io/ultrametrica/)
+[![ORCID](https://img.shields.io/badge/ORCID-0009--0006--8168--9648-A6CE39.svg)](https://orcid.org/0009-0006-8168-9648)
+[![Lean 4](https://img.shields.io/badge/Lean_4-v4.35.0_(120_Decls,_6--Kernel_Comparator)-10b981)](lean/README.md)
+[![Exact Rational Audit](https://img.shields.io/badge/Exact_Rational_Falsifier-Python_Fraction_PASS-10b981)](scripts/verify_exact.py)
+[![Planted Mutants](https://img.shields.io/badge/Planted_Mutants-8%2F8_Killed-10b981)](test/mutants.mjs)
+[![License: Cosmogonic Non-Commercial](https://img.shields.io/badge/License-Cosmogonic_Non--Commercial-0ea5e9)](LICENSE)
+
+**Author:** Alexander Stephen Donahue (`Independent Researcher, Spokane, WA, USA` · project handle [`0thernes`](https://0thernes.art) · `0_0@0thernes.art` · ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648))  
+**Release:** `v1.4.0` · **Status:** `active` (Research Preprint & Interactive Laboratory — Non-Commercial Research & Play; see [`LICENSE`](LICENSE) and [`LEGAL.md`](LEGAL.md))  
+**Live Interactive WebGL2 + 48 kHz AudioWorklet Observatory:** **[https://0thernes.github.io/ultrametrica/](https://0thernes.github.io/ultrametrica/)**
+
+![ULTRAMETRICA Live WebGL2 Bruhat-Tits AdS & Rotating Kerr-BTZ Observatory](docs/media/ultrametrica-observatory.png)
+
+---
+
+## 5-Second Independent Proof Verification (`#print axioms` & Multi-Kernel Audit)
+
+Verify all **120 pure Lean 4 (`v4.35.0`) declarations** (zero Mathlib, `autoImplicit = false`, zero `sorry`, zero `native_decide`) and isolated `Spec`/`Challenge`/`Solution` targets in seconds:
+
+```bash
+cd lean && lake build UltrametricaProofs Challenge Solution && lake env lean VerifyAxioms.lean
+# On Linux with bubblewrap (also enforced on every push in GitHub Actions CI):
+lake comparator --config comparator.json --paranoid
+```
+
+Verbatim kernel output (character-checked against [`results/lean4-audit.txt`](results/lean4-audit.txt) by [`scripts/check_readme_axioms.py`](scripts/check_readme_axioms.py)):
+
+```text
+'Ultrametrica.monna_involution_universal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.odd_prime_conjugate_sector_disjoint' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.picket_fence_even_gap' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.btz_kappa_from_wasserstein' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.curved_ads_gauss_bonnet_subcritical' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.global_multi_edge_vertex_charge_conservation' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.rt_strong_subadditivity' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.multi_ball_kozyrev_soliton_list' depends on axioms: [propext]
+'Ultrametrica.sherman_morrison_exact_identity' depends on axioms: [propext, Quot.sound]
+```
+
+Independent external kernels verified on pruned 8-target export (`1,886` transitive declarations) & full `Solution`: `leanchecker --fresh`, `leanchecker-paranoid --fresh`, `con-leche --verified`, `con-ron --verified`, `nanoda_bin 0.4.19` (strict `[propext, Quot.sound, Classical.choice]`), plus `lean4lean` via `bubblewrap`-sandboxed `lake comparator --paranoid` in CI. See [`docs/statement-fidelity.md`](docs/statement-fidelity.md).
+
+---
+
+## Navigation
+
+| Document | Description |
+|---|---|
+| **[dist/Donahue_2026_Ultrametrica.pdf](dist/Donahue_2026_Ultrametrica.pdf)** | **Frozen AMS-LaTeX Publication Preprint PDF** (5 vector figures, zero warnings; standalone arXiv bundle: [`dist/arxiv_submission.tar.gz`](dist/arxiv_submission.tar.gz)) |
+| **[CLAIMS.md](CLAIMS.md)** | **1-to-1 Claim & Falsification Ledger** (`kernel-checked`, `exact-rational`, `pre-registered statistical`, `numerical`, `prior work` + *What Would Prove Us Wrong*) |
+| **[LIMITATIONS.md](LIMITATIONS.md)** | Honest scope boundaries, literal-vs-metaphor table, finite-$N$ bounds & non-claims |
+| **[docs/MEGA_ATLAS_CROSSCHECK.md](docs/MEGA_ATLAS_CROSSCHECK.md)** | Honest cross-check against all `1,900` open problems in `0thernes/unsolved-problems-mega-atlas` (**`0/1,900` full solutions**; discrete sub-results on `SUB-032`) |
+| **[docs/preregistration.md](docs/preregistration.md)** | Git-sealed preregistration (`c171b1b`) for confirmatory 20-seed Experiment I ([`results/stats-eval.json`](results/stats-eval.json)) |
+| **[docs/statement-fidelity.md](docs/statement-fidelity.md)** | Line-by-line Lean 4 statement-fidelity, non-vacuity & 6-kernel audit matrix |
+| **[docs/reviews/2026-11-25-hardening-cycles.md](docs/reviews/2026-11-25-hardening-cycles.md)** | 3-Cycle deep hardening & red-team dossier (all findings classified into the exact 10 classes) |
+| **[REPLICATION.md](REPLICATION.md)** | Clean-clone reproduction commands, tolerances & dated replication log |
+| **[docs/architecture.md](docs/architecture.md)** | System architecture with Mermaid diagram + [`docs/adr/`](docs/adr/README.md) (ADR-0001..0005) |
+| **[docs/benchmarks.md](docs/benchmarks.md)** | Hardware-tagged performance budgets (`0.388 ms` coupled BTZ frame, `319.9×` FFT speedup) |
+| **[docs/threat-model.md](docs/threat-model.md)** | STRIDE threat model mapped 1-to-1 to [`test/server.mjs`](test/server.mjs) & CI security gates |
+| **[SUMMARY.md](SUMMARY.md)** · **[ERRATA.md](ERRATA.md)** · **[INDEX.md](INDEX.md)** | Executive summary, correction/withdrawal ledger, and complete repository index |
+
+---
+
+## Six Core Verified Theorems (120 Pure Lean 4 Declarations + Exact-Rational & 26 Node Suites)
+
+1. **Theorem I & Prop. 4.2 — Adelic Parity-Doubling, Valuation-Residue Sectors & Pre-Registered GOE/GUE Falsification** ([`Basic.lean`](lean/UltrametricaProofs/Basic.lean), [`AdelicSymmetry.lean`](lean/UltrametricaProofs/AdelicSymmetry.lean), [`docs/preregistration.md`](docs/preregistration.md)):
+   Universal Monna involution $R_p$, ball contiguity, and Bruhat-Tits subtree shift isometry block-diagonalize $H_\theta$ identically into $1 + n(p-1)$ sectors $W_{s,m}$ (`leak <= 1.8e-14` up to $N = 625$), protecting 100% of excited levels in exact doublets for odd $p \ge 3$ while lifting all doublets at $p = 2$. Pre-registered Experiment I (`20` seeds vs. GUE/GOE controls) confirms all **4/4 hypotheses** at `p_holm = 0.0004` (`20/20` seeds each), locking sectors to $r_0(p,m) = \min(2m, p-2m)/\max(2m, p-2m)$ ($W_{0,1} \approx 2/3$ vs. sibling $W_{0,2} \approx 1/4$ inside the same $p=5, N=625$ Hamiltonian).
+2. **Theorem II — Cycle-Metric-Bridged Tate-Curve BTZ Ollivier-Ricci Law & $L_c = 5$ Trichotomy** ([`HolographyCurvature.lean`](lean/UltrametricaProofs/HolographyCurvature.lean)):
+   Proved end-to-end in Lean 4 from the literal $L$-cycle graph metric through Kantorovich primal-dual optimality for all $p \ge 2, L \ge 3$: $\kappa_{\mathrm{BTZ}}(p, L) = -(2p - \max(0, 6-L))/(p+2)$ (`45` exact `Fraction` horizons, zero rounding error).
+3. **Theorem III — Arbitrary $K$-Ball Kozyrev Compacton-Soliton Invariance & $\alpha$-Scaled Self-Trapping** ([`SolitonAndSolver.lean`](lean/UltrametricaProofs/SolitonAndSolver.lean)):
+   Any finite list of $K$ pairwise-disjoint Kozyrev wavelets is an exact radiation-free nonlinear soliton for arbitrary local $F(|\psi|^2)$ (`0.00%` leakage up to $g = 500$).
+4. **Theorem IV — Unconditional Rank-1 Kerr-BTZ Bulk Solver, Flux Parity & BF Stability Margin** ([`SolitonAndSolver.lean`](lean/UltrametricaProofs/SolitonAndSolver.lean)):
+   $w_{L-1} u u^\dagger \succeq 0$ guarantees $\mathrm{den} \ge 1 > 0$, exact arbitrary-dimension complex Hermitian Sherman-Morrison solve (exact $\mathbb{Q}(i)$ residual $= 0$), exact flux parity $E(-\Omega) = E(\Omega)$ and $J(-\Omega) = -J(\Omega)$, and BF stability down to $\Delta = 0.5001, \Omega = \pi$.
+5. **Theorem V & Theorem V-Global — Single-Edge and Global Multi-Edge Curved AdS Discrete Gauss-Bonnet Conservation** ([`HolographyCurvature.lean`](lean/UltrametricaProofs/HolographyCurvature.lean)):
+   For arbitrary simultaneous positive conductances $w_e > 0$ on strictly interior bridge edges of $T_p$, vertex curvature half-charges $-(p-1)w_e/W_u$ sum identically to $-(p-1)$ at every interior vertex, yielding exact zero global excess whenever $w_e/W_u + w_e/W_v \le 1$ on all edges and exact negative deficit $-2\sum(w_e/W_u + w_e/W_v - 1)$ otherwise (`69` single/multi-edge exact `Fraction` plans + `1,000` random JS trees `< 1e-11`).
+6. **Theorem VI — Universal Holographic Ryu-Takayanagi Strong Subadditivity** ([`HolographyCurvature.lean`](lean/UltrametricaProofs/HolographyCurvature.lean)):
+   Proved in Lean 4 on arbitrary finite non-negative weighted graphs (pure AdS trees, curved BTZ black holes, higher-genus quotients): $S(A \cup B \cup C) + S(B) \le S(A \cup B) + S(B \cup C)$ for all disjoint boundary regions $A, C$ (`4,352` exhaustive brute-force partitions + `1,000` random JS graphs).
+
+---
+
+## Quickstart
+
+Requires **Node.js $\ge 20$** (zero `npm install` needed — zero external runtime dependencies). Optional toolchains: Python `3.11+` (stdlib only), Lean `v4.35.0`, Tectonic `0.15+`.
+
+```bash
+git clone https://github.com/0thernes/ultrametrica.git
+cd ultrametrica
+npm run verify:all
+```
+
+## Usage
+
+```bash
+# 1. Run all 26 Node test suites (10 theorems, 8 killed mutants, 3,200+ properties, server EIO, golden)
+npm run verify:all
+
+# 2. Run all 3 standalone engine examples (see examples/README.md)
+npm run examples
+
+# 3. Run independent textbook Python oracle (1,000+ cases), README axiom check & exact-rational audit
+python reference/padic_oracle.py
+python scripts/check_readme_axioms.py
+python scripts/verify_exact.py --check-checksums
+
+# 4. Reproduce Exp A-H discovery benchmarks, perf benchmarks & pre-registered Experiment I
+npm run discover && npm run bench && npm run stats
+
+# 5. Launch the hardened local WebGL2 + 48 kHz AudioWorklet Observatory (health: GET /healthz)
+PORT=4173 node server.mjs
+# Open http://127.0.0.1:4173 (or visit https://0thernes.github.io/ultrametrica/)
+```
+
+Or run the entire verification, Lean 4, and LaTeX reproduction pipeline with [`justfile`](justfile):
+
+```bash
+just reproduce
+```
+
+---
+
+## Limitations
+
+See [`LIMITATIONS.md`](LIMITATIONS.md) for the complete scope boundary and literal-vs-metaphor table:
+
+- **No empirical physics claim:** All theorems are strictly mathematical and computational on finite $p$-adic groups $\mathbb{Z}_p / p^n\mathbb{Z}_p$ and finite weighted Bruhat-Tits / Tate-curve graphs.
+- **Zero full Mega-Atlas solutions (`0 / 1,900`):** ULTRAMETRICA does not solve the continuum limit or full adelic unification of `SUB-032` ([`docs/MEGA_ATLAS_CROSSCHECK.md`](docs/MEGA_ATLAS_CROSSCHECK.md)).
+- **Not peer-reviewed:** Manuscripts are independent preprints; Lean proofs certify logical validity of formalized statements within the stated kernel boundary ([`docs/statement-fidelity.md`](docs/statement-fidelity.md)).
+- **Finite-$N$ bounds:** `PadicSpace` caps $N = p^n \le 65{,}536$; Theorem V-Global applies to strictly interior vertices of full degree $p + 1$; $n \to \infty$ analytic convergence for $\alpha \ne 1$ is verified up to $N = 625$ rather than proved in Lean.
+
+---
+
+## Legal & Licensing
+
+Copyright © 2026 **Alexander Stephen Donahue (`0thernes`)** `<0_0@0thernes.art>` (Independent Researcher, Spokane, WA, USA; ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648)).  
+Licensed under the **COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY** ([`LICENSE`](LICENSE)). Study, verify, fork, and build upon it freely for non-commercial research and play with attribution intact; **all commercial rights are reserved**. See [`LEGAL.md`](LEGAL.md) for AI-tool disclosure, ownership, and [`docs/adr/0005-cosmogonic-noncommercial-license.md`](docs/adr/0005-cosmogonic-noncommercial-license.md) for the OSI licensing trade-off.
+
+
+---
+
+## FILE: `CLAIMS.md`
+
+# ULTRAMETRICA (`v1.4.0`) — Complete 1-to-1 Claim & Falsification Ledger (`CLAIMS.md`)
+
+> Build Standard `B04` & `B42`, Playbook Section 5. Author: **Alexander Stephen Donahue** (Independent Researcher, Spokane, WA, USA; ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648)).
+> Every scientific, mathematical, formal, statistical, and computational claim in ULTRAMETRICA is mapped 1-to-1 below to its exact verification tier, reproducible command, test/proof symbol, verified measurement, and explicit **falsification criterion** (*What Would Prove Us Wrong*).
+
+## Verification Tiers
+
+- **`kernel-checked`:** Machine-verified in pure Lean 4 (`v4.35.0`, zero Mathlib, zero `sorry`, zero `native_decide`, `autoImplicit = false`, strictly `[propext, Classical.choice, Quot.sound]`) across `120` declarations + independent external kernels (`leanchecker`, `leanchecker-paranoid`, `con-leche`, `con-ron`, `nanoda_bin`, plus `lean4lean` via `lake comparator --paranoid` in `bubblewrap` Linux CI).
+- **`exact-rational`:** Independently verified with **zero floating-point rounding error** in Python standard library arbitrary-precision `int`, `fractions.Fraction`, and $\mathbb{Q}(i)$ (`scripts/verify_exact.py`).
+- **`pre-registered statistical`:** Pre-registered in git-sealed [`docs/preregistration.md`](docs/preregistration.md) (`c171b1b`) prior to execution, evaluated with 20-seed GUE/GOE controls, 10,000-resample permutation/bootstrap CIs, Cliff's $\delta$, Cohen's $d$, and Holm-Bonferroni correction (`scripts/stats_eval.mjs`).
+- **`numerical`:** Verified in IEEE-754 double precision via `test/verify.mjs`, `test/mutants.mjs` (8/8 killed), `test/properties.mjs` (3,200+ cases), `test/golden.mjs`, and `reference/padic_oracle.py`.
+- **`prior work`:** Established literature explicitly credited in [`paper/refs.bib`](paper/refs.bib) (no priority claimed).
+
+---
+
+## Complete Claim Ledger
+
+| Claim ID | Exact Claim | Tier | Reproducible Command | Proof / Test Symbol | Last Verified Value (2026-11-25) | Status | What Would Prove Us Wrong (Falsification Condition) |
+|---|---|---|---|---|---|---|---|
+| **C-THM-1A** | Base-$p$ Monna digit reversal $R_p$ is a universal involution ($R_p(R_p(x)) = x$), bijection, complement-commuting, and maps $p$-adic balls bijectively to contiguous leaf intervals for all $p \ge 2, n \in \mathbb{N}, x < p^n$. | `kernel-checked` + `numerical` | `cd lean && lake build Solution` + `npm run properties` | `Basic.lean`: `monna_involution_universal`, `padic_ball_monna_contiguity`; `Solution.lean`: `target_thm1_monna_and_parity` | 120/120 Lean decls + 1,200 property cases + 1,000 Python oracle queries (`0` mismatches) | **VERIFIED** | Any $(p, n, x)$ with $p \ge 2, x < p^n$ where $R_p(R_p(x)) \ne x$, or any ball $B_j(b)$ whose Monna image is non-contiguous; or any comparator kernel rejection. |
+| **C-THM-1B** | Adelic hybrid $H_\theta = \theta R_p D_p^\alpha R_p + (1-\theta)H_{\mathbb{R}}$ block-diagonalizes identically into $1 + n(p-1)$ sectors $W_{s,m}$; odd primes $p \ge 3$ enforce exact even multiplicity ($\le (p^n+1)/2$ distinct levels) while $p=2$ lifts all doublets to $2^n$ simple levels. | `kernel-checked` + `exact-rational` + `numerical` | `npm test && npm run falsify && python scripts/verify_exact.py` | `AdelicSymmetry.lean`: `subtreeShift_preserves_ultrametric_prefix`, `odd_prime_conjugate_sector_disjoint`, `even_prime_self_conjugate`; `test/verify.mjs` Thm 9; Mutant M1 | 7,033 exact pairs (`0` errors); off-block leak $\le 1.76\times 10^{-14}$ up to $N=625$; Mutant M1 killed | **VERIFIED** | Any off-block matrix entry of $\mathcal{F}_p H_Q^{\mathrm{leaf}} \mathcal{F}_p^\dagger$ exceeding machine precision, or $> (p^n+1)/2$ distinct levels for any odd prime $p \ge 3$. |
+| **C-PROP-42** | Folded frequencies in $W_{0,m}$ ($1 \le m \le \lfloor p/2 \rfloor$) interleave monotonically with exact alternating gaps $p - 2m$ and $2m$, setting the $\alpha$-invariant modular picket-fence ratio $r_0(p, m) = \min(2m, p-2m)/\max(2m, p-2m)$. | `kernel-checked` + `exact-rational` + `numerical` | `cd lean && lake build Solution` + `npm run discover` | `AdelicSymmetry.lean`: `picket_fence_monotone`, `picket_fence_even_gap`, `picket_fence_odd_gap`; `Solution.lean`: `target_thm1_picket_fence_law`; Exp E & G | Exact over 18 `Fraction` sectors; Exp G ($N \le 625, \alpha \in [0.5, 2.0]$): $W_{0,1} \approx 0.63$, $W_{0,2} \approx 0.26$, $p=2 \approx 0.0004$ | **VERIFIED** | Any $(p, m, a)$ violating alternating gaps $p-2m, 2m$, or any $\alpha \in [0.5, 2.0]$ where sibling sectors $W_{0,1}$ and $W_{0,2}$ converge to identical GUE/GOE statistics. |
+| **C-EXP-I** | Pre-registered confirmatory falsification of GOE/GUE thermalization in $W_{0,m}$ against 20-seed GUE/GOE controls (H1–H4) with Holm-Bonferroni correction. | `pre-registered statistical` | `npm run stats` (preregistered in commit `c171b1b`) | `docs/preregistration.md`, `scripts/stats_eval.mjs`, `results/stats-eval.json` | **4/4 hypotheses confirmed at `p_holm = 0.0004` (`20/20` seeds each):** H1 $\Delta\langle r\rangle=-0.3330$ ($\delta=-0.8035$), H2 $+0.1004$ ($\delta=+0.2686$), H3 $-0.5433$ ($\delta=-0.9980$), H4 $-0.3380$ ($\delta=-0.8184$) | **VERIFIED** | Any of H1–H4 failing directional sign, 95% bootstrap CI excluding 0, or `p_holm < 0.01` under the preregistered 20-seed protocol. |
+| **C-THM-2** | Exact Tate-curve BTZ horizon Ollivier-Ricci law $\kappa_{\mathrm{BTZ}}(p, L) = -(2p - \max(0, 6-L))/(p+2)$ and exact $L_c = 5$ trichotomy ($(p+1)(p+2)(\kappa_{\mathrm{BTZ}}-\kappa_{\mathrm{AdS}}) = (p+1)\max(0,6-L)-4$) for all $p \ge 2, L \ge 3$. | `kernel-checked` + `exact-rational` + `numerical` | `python scripts/verify_exact.py` + `npm run falsify` | `HolographyCurvature.lean`: `btz_graph_metric_eq_classDist`, `btz_wasserstein_lower_bound`, `btz_kappa_from_wasserstein`; `Solution.lean`: `target_thm2_btz_ollivier_ricci`; Mutant M3 | 45 exact `Fraction` SPFA horizons (`0` rounding error); JS error $\le 2.22\times 10^{-16}$; Mutant M3 killed | **VERIFIED** | Any $(p \ge 2, L \ge 3)$ uniform BTZ horizon where exact 1-Wasserstein transport produces $\kappa \ne -(2p-\max(0,6-L))/(p+2)$. |
+| **C-THM-3** | Arbitrary finite $K$-ball disjoint Kozyrev wavelet superpositions are exact radiation-free compacton-solitons of $i\partial_t\psi = (D_p^\alpha + F(|\psi|^2))\psi$. | `kernel-checked` + `numerical` | `npm test && node examples/01_kozyrev_compacton.mjs` | `SolitonAndSolver.lean`: `multi_ball_kozyrev_soliton_list`; `Solution.lean`: `target_thm3_multiball_soliton`; Exp C & F | Lean kernel exact; JS solo/disjoint leakage $< 2.5\times 10^{-14}$ up to $g=500$ vs. Euclidean twin $59.4$–$89.2\%$ leak | **VERIFIED** | Any disjoint $K$-ball Kozyrev superposition exhibiting nonzero cross-ball probability leakage above numerical splitting error. |
+| **C-THM-4** | Rank-1 edge-Laplacian Kerr-BTZ bulk solver has $w_{L-1} u u^\dagger \succeq 0$, unconditional denominator $\mathrm{den} \ge 1 > 0$, exact $O(V)$ solve down to $\Delta = 0.5001$, and exact flux parity $E(-\Omega)=E(\Omega)$, $J(-\Omega)=-J(\Omega)$. | `kernel-checked` + `exact-rational` + `numerical` | `python scripts/verify_exact.py && npm test && npm run falsify` | `SolitonAndSolver.lean`: `sherman_morrison_denominator_ge_one`, `sherman_morrison_exact_identity`, `kerr_flux_edge_*`; `Solution.lean`: `target_thm4_kerr_solver_and_parity`; Mutants M2, M4 | Exact $\mathbb{Q}(i)$ residual $= 0$ ($\mathrm{den}=30290594521/18671790625 \ge 1$); BF residual $\le 5.38\times 10^{-15}$ at $\Delta=0.5001, \Omega=\pi$; Exp D parity err $= 0.00$ | **VERIFIED** | Any positive-weight BTZ instance above the BF bound yielding $\mathrm{den} < 1$, nonzero Klein-Gordon residual, or nonzero parity breaking in $E(\Omega)$ or $J(\Omega)$. |
+| **C-THM-5** | **Theorem V & Theorem V-Global (Curved AdS Discrete Gauss-Bonnet):** For arbitrary simultaneous positive conductances $w_e > 0$ on strictly interior bridge edges of $T_p$, vertex curvature half-charges $-(p-1)w_e/W_u$ sum identically to $-(p-1)$ at every interior vertex, yielding exact zero total curvature excess whenever $w_e/W_u + w_e/W_v \le 1$ on all edges, and exact negative deficit $-2\sum_{w_e/W_u + w_e/W_v > 1} (\frac{w_e}{W_u} + \frac{w_e}{W_v} - 1)$ otherwise. | `kernel-checked` + `exact-rational` + `numerical` | `python scripts/verify_exact.py && npm run properties && node examples/03_global_gauss_bonnet.mjs` | `HolographyCurvature.lean`: `curved_ads_gauss_bonnet_subcritical`, `curved_gen_kappa_charge_decomp`, `global_multi_edge_vertex_charge_conservation`; `Solution.lean`: `target_thm5_global_curved_gauss_bonnet`; Mutant M8 | 60 single-edge + 9 simultaneous multi-edge exact `Fraction` trees (`0` error); 1,000 random multi-edge JS cases (`< 1e-11`); Mutant M8 killed | **VERIFIED** | Any strictly interior multi-edge positive-conductance metric on $T_p$ whose total curvature excess deviates from $-2\sum_{w_e/W_u + w_e/W_v > 1}(w_e/W_u + w_e/W_v - 1)$. |
+| **C-THM-6** | **Theorem VI (Universal Holographic RT Strong Subadditivity):** On ANY finite weighted graph (pure AdS tree, curved BTZ cycle, or general topology), minimal homologous cuts obey $S(A \cup B \cup C) + S(B) \le S(A \cup B) + S(B \cup C)$ for all disjoint boundary regions $A, C$ (discrete formalization of Headrick-Takayanagi 2007). | `kernel-checked` + `exact-rational` + `numerical` | `cd lean && lake build Solution` + `python scripts/verify_exact.py && npm run properties` | `HolographyCurvature.lean`: `rt_cut_submodular`, `rt_strong_subadditivity`, `rt_subadditivity`; `Solution.lean`: `target_thm6_holographic_ssa`; Mutant M6 | Lean kernel exact on arbitrary weighted graphs; exhaustive brute-force over all `4,352` partitions (`0` violations); 1,000 random JS BTZ/AdS checks (`0` violations) | **VERIFIED** | Any finite non-negative weighted graph and disjoint boundary regions $A, C$ violating $S(A \cup B \cup C) + S(B) \le S(A \cup B) + S(B \cup C)$. |
+| **C-ENG-1** | Zero-dependency Radix-$p$ FFT, 4th-order Yoshida symplectic engine, symmetric Jacobi gravity, and $O(V)$ RT DP meet machine accuracy (`< 1e-11`), bit-exact determinism, and real-time 60 FPS latency budgets (`0.388 ms` coupled frame step, `319.9x` FFT speedup at $N=625$). | `numerical` | `npm run verify:all && npm run bench && python reference/padic_oracle.py` | `test/{verify,mutants,properties,golden}.mjs`, `reference/padic_oracle.py`, `scripts/bench.mjs` | 26/26 Node tests pass; 8/8 mutants killed (incl. M5 Yoshida, M7 Jacobi); Oracle max err `1.23e-12`; frame `0.3882 ms < 16.67 ms` | **VERIFIED** | Any deterministic rerun changing golden snapshot/SHA-256, any mutant surviving, or any FFT/oracle discrepancy $> 10^{-11}$. |
+| **C-SEC-1** | Hardened `server.mjs` blocks path traversal, null bytes, backslashes, unsupported verbs, enforces strict CSP, exposes `/healthz`, validates `PORT` fail-fast, and survives disk `EIO` faults cleanly with structured stack logs. | `numerical` (contract + fault injection) | `npm run server:test` | `test/server.mjs` (A33, A34, B09, B21, B36) | 3/3 server contract, security & EIO failure-injection test suites PASS | **VERIFIED** | Any traversal payload escaping `src/`, missing CSP header, uncaught `ERR_HTTP_HEADERS_SENT`, or server crash on `EIO`. |
+| **C-ATLAS** | Honest cross-check against all `1,900` problems in `0thernes/unsolved-problems-mega-atlas`: **`0 / 1,900` full solutions**; formally verified discrete sub-results on `SUB-032` and negative-result falsification on `ANL-065`/`QM-016`. | Audit / Scope Boundary | Inspect [`docs/MEGA_ATLAS_CROSSCHECK.md`](docs/MEGA_ATLAS_CROSSCHECK.md) | `docs/MEGA_ATLAS_CROSSCHECK.md`, `LIMITATIONS.md` | Exact scan of all `1,900` JSON entries (`635` broad, `46` narrow, `1` primary match `SUB-032`) | **VERIFIED** | Any false claim in our repo asserting a full solution to an open Mega-Atlas problem would contradict this audit. |
+| **C-PRIOR** | Foundational $p$-adic analysis, Vladimirov $D_p^\alpha$, Kozyrev wavelets, $p$-adic AdS/CFT, edge-length gravity, Ollivier-Ricci curvature, Ryu-Takayanagi & Headrick-Takayanagi SSA, Yoshida splitting, and Oganesyan-Huse/Atas spacing ratios belong to cited prior work. | `prior work` | Inspect [`paper/refs.bib`](paper/refs.bib) | 21 verified literature references in `paper/refs.bib` | All DOIs/arXiv IDs checked | **CREDITED** | Any uncredited derivation or misattributed prior theorem discovered in our manuscripts. |
+
+
+---
+
+## FILE: `LIMITATIONS.md`
+
+# Limitations, Scope Boundaries & Threats to Validity
+
+> Build Standard `B41` & Playbook Section 5 compliance. Every limitation below is stated plainly so reviewers, students, and automated audits can immediately see where ULTRAMETRICA's guarantees stop.
+
+## 1. What ULTRAMETRICA Does NOT Claim
+
+1. **No Empirical Physics Discovery:** ULTRAMETRICA is a mathematical-physics, formal-verification, and computational laboratory. It makes **no claim** of experimental discovery of new physical laws of nature, quantum gravity measurements, or astrophysical black hole observations.
+2. **Zero Full Solutions to Unsolved Mega-Atlas Problems (`0 / 1,900`):** A full cross-check against all `1,900` open problems in [`0thernes/unsolved-problems-mega-atlas`](https://github.com/0thernes/unsolved-problems-mega-atlas) confirms that ULTRAMETRICA solves **zero** open problems completely (see [`docs/MEGA_ATLAS_CROSSCHECK.md`](docs/MEGA_ATLAS_CROSSCHECK.md)). It provides exact discrete finite-cutoff sub-results related to `SUB-032` ($p$-adic AdS/CFT) and a negative-result falsification of naive GOE/GUE thermalization in Monna-conjugated adelic hybrids (`ANL-065`/`QM-016`), while leaving continuum limits ($n \to \infty$), full adelic unification over $\mathbb{A}_{\mathbb{Q}}$, and $p$-adic quantum chaos open.
+3. **Not Peer-Reviewed:** The accompanying white paper (`dist/Donahue_2026_Ultrametrica.pdf`) and markdown reports are independent research preprints. Machine-checked Lean 4 proofs certify logical validity of formalized statements within the Lean 4 kernel (and 5 independent external kernels), not mathematical novelty, physical applicability, or external journal endorsement.
+4. **No Physical Reality Claim for Metaphorical Labels:** Interactive UI and acoustic terms use physics-inspired terminology that must be distinguished strictly from formal theorems (see Section 2).
+
+---
+
+## 2. Literal Mathematical Objects vs. Metaphorical / Pedagogical Labels
+
+| Term Used in Observatory / Docs | Literal Mathematical Definition in ULTRAMETRICA | What It Is **NOT** |
+|---|---|---|
+| **$p$-adic AdS/CFT bulk** | Finite cutoff $(p+1)$-regular Bruhat-Tits tree $T_p$ of depth $n$ with discrete Klein-Gordon operator and Gubser mass $m^2(\Delta) = p^\Delta + p^{1-\Delta} - (p+1)$ | Not a UV-complete continuum string theory or full 4D Lorentzian quantum gravity |
+| **Rotating Kerr-BTZ black hole** | Discrete Schottky/Tate-curve quotient $T_p / p^{h\mathbb{Z}}$ ($L = p^h \ge 3$) with $U(1)$ Aharonov-Bohm horizon flux $\Omega$ | Not an exact discrete solution of 3+1D vacuum Einstein equations with an ergosphere |
+| **Dynamic edge-length gravity** | Damped second-order wave equation on tree edges $\ddot{\sigma}_e + \gamma \dot{\sigma}_e = c^2 \Delta_{\mathrm{line}} \sigma_e - \kappa T_e$ inspired by Gubser et al. (2017) | Not a diffeomorphism-invariant canonical quantization of general relativity |
+| **Ryu-Takayanagi entropy** | Exact global minimum homologous edge cut $\sum_{e \in \gamma_A} w_e \ln p$ on a finite weighted graph | Not a von Neumann entropy computed from an explicit infinite-dimensional CFT state |
+| **Reality Split / Euclidean twin** | Side-by-side comparison of Vladimirov $D_p^\alpha$ evolution against circular Archimedean $(2\pi\min(k,N-k))^\alpha$ evolution on the same grid $\mathbb{Z}/p^n\mathbb{Z}$ | Not a multiverse or physical spacetime splitting claim |
+| **Prime-power acoustics (AudioWorklet)** | Sonification mapping Vladimirov shells $p^{\alpha(j+1)}$ and horizon flux to audible sine oscillators ($3^x$ tritaves, $5^x$ pentaves, $7^x$ heptaves) | Not physical acoustic waves in a $p$-adic medium |
+
+---
+
+## 3. Formal-Verification Boundary (What Lean 4 Does vs. Does Not Prove)
+
+- **Inside the Lean 4 Kernel (+ 6-Kernel Comparator):** All 120 exported declarations in `lean/UltrametricaProofs/` and all 8 specification targets in `lean/Challenge.lean` / `lean/Solution.lean` — covering universal base-$p$ Monna involution, ball contiguity, subtree-shift ultrametric isometry, sector completeness, prime-parity dichotomy, modular picket-fence spacing gaps, literal $L$-cycle Kantorovich primal-dual BTZ Ollivier-Ricci curvature ($L_c = 5$ trichotomy), curved AdS single-edge & global multi-edge Gauss-Bonnet charge decomposition, arbitrary $K$-ball compacton-soliton invariance, arbitrary-dimension complex Hermitian Sherman-Morrison algebra & flux parity, and universal discrete Ryu-Takayanagi Strong Subadditivity.
+- **Outside the Lean 4 Kernel:**
+  - IEEE-754 double-precision floating-point Radix-$p$ FFT accuracy, Yoshida $\Delta t^4$ time integration, and Jacobi eigensolver convergence (`test/verify.mjs`, `test/properties.mjs`, `reference/padic_oracle.py`).
+  - Asymptotic $n \to \infty$ analytic proof of $\langle r\rangle_{W_{0,m}} \to r_0(p,m)$ for general $\alpha > 0$ (verified numerically up to $N = 625$ in Experiments E, G, and pre-registered Experiment I, not formally proved in the $n \to \infty$ limit).
+  - WebGL2 rendering, AudioWorklet DSP audio output, and HTTP network transport (`test/server.mjs` + browser QA).
+
+---
+
+## 4. Computational, Finite-$N$, and Platform Constraints
+
+1. **Finite-Cutoff Tree Boundary Effect:** Theorem V / V-Global holds on strictly interior edges whose endpoints both have full $(p+1)$-regular degree. On a finite cutoff tree of depth $n$, the root has degree $p$ and leaves have degree $1$, so strictly interior perturbations require `n >= 4` and `2 <= depth(u), depth(v) <= n - 2`.
+2. **Dimension Cap ($N \le 65{,}536$):** `PadicSpace` caps $N = p^n \le 65{,}536$ to prevent browser/Node OOM and quadratic $O(N^2)$ visual panel stalls. Interactive WebGL2 presets operate comfortably at $N \le 343$.
+3. **Real-Time Browser & Audio Requirements:** Live 3D rendering requires WebGL2 (a graceful fallback message is displayed if unavailable); AudioWorklet requires a user gesture and a secure context (`https://` or `localhost`/`127.0.0.1`).
+4. **Windows vs. Linux `lake comparator` Sandboxing:** `lake comparator --paranoid` enforces `bubblewrap` (`bwrap`) Linux user-namespace sandboxing on Linux (executed natively in Ubuntu GitHub Actions CI). On Windows hosts, local verification runs `leanchecker --fresh`, `leanchecker-paranoid --fresh`, `lean4lean --fresh`, and `lake comparator --paranoid --inadvisably-no-sandbox` over exported NDJSON files; full sandboxed comparator assurance comes from the clean Ubuntu CI runner.
+5. **Non-Commercial License Constraint:** `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` is source-available non-commercial (not OSI-approved open source). Downstream commercial reuse, Mathlib upstreaming, or JOSS submission would require an explicit licensing grant or dual-licensing decision by the author.
+
+
+---
+
+## FILE: `REPLICATION.md`
+
+# Independent Replication Protocol & Log
+
+> Build Standard `B43` & `B44`. Every quantitative result, theorem proof, benchmark figure, and PDF in ULTRAMETRICA can be reproduced end-to-end from a fresh clone with zero paid APIs, zero external runtime npm packages, and zero Mathlib downloads.
+
+## 1. Environment & Resource Requirements
+
+| Component | Minimum Requirement | Tested Reference | Typical Runtime |
+|---|---|---|---|
+| **Node.js** | `>= 20.x` (tested on `22.x` & `25.x`) | Node `v22` (CI) / `v25.8.2` (Win11) | `< 1 s` (all 26 tests), `~6 s` (`discover` + `bench` + `stats`) |
+| **Python** | `>= 3.11` (standard library ONLY — zero `pip` packages) | Python `3.13` | `~2 s` (`padic_oracle.py` + `verify_exact.py`) |
+| **Lean 4** | Exact toolchain pinned in [`lean/lean-toolchain`](lean/lean-toolchain) (`leanprover/lean4:v4.35.0`) | Lean `v4.35.0` (0 Mathlib) | `~15 s` clean build + 6-kernel comparator |
+| **Tectonic** | `>= 0.15.0` (for optional PDF & vector figure rebuild) | Tectonic `0.17.0` | `~25 s` (5 figures + main PDF + arXiv check) |
+| **Hardware** | Any 64-bit x86_64 or arm64 CPU, `>= 2 GB` RAM, `>= 500 MB` free disk | Intel Core Ultra 9 275HX / GitHub Actions runners | Total full stack `< 60 s` |
+
+---
+
+## 2. Clean-Clone Reproduction Steps
+
+```bash
+git clone https://github.com/0thernes/ultrametrica.git
+cd ultrametrica
+
+# 1. All 26 Node test suites (10 theorems + 8 killed mutants + 3,200+ properties + server contract/EIO + golden)
+npm run verify:all
+
+# 2. All 3 runnable examples
+npm run examples
+
+# 3. Independent Python textbook oracle (1,000+ cases) + README axiom guard + exact-rational falsifier & SHA-256 check
+python reference/padic_oracle.py
+python scripts/check_readme_axioms.py
+python scripts/verify_exact.py --check-checksums
+
+# 4. Regenerate discovery benchmarks, hardware benchmarks, and pre-registered Experiment I statistics
+npm run discover
+npm run bench
+npm run stats
+
+# 5. Pure Lean 4.35.0 clean build, 120-decl axiom audit, leanchecker, and 6-kernel comparator (Linux with bwrap)
+cd lean
+lake clean
+lake build UltrametricaProofs Challenge Solution
+lake env lean VerifyAxioms.lean
+lake env leanchecker --fresh UltrametricaProofs
+lake env leanchecker --fresh Solution
+lake comparator --config comparator.json --paranoid
+cd ..
+
+# 6. Rebuild vector figures, zero-warning AMS-LaTeX PDF, and verify standalone arXiv tarball
+python scripts/generate_figures.py
+python scripts/package_dist.py
+```
+
+---
+
+## 3. Expected Tolerances & Exactness Criteria
+
+- **Lean 4 Proofs & 6-Kernel Comparator:** Exact (`0` errors, `0` warnings in `UltrametricaProofs` & `Solution`, `120` declarations strictly in `[propext, Classical.choice, Quot.sound]`, all `8/8` targets pass `lake comparator --paranoid`).
+- **Python Exact-Rational Falsifier (`verify_exact.py`):** Exact (`0` rounding error — arbitrary-precision `int` & `fractions.Fraction`).
+- **Deterministic Golden Snapshot (`test/golden.mjs`):** Exact match to `12` decimal digits (`test/golden/baseline-snapshot.json`).
+- **Pre-Registered Experiment I (`scripts/stats_eval.mjs`):** Deterministic seeded PRNG (`seeds 1001..1020`, `10,000` permutation/bootstrap resamples) — `4/4` hypotheses confirmed at `p_holm = 0.0004` identically across platforms (`|Δ⟨r⟩|` exact to `< 1e-12`).
+- **IEEE-754 Engine & Differential Oracle (`test/verify.mjs`, `test/properties.mjs`, `reference/padic_oracle.py`):** Relative/absolute tolerance `< 1e-11` (actual measured errors `1e-15`–`1.23e-12`).
+- **Performance Benchmarks (`scripts/bench.mjs`):** Wall-clock timings depend on host CPU clock and thermal state; verify speedup monotonicity (Radix-$p$ FFT strictly faster than naive DFT at $N \ge 9$, coupled frame step `< 16.67 ms` on modern desktop CPUs) and exact correctness checksums.
+
+---
+
+## 4. Replication Log
+
+Every clean-environment reproduction (local or independent CI runner) is recorded chronologically below.
+
+| Date | Replicator / Runner | Commit / Tag | Environment | Verdict | Notes |
+|---|---|---|---|---|---|
+| 2026-11-21 | Author + GitHub Actions CI (`ubuntu-latest`) | `v1.1.0` (`27d1eb2`) | Node 22, Python 3.12, Lean `v4.35.0`, Tectonic `0.15` | PASS | 9/9 theorems, 36 Lean decls, zero-warning PDF |
+| 2026-11-21 | Author + GitHub Actions CI (`ubuntu-latest`) | `v1.2.0` (`a3a3dc1`) | Node 22, Python 3.12, Lean `v4.35.0`, Tectonic `0.15` | PASS | 9/9 theorems, 6/6 mutants, 71 Lean decls, GitHub Pages live |
+| 2026-11-21 | Author + GitHub Actions CI (`ubuntu-latest`) | `v1.3.0` (`e42e6af`) | Node 22, Python 3.12, Lean `v4.35.0`, Tectonic `0.15` | PASS | 10/10 theorems, 8/8 mutants, 101 Lean decls, 60 curved Fraction plans |
+| 2026-11-25 | Author (Windows 11 local workstation) | `v1.4.0` | Intel Core Ultra 9 275HX, Node `v25.8.2`, Python `3.13`, Lean `v4.35.0`, Tectonic `0.17.0` | PASS | 26/26 Node tests, 3,200+ properties, 1,000+ Python oracle queries, 120 Lean decls + external kernels, Exp I 4/4 (`p_holm=0.0004`), zero-warning PDF |
+| 2026-11-25 | GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.4.0` | Clean GitHub-hosted runners + `bubblewrap` 6-kernel `lake comparator --paranoid` | PASS (verified post-push in Actions) | Independent clean-clone verification across 3 operating systems + sandboxed 6-kernel Lean verification |
+
+
+---
+
+## FILE: `VERIFICATION.md`
+
+# Verification, Falsifiability & Authentication Protocol (`v1.4.0`)
+
+**ULTRAMETRICA (`v1.4.0`)** is engineered to be **Provable**, **Falsifiable**, **Verifiable**, and **Authenticated** across seven independent layers: (1) pure Lean 4 (`v4.35.0`, `autoImplicit = false`) kernel proofs (**120 audited declarations** + **8 isolated `Spec`/`Challenge`/`Solution` targets** verified across `Lean 4.35.0`, `leanchecker`, `leanchecker-paranoid`, `con-leche`, `con-ron`, `nanoda_bin 0.4.19`, plus `lean4lean` inside Linux `bubblewrap` `lake comparator --paranoid` in CI), (2) zero-dependency exact-rational Python (`int`, `fractions.Fraction`, $\mathbb{Q}(i)$, and exhaustive brute-force) falsification across Theorems I–VI + independent textbook differential oracle (`reference/padic_oracle.py`), (3) deterministic Node.js `26`-test suite (`10` theorems, `8/8` planted negative mutants killed, `3,200+` seeded property/metamorphic/negative tests, HTTP contract + disk `EIO` failure injection, golden snapshot) + `3` runnable examples, (4) git-sealed pre-registered confirmatory Experiment I (`docs/preregistration.md`, `c171b1b` -> `4/4` confirmed at `p_holm = 0.0004`) + hardware-tagged performance budgets (`scripts/bench.mjs`), (5) zero-warning AMS-LaTeX PDF (5 vector figures) + standalone arXiv bundle, (6) bit-exact cryptographic manifests (`CHECKSUMS.sha256` & `data/MANIFEST.sha256` + SLSA release provenance), and (7) verbatim README `#print axioms` check (`scripts/check_readme_axioms.py`).
+
+---
+
+## 1. Independent One-Command Reproduction
+
+```bash
+# Layer 1 — Run all 10 executable theorems + 8 planted negative mutants (8/8 killed)
+npm run verify:all
+
+# Layer 2 — Run independent exact-rational falsifier (Theorems I-V), metadata audit & SHA-256 verification
+python scripts/verify_exact.py --check-checksums
+sha256sum -c CHECKSUMS.sha256
+
+# Layer 3 — Reproduce all 8 discovery benchmark datasets (Exp A-H -> results/discovery-benchmarks.json)
+npm run discover
+
+# Layer 4 — Clean-build Lean 4 library & audit all 101 declarations via VerifyAxioms.lean
+cd lean && lake clean && lake build && lake env lean VerifyAxioms.lean && cd ..
+
+# Layer 5 — Regenerate 5 vector figures, zero-warning 15-page PDF, & standalone arXiv tarball
+python scripts/generate_figures.py
+python scripts/package_dist.py
+
+# Layer 6 — Launch hardened live interactive WebGL2 + 48 kHz AudioWorklet observatory
+npm start
+# Open http://localhost:4173 (or set PORT=4174) — or visit https://0thernes.github.io/ultrametrica/
+```
+
+---
+
+## 2. Explicit Proof Boundaries (What Each Layer Proves)
+
+For the complete 1-to-1 declaration map, see [`docs/CLAIMS.md`](docs/CLAIMS.md) and [`docs/AUDIT_AND_CONTRAST_ANALYSIS.md`](docs/AUDIT_AND_CONTRAST_ANALYSIS.md).
+
+| Layer | Trusted Computing Base | What Is Proved | Explicit Boundary (Not Covered Here) |
+|---|---|---|---|
+| **Lean 4 (`lean/`)** | Lean `v4.35.0` kernel + standard axioms (`propext`, `Classical.choice`, `Quot.sound` max; `0` `sorryAx`, `0` `native_decide`, `0` custom axioms) | **101 audited universal & first-principles theorems** (`2,267` lines): universal Monna bijectivity & ball contiguity, concrete `bruhatTitsUltrametric`, subtree cyclic-shift isometry, universal modular picket-fence law, cycle-graph metric bridge (`btz_graph_metric_eq_classDist`), Kantorovich primal-dual proofs for pure AdS, BTZ ($L \ge 3$), and **Theorem V curved AdS Gauss-Bonnet / supercritical pinch deficit**, Euler $\chi = 1, 0$, Gubser BF bound & shadow duality, RT bounds & complement symmetry, arbitrary $K$-ball solitons, arbitrary-dimension complex Hermitian Sherman-Morrison & Kerr flux parity | Floating-point FFT/PDE conservation, dense Jacobi diagonalization, GPU shaders, and AudioWorklet DSP |
+| **Exact-Rational Falsifier (`scripts/verify_exact.py`)** | Python 3 stdlib exact arbitrary-precision `int` & `fractions.Fraction` | 7,033 conjugate Adelic pairs ($p \le 19$); 18 picket-fence sectors; 45 exact zero-rounding BTZ optimal-transport horizons; **60 exact zero-rounding curved AdS Gauss-Bonnet plans**; exact $\mathbb{Q}(i)$ Rank-1 Sherman-Morrison solve; Lean source token scan; version/ORCID parity & 55-file SHA-256 manifest | Finite tested primes, horizons & weights; complements Lean universal proofs |
+| **Executable Suite (`test/verify.mjs`)** | Node.js IEEE-754 `Float64` (`node:test`) | **10 numerical theorems** covering FFT vs. naive DFT, Kozyrev eigenfunctions, strong triangle + tree isometry, Yoshida $\Delta t^4$ scaling, bulk KG residual $< 10^{-11}$, Gubser propagator $< 10^{-12}$, Ollivier-Ricci, brute-force RT DP match, Adelic Fourier block leak, unified BTZ curvature, **Theorem V curved Gauss-Bonnet, symmetric Jacobi gravity, BF tachyonic margin ($\Delta = 0.501$), & audit regressions** | Finite tested parameter sets ($p \in \{2,3,5,7\}$); not formal universal quantification |
+| **Planted Negative Mutants (`test/mutants.mjs`)** | Isolated defective engine instances (`node:test`) | **8/8 deliberate defects KILLED** (M1 corrupted Monna table, M2 dropped root Robin impedance, M3 false BTZ deficit `-2`, M4 flipped Kerr gauge phase, M5 2nd-order Strang downgrade, M6 horizon-blind RT cut, **M7 in-place Gauss-Seidel asymmetric gravity, M8 naive zero-deficit extrapolation past $\sigma_e < -\ln p$**) | Proves tests reject 8 targeted defect classes; does not exhaust all possible bugs |
+| **Discovery Benchmarks (`scripts/discover.mjs`)** | Deterministic real & complex Hermitian Jacobi + SPFA + Yoshida | **8 reproducible datasets (Exp A–H)** in [`results/discovery-benchmarks.json`](results/discovery-benchmarks.json) up to $N = 625$ ($\dim W_{0,m} = 125$) across $\alpha \in [0.5, 2.0]$ and $\Delta \to 0.5001$ | Finite-$N$ empirical measurements; asymptotic $n \to \infty$ operator-norm bound remains open |
+| **Manuscript & Live Observatory** | Tectonic `0.17.0` + WebGL2 + WebAudio | Zero-warning 15-page AMS-LaTeX PDF (5 vector figures, [`dist/Donahue_2026_Ultrametrica.pdf`](dist/Donahue_2026_Ultrametrica.pdf)) + standalone arXiv bundle ([`dist/arxiv_submission.tar.gz`](dist/arxiv_submission.tar.gz)) + live GitHub Pages observatory (`https://0thernes.github.io/ultrametrica/`) | Presentation & visualization layers |
+
+---
+
+## 3. Falsification Protocol (How to Break Any Claim)
+
+We explicitly invite counterexamples and prior-literature challenges via our [Falsification Issue Template](.github/ISSUE_TEMPLATE/falsification.yml). Any single item below falsifies the corresponding claim:
+
+1. **To falsify Theorem I / $\alpha$-Invariant Modular Picket-Fence Law:** Produce any prime $p$, depth $n$, exponent $\alpha > 0$, or $\theta \in (0, 1)$ where (a) the Fourier-basis Monna-conjugated Vladimirov matrix has any cross-sector entry $|M_{jk}| > 10^{-11}$ between distinct $(v_p(k), (k/p^v)\bmod p)$ sectors, OR (b) an odd prime $p \ge 3$ produces $> (p^n + 1)/2$ distinct eigenvalues of $H_\theta$.
+2. **To falsify Theorem II (Unified BTZ Ollivier-Ricci Law & $L_c = 5$ Trichotomy):** Produce any $p \ge 2, L \ge 3$ uniform Tate-curve BTZ graph where exact non-lazy 1-Wasserstein optimal transport differs from $\kappa_{\text{BTZ}}(p, L) = -(2p - \max(0, 6-L))/(p+2)$.
+3. **To falsify Theorem III (Arbitrary $K$-Ball Kozyrev Compacton-Solitons):** Produce any local nonlinearity $F(|\psi|^2)$ and pairwise-disjoint Kozyrev wavelet superposition that radiates $> 10^{-11}$ probability outside its initial support under $D_p^\alpha + F(|\psi|^2)$.
+4. **To falsify Theorem IV (Kerr-BTZ Bulk Solver & Parity):** Produce any curved positive edge weights $w_e > 0$ and horizon flux $\Omega \in [-\pi, \pi]$ (with $\Delta \ge 0.5001$) where the $O(V)$ Schur + Sherman-Morrison solver divides by zero or produces an uneliminated Klein-Gordon residual $> 10^{-11}$.
+5. **To falsify Theorem V (Curved AdS Discrete Gauss-Bonnet Conservation & Supercritical Pinch Deficit):** Produce any prime $p \ge 2$ and finite interior edge log-length $\sigma_e = \ln a_e$ on $T_p$ whose total curvature excess $\sum_{e'}(\kappa_{e'} - \kappa_{\mathrm{AdS}})$ differs from $0$ (for $\sigma_e \ge -\ln p$) or $-2(e^{-\sigma_e}-p)/(e^{-\sigma_e}+p)$ (for $\sigma_e < -\ln p$).
+6. **To challenge formal soundness:** Detect `sorryAx`, `native_decide`, or any axiom outside `[propext, Classical.choice, Quot.sound]` in `cd lean && lake clean && lake build && lake env lean VerifyAxioms.lean`.
+
+---
+
+## 4. Authenticated Cryptographic Manifest (`CHECKSUMS.sha256`, Release `v1.3.0`)
+
+All **55 tracked source, proof, benchmark, audit, manuscript, figure, and distribution files** are cryptographically hashed in the root manifest [`CHECKSUMS.sha256`](CHECKSUMS.sha256) and automatically verified in GitHub Actions CI (`sha256sum -c CHECKSUMS.sha256` and `python scripts/verify_exact.py --check-checksums`).
+
+Frozen distribution digests for Release `v1.3.0`:
+
+```text
+d56f2ec54d3d04fecc885c1d010fd2045a12c4c05f3bacc444a452be263f1395  dist/Donahue_2026_Ultrametrica.pdf
+aae1420e8947c69fd3511e8c6bc2419cabc1528b44b99f48b591bbd6931dca55  dist/arxiv_submission.tar.gz
+```
+
+
+---
+
+## FILE: `docs/architecture.md`
+
+# System Architecture (`docs/architecture.md`)
+
+> Build Standard `A20`. ULTRAMETRICA is engineered as a **zero-dependency**, cleanly layered mathematical-physics engine, real-time WebGL2/AudioWorklet observatory, and pure Lean 4 (`v4.35.0`) formal verification stack.
+
+## 1. High-Level Layered Architecture
+
+```mermaid
+flowchart TD
+    subgraph UI["Interactive Observatory (src/web/, WCAG 2.2 AA)"]
+        HTML["index.html + styles.css"]
+        APP["app.js (State, URL Permalinks, Keyboard, Controls)"]
+        GL["renderer3d.js (WebGL2 GLSL 300 es, 60 FPS)"]
+        P2D["panels2d.js (Twin Oscilloscope, Ultrametric Triangles, Wavelets)"]
+        AUD["audio.js + audio-worklet.js (48 kHz Lock-Free DSP)"]
+    end
+
+    subgraph ENGINE["Zero-Dependency Physics & Math Engine (src/engine/)"]
+        SIM["simulation.js (9 Presets, Coupled Loop, Telemetry)"]
+        PAD["padic.js (Radix-p FFT, Vladimirov D_p^alpha, Monna R_p, Kozyrev)"]
+        QTM["quantum.js (4th-Order Yoshida Symplectic PDE + Euclidean R Twin)"]
+        HOL["holography.js (O(V) Schur + Rank-1 Kerr-BTZ, SPFA Ricci, Tree/Cycle DP RT)"]
+    end
+
+    subgraph SERVER["Hardened Local Host (server.mjs)"]
+        HTTP["Node HTTP Server (/healthz, CSP, Sandbox, Structured JSON Logs)"]
+    end
+
+    subgraph VERIFY["Multi-Layer Independent Verification Stack"]
+        NODE["test/{verify,mutants,properties,server,golden}.mjs (26 Tests)"]
+        PY["reference/padic_oracle.py + scripts/verify_exact.py (Exact Fraction & Q(i))"]
+        STATS["scripts/{discover,bench,stats_eval}.mjs (Exp A-I + Perf)"]
+        LEAN["lean/ (120 Pure Lean 4.35.0 Decls + Challenge/Solution 6-Kernel Comparator)"]
+        PAPER["paper/main.tex + scripts/{generate_figures,package_dist}.py (Zero-Warn PDF)"]
+    end
+
+    HTML --> APP
+    APP --> SIM
+    SIM --> PAD
+    SIM --> QTM
+    SIM --> HOL
+    QTM --> PAD
+    HOL --> PAD
+    SIM --> GL
+    SIM --> P2D
+    SIM --> AUD
+    HTTP -.->|serves static ES modules| UI
+    NODE --> ENGINE
+    NODE --> SERVER
+    PY --> ENGINE
+    STATS --> ENGINE
+    LEAN -.->|formal theorems Thm I-VI| ENGINE
+    STATS --> PAPER
+    LEAN --> PAPER
+```
+
+---
+
+## 2. Module Responsibilities & Data Flow
+
+### Layer 1 — Pure Mathematical Engine (`src/engine/`)
+- **`padic.js` (`PadicSpace`):** Encodes the finite $p$-adic boundary $\mathbb{Z}_p / p^n \mathbb{Z}_p$ ($N = p^n \le 65{,}536$, prime $p \ge 2$, $n \ge 2$). Provides exact little-endian digit extraction, universal base-$p$ Monna digit-reversal involution $R_p$ (`revTable`), ultrametric norm $|x - y|_p$, native $O(p N \log_p N)$ unitary Radix-$p$ Pontryagin FFT (`fftForward`/`fftInverse`), Vladimirov spectrum $|\xi_k|_p^\alpha$, RMS-calibrated Euclidean twin spectrum, and orthonormal Kozyrev wavelets $\psi_{j,b,m}$.
+- **`quantum.js` (`PadicQuantumEngine`):** Evolves the nonlinear $p$-adic Gross-Pitaevskii equation $i \partial_t \psi = (D_p^\alpha + g|\psi|^2 + V_{\mathrm{grav}})\psi$ alongside a synchronized Archimedean $\mathbb{R}$ twin using 4th-order Yoshida symplectic operator splitting (3 symmetric Drift-Kick-Drift substeps).
+- **`holography.js` (`BruhatTitsBulk`):** Constructs the $(p+1)$-regular cutoff Bruhat-Tits tree $T_p$ (`horizonDepth = 0`) or genus-1 Tate-curve rotating Kerr-BTZ black hole quotient $T_p / p^{h\mathbb{Z}}$ (`horizonDepth >= 1`, $L = p^h \ge 3$, Aharonov-Bohm flux $\Omega \in [-\pi,\pi]$). Solves the gauge-covariant bulk Klein-Gordon equation in exact $O(V)$ time via bottom-up subtree Schur complements + Rank-1 Sherman-Morrison wrap-edge update (Theorem IV), updates dynamic edge lengths $\sigma_e = \ln a_e$ via symmetric Jacobi updates (`_sigmaSnap`), computes exact bipartite SPFA 1-Wasserstein Ollivier-Ricci curvature (Theorems II, V, V-Global), and solves global minimum homologous Ryu-Takayanagi cuts in exact $O(V)$ tree/cycle DP (Theorem VI).
+- **`simulation.js` (`UltrametricaSimulation`):** Coordinates 9 curated scientific presets, coupled boundary-bulk feedback, telemetry metrics (ball leakage, norm drift, entropy, curvature extrema, Kerr horizon current), and Adelic hybrid spectrum sweeps.
+
+### Layer 2 — Real-Time Interactive Observatory (`src/web/`) & Host (`server.mjs`)
+- **`renderer3d.js`:** Zero-dependency WebGL2 GLSL 300 es renderer with cached uniform locations, ray-picking, `webglcontextlost`/`webglcontextrestored` recovery, and reduced-motion awareness.
+- **`panels2d.js`:** Canvas 2D twin oscilloscope, live ultrametric isosceles triangle prover, and interactive Kozyrev wavelet tree.
+- **`audio.js` + `audio-worklet.js`:** Lock-free 48 kHz AudioWorklet synthesizing Vladimirov prime-power shells with exponential click-free smoothing and finite-value guards.
+- **`server.mjs`:** Hardened local static server enforcing strict `src/` sandboxing, `GET`/`HEAD` allowlist, strict CSP (`default-src 'self'`), fail-fast `PORT` validation (`parsePort`), `/healthz` JSON probe, and structured JSON logging (`LOG_FORMAT=json`).
+
+### Layer 3 — Formal Proofs (`lean/`) & Independent Oracles (`reference/`, `scripts/`)
+- **`lean/`:** Zero-Mathlib Lean 4 (`v4.35.0`) formalization split cleanly into statement-only definitions (`UltrametricaProofs/Spec.lean`), four sorry-free proof modules (`Basic`, `AdelicSymmetry`, `HolographyCurvature`, `SolitonAndSolver`), `VerifyAxioms.lean` (120 declarations), and isolated `Challenge.lean` / `Solution.lean` / `comparator.json` audited across 6 independent kernels.
+- **`reference/padic_oracle.py` & `scripts/verify_exact.py`:** Completely decoupled Python stdlib implementations verifying exact rational `fractions.Fraction` optimal transport, exact $\mathbb{Q}(i)$ linear solves, exact brute-force RT SSA, and nested-comment-safe Lean audits.
+
+
+---
+
+## FILE: `docs/statement-fidelity.md`
+
+# Lean 4 Statement-Fidelity & Non-Vacuity Audit (`docs/statement-fidelity.md`)
+
+> Independent AI Research Playbook (`v1.3`) Section 1 compliance. Every formal theorem in `lean/Challenge.lean` and `lean/UltrametricaProofs/` is audited line-by-line against its literal mathematical statement, checked for hidden vacuous hypotheses, and paired with explicit concrete witnesses.
+
+## 1. Zero-Trust Architecture (`Spec.lean` → `Challenge.lean` vs. `Solution.lean`)
+
+- **[`lean/UltrametricaProofs/Spec.lean`](../lean/UltrametricaProofs/Spec.lean):** Contains *only* pure mathematical definitions (`101` lines, zero theorems, zero tactics, zero `sorry`).
+- **[`lean/Challenge.lean`](../lean/Challenge.lean):** Imports *only* `UltrametricaProofs.Spec` and states the 8 canonical verification targets with intentional `sorry` placeholders. It imports **none** of the 4 proof modules.
+- **[`lean/Solution.lean`](../lean/Solution.lean):** Proves all 8 targets in `Ultrametrica.ComparatorTarget` with **zero `sorry`**, **zero `admit`**, **zero `native_decide`**, **zero custom axioms**, and `autoImplicit = false` / `relaxedAutoImplicit = false`.
+- **[`lean/comparator.json`](../lean/comparator.json):** Enforces exact definitional equality between `Challenge` and `Solution` across all 8 theorem signatures with permitted axioms strictly limited to `["propext", "Quot.sound", "Classical.choice"]`.
+
+---
+
+## 2. Line-by-Line Theorem Statement Fidelity Matrix
+
+| Target / Theorem | Paper / Literature Statement | Exact Lean 4 Statement (`Challenge.lean` / Proof Module) | Fidelity Verdict & Exact Scope Boundary | Non-Vacuity Witness (`target_nonvacuity_witnesses`) |
+|---|---|---|---|---|
+| **Target 1 — Theorem I (Monna & Parity)** | For all $p \ge 2, n \in \mathbb{N}, x < p^n$: $R_p(R_p(x)) = x$, $R_p(p^n - 1 - x) = p^n - 1 - R_p(x)$, odd primes separate $m \ne p - m$ for $1 \le m < p$, and $p=2$ has $1 = 2 - 1$. | `target_thm1_monna_and_parity` + `Basic.lean` (`monna_involution_universal`, `padic_ball_monna_contiguity`) + `AdelicSymmetry.lean` (`subtreeShift_preserves_ultrametric_prefix`, `fourier_shift_phase_congruence`) | **EXACT MATCH (Universal).** Note: complex inner-product orthogonality $W_{s,m} \perp W_{s,p-m}$ is certified algebraically via exact phase separation $e^{2\pi i m/p}$ and integer congruence; floating-point FFT realization is tested separately in `test/verify.mjs`. | `Spec.revBase 3 4 5 = 63` (decidable witness; `revBase 3 4 63 = 5`). |
+| **Target 2 — Prop. 4.2 (Modular Picket-Fence Law)** | For all $p \ge 2, 1 \le m, 2m \le p, a \in \mathbb{N}$: folded frequencies $u_{2a} = ap + m, u_{2a+1} = (a+1)p - m$ interleave monotonically with exact gaps $p - 2m$ and $2m$. | `target_thm1_picket_fence_law` + `AdelicSymmetry.lean` (`picket_fence_monotone`, `picket_fence_even_gap`, `picket_fence_odd_gap`, `picket_fence_gap_sum`) | **EXACT MATCH (Discrete Frequency Sequence).** Boundary note: Mean-Value-Theorem asymptotic limit $\langle r\rangle \to r_0(p,m)$ as $n \to \infty$ for nonlinear $\alpha \ne 1$ is verified numerically (Exp E/G/I), not formalized in Lean. | `Spec.picketVal 5 1 1 - Spec.picketVal 5 1 0 = 3` (`5 - 2*1 = 3`). |
+| **Target 3 — Theorem II (BTZ Ollivier-Ricci & $L_c = 5$)** | For all $p \ge 2, L \ge 3$: exact non-lazy 1-Wasserstein optimal transport on literal $L$-cycle BTZ horizon obeys $\kappa_{\mathrm{BTZ}} = -(2p - \max(0, 6-L))/(p+2)$ and $(p+1)(p+2)(\kappa_{\mathrm{BTZ}}-\kappa_{\mathrm{AdS}}) = (p+1)\max(0,6-L)-4$. | `target_thm2_btz_ollivier_ricci` + `HolographyCurvature.lean` (`btz_graph_metric_eq_classDist`, `btz_dual_1lipschitz`, `btz_wasserstein_lower_bound`, `btz_primal_feasible`, `btz_primal_cost_exact`, `btz_kappa_from_wasserstein`) | **EXACT MATCH (Cleared Denominator / Exact Rational).** Rational transport plans $P_{ij} = \tilde{P}_{ij}/((p+2)M)$ are quantified over ALL integer denominators $M \ge 1$ and ALL non-negative integer matrices $\tilde{P}_{ij} \ge 0$, covering every rational bipartite coupling without floating point. | Independently verified over 45 exact `fractions.Fraction` SPFA solves (`verify_exact.py`). |
+| **Target 4 — Theorem III (Arbitrary $K$-Ball Compacton-Soliton)** | For ANY finite list of $K$ pairwise-disjoint flat-modulus wavelets and ANY local nonlinearity $F$: $F(\|\sum \psi_r\|^2)(\sum \psi_r) = \sum F(c_r)\psi_r$ pointwise with zero inter-ball cross-talk. | `target_thm3_multiball_soliton` + `SolitonAndSolver.lean` (`multi_ball_kozyrev_soliton_list`) | **EXACT MATCH (Pointwise Algebraic Operator Identity).** Formalized over exact Gaussian integers $\mathbb{Z}[i]$ (`Spec.CInt`) and arbitrary $F : \mathbb{Z} \to \mathbb{Z}$; extends identically over $\mathbb{C}$ since the proof uses only ring addition/scalar multiplication and disjoint support. | Confirmed by `test/verify.mjs` Theorem 2/4 and Exp C (`0.00%` leak up to $g=500$). |
+| **Target 5 — Theorem IV (Kerr-BTZ Rank-1 Solver & Flux Parity)** | Wrap edge $w_{L-1} u u^\dagger \succeq 0$, Sherman-Morrison denominator $1 + w q \ge 1 > 0$, cleared-denominator arbitrary-$L$ solve is exact, and $\Omega \mapsto -\Omega$ keeps stress even & flips current odd. | `target_thm4_kerr_solver_and_parity` + `SolitonAndSolver.lean` (`horizon_edge_quadratic_expansion`, `sherman_morrison_denominator_ge_one`, `sherman_morrison_exact_identity`, `kerr_flux_edge_stress_even`, `kerr_flux_edge_current_odd`) | **EXACT MATCH (Algebraic Core).** Positivity $q = u^\dagger T^{-1} u \ge 0$ enters as the explicit hypothesis $0 \le q$ (holding whenever $T \succ 0$ above the BF bound, audited numerically down to $\Delta = 0.5001$ in Exp H). | Verified in exact $\mathbb{Q}(i)$ arithmetic (`verify_exact.py`, residual $= 0$). |
+| **Target 6 — Theorem V & V-Global (Curved AdS Gauss-Bonnet)** | On arbitrary weighted interior bridge edges of $T_p$, exact conductance curvature decomposes into vertex half-charges $-(p-1)w_e/W_u$ (conserved identically to $-(p-1)$ at every interior vertex) minus the exact supercritical pinch deficit when $w_e/W_u + w_e/W_v > 1$. | `target_thm5_global_curved_gauss_bonnet` + `HolographyCurvature.lean` (`curved_sub/sup_wasserstein_lower_bound`, `curved_ads_gauss_bonnet_subcritical`, `curved_ads_supercritical_pinch_deficit`, `curved_gen_kappa_charge_decomp`, `global_multi_edge_vertex_charge_conservation`) | **EXACT MATCH (Both Single-Edge Primal-Dual & Multi-Edge Charge Conservation).** Finite-cutoff boundary caveat: requires interior vertices of full degree $p+1$ (excludes root & leaves). | `Spec.curvedGenDeficitNum 2 5 7 = 0` (subcritical) and `Spec.curvedGenDeficitNum 8 10 10 = 120` (supercritical). |
+| **Target 7 — Theorem VI (Universal Holographic RT Strong Subadditivity)** | On ANY finite weighted graph, for disjoint boundary regions $A, C$ and arbitrary homologous minimal cuts $W_{AB}, W_{BC}$, $S(A \cup B \cup C) + S(B) \le S(A \cup B) + S(B \cup C)$. | `target_thm6_holographic_ssa` + `HolographyCurvature.lean` (`rt_edge_cut_submodular`, `rt_cut_submodular`, `rt_strong_subadditivity`, `rt_subadditivity`) | **EXACT MATCH (Literal Textbook Headrick-Takayanagi Discrete Theorem).** Holds for arbitrary finite edge lists with arbitrary non-negative `Nat` weights and arbitrary topology (trees, BTZ cycles, higher-genus quotients). | `Spec.rtCutCap [(0,1,2),(0,2,3),(0,3,5)] (fun v => v == 1 || v == 2) = 5` + `rt_ssa_nonvacuous_witness`. |
+| **Target 8 — Non-Vacuity Witnesses** | Concrete decidable evaluations proving definitions are non-degenerate and non-vacuous. | `target_nonvacuity_witnesses` (proved by `decide`) | **EXACT MATCH.** Eliminates any possibility that quantifiers hold vacuously due to contradictory definitions. | All 5 conjuncts evaluated directly by kernel reduction (`decide`, zero `native_decide`). |
+
+---
+
+## 3. Multi-Kernel Verification Matrix
+
+| Kernel | Implementation Language | Trust Base | Scope Audited | Status |
+|---|---|---|---|---|
+| **Lean `v4.35.0` kernel** | C++ (official toolchain) | Standard Lean 4 kernel | Full `UltrametricaProofs` (120 decls) + `Solution` (8 targets) | **PASS** |
+| **`leanchecker --fresh`** | C++ standalone | Independent replay from `.olean` | `UltrametricaProofs` + `Solution` | **PASS** |
+| **`leanchecker-paranoid --fresh`** | C++ paranoid kernel | Stricter reduction/check rules | `UltrametricaProofs` + `Solution` | **PASS** |
+| **`con-leche --verified`** | Independent verified graded checker | Exported `.ndjson` (58,743 decls) | Full `Solution.ndjson` export | **PASS** |
+| **`con-ron --verified`** | Independent Rust arena checker | Exported `.ndjson` (58,743 decls) | Full `Solution.ndjson` export | **PASS** |
+| **`nanoda_bin` + `lean4lean` (via `lake comparator --paranoid`)** | Independent Rust (`nanoda_bin 0.4.19`) + Lean-in-Lean (`lean4lean`) | Sandboxed `bubblewrap` Linux CI + local `nanoda_bin` | All 8 targets `Challenge` vs `Solution` | **PASS** (`nanoda_bin` local + full 6-kernel `bwrap` in Ubuntu CI) |
+
+
+---
+
+## FILE: `docs/MEGA_ATLAS_CROSSCHECK.md`
+
+# ULTRAMETRICA — Cross-Check Against `0thernes/unsolved-problems-mega-atlas`
+
+**Author:** Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA · ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648))  
+**Date:** 2026-11-25  
+**Target Catalog:** [`0thernes/unsolved-problems-mega-atlas`](https://github.com/0thernes/unsolved-problems-mega-atlas) (`outputs/MegaAtlas_Unsolved_Problems_V2.json`, `1,900` open problems)  
+**ULTRAMETRICA Version:** `v1.4.0`
+
+---
+
+## 1. Bottom-Line Epistemic Verdict
+
+> **Full Open Problems Solved in the Mega-Atlas: `0 / 1,900`.**
+
+ULTRAMETRICA does **not** solve or retire any grand open problem in `unsolved-problems-mega-atlas`. Every continuum, Millennium, quantum-gravity, and number-theoretic problem in the catalog remains **OPEN**.
+
+What ULTRAMETRICA **does** deliver — with machine-checked pure Lean 4 (`v4.35.0`) proofs verified across six independent kernels, exact rational (`fractions.Fraction`) certificates, and reproducible numerical experiments — is a set of **exact finite-prime discrete sub-results, structural obstructions, and negative-result falsifications** directly attached to **`SUB-032`** and adjacent to **`ANL-065` / `QM-016`**, **`GR-002` / `GR-044` / `GR-045` / `GR-050`**, **`SUB-030`**, **`STAT-017`**, and **`GEOM-018` / `GEOM-019`**.
+
+---
+
+## 2. Automated Catalog Screening Summary
+
+An exhaustive scan over all `1,900` problem entries in `MegaAtlas_Unsolved_Problems_V2.json` across `48` non-Archimedean, holographic, optimal-transport, discrete-curvature, spectral-chaos, and black-hole keywords yielded:
+
+- **Broad domain keyword hits:** `635 / 1,900`
+- **Narrow technical keyword hits** (`p-adic`, `ultrametric`, `Bruhat-Tits`, `Ollivier`, `Vladimirov`, `Kozyrev`, `adelic`, `Ryu-Takayanagi`, `strong subadditivity`, `Gauss-Bonnet`, `Kantorovich`, `Wasserstein`, `compacton`, `Breitenlohner-Freedman`, `quantum chaos`, `Wigner-Dyson`, `BTZ`, `Schottky`, `Ostrowski`, `non-Archimedean`): **`46 / 1,900`**
+- **Exact primary domain match:** **`1` (`SUB-032`)**
+
+---
+
+## 3. Problem-by-Problem Audit Matrix
+
+| Mega-Atlas ID | Problem Title & 2026 Status | Full Solution? | Exact Scoped Relation to ULTRAMETRICA (`v1.4.0`) | What Remains Unsolved (Honest Boundary) |
+|---|---|---|---|---|
+| **`SUB-032`** | **Non-Archimedean / $p$-adic AdS/CFT Holography Continuum Limit & Adelic Unification** (*Active Breakthroughs / Frontier*) | **NO** | **Primary direct match (partial discrete sub-results).** Proves exact finite-$p$ discrete structures on $\mathbb{Z}_p/p^n\mathbb{Z}_p$, $T_p$, and Tate-curve quotients $T_p/p^{h\mathbb{Z}}$: (1) **Theorem I & Prop. 4.2** adelic parity-doubling dichotomy & modular picket-fence obstruction; (2) **Theorem II** first-principles Kantorovich BTZ Ollivier-Ricci law & $L_c = 5$ trichotomy for all $p \ge 2, L \ge 3$; (3) **Theorem V (Global)** non-perturbative arbitrary multi-edge curved AdS discrete Gauss-Bonnet conservation ($\frac{w_e}{W_u}+\frac{w_e}{W_v}\le 1$) and exact supercritical pinch deficit; (4) **Theorem VI** universal discrete holographic Strong Subadditivity on arbitrary weighted graphs. | Reconstructing continuous Lorentzian Einstein gravity and real $\mathrm{AdS}/\mathrm{CFT}$ rigorously from the infinite adelic product $\prod_p |x|_p \cdot |x|_\infty = 1$ remains **completely open**. ULTRAMETRICA couples one finite prime $p$ to $\mathbb{R}$ via the discrete Monna map $R_p$; it does not construct an infinite-prime continuum limit. |
+| **`ANL-065` & `QM-016`** | **Berry–Tabor and Bohigas–Giannoni–Schmit (BGS) Quantum Chaos Spectral Conjectures** (*Partially Solved / Special Cases*) | **NO** | **Sharp negative-result falsification for a concrete non-commuting adelic family.** Despite $[H_Q, H_R] \ne 0$ and Baker's-map-like digit reversal $R_p$, Theorem I + Prop. 4.2 + Experiments E & G (with multi-seed GUE/GOE control rejection) prove that $H_\theta$ fails to thermalize to Wigner-Dyson GOE/GUE, remaining locked to $r_0(p,m) = \min(2m, p-2m)/\max(2m, p-2m)$. | Proving BGS for even one generic classically chaotic billiard (e.g., Bunimovich stadium) remains **completely open**. |
+| **`GR-002`, `GR-044`, `GR-045`, `GR-050`, `GR-022`** | **Black Hole Information Paradox, Emergent Spacetime, ER=EPR, Pure 3D/Kerr Holography, Bekenstein–Hawking Entropy** (*Open / Frontier*) | **NO** | **Exact discrete non-Archimedean toy-model testbed only.** Provides exact $O(V)$ Ryu-Takayanagi minimal cuts with discrete Page-like horizon-engulfing transitions (`Theorem 8`, `rt_uniform_odd_prime_all_arcs`), machine-checked discrete Strong Subadditivity (**Theorem VI**), and exact rotating Kerr-BTZ Aharonov-Bohm bulk solvers (**Theorem IV**). | Makes **zero** claim toward continuous Lorentzian black-hole interior reconstruction, firewalls, quantum extremal surfaces in 3D/4D Einstein gravity, or microscopic 4D Kerr entropy. |
+| **`SUB-030`** | **Computational Complexity & Curse of Dimensionality in Wasserstein & Gromov–Wasserstein Transport** (*Active Frontier*) | **NO** | **Specialized exact low-degree graph transport only.** Gives $O(1)$ closed-form bridge Wasserstein formulas on trees and exact rational bipartite primal-dual certificates on unicyclic BTZ graphs (vertex degree $p+2$). | High-dimensional statistical estimation rates, Wasserstein barycenters, and non-convex Gromov-Wasserstein remain **NP-hard / open**. |
+| **`STAT-017`** | **Cutoff Phenomenon for General Markov Chains (Peres Product Condition / Ollivier Curvature)** (*Active Frontier*) | **NO** | **Exact Ollivier-Ricci curvature formulas on weighted Bruhat-Tits trees and unicyclic Tate-curve quotients only** (Theorems II and V). | Mixing-time cutoff for general vertex-transitive and Cayley graphs remains **open**. |
+| **`GEOM-018` & `GEOM-019`** | **Hopf & Hopf–Chern Sign Conjectures (Gauss-Bonnet in Riemannian Geometry)** (*Open / Special Cases*) | **NO** | **Discrete graph-curvature analogy only.** Theorem V proves exact discrete Gauss-Bonnet conservation for Ollivier-Ricci curvature on weighted $(p+1)$-regular trees ($\chi = 1$) in the subcritical regime. | Smooth Riemannian sectional curvature conjectures on $S^2 \times S^2$ and closed even-dimensional manifolds ($\dim \ge 6$) remain **completely open**. |
+| **`ALG-056`, `GEOM-052`, `LOG-017`, `NT-005..073`, `XNT-009..039`, `STAT-015`, `SUB-033`** | **Pure $p$-adic Number Theory, Arithmetic Geometry, Lie Groups, Spin-Glass Ultrametricity** (*Open*) | **NO** | **Not targeted.** Share only the underlying $p$-adic / ultrametric vocabulary (`|x+y|_p <= max(|x|_p, |y|_p)`). | Entirely untouched by ULTRAMETRICA. |
+
+---
+
+## 4. Recommended Next Open-Problem Targets Directly Extending ULTRAMETRICA (`SUB-032`)
+
+If future work aims to push further on `SUB-032` from this verified baseline, three concrete mathematical sub-problems sit directly adjacent to `v1.4.0`:
+
+1. **Higher-Genus Mumford–Schottky Multi-Mouth Wormholes ($g \ge 2$):** Derive and formalize exact Kantorovich primal-dual Ollivier-Ricci laws and $O(V + g^3)$ Woodbury bulk Klein-Gordon solvers on $T_p / \Gamma_g$.
+2. **Simultaneous Inhomogeneous Curvature on Cyclic BTZ Horizons:** Extend Theorem V's global multi-edge Gauss-Bonnet conservation and supercritical deficit formula from bridges on $T_p$ to dynamic edge lengths on the cyclic BTZ horizon ring where shortest paths switch across the cycle.
+3. **Asymptotic Operator-Norm Mixing Bound ($n \to \infty$):** Prove an analytic upper bound on intra-sector off-diagonal mixing $\|H_{Q,\mathrm{off}}\|_{W_{0,m}}$ as $n \to \infty$ to convert Experiments E & G's modular picket-fence locking from finite-$N$ empirical verification ($N \le 625$) into a universal spectral theorem.
+
+
+---
+
+## FILE: `docs/preregistration.md`
+
+# Pre-Registration of Statistical & Multi-Edge Hypotheses (`v1.4.0`)
+
+**Author:** Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA · ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648))  
+**Date:** 2026-11-25  
+**Status:** Sealed prior to running `scripts/stats_eval.py` (Experiment I)  
+**Scope:** Strictly distinguishes *exploratory* benchmarks archived in `v1.0.0`–`v1.3.0` (`Experiments A–H`) from *pre-registered confirmatory* tests introduced in `v1.4.0` (`Experiment I`).
+
+---
+
+## 1. Honest Disclosure: Exploratory vs. Pre-Registered Work
+
+- **Exploratory (`Experiments A–H`, `v1.0.0`–`v1.3.0`):** Deterministic mathematical/numerical sweeps over `p in {2,3,5,7}` that motivated Theorems I–V and Proposition 4.2. Because these sweeps preceded formal preregistration, they are explicitly labeled **exploratory** (and mathematically certified independently via pure Lean 4 proofs and exact `fractions.Fraction` arithmetic where applicable).
+- **Pre-Registered Confirmatory (`Experiment I`, `v1.4.0`):** Specified below **before** executing `scripts/stats_eval.py` and recording `results/stats-eval.json`.
+
+---
+
+## 2. Pre-Registered Hypotheses (`Experiment I`)
+
+### Family A — Statistical Rejection of Random-Matrix GUE/GOE Thermalization in $H_\theta$ (`B28`–`B31`)
+
+- **Treatment Arm:** Intra-sector adjacent level spacing ratios $r_j = \min(\delta_j, \delta_{j+1}) / \max(\delta_j, \delta_{j+1})$ inside the top-level valuation-residue sectors $W_{0,m}$ of $H_{\theta=0.5}$ at $\alpha \in \{1.0, 2.0\}$ for:
+  - **H1:** $(p, n, m) = (5, 4, 2)$ ($\dim W_{0,2} = 125$, predicted picket-fence $r_0 = 1/4 = 0.25$) vs. matched-dimension $125 \times 125$ GUE random Hermitian control matrices.
+  - **H2:** $(p, n, m) = (5, 4, 1)$ ($\dim W_{0,1} = 125$, predicted picket-fence $r_0 = 2/3 \approx 0.6667$) vs. matched-dimension $125 \times 125$ GOE random real symmetric control matrices.
+  - **H3:** $(p, n, m) = (2, 7, 1)$ ($\dim W_{0,1} = 64$, predicted picket-fence $r_0 = 0$) vs. matched-dimension $64 \times 64$ GOE random real symmetric control matrices.
+  - **H4 (Quadratic Dispersion $\alpha = 2.0$):** $(p, n, m) = (5, 4, 2)$ at $\alpha = 2.0$ vs. matched-dimension $125 \times 125$ GUE control matrices.
+- **Control Arm & Fixed Seeds (`B28`):** $K = 20$ independent fixed-seed random Hermitian GUE / real symmetric GOE control matrices (`seeds = [1001..1020]`) generated by a deterministic Box-Muller seeded PRNG (`mulberry32`), diagonalized by the exact same Jacobi solver as the treatment arm.
+- **Primary Metric:** Difference in sample mean spacing ratio $\Delta \langle r \rangle = \langle r \rangle_{\text{Adelic}} - \langle r \rangle_{\text{RMT}}$ per seed ($N_{\text{seeds}} = 20$ paired/per-seed contrasts against the deterministic treatment spectrum, plus two-sample Mann-Whitney U & 10,000-resample Monte Carlo permutation test on the full vector of individual spacing ratios $\{r_j\}$).
+- **Statistical Test (`B29`):** Two-sided Monte Carlo permutation test (`10,000` seeded permutations, `seed = 20261125`) comparing the empirical treatment spacing ratios $\{r_j\}$ against the pooled 20-seed RMT control spacing ratios, plus exact sign/Wilcoxon check over the 20 per-seed control means.
+- **Effect Size & 95% CI (`B30`):** Difference of means $\Delta \langle r \rangle$, Cliff's $\delta$, and Cohen's $d$, each paired with a seeded `10,000`-resample percentile bootstrap 95% confidence interval (`seed = 20261125`).
+- **Multiple-Comparison Correction (`B31`):** Holm-Bonferroni step-down family-wise error rate adjustment across all 4 hypotheses (`alpha_FWER = 0.01`).
+- **Decision / Falsification Rule:** A hypothesis is **confirmed** if and only if its Holm-Bonferroni adjusted $p_{\text{adj}} < 0.01$ AND the 95% bootstrap CI for $\Delta \langle r \rangle$ excludes $0$ in the predicted direction ($< 0$ for H1, H3, H4; $> 0$ for H2). Otherwise, the hypothesis is **refuted** and reported as a negative result.
+- **Stopping Rule:** Fixed exact design (`K = 20` seeds, `10,000` permutations, `10,000` bootstrap resamples); zero sequential peeking or seed dropping.
+
+---
+
+## 3. Deviations Log (Append-Only)
+
+| Date | Deviation | Reason |
+|---|---|---|
+| 2026-11-25 | None (pre-execution seal). | Initial preregistration committed before running `scripts/stats_eval.py`. |
+
+
+---
+
+## FILE: `docs/benchmarks.md`
+
+# Performance Benchmarks & Latency Budgets (`docs/benchmarks.md`)
+
+> Build Standard `A37`, `B26`, and `B27`. Every number below is reproduced directly by `npm run bench` (`scripts/bench.mjs`), archived in [`results/perf-benchmarks.json`](../results/perf-benchmarks.json), and paired with a live correctness checksum so timing can never pass on broken math.
+
+## 1. Hardware & Runtime Provenance
+
+- **CPU:** Intel Core Ultra 9 275HX (24 logical cores)
+- **OS / Architecture:** `win32-x64`
+- **Runtime:** Node.js `v25.8.2` (zero external dependencies)
+- **Methodology:** Warm-up iterations discarded before timing; `10–15` timed outer runs per kernel reporting **median**, **IQR** (interquartile range), **min**, **max**, and an algebraic/numerical **correctness checksum**.
+
+---
+
+## 2. Explicit Performance Budgets
+
+| Kernel / Operation | Hard Budget | Measured Median (`v1.4.0`) | IQR | Margin | Status |
+|---|---|---|---|---|---|
+| Coupled BTZ Frame Step (`p=3, n=5, L=9`, Yoshida + Bulk KG + Ricci + Gravity) | `< 16.67 ms` (60 FPS) | **`0.3882 ms`** | `0.1318 ms` | **42× faster than budget** | PASS |
+| Full Bulk KG + SPFA Ricci + Exact RT (`p=5, n=4, N=625`, BTZ $L=5$) | `< 10.00 ms` | **`0.2223 ms`** | `0.1284 ms` | **45× faster than budget** | PASS |
+| Native Radix-$p$ Pontryagin FFT (`p=5, n=4, N=625`, single transform) | `< 1.00 ms` | **`0.0183 ms`** (`0.1829 ms / 10`) | `0.0012 ms` | **54× faster than budget** | PASS |
+
+---
+
+## 3. Algorithmic Speedup: Native Radix-$p$ FFT vs. Textbook $O(N^2)$ DFT
+
+| Dimension $(p, n, N)$ | Radix-$p$ FFT (per call) | Naive $O(N^2)$ DFT (per call) | Speedup | Max Error Checksum |
+|---|---|---|---|---|
+| `p=3, n=2, N=9` | `0.000144 ms` (`0.0288 ms / 200`) | `0.001000 ms` (`0.0200 ms / 20`) | **`6.94×`** | `maxErr = 1.02e-15` |
+| `p=3, n=5, N=243` | `0.007525 ms` (`0.1505 ms / 20`) | `0.9249 ms` (`1.8497 ms / 2`) | **`122.90×`** | `maxErr = 1.12e-14` |
+| `p=5, n=4, N=625` | `0.01829 ms` (`0.1829 ms / 10`) | `5.8508 ms` (`5.8508 ms / 1`) | **`319.89×`** | `maxErr = 1.07e-14` |
+
+### Honest Caveats & Small-$N$ / Variance Disclosure (`B27`)
+
+- **Tiny-$N$ overhead:** For trivial sizes like $N = 2$ or $N = 3$, loop overhead and twiddle-table indexing make naive summation competitive; Radix-$p$ wins decisively starting at $N \ge 9$ (`6.94×` at $N=9$, `319.89×` at $N=625$).
+- **Thermal & JIT variance:** `min`/`max` ranges on sub-millisecond workloads (e.g. `0.3407 ms`–`0.7412 ms` on `coupled_btz_frame_step`) reflect V8 tier-up and OS scheduling jitter; we therefore report median + IQR rather than cherry-picked minimums.
+- **Quadratic visual/spectral ceiling:** Interactive WebGL2 presets stay below $N \le 343$ because the 2D ultrametric matrix/oscilloscope rendering and exact Jacobi diagonalization (in `scripts/discover.mjs`) scale as $O(N^2)$–$O(N^3)$, whereas the core FFT/bulk/RT engine scales as $O(p N \log_p N)$ and $O(V)$.
+
+---
+
+## 4. Historical Performance Tracking (`B26`)
+
+| Release | Key Optimization | Coupled BTZ Frame (`p=3, n=5, L=9`) | Radix-$p$ FFT (`N=625`) Speedup |
+|---|---|---|---|
+| `v1.0.0` | Initial zero-dependency Radix-$p$ FFT & $O(V)$ Schur + Sherman-Morrison solver | Uninstrumented | Uninstrumented |
+| `v1.3.0` | Cached WebGL2 uniform locations, preallocated scratch TypedArrays in `computeOllivierRicci` / `computeRyuTakayanagi` / `stepGravity` (`_sigmaSnap`) | `< 1 ms` (60 FPS verified in browser) | — |
+| `v1.4.0` | Added formal hardware-tagged median/IQR harness (`scripts/bench.mjs`) + strict input bounds | **`0.3882 ms`** (IQR `0.1318 ms`, `kgRes=1.20e-16`) | **`319.89×`** (`maxErr=1.07e-14`) |
+
+
+---
+
+## FILE: `docs/threat-model.md`
+
+# Security Threat Model (`docs/threat-model.md`)
+
+> Build Standard `B36`. STRIDE threat analysis covering ULTRAMETRICA's local HTTP server (`server.mjs`), browser observatory (`src/web/`), mathematical engine (`src/engine/`), and verification toolchain (`lean/`, `scripts/`).
+
+## 1. Trust Boundaries & Attack Surface
+
+| Surface | Exposure | Trust Level | Key Assets |
+|---|---|---|---|
+| **Local HTTP Server (`server.mjs`)** | Loopback (`127.0.0.1:4173` default) or user-configured LAN `HOST` | Untrusted HTTP request lines / paths / headers | Local filesystem outside `src/`, process availability |
+| **Browser Observatory (`src/web/`)** | Public static site (`https://0thernes.github.io/ultrametrica/`) | Untrusted URL query string (`?exp=...&p=...`) | Browser origin integrity, XSS prevention, GPU/Audio stability |
+| **Mathematical Engine (`src/engine/`)** | Imported ES modules | Untrusted caller arguments (`p`, `n`, `horizonDepth`, `alpha`) | Memory safety (no unbounded allocation / NaN poisoning) |
+| **Lean 4 Proofs (`lean/`)** | Public repo / external evaluator | Untrusted proof files (`Solution.lean`) | Logical soundness against `Challenge.lean` specification |
+
+---
+
+## 2. STRIDE Threat Matrix & Mitigations
+
+| Category | Specific Threat | Severity | Concrete Mitigation | Automated Verification |
+|---|---|---|---|---|
+| **Spoofing** | Forged theorem provenance or tampered release PDF/benchmarks | High | Cryptographic `CHECKSUMS.sha256` & `data/MANIFEST.sha256`, `actions/attest-build-provenance@v2` SLSA release attestation, exact ORCID `0009-0006-8168-9648`, verbatim README `#print axioms` check | `scripts/verify_exact.py --check-checksums`, `scripts/check_readme_axioms.py`, `.github/workflows/release.yml` |
+| **Tampering** | Path traversal (`../../etc/passwd`, `%2e%2e%2f`, backslash `..\`, null bytes `%00`) on `server.mjs` | High | Strict `decodeURIComponent` guard, reject `\0` and `\` (`400`), canonical `path.resolve` + `path.relative` prefix check (`403`), reject non-files/directories (`403`) | [`test/server.mjs`](../test/server.mjs) (B09/B36 suite) |
+| **Tampering** | DOM-based XSS via crafted URL permalink parameters or injected UI markup | High | Strict `Content-Security-Policy` (`default-src 'self'; script-src 'self'; object-src 'none'; frame-ancestors 'none'`), zero `innerHTML` usage in `src/web/app.js` (uses `textContent` / safe DOM nodes), strict numeric clamping & allowlist checks on URL query params | [`test/server.mjs`](../test/server.mjs) (`SECURITY_HEADERS`), `src/web/app.js` audit (`F13`) |
+| **Tampering** | Proof-checking bypass in Lean 4 (hidden `sorry`, `native_decide`, `@[extern`, custom `axiom`, definition mismatch) | Critical | Isolated `Spec.lean` + `Challenge.lean` vs. `Solution.lean` checked via **6 independent kernels** (`lake comparator --paranoid` inside Linux `bubblewrap` sandbox) + nested-comment-safe static scanner (`F09`) + `VerifyAxioms.lean` allowlist | `.github/workflows/ci.yml` (`lean4-six-kernel-audit`), `scripts/verify_exact.py` |
+| **Repudiation** | Silent modification of preregistered statistical hypotheses or post-hoc editing of published results | Medium | Git-sealed [`docs/preregistration.md`](preregistration.md) (`c171b1b`) committed *before* running `scripts/stats_eval.mjs`, append-only [`docs/run-log.md`](run-log.md), and [`ERRATA.md`](../ERRATA.md) | `results/stats-eval.json` (`preregCommit`), git commit history |
+| **Information Disclosure** | Accidental leakage of host stack traces or filesystem structure via HTTP responses | Medium | `server.mjs` returns minimal generic plain-text bodies (`Bad Request`, `Forbidden`, `Not Found`, `Internal Server Error`) on all error codes; full stack traces go strictly to structured server-side `stderr` logs | [`test/server.mjs`](../test/server.mjs) (B21 EIO test) |
+| **Information Disclosure** | Accidental commit of API keys or tokens | Medium | Zero external API keys required; report-only `gitleaks` secret scan runs on every push in CI | `.github/workflows/ci.yml` (`report-only-static`) |
+| **Denial of Service** | Memory exhaustion via giant `PadicSpace(p, n)` ($p^n \gg 10^6$), negative `horizonDepth`, or non-finite `dt`/`alpha` | Medium | `PadicSpace` caps $N = p^n \le 65{,}536$; all public engine constructors/methods validate finiteness, positivity, and integer bounds loudly (`RangeError`/`TypeError`) | [`test/properties.mjs`](../test/properties.mjs) (`B06`/`B20` negative suite) |
+| **Denial of Service** | Unhandled `ERR_HTTP_HEADERS_SENT` crash or hung socket on disk I/O error in `server.mjs` | Medium | `server.mjs` reads file bytes *before* calling `res.writeHead(200, ...)`, guards `res.headersSent` in `catch`, and survives injected `EIO` faults cleanly | [`test/server.mjs`](../test/server.mjs) (B21 EIO failure injection) |
+| **Elevation of Privilege** | Unsupported HTTP verbs (`POST`/`PUT`/`DELETE`) or browser plugin/frame embedding | Low | Strict `GET`/`HEAD` allowlist (`405` + `Allow: GET, HEAD`), `X-Content-Type-Options: nosniff`, `Cross-Origin-Resource-Policy: same-origin`, `frame-ancestors 'none'` | [`test/server.mjs`](../test/server.mjs) |
+
+## 3. Out-of-Scope Threats
+
+ULTRAMETRICA is a static client-side scientific observatory and local research server with no user accounts, no authentication database, and no PII collection (`personal_data: false`). It is not designed to be exposed directly to the public internet without TLS termination (public deployment uses GitHub Pages HTTPS).
+
+
+---
+
+## FILE: `docs/faq.md`
+
+# Frequently Asked Questions (`docs/faq.md`)
+
+> Build Standard `A44`. Direct, non-evasive answers to skeptical questions from mathematicians, physicists, and reviewers.
+
+### 1. Did ULTRAMETRICA solve any open problems from `0thernes/unsolved-problems-mega-atlas`?
+**No — `0 / 1,900` full solutions.** A systematic audit of all `1,900` entries in `unsolved-problems-mega-atlas` is archived in [`docs/MEGA_ATLAS_CROSSCHECK.md`](MEGA_ATLAS_CROSSCHECK.md). ULTRAMETRICA contributes formally verified discrete finite-cutoff sub-results related to **`SUB-032`** ($p$-adic AdS/CFT) and an empirical/formal negative result falsifying naive GOE/GUE thermalization in Monna-conjugated adelic hybrids (`ANL-065`/`QM-016`), while leaving continuum limits ($n \to \infty$) and full adelic unification over $\mathbb{A}_{\mathbb{Q}}$ strictly open.
+
+### 2. Why did you avoid Mathlib in the Lean 4 proofs?
+Zero Mathlib yields three huge practical advantages for independent verification: (1) a clean build finishes in **~5 seconds** instead of downloading gigabytes of `.olean` caches; (2) every definition in [`lean/UltrametricaProofs/Spec.lean`](../lean/UltrametricaProofs/Spec.lean) is 100% transparent and readable in 101 lines without navigating deep typeclass hierarchies; and (3) `lake comparator --paranoid` can verify `Solution.lean` against `Challenge.lean` across **6 independent Lean kernels** (`Lean 4.35.0`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) with zero external dependency bloat. See [`docs/adr/0001-zero-mathlib-lean4.md`](adr/0001-zero-mathlib-lean4.md).
+
+### 3. How do I know the Lean 4 proofs aren't vacuous, using `sorry`, or proving watered-down statements?
+Three independent defenses prevent proof gaming:
+1. **Verbatim 5-second axiom check:** Run `cd lean && lake env lean VerifyAxioms.lean` — every single one of the **120** declarations uses only `[propext, Classical.choice, Quot.sound]` (zero `sorryAx`, zero `Lean.ofReduceBool`/`native_decide`, zero custom axioms).
+2. **Isolated 6-kernel comparator (`Challenge.lean` vs. `Solution.lean`):** `Challenge.lean` imports *only* `Spec.lean` (definitions only, zero proofs) and includes explicit concrete non-vacuity witnesses (`target_nonvacuity_witnesses`), matched identically against sorry-free `Solution.lean`.
+3. **Line-by-line Statement Fidelity Audit:** [`docs/statement-fidelity.md`](statement-fidelity.md) maps every Lean theorem literally to the textbook/paper mathematical statement and states every hypothesis explicitly.
+
+### 4. Does ULTRAMETRICA claim to have discovered new experimental physics?
+**No.** All six theorems (Theorems I–VI) are strictly mathematical and computational results on finite $p$-adic groups $\mathbb{Z}_p / p^n\mathbb{Z}_p$ and finite weighted Bruhat-Tits / Tate-curve graphs. See [`LIMITATIONS.md`](../LIMITATIONS.md) for the complete literal-vs-metaphor table.
+
+### 5. Why is the intra-sector spacing ratio $\langle r\rangle$ at $p=5, W_{0,1}$ (`~0.626`) close to GUE (`0.5996`) — didn't you just see GUE chaos?
+**No — and our pre-registered Experiment I (`results/stats-eval.json`) decisively falsifies that interpretation.** Inside the *exact same* $p=5, N=625$ Hamiltonian $H_\theta$, sibling sector $W_{0,2}$ locks simultaneously at $\langle r\rangle = 0.2612 \approx 1/4$ (far below even Poisson `0.3863`!), while $W_{0,1}$ sits strictly *above* GUE at $\approx 2/3$ (`p_holm = 0.0004`, Cliff's $\delta = -0.8035$ against 20-seed GUE controls in $W_{0,2}$ and $+0.2686$ against 20-seed GOE controls in $W_{0,1}$, plus $p=2, W_{0,1} \approx 0.0015$, Cliff's $\delta = -0.9980$). Both values come from the exact formally proved **modular picket-fence law** $r_0(p, m) = \min(2m, p-2m)/\max(2m, p-2m)$ (Proposition 4.2).
+
+### 6. Why isn't this MIT or Apache-2.0 licensed?
+The author retains commercial rights under `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` ([`LICENSE`](../LICENSE)), while granting broad royalty-free permission for personal, educational, academic, and independent non-commercial research, study, verification, and modification. The trade-off with OSI-requiring venues (e.g., JOSS or Mathlib upstreaming) is recorded explicitly in [`docs/adr/0005-cosmogonic-noncommercial-license.md`](adr/0005-cosmogonic-noncommercial-license.md).
+
+### 7. Why does `README.md` say "Independent Researcher" instead of "0thernes LLC"?
+Because no LLC legal entity has been formally registered, we corrected all authorship metadata in `v1.4.0` to match the author's live ORCID record (`Independent Researcher, Spokane, WA, USA`, ORCID `0009-0006-8168-9648`), keeping `0thernes` strictly as the project/publisher handle. See [`ERRATA.md`](../ERRATA.md).
+
+
+---
+
+## FILE: `docs/glossary.md`
+
+# Glossary (`docs/glossary.md`)
+
+> Alphabetized technical, mathematical, and verification glossary (`A44`). Complements the root [`GLOSSARY.md`](../GLOSSARY.md).
+
+- **Adelic Hybrid Hamiltonian ($H_\theta$):** One-parameter real symmetric operator $\theta R_p D_p^\alpha R_p + (1-\theta) H_{\mathbb{R}}$ coupling Monna-conjugated $p$-adic Vladimirov dispersion with circular Archimedean dispersion on $\mathbb{Z}/p^n\mathbb{Z}$.
+- **Aharonov-Bohm Horizon Flux ($\Omega$):** Directed $U(1)$ gauge phase $\theta = \Omega/L$ threaded around the $L$-cycle BTZ horizon ring, producing complex Hermitian hopping $-w_e e^{\pm i\theta}$.
+- **Blindspot (Finding Class 10/10):** An unexamined assumption, missing axis, or untested invariant class that previous reviews failed to inspect at all.
+- **Breitenlohner-Freedman (BF) Bound ($m_{\mathrm{BF}}^2$):** Discrete AdS stability threshold $m_{\mathrm{BF}}^2 = -(\sqrt{p} - 1)^2$ achieved at $\Delta = 1/2$, with exact squared excess $m^2(\Delta) - m_{\mathrm{BF}}^2 = (p^{\Delta/2} - p^{(1-\Delta)/2})^2 \ge 0$.
+- **Bruhat-Tits Tree ($T_p$):** Infinite $(p+1)$-regular acyclic graph serving as the discrete hyperbolic bulk dual to $\mathbb{P}^1(\mathbb{Q}_p)$, truncated in simulation to depth $n$ with $N = p^n$ leaves.
+- **Bug (Finding Class 1/10):** Incorrect executable code behavior (e.g., `F02` negative `horizonDepth` coercion, `F14` `ERR_HTTP_HEADERS_SENT` in `server.mjs`).
+- **Concern (Finding Class 5/10):** A risk or sensitivity that does not currently fail tests but merits monitoring or explicit bounding (e.g., sub-millisecond JIT variance in benchmarks).
+- **Conflict (Finding Class 7/10):** A direct contradiction between two documents, specs, versions, or standards.
+- **Dilemma (Finding Class 6/10):** A genuine trade-off with no free lunch requiring an explicit recorded owner decision (e.g., Non-Commercial Cosmogonic License vs. OSI license for Mathlib/JOSS).
+- **Error (Finding Class 2/10):** A factual, mathematical, build, or runtime failure (e.g., compiler type error, wrong sign, or stale version number).
+- **Gap (Finding Class 8/10):** A missing required artifact, test category, or checklist item (e.g., missing lockfile `B02` or missing `Challenge.lean` comparator setup).
+- **Hole (Finding Class 9/10):** A structural weakness in a verification or security check that could allow a false positive or bypass (e.g., `F09` non-nested Lean comment regex).
+- **Issue (Finding Class 3/10):** An operational, UX, accessibility, or maintainability defect (e.g., missing WCAG `<label for>` or `aria-pressed`).
+- **Kantorovich Duality:** Primal-dual equivalence for 1-Wasserstein optimal transport $W_1(\mu_u, \mu_v) = \sup_{\|\phi\|_{\mathrm{Lip}} \le 1} (\langle \phi, \mu_u\rangle - \langle \phi, \mu_v\rangle)$, formalized over exact integers/rationals in `HolographyCurvature.lean`.
+- **Kozyrev Wavelet ($\psi_{j,b,m}$):** Orthonormal compactly supported eigenfunction of $D_p^\alpha$ supported strictly on a single $p$-adic ball $B_j(b)$ with eigenvalue $p^{\alpha(j+1)}$ and exact nonlinear soliton invariance (Theorem III).
+- **Modular Picket-Fence Law ($r_0(p,m)$):** Exact alternating spacing-ratio ceiling $\min(2m, p-2m)/\max(2m, p-2m)$ inside valuation-residue sector $W_{0,m}$ (Proposition 4.2), falsifying Wigner-Dyson GOE/GUE thermalization.
+- **Monna Involution ($R_p$):** Base-$p$ digit-reversal permutation on $\{0,\dots,p^n-1\}$ mapping $p$-adic balls bijectively to contiguous leaf intervals.
+- **Ollivier-Ricci Curvature ($\kappa_e$):** Discrete edge curvature $\kappa(u, v) = 1 - W_1(\mu_u, \mu_v)/a_{uv}$ for non-lazy conductance walks $\mu_u(x) = w_{ux} / W_u$.
+- **Problem (Finding Class 4/10):** A high-level credibility, governance, or scientific-framing flaw (e.g., unformed `"0thernes LLC"` entity claim).
+- **Ryu-Takayanagi (RT) Cut & Strong Subadditivity (SSA):** Exact global minimum homologous edge cut capacity $S(A) = \min_{W \sim A} \sum_{e \in \partial W} c_e$, universally obeying $S(A \cup B \cup C) + S(B) \le S(A \cup B) + S(B \cup C)$ (Theorem VI).
+- **Supercritical Pinch Deficit:** Exact negative breakdown $-2\sum_{e: w_e/W_u + w_e/W_v > 1} (\frac{w_e}{W_u} + \frac{w_e}{W_v} - 1)$ of curved AdS Gauss-Bonnet conservation when an interior edge is pinched past $w_e/W_u + w_e/W_v > 1$ (single-edge threshold $\sigma_e^* = -\ln p$, Theorems V & V-Global).
+- **Tate-Curve BTZ Quotient ($T_p / p^{h\mathbb{Z}}$):** Discrete genus-1 black hole graph formed by identifying depths $< h$ into a closed horizon ring of circumference $L = p^h \ge 3$ with Euler characteristic $\chi = 0$.
+- **Vladimirov Operator ($D_p^\alpha$):** Non-local $p$-adic fractional pseudo-differential operator diagonalized by the Pontryagin Fourier transform with eigenvalues $|\xi_k|_p^\alpha$.
+- **Yoshida 4th-Order Integrator:** Symmetric 3-stage symplectic operator splitting achieving $O(\Delta t^4)$ energy error and machine-precision $L^2$ norm conservation.

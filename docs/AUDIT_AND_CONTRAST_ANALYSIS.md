@@ -1,8 +1,8 @@
-# ULTRAMETRICA (`v1.3.0`) — Comprehensive Multi-Layer Adversarial Audit & Contrast Comparative Analysis
+# ULTRAMETRICA (`v1.3.0` Historical Audit -> Superseded by `v1.4.0` 3-Cycle Hardening Dossier) — Multi-Layer Adversarial Audit & Contrast Comparative Analysis
 
-**Author:** Alexander Stephen Donahue (`Alexander S. Donahue`) · 0thernes LLC, Spokane, WA, USA  
+**Author:** Alexander Stephen Donahue (`Alexander S. Donahue`) · Independent Researcher, Spokane, WA, USA (handle `0thernes`)  
 **ORCID:** [0009-0006-8168-9648](https://orcid.org/0009-0006-8168-9648) · **Contact:** `0_0@0thernes.art`  
-**Audit Date:** November 21, 2026 · **Release:** `v1.3.0`  
+**Audit Date:** November 21, 2026 (see [`reviews/2026-11-25-hardening-cycles.md`](reviews/2026-11-25-hardening-cycles.md) for the `v1.4.0` 3-cycle deep hardening & 90-item compliance audit)  
 **Scope:** Line-by-line adversarial inspection of every code file (`src/`, `server.mjs`), formal Lean 4 proof module (`lean/`), verification/mutant script (`test/`, `scripts/`), manuscript (`paper/`), UI viewport (`1280×800`), and live mathematical-physics parameter space across substrates, spectrums, gradients, margins, taxonomies, and adjacent models.
 
 ---

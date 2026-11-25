@@ -1,0 +1,36 @@
+name: Independent Replication Report
+description: Log an independent clean-clone replication run for REPLICATION.md (Build Standard B44).
+title: "[replication]: "
+labels: ["replication"]
+body:
+  - type: dropdown
+    id: finding_class
+    attributes:
+      label: Finding Class (select 'issue' or 'concern' if partial, or 'gap' if logging clean pass)
+      options:
+        - gap
+        - issue
+        - concern
+        - error
+        - bug
+        - problem
+        - conflict
+        - hole
+        - blindspot
+        - dilemma
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Git Tag / Commit SHA Tested
+      placeholder: "v1.4.0"
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Environment & Command Outputs
+      description: OS, CPU, Node/Python/Lean/Tectonic versions, and pass/fail summary for npm run verify:all, verify_exact.py, lake comparator, and package_dist.py.
+    validations:
+      required: true
