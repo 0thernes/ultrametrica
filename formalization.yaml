@@ -1,4 +1,4 @@
-title: "ULTRAMETRICA: Exact Non-Archimedean Holography, Recursive Adelic Symmetries, Tate-Curve BTZ Ollivier-Ricci Curvature, Global Curved Gauss-Bonnet & Holographic Strong Subadditivity"
+title: "ULTRAMETRICA: Lean 4 Invariants of a Discrete p-adic (Bruhat-Tits Tree) Holography Model: Monna Digit Reversal, BTZ and Bridge-Edge Ollivier-Ricci Transport Bounds, Per-Vertex Gauss-Bonnet Half-Charges, and Graph-Cut Strong Subadditivity"
 repository: "https://github.com/0thernes/ultrametrica"
 version: "1.5.0"
 date: "2026-11-25"
@@ -42,4 +42,4 @@ automation:
   human_line_by_line_review_recorded: false
   statement_fidelity_table: "docs/statement-fidelity.md"
 review_status: "Research preprint; NOT externally peer reviewed; NOT yet submitted to Palomar Registry, arXiv, or Zenodo."
-limitations: "Formalizes finite-prime discrete Bruhat-Tits trees, unicyclic Tate-curve BTZ quotients, and finite weighted-graph holographic cuts; does NOT solve the continuum adelic unification problem (Mega-Atlas SUB-032) or prove asymptotic n -> infinity spectral mixing bounds."
+limitations: "Formalizes invariants of the repository's own discrete definitions: finite-prime Bruhat-Tits trees, a hand-coded 3-class reduction of unicyclic Tate-curve BTZ horizons, a hand-coded bridge-edge transport cost model, and finite weighted-graph cuts. Lean does not define the Vladimirov operator, Kozyrev wavelets, the hybrid Hamiltonian H_theta, time evolution or the O(V) bulk solver; no theorem sums curvature over the edges of a finite tree. The six-kernel comparator covers the 10 targets in lean/comparator.json and their dependency closure. The 149-declaration count includes literal or definitional identities (e.g. 1 = 2 - 1). Does NOT solve the continuum adelic unification problem (Mega-Atlas SUB-032), any quantum-gravity problem, or prove asymptotic n -> infinity spectral mixing bounds."

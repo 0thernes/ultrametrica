@@ -13,7 +13,7 @@
 
 ULTRAMETRICA does **not** solve or retire any grand open problem in `unsolved-problems-mega-atlas`. Every continuum, Millennium, quantum-gravity, and number-theoretic problem in the catalog remains **OPEN**.
 
-What ULTRAMETRICA **does** deliver — with machine-checked pure Lean 4 (`v4.35.0`) proofs verified across six independent kernels, exact rational (`fractions.Fraction`) certificates, and reproducible numerical experiments — is a set of **exact finite-prime discrete sub-results, structural obstructions, and negative-result falsifications** directly attached to **`SUB-032`** and adjacent to **`ANL-065` / `QM-016`**, **`GR-002` / `GR-044` / `GR-045` / `GR-050`**, **`SUB-030`**, **`STAT-017`**, and **`GEOM-018` / `GEOM-019`**.
+What ULTRAMETRICA **does** deliver — with pure Lean 4 (`v4.35.0`) proofs kernel-checked by Lean (`lake build`, `leanchecker`), whose 10 comparator targets were also accepted by 6 independent kernels, exact rational (`fractions.Fraction`) certificates, and reproducible numerical experiments — is a set of **exact finite-prime discrete sub-results, structural obstructions, and negative-result falsifications** directly attached to **`SUB-032`** and adjacent to **`ANL-065` / `QM-016`**, **`GR-002` / `GR-044` / `GR-045` / `GR-050`**, **`SUB-030`**, **`STAT-017`**, and **`GEOM-018` / `GEOM-019`**.
 
 ---
 

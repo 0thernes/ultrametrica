@@ -4,6 +4,13 @@ All notable releases, mathematical proofs, verification suites, and engine chang
 
 ## [Unreleased]
 
+### Changed — documentation corrections from the 2026-11-26 statement audit
+- Corrected `README.md`, `CLAIMS.md`, `LIMITATIONS.md`, `CITATION.cff` (title), `formalization.yaml` (title, limitations), `docs/CLAIMS.md`, `docs/statement-fidelity.md` and `docs/MEGA_ATLAS_CROSSCHECK.md` to match an independent statement audit ([audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md)). No Lean, paper, data or code file changed.
+- Withdrew "Quantum Gravity Engine" / "Holographic Quantum Gravity" from the README tagline and citation title; the project is described as a discrete $p$-adic (Bruhat-Tits tree) holography laboratory.
+- Split claim rows C-THM-1B, C-PROP-42, C-THM-2, C-THM-3, C-THM-4 and C-THM-5 into their kernel-checked lemma and their exact-rational or numerical part; Lean does not define $D_p^\alpha$, Kozyrev wavelets, $H_\theta$, time evolution or the $O(V)$ solver, and does not sum curvature over a finite tree.
+- Stated six-kernel coverage as the 10 comparator targets and their dependency closure, and noted that the 149-declaration count includes literal or definitional identities and omits 7 public helper lemmas by name.
+- Added the hypotheses of `rt_strong_subadditivity` and a citation of Headrick and Takayanagi (2007) to Theorem VI, and recorded paper and Lean issues in `ERRATA.md` under "2026-11-26 statement audit".
+
 - Future genus-$g \ge 2$ Mumford-Schottky wormhole curvature generalization and finite multi-prime adelic product lattice ($\mathbb{A}_{\mathbb{Q}}$ truncation) planned for `v1.6.0+` (see [`ROADMAP.md`](ROADMAP.md)).
 
 ## [1.5.0] — 2026-11-26
