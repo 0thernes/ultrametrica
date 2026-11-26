@@ -13,5 +13,5 @@ Eliminate all hanging subtrees bottom-up into the $L$ horizon vertices via exact
 
 ## Consequences
 
-- **Positive:** Guaranteed $O(V)$ runtime (`0.22 ms` for $N = 625$ BTZ), algebraically proved unconditional non-singularity ($\mathrm{den} \ge 1$, Theorem IV in `SolitonAndSolver.lean`), exact $\mathbb{Q}(i)$ zero-residual verification, and machine-precision stability (`5.38e-15`) all the way down to the Breitenlohner-Freedman bound $\Delta = 0.5001$ under maximal flux $\Omega = \pi$.
+- **Positive:** Guaranteed $O(V)$ runtime (`0.22 ms` for $N = 625$ BTZ), the integer inequality $1 \le 1 + wq$ for $w, q \ge 0$ (`sherman_morrison_denominator_ge_one`, with $q \ge 0$ a hypothesis; positivity of $T$ and the solver are not in Lean), exact $\mathbb{Q}(i)$ zero-residual verification, and machine-precision stability (`5.38e-15`) all the way down to the Breitenlohner-Freedman bound $\Delta = 0.5001$ under maximal flux $\Omega = \pi$.
 - **Trade-off:** Requires strict adherence to the BF stability regime ($T \succ 0$) so that $u^\dagger T^{-1} u \ge 0$; entering the tachyonic regime $\Delta < 0.5$ is guarded against in UI/engine bounds.

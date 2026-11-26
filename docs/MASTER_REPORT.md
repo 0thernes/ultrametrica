@@ -58,6 +58,8 @@ On a uniform BTZ horizon ring of length $L \ge 3$ where each horizon vertex has 
 Every Kozyrev wavelet $\psi_{j,b,m}$ has flat intensity $|\psi|^2 = p^{-(n-j)}$ on its ball $B_j(b)$ and zero outside. Hence ANY local nonlinearity $F(|\psi|^2)$ acts as a scalar shift on any disjoint superposition of Kozyrev wavelets (`kozyrev_exact_nonlinear_soliton`, `disjoint_multi_soliton_no_crosstalk`). Breaking constant modulus by superposing overlapping scales inside one ball induces ultrametric tunneling whose amplitude peaks near $g_* \approx 60$ (`0.37%` at $p=3, n=5$) and collapses back to `0.00%` at $g = 500$ via nonlinear detuning self-trapping.
 
 ### 2.4 Theorem IV — Unconditional Positive-Definiteness of the Kerr-BTZ Rank-1 Solver
+> **Correction (2026-11-26):** "Unconditional" in this heading is withdrawn. $\mathrm{den} \ge 1$ needs $q = u^\dagger T^{-1} u \ge 0$, which holds when $T \succ 0$. Lean checks only the integer inequality $1 \le 1 + wq$ for $w, q \ge 0$ (`sherman_morrison_denominator_ge_one`, with $q \ge 0$ a hypothesis); positivity of $T$ and the solver are not in Lean. See C-THM-4 in [`CLAIMS.md`](../CLAIMS.md) and [`ERRATA.md`](../ERRATA.md).
+
 Because every gauge-coupled edge $(h_{L-1}, h_0)$ contributes $w_{L-1} u u^\dagger \succeq 0$ to the Hermitian Laplacian $M$, removing it yields an open-chain Hermitian positive-definite tridiagonal matrix $T \succ 0$. Thus Thomas elimination never encounters a zero pivot, and the Sherman-Morrison denominator $1 + w_{L-1} u^\dagger T^{-1} u \ge 1 > 0$ is strictly bounded below by $1$ (`horizon_edge_laplacian_psd`, `sherman_morrison_denominator_ge_one`).
 
 ---

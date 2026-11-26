@@ -10,6 +10,7 @@ All notable releases, mathematical proofs, verification suites, and engine chang
 - Split claim rows C-THM-1B, C-PROP-42, C-THM-2, C-THM-3, C-THM-4 and C-THM-5 into their kernel-checked lemma and their exact-rational or numerical part; Lean does not define $D_p^\alpha$, Kozyrev wavelets, $H_\theta$, time evolution or the $O(V)$ solver, and does not sum curvature over a finite tree.
 - Stated six-kernel coverage as the 10 comparator targets and their dependency closure, and noted that the 149-declaration count includes literal or definitional identities and omits 7 public helper lemmas by name.
 - Added the hypotheses of `rt_strong_subadditivity` and a citation of Headrick and Takayanagi (2007) to Theorem VI, and recorded paper and Lean issues in `ERRATA.md` under "2026-11-26 statement audit".
+- Removed the withdrawn word "unconditional" for the Theorem IV denominator bound from `docs/adr/0003-rank1-sherman-morrison-kerr-btz.md`, `GLOSSARY.md`, `INDEX.md`, `SUMMARY.md`, `paper/WHITE_PAPER.md` and `src/web/blueprint.html`, and added a dated correction note to `docs/MASTER_REPORT.md`: $\mathrm{den} \ge 1$ needs $u^\dagger T^{-1} u \ge 0$, and Lean checks only $1 \le 1 + wq$ for $w, q \ge 0$.
 
 - Future genus-$g \ge 2$ Mumford-Schottky wormhole curvature generalization and finite multi-prime adelic product lattice ($\mathbb{A}_{\mathbb{Q}}$ truncation) planned for `v1.6.0+` (see [`ROADMAP.md`](ROADMAP.md)).
 
