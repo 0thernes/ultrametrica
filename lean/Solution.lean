@@ -1,13 +1,17 @@
-/-
-  ULTRAMETRICA (v1.4.0) — Sorry-Free Solution Module Matched Against `Challenge.lean`.
+module
 
-  Proves all 8 targets in `Ultrametrica.ComparatorTarget` with ZERO `sorry`, ZERO `native_decide`,
+public import UltrametricaProofs.Spec
+public import UltrametricaProofs
+
+/-!
+  ULTRAMETRICA (v1.5.0) — Sorry-Free Solution Module Matched Against `Challenge.lean`.
+
+  Palomar Registry compliant Lean 4.35.0 `module`.
+  Proves all 10 targets in `Ultrametrica.ComparatorTarget` with ZERO `sorry`, ZERO `native_decide`,
   ZERO custom axioms, and ZERO Mathlib dependencies, verified across 6 independent Lean kernels via:
+      lake check --paranoid
       lake comparator --config comparator.json --paranoid
 -/
-
-import UltrametricaProofs.Spec
-import UltrametricaProofs
 
 namespace Ultrametrica.ComparatorTarget
 
@@ -62,6 +66,26 @@ private theorem spec_btzTransportCost_eq (L : Int) (hL : 3 ≤ L)
       spec_btzGraphDist_eq_classDist L hL .child .back,
       spec_btzGraphDist_eq_classDist L hL .child .child]
   rfl
+
+private theorem spec_finSum_eq (n : Nat) (f : Fin n → Int) :
+    Spec.finSum n f = Ultrametrica.finSum n f := by
+  induction n with
+  | zero => rfl
+  | succ k ih =>
+    simp only [Spec.finSum, Ultrametrica.finSum]
+    rw [ih (fun i => f i.castSucc)]
+
+private theorem spec_genBridgeTransportCost_eq (p : Nat) (ae : Int) (uA vA : Fin p → Int)
+    (P00 : Int) (P0y Px0 : Fin p → Int) (Pxy : Fin p → Fin p → Int) :
+    Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy =
+      Ultrametrica.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy := by
+  unfold Spec.genBridgeTransportCost Ultrametrica.genBridgeTransportCost
+  rw [spec_finSum_eq, spec_finSum_eq, spec_finSum_eq]
+  have hinner : (fun r => Spec.finSum p (fun s => Pxy r s * (uA r + ae + vA s))) =
+      (fun r => Ultrametrica.finSum p (fun s => Pxy r s * (uA r + ae + vA s))) := by
+    funext r
+    exact spec_finSum_eq p _
+  rw [hinner]
 
 private theorem spec_cint_add_zero_left (a : Spec.CInt) :
     Spec.CInt.add Spec.CInt.zero a = a := by
@@ -118,9 +142,9 @@ private theorem spec_sumInt_eq (ws : List Int) :
 
 private def toCoreCInt (z : Spec.CInt) : Ultrametrica.CInt := ⟨z.re, z.im⟩
 
--- ---- The 8 Comparator Targets (Exact Match to `Challenge.lean`) ----
+-- ---- The 10 Comparator Targets (Exact Match to `Challenge.lean`) ----
 
-theorem target_thm1_monna_and_parity :
+public theorem target_thm1_monna_and_parity :
     (∀ p n x, 2 ≤ p → x < p ^ n → Spec.revBase p n (Spec.revBase p n x) = x) ∧
     (∀ p n x, 2 ≤ p → x < p ^ n → Spec.revBase p n (p ^ n - 1 - x) = p ^ n - 1 - Spec.revBase p n x) ∧
     (∀ p m, p % 2 = 1 → 1 ≤ m → m < p → m ≠ p - m) ∧
@@ -135,7 +159,7 @@ theorem target_thm1_monna_and_parity :
   · intro p m hodd h1 hlt
     exact Ultrametrica.odd_prime_conjugate_sector_disjoint p m hodd h1 hlt
 
-theorem target_thm1_picket_fence_law :
+public theorem target_thm1_picket_fence_law :
     ∀ p m a, 2 ≤ p → 1 ≤ m → 2 * m ≤ p →
       Spec.picketVal p m (2 * a) ≤ Spec.picketVal p m (2 * a + 1) ∧
       Spec.picketVal p m (2 * a + 1) < Spec.picketVal p m (2 * a + 2) ∧
@@ -152,7 +176,7 @@ theorem target_thm1_picket_fence_law :
   have h3 := Ultrametrica.picket_fence_odd_gap p m a h2m
   exact ⟨h1.1, h1.2, h2, h3⟩
 
-theorem target_thm2_btz_ollivier_ricci :
+public theorem target_thm2_btz_ollivier_ricci :
     (∀ p L M : Int, 2 ≤ p → 3 ≤ L → 1 ≤ M →
       ∀ P : Spec.BTZNbrClass → Spec.BTZNbrClass → Int,
         (∀ i j, 0 ≤ P i j) →
@@ -184,7 +208,7 @@ theorem target_thm2_btz_ollivier_ricci :
     rw [hss L, Int.mul_comm (-(2 * p - max 0 (6 - L))) (p + 1)] at hid
     exact hid
 
-theorem target_thm3_multiball_soliton :
+public theorem target_thm3_multiball_soliton :
     ∀ (X : Type) (F : Int → Int) (modes : List ((X → Spec.CInt) × Int)),
       (∀ m ∈ modes, ∀ x, m.1 x = Spec.CInt.zero ∨ (m.1 x).normSq = m.2) →
       (∀ i j (hi : i < modes.length) (hj : j < modes.length),
@@ -232,7 +256,7 @@ theorem target_thm3_multiball_soliton :
             spec_foldr_smul_zero_of_all_zero F tl x htl_all_zero,
             spec_cint_add_zero_right, spec_cint_add_zero_right, hnorm]
 
-theorem target_thm4_kerr_solver_and_parity :
+public theorem target_thm4_kerr_solver_and_parity :
     (∀ w q : Int, 0 ≤ w → 0 ≤ q → 1 ≤ 1 + w * q) ∧
     (∀ w : Int, ∀ z0 z1 ph : Spec.CInt,
       let d1 := Spec.CInt.sub z0 (Spec.CInt.mul ph z1)
@@ -248,7 +272,6 @@ theorem target_thm4_kerr_solver_and_parity :
     dsimp only
     exact congrArg (w * ·) hcore
   · intro w z0 z1 ph
-    have hcore := Ultrametrica.kerr_flux_edge_current_odd (toCoreCInt z0) (toCoreCInt z1) (toCoreCInt ph)
     dsimp only
     have hcur : (Spec.CInt.mul z0 (Spec.CInt.mul ph.conj z1.conj)).im =
         -(Spec.CInt.mul z0.conj (Spec.CInt.mul ph z1)).im := by
@@ -262,7 +285,7 @@ theorem target_thm4_kerr_solver_and_parity :
       omega
     rw [hcur, Int.mul_neg]
 
-theorem target_thm5_global_curved_gauss_bonnet :
+public theorem target_thm5_global_curved_gauss_bonnet :
     (∀ p w Wu Wv : Int,
       Spec.curvedGenKappaNum p w Wu Wv =
         -(p - 1) * w * Wv + -(p - 1) * w * Wu - Spec.curvedGenDeficitNum w Wu Wv) ∧
@@ -287,7 +310,35 @@ theorem target_thm5_global_curved_gauss_bonnet :
     rw [spec_sumInt_eq, spec_sumInt_eq]
     exact Ultrametrica.sumInt_map_mul (-(p - 1)) ws
 
-theorem target_thm6_holographic_ssa :
+public theorem target_thm5_kantorovich_dual :
+    (∀ (p : Nat) (D ae w Wu Wv M : Int) (uW vW uA vA : Fin p → Int)
+       (P00 : Int) (P0y Px0 : Fin p → Int) (Pxy : Fin p → Fin p → Int),
+      0 ≤ ae → w * ae = D →
+      (∀ r, uW r * uA r = D) → (∀ s, vW s * vA s = D) →
+      w + Spec.finSum p uW = Wu →
+      0 ≤ P00 → (∀ r s, 0 ≤ Pxy r s) →
+      (∀ r, Px0 r + Spec.finSum p (fun s => Pxy r s) = uW r * Wv * M) →
+      P00 + Spec.finSum p Px0 = w * Wu * M →
+      (∀ s, P0y s + Spec.finSum p (fun r => Pxy r s) = vW s * Wu * M) →
+      ae * M * (Wu * Wv + ((p : Int) - 1) * w * (Wu + Wv)) ≤
+        Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy ∧
+      ae * M * (((p : Int) + 1) * w * (Wu + Wv) - Wu * Wv) ≤
+        Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy) := by
+  intro p D ae w Wu Wv M uW vW uA vA P00 P0y Px0 Pxy hae hwD huA hvA hWu hP00 hPxy hRowR hCol0 hColS
+  rw [spec_finSum_eq] at hWu hCol0
+  have hRowR' : ∀ r, Px0 r + Ultrametrica.finSum p (fun s => Pxy r s) = uW r * Wv * M := by
+    intro r; rw [← spec_finSum_eq]; exact hRowR r
+  have hColS' : ∀ s, P0y s + Ultrametrica.finSum p (fun r => Pxy r s) = vW s * Wu * M := by
+    intro s; rw [← spec_finSum_eq]; exact hColS s
+  rw [spec_genBridgeTransportCost_eq]
+  exact ⟨
+    Ultrametrica.gen_bridge_wasserstein_lower_bound_sub
+      p D ae w Wu Wv M uW vW uA vA P00 P0y Px0 Pxy hae hwD huA hvA hWu hP00 hRowR' hCol0 hColS',
+    Ultrametrica.gen_bridge_wasserstein_lower_bound_sup
+      p D ae w Wu Wv M uW vW uA vA P00 P0y Px0 Pxy hae hwD huA hvA hWu hPxy hRowR' hCol0 hColS'
+  ⟩
+
+public theorem target_thm6_holographic_ssa :
     ∀ (edges : List (Nat × Nat × Nat)) (bdry A B C W_AB W_BC : Nat → Bool) (S_ABC S_B : Nat),
       (∀ v, bdry v = true → (A v && C v) = false) →
       Spec.IsHomologous bdry (fun v => A v || B v) W_AB →
@@ -301,7 +352,16 @@ theorem target_thm6_holographic_ssa :
   · intro W hW; rw [← spec_rtCutCap_eq]; exact hminABC W hW
   · intro W hW; rw [← spec_rtCutCap_eq]; exact hminB W hW
 
-theorem target_nonvacuity_witnesses :
+public theorem target_adversarial_refutations :
+    ¬ (∀ m : Nat, 1 ≤ m → m < 2 → m ≠ 2 - m) ∧
+    Spec.curvedGenDeficitNum 8 10 10 ≠ 0 ∧
+    ¬ (Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 1 || v == 2) +
+       Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 2 || v == 3) ≤
+       Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 1 || v == 2 || v == 3) +
+       Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 2)) := by
+  exact ⟨Ultrametrica.Adversarial.adv_dyadic_breaks_odd_doublet_protection, by decide, by decide⟩
+
+public theorem target_nonvacuity_witnesses :
     Spec.revBase 3 4 5 = 63 ∧
     Spec.picketVal 5 1 1 - Spec.picketVal 5 1 0 = 3 ∧
     Spec.curvedGenDeficitNum 2 5 7 = 0 ∧

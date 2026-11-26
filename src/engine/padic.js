@@ -14,11 +14,13 @@
 
 const TWO_PI = 2 * Math.PI;
 
+/** @param {number} p @returns {boolean} */
 export function isPrimeSmall(p) {
   return p === 2 || p === 3 || p === 5 || p === 7;
 }
 
 export class PadicSpace {
+  /** @param {number} [p=3] @param {number} [n=6] */
   constructor(p = 3, n = 6) {
     if (!isPrimeSmall(p)) {
       throw new RangeError(`Unsupported prime p=${p}. Supported primes: 2, 3, 5, 7.`);
@@ -88,11 +90,16 @@ export class PadicSpace {
     }
 
     // Precomputed stage twiddle factors W_{block}^{r*j} for stages s = 0..n-1
+    /** @type {Float64Array[]} */
     this.stageTwiddleFwdRe = [];
+    /** @type {Float64Array[]} */
     this.stageTwiddleFwdIm = [];
+    /** @type {Float64Array[]} */
     this.stageTwiddleInvRe = [];
+    /** @type {Float64Array[]} */
     this.stageTwiddleInvIm = [];
     for (let s = 0; s < n; s++) {
+      /** @type {number} */
       const stride = this.powP[s];
       const block = stride * p;
       const len = p * stride;
@@ -125,7 +132,11 @@ export class PadicSpace {
     this._fftWorkIm = new Float64Array(this.N);
   }
 
-  /** Base-p digits of x in little-endian order [d_0, d_1, ..., d_{n-1}]. */
+  /**
+   * Base-p digits of x in little-endian order [d_0, d_1, ..., d_{n-1}].
+   * @param {number} x
+   * @returns {Int32Array}
+   */
   digits(x) {
     const out = new Int32Array(this.n);
     let v = ((x % this.N) + this.N) % this.N;
@@ -136,7 +147,11 @@ export class PadicSpace {
     return out;
   }
 
-  /** Canonical p-adic string "...d_{n-1}...d_1 d_0 (mod p^n)". */
+  /**
+   * Canonical p-adic string "...d_{n-1}...d_1 d_0 (mod p^n)".
+   * @param {number} x
+   * @returns {string}
+   */
   formatPadic(x) {
     const d = this.digits(x);
     let s = '';
@@ -144,13 +159,21 @@ export class PadicSpace {
     return `...${s}_${this.p}`;
   }
 
-  /** Monna map M_p(x) in [0, 1). */
+  /**
+   * Monna map M_p(x) in [0, 1).
+   * @param {number} x
+   * @returns {number}
+   */
   monna(x) {
     const xm = ((x % this.N) + this.N) % this.N;
     return this.revTable[xm] / this.N;
   }
 
-  /** Map Bruhat-Tits leaf index l -> p-adic integer x in Z_p / p^n Z_p. */
+  /**
+   * Map Bruhat-Tits leaf index l -> p-adic integer x in Z_p / p^n Z_p.
+   * @param {number} leaf
+   * @returns {number}
+   */
   leafToPadic(leaf) {
     if (!Number.isInteger(leaf) || leaf < 0 || leaf >= this.N) {
       throw new RangeError(`Leaf index ${leaf} out of range [0, ${this.N - 1}].`);
@@ -158,7 +181,11 @@ export class PadicSpace {
     return this.revTable[leaf];
   }
 
-  /** Map p-adic integer x -> Bruhat-Tits leaf index l. */
+  /**
+   * Map p-adic integer x -> Bruhat-Tits leaf index l.
+   * @param {number} x
+   * @returns {number}
+   */
   padicToLeaf(x) {
     if (!Number.isInteger(x)) {
       throw new RangeError(`p-adic integer x must be an integer, got ${x}.`);
@@ -166,20 +193,35 @@ export class PadicSpace {
     return this.revTable[((x % this.N) + this.N) % this.N];
   }
 
-  /** Exact p-adic valuation v_p(x - y) in {0, 1, ..., n}. */
+  /**
+   * Exact p-adic valuation v_p(x - y) in {0, 1, ..., n}.
+   * @param {number} x
+   * @param {number} y
+   * @returns {number}
+   */
   diffValuation(x, y) {
     const diff = ((x - y) % this.N + this.N) % this.N;
     return this.valuationTable[diff];
   }
 
-  /** Exact p-adic ultrametric distance |x - y|_p = p^{-v_p(x-y)} (0 if equal mod p^n). */
+  /**
+   * Exact p-adic ultrametric distance |x - y|_p = p^{-v_p(x-y)} (0 if equal mod p^n).
+   * @param {number} x
+   * @param {number} y
+   * @returns {number}
+   */
   distance(x, y) {
     const diff = ((x - y) % this.N + this.N) % this.N;
     if (diff === 0) return 0;
     return this.p ** (-this.valuationTable[diff]);
   }
 
-  /** Exact ultrametric distance between two Bruhat-Tits tree leaves l1, l2. */
+  /**
+   * Exact ultrametric distance between two Bruhat-Tits tree leaves l1, l2.
+   * @param {number} l1
+   * @param {number} l2
+   * @returns {number}
+   */
   leafDistance(l1, l2) {
     return this.distance(this.leafToPadic(l1), this.leafToPadic(l2));
   }
@@ -191,6 +233,11 @@ export class PadicSpace {
    * where sign = -1 (forward) or +1 (inverse).
    *
    * Safe when outRe === inRe and outIm === inIm (in-place supported via work buffer).
+   * @param {Float64Array} inRe
+   * @param {Float64Array} inIm
+   * @param {Float64Array} outRe
+   * @param {Float64Array} outIm
+   * @param {boolean} inverse
    */
   _radixTransform(inRe, inIm, outRe, outIm, inverse) {
     const p = this.p;
@@ -221,6 +268,7 @@ export class PadicSpace {
 
     // Step 2: n butterfly stages of radix p
     for (let s = 0; s < n; s++) {
+      /** @type {number} */
       const stride = this.powP[s];
       const block = stride * p;
       const twRe = twReStages[s];
@@ -281,10 +329,22 @@ export class PadicSpace {
     }
   }
 
+  /**
+   * @param {Float64Array} inRe
+   * @param {Float64Array} inIm
+   * @param {Float64Array} outRe
+   * @param {Float64Array} outIm
+   */
   fft(inRe, inIm, outRe, outIm) {
     this._radixTransform(inRe, inIm, outRe, outIm, false);
   }
 
+  /**
+   * @param {Float64Array} inRe
+   * @param {Float64Array} inIm
+   * @param {Float64Array} outRe
+   * @param {Float64Array} outIm
+   */
   ifft(inRe, inIm, outRe, outIm) {
     this._radixTransform(inRe, inIm, outRe, outIm, true);
   }
@@ -293,6 +353,8 @@ export class PadicSpace {
    * Exact eigenvalues of the Vladimirov pseudo-differential operator D_p^alpha
    * in Pontryagin dual frequency space k in {0, ..., N-1}:
    *   lambda_k = |k / p^n|_p^alpha = p^{alpha * (n - v_p(k))}  for k != 0,  0 for k = 0.
+   * @param {number} alpha
+   * @returns {Float64Array}
    */
   vladimirovSpectrum(alpha) {
     if (!Number.isFinite(alpha) || alpha <= 0) {
@@ -312,6 +374,8 @@ export class PadicSpace {
   /**
    * Archimedean fractional Laplacian (-Delta)^{alpha/2} eigenvalues on Z/NZ
    * mapped to unit circle circumference: (2*pi*min(k, N-k))^alpha.
+   * @param {number} alpha
+   * @returns {Float64Array}
    */
   archimedeanSpectrum(alpha) {
     if (!Number.isFinite(alpha) || alpha <= 0) {
@@ -329,6 +393,11 @@ export class PadicSpace {
 
   /**
    * Apply exact Vladimirov operator D_p^alpha to state psi (indexed by p-adic x).
+   * @param {Float64Array} re
+   * @param {Float64Array} im
+   * @param {number} alpha
+   * @param {Float64Array} outRe
+   * @param {Float64Array} outIm
    */
   applyVladimirov(re, im, alpha, outRe, outIm) {
     const spec = this.vladimirovSpectrum(alpha);
@@ -353,6 +422,9 @@ export class PadicSpace {
    *   D_p^alpha psi_{j, b, m} = p^{alpha * (j + 1)} psi_{j, b, m}.
    *
    * Returns psi indexed by p-adic integer x (ready for FFT / quantum evolution).
+   * @param {number} j
+   * @param {number} ballIndex
+   * @param {number} [characterM=1]
    */
   createKozyrevWavelet(j, ballIndex, characterM = 1) {
     const p = this.p;
@@ -398,6 +470,7 @@ export class PadicSpace {
       ballSize,
       centerX: this.revTable[leafStart],
       radius: p ** (-j),
+      /** @param {number} alpha */
       eigenvalue: (alpha) => p ** (alpha * (j + 1)),
     };
   }
@@ -412,7 +485,8 @@ export class PadicSpace {
    *   - shellPower: Float64Array(n + 1) where shellPower[0] = |const|^2 and
    *                 shellPower[j + 1] = sum_{b, m} |c_{j, b, m}|^2 (exact energy at eigenvalue p^{alpha*(j+1)})
    *   - shellCentroid: Float64Array(n + 1) Monna-map spatial centroid in [0, 1] for stereo audio panning
-   *   - coeffs: array of { j, b, m, re, im, power } for non-negligible wavelets
+   * @param {Float64Array} psiRe
+   * @param {Float64Array} psiIm
    */
   kozyrevTransform(psiRe, psiIm) {
     const p = this.p;
@@ -503,6 +577,9 @@ export class PadicSpace {
   /**
    * Exact Ultrametric Triangle & Bruhat-Tits Gromov Product Prover
    * for any 3 boundary leaves (leafA, leafB, leafC).
+   * @param {number} leafA
+   * @param {number} leafB
+   * @param {number} leafC
    */
   proveUltrametricTriangle(leafA, leafB, leafC) {
     const xA = this.leafToPadic(leafA);

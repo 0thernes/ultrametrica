@@ -1,6 +1,6 @@
-# ULTRAMETRICA — Master Index & Table of Contents (`v1.4.1`)
+# ULTRAMETRICA — Master Index & Table of Contents (`v1.5.0`)
 
-Complete navigational map of every manuscript, formal Lean 4 proof (`120` declarations + `8` isolated 6-kernel comparator targets), 3-cycle hardening dossier, Mega-Atlas cross-check (`0/1,900`), pre-registered statistical audit, claim ledger, engine module, benchmark artifact, runnable example, and governance record in `0thernes/ultrametrica` (`v1.4.1`).
+Complete navigational map of every manuscript, formal Lean 4 proof (`149` audited declarations = `139` core theorems across 5 Palomar modules + `10` isolated 6-kernel comparator targets), interactive proof blueprint (`src/web/blueprint.html`), live Crossref DOI audit (`docs/LITERATURE_SEARCH.md`), 3-cycle hardening dossier (`F01`–`F36`), Mega-Atlas cross-check (`0/1,900`), pre-registered statistical audit, claim ledger, engine module, benchmark artifact, runnable example, and governance record in `0thernes/ultrametrica` (`v1.5.0`).
 
 ---
 

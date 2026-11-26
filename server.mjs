@@ -52,7 +52,7 @@ export function createUltrametricaServer({
   srcRoot = DEFAULT_SRC_ROOT,
   fsImpl = fs,
   logFn = null,
-  version = '1.4.1',
+  version = '1.5.0',
 } = {}) {
   const rootAbs = path.resolve(srcRoot);
   const startedAt = Date.now();
@@ -113,6 +113,13 @@ export function createUltrametricaServer({
         res.writeHead(302, { Location: `/web/${parsed.search}`, ...SECURITY_HEADERS });
         res.end();
         emitLog('info', { reqId, method, path: '/', status: 302 });
+        return;
+      }
+
+      if (parsed.pathname === '/blueprint' || parsed.pathname === '/blueprint.html') {
+        res.writeHead(302, { Location: `/web/blueprint.html${parsed.search}`, ...SECURITY_HEADERS });
+        res.end();
+        emitLog('info', { reqId, method, path: parsed.pathname, status: 302 });
         return;
       }
 
@@ -209,7 +216,7 @@ if (isMain) {
   const PORT = parsePort(process.env.PORT);
   const HOST = process.env.HOST || '127.0.0.1';
   const jsonLogs = process.env.LOG_FORMAT === 'json';
-  let version = '1.4.1';
+  let version = '1.5.0';
   try {
     version = (await fs.readFile(VERSION_PATH, 'utf8')).trim() || version;
   } catch {}

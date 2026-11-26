@@ -20,7 +20,7 @@
 git clone https://github.com/0thernes/ultrametrica.git
 cd ultrametrica
 
-# 1. All 26 Node test suites (10 theorems + 8 killed mutants + 3,200+ properties + server contract/EIO + golden)
+# 1. All 27 Node test suites (10 theorems + 8 killed mutants + 3,400+ properties/stress + server contract/EIO + golden)
 npm run verify:all
 
 # 2. All 3 runnable examples
@@ -76,3 +76,4 @@ Every clean-environment reproduction (local or independent CI runner) is recorde
 | 2026-11-25 | Author (Windows 11 local workstation) | `v1.4.0` | Intel Core Ultra 9 275HX, Node `v25.8.2`, Python `3.13`, Lean `v4.35.0`, Tectonic `0.17.0` | PASS | 26/26 Node tests, 3,200+ properties, 1,000+ Python oracle queries, 120 Lean decls + external kernels, Exp I 4/4 (`p_holm=0.0004`), zero-warning PDF |
 | 2026-11-25 | GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.4.0` | Clean GitHub-hosted runners + `bubblewrap` 6-kernel `lake comparator --paranoid` | PASS (`#45726457779`) | Independent clean-clone verification across 3 operating systems + sandboxed 6-kernel Lean verification (Rekor `4114476726`) |
 | 2026-11-25 | Author Local + GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.4.1` | Intel Core Ultra 9 275HX + 3-OS GitHub runners + `bubblewrap` 6-kernel comparator | PASS | Zero-warning PDF (`19` pages, `21/21` refs), `0` `ruff` / `0` `mypy` warnings, responsive live observatory QA, `26/26` Node + `1,000+` Python + `120` Lean decls |
+| 2026-11-26 | Author Local + GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.5.0` | Intel Core Ultra 9 275HX + 3-OS GitHub runners + `bubblewrap` `lake check` & 6-kernel comparator | PASS | `27/27` Node (incl. 200 curved-BTZ Dijkstra stress trials), `149` Lean decls (Palomar `module`, multi-edge Kantorovich duality, `AdversarialTests.lean`), `18/18` live Crossref DOIs (`0` retractions), `54/54` Blueprint decls, `0` `tsc`/`ruff`/`mypy` errors, zero-warning PDF |

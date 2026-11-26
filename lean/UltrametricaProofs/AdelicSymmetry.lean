@@ -1,5 +1,8 @@
-/-
-  ULTRAMETRICA — Lean 4 Formal Proofs (Module 2: Adelic Parity-Doubling Dichotomy & Subtree Isometry)
+module
+
+/-!
+  ULTRAMETRICA (v1.5.0) — Lean 4 Formal Proofs (Module 2: Adelic Parity-Doubling Dichotomy & Subtree Isometry)
+  Palomar-compliant Lean 4.35.0 `module`.
   Proves universally for ALL bases/primes p >= 2 and ALL depths n >= 1 (zero Mathlib, zero sorry):
     1. Exact Hilbert-space completeness 1 + sum_{s=0}^{n-1} (p - 1) * p^s = p^n.
     2. Exact within-ball cyclic child-subtree shift `subtreeShift p n s` preserves EVERY Bruhat-Tits
@@ -9,6 +12,8 @@
     4. Exact complex conjugation k -> p^n - k preserving valuation s and mapping (s, m) -> (s, p - m).
     5. Odd-prime doublet protection (m != p - m for all odd p >= 3) and even-prime self-conjugacy (p = 2).
 -/
+
+@[expose] public section
 
 namespace Ultrametrica
 
@@ -421,3 +426,4 @@ theorem picket_fence_dyadic_zero_gap :
     min (2 * 1) (2 - 2 * 1) = 0 := by decide
 
 end Ultrametrica
+end

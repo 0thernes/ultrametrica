@@ -1,11 +1,15 @@
-/-
-  ULTRAMETRICA — Standalone Kernel Axiom Audit (v4.35.0, release v1.3.0)
-  Audits all 101 exported theorems across the four proof libraries via `#print axioms`.
-  Every theorem must depend strictly on a subset of [propext, Classical.choice, Quot.sound]
-  (or no axioms at all) with zero `sorryAx`, zero `native_decide`, and zero custom axioms.
--/
+module
 
-import UltrametricaProofs
+public import UltrametricaProofs
+public import Solution
+
+/-!
+  ULTRAMETRICA (v1.5.0) — Standalone Kernel Axiom Audit (`v4.35.0`, Palomar `module`)
+  Audits all 149 exported declarations across all five proof modules (139 theorems) + all 10 isolated comparator targets
+  via `#print axioms`. Every theorem must depend strictly on a subset of
+  `[propext, Classical.choice, Quot.sound]` (or zero axioms) with zero `sorryAx`,
+  zero `native_decide` (`_native` / `ofReduceBool`), and zero custom axioms.
+-/
 
 -- Module 1: Basic Ultrametric Geometry, Universal Monna Involution, Ball Contiguity & Concrete Tree Metric (26 theorems)
 #print axioms Ultrametrica.ultrametric_isosceles_lt
@@ -60,7 +64,7 @@ import UltrametricaProofs
 #print axioms Ultrametrica.picket_fence_odd_prime_strictly_positive
 #print axioms Ultrametrica.picket_fence_dyadic_zero_gap
 
--- Module 3: First-Principles Optimal-Transport Curvature, Cycle Bridge, BF Bound, RT & Theorem V Gauss-Bonnet (40 theorems)
+-- Module 3: First-Principles Optimal-Transport Curvature, Multi-Edge Kantorovich Duality, BF Bound & RT SSA (73 theorems)
 #print axioms Ultrametrica.ads_dual_1lipschitz
 #print axioms Ultrametrica.ads_wasserstein_lower_bound
 #print axioms Ultrametrica.ads_primal_cost_exact
@@ -120,6 +124,20 @@ import UltrametricaProofs
 #print axioms Ultrametrica.rt_strong_subadditivity
 #print axioms Ultrametrica.rt_subadditivity
 #print axioms Ultrametrica.rt_ssa_nonvacuous_witness
+#print axioms Ultrametrica.finSum_congr
+#print axioms Ultrametrica.finSum_add
+#print axioms Ultrametrica.finSum_const
+#print axioms Ultrametrica.finSum_mul_left
+#print axioms Ultrametrica.finSum_mul_right
+#print axioms Ultrametrica.finSum_nonneg
+#print axioms Ultrametrica.finSum_swap
+#print axioms Ultrametrica.gen_bridge_transport_cost_identity
+#print axioms Ultrametrica.gen_bridge_excess_balance
+#print axioms Ultrametrica.gen_bridge_wasserstein_lower_bound_sub
+#print axioms Ultrametrica.gen_bridge_wasserstein_lower_bound_sup
+#print axioms Ultrametrica.gen_bridge_primal_sub_optimal
+#print axioms Ultrametrica.gen_bridge_primal_sup_optimal
+#print axioms Ultrametrica.gen_bridge_kappa_from_wasserstein
 
 -- Module 4: Multi-Ball Solitons, Exact Complex Sherman-Morrison & Kerr Parity Laws (12 theorems)
 #print axioms Ultrametrica.kozyrev_exact_nonlinear_soliton
@@ -134,3 +152,22 @@ import UltrametricaProofs
 #print axioms Ultrametrica.sherman_morrison_exact_identity
 #print axioms Ultrametrica.kerr_flux_edge_stress_even
 #print axioms Ultrametrica.kerr_flux_edge_current_odd
+
+-- Module 5: Adversarial False-Variant Refutations (5 theorems)
+#print axioms Ultrametrica.Adversarial.adv_dyadic_breaks_odd_doublet_protection
+#print axioms Ultrametrica.Adversarial.adv_btz_L5_not_universally_flatter
+#print axioms Ultrametrica.Adversarial.adv_supercritical_pinch_breaks_conservation
+#print axioms Ultrametrica.Adversarial.adv_overlapping_modes_violate_zero_crosstalk
+#print axioms Ultrametrica.Adversarial.adv_rt_ssa_reverse_inequality_false
+
+-- Isolated Palomar Comparator Targets (10 targets)
+#print axioms Ultrametrica.ComparatorTarget.target_thm1_monna_and_parity
+#print axioms Ultrametrica.ComparatorTarget.target_thm1_picket_fence_law
+#print axioms Ultrametrica.ComparatorTarget.target_thm2_btz_ollivier_ricci
+#print axioms Ultrametrica.ComparatorTarget.target_thm3_multiball_soliton
+#print axioms Ultrametrica.ComparatorTarget.target_thm4_kerr_solver_and_parity
+#print axioms Ultrametrica.ComparatorTarget.target_thm5_global_curved_gauss_bonnet
+#print axioms Ultrametrica.ComparatorTarget.target_thm5_kantorovich_dual
+#print axioms Ultrametrica.ComparatorTarget.target_thm6_holographic_ssa
+#print axioms Ultrametrica.ComparatorTarget.target_adversarial_refutations
+#print axioms Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses

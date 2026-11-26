@@ -1,26 +1,12 @@
-/-
-  ULTRAMETRICA — Lean 4 Formal Proofs (Module 4: Multi-Ball Kozyrev Solitons,
-  Exact Complex Sherman-Morrison Identity & Rotating Kerr-BTZ Parity Laws)
-  Pure Lean 4 (v4.35.0), zero Mathlib, zero native_decide, zero sorry.
+module
 
-  Proves:
-    1. Theorem III.1 (Exact Nonlinear Kozyrev Compacton-Soliton Invariance):
-       Any eigenfunction with constant modulus squared c on its support is an exact nonlinear
-       eigenstate of (D + F(|psi|^2)) with renormalized eigenvalue (lambda + F c).
-    2. Theorem III.2 & III.3 (Exact Disjoint Multi-Ball Zero Cross-Talk — 2-Soliton & Arbitrary K-Soliton List):
-       For ANY finite list of K pairwise-disjoint compacton wavelets, the local nonlinearity
-       F(|sum psi_r|^2)(sum psi_r) splits pointwise with ZERO inter-ball cross-talk into
-       sum F(c_r) * psi_r.
-    3. Theorem IV.1 (Hermitian Gauge-Coupled Horizon Edge PSD & Exact Expansion):
-       w * |z0 - e^{i theta} z1|^2 >= 0 and exact unit-phase quadratic expansion.
-    4. Theorem IV.2 (Unconditional Sherman-Morrison Denominator >= 1 and Exact Algebraic Identity):
-       Proves 1 + w * q >= 1 > 0 AND proves the full cleared-denominator complex Hermitian
-       Sherman-Morrison identity (T + w u u^H)(den * y - (w u^H y) * z) = den * b in arbitrary
-       finite dimension L over CInt.
-    5. Theorem IV.3 (Kerr-BTZ Aharonov-Bohm Parity Laws):
-       Conjugating flux phase ph -> conj(ph) and field z -> conj(z) leaves edge stress identically
-       even (E(-Omega) = E(Omega)) and flips directed horizon current identically odd (J(-Omega) = -J(Omega)).
+/-!
+  ULTRAMETRICA (v1.5.0) — Lean 4 Formal Proofs (Module 4: Multi-Ball Kozyrev Solitons,
+  Exact Complex Sherman-Morrison Identity & Rotating Kerr-BTZ Parity Laws)
+  Palomar-compliant Lean 4.35.0 `module`, zero Mathlib, zero `native_decide`, zero `sorry`.
 -/
+
+@[expose] public section
 
 namespace Ultrametrica
 
@@ -479,3 +465,4 @@ theorem kerr_flux_edge_current_odd (z0 z1 ph : CInt) :
   omega
 
 end Ultrametrica
+end

@@ -4,7 +4,22 @@ All notable releases, mathematical proofs, verification suites, and engine chang
 
 ## [Unreleased]
 
-- Future genus-$g \ge 2$ Mumford-Schottky wormhole curvature generalization and finite multi-prime adelic product lattice ($\mathbb{A}_{\mathbb{Q}}$ truncation) planned for `v1.5.0+` (see [`ROADMAP.md`](ROADMAP.md)).
+- Future genus-$g \ge 2$ Mumford-Schottky wormhole curvature generalization and finite multi-prime adelic product lattice ($\mathbb{A}_{\mathbb{Q}}$ truncation) planned for `v1.6.0+` (see [`ROADMAP.md`](ROADMAP.md)).
+
+## [1.5.0] — 2026-11-26
+
+### Added
+- **First-Principles Multi-Edge Inhomogeneous Kantorovich Primal-Dual Duality in Lean 4 (`F30`):** Added Section 13 (`14` theorems: `gen_bridge_transport_cost_identity`, `gen_bridge_excess_balance`, `gen_bridge_wasserstein_lower_bound_sub/sup`, `gen_bridge_primal_sub/sup_optimal`, `gen_bridge_kappa_from_wasserstein`) to `lean/UltrametricaProofs/HolographyCurvature.lean` plus isolated comparator Target 7 (`target_thm5_kantorovich_dual`), proving Theorem V-Global directly from first-principles optimal transport across arbitrary prime degrees $p \in \mathbb{N}$ and arbitrary inhomogeneous outer conductances.
+- **Adversarial False-Variant Lean Refutation Suite (`lean/UltrametricaProofs/AdversarialTests.lean`, Playbook Item #12):** Added `5` kernel-checked explicit negations (`¬ (...)`) proving sharpness of Theorems I, II, III, V/V-Global, and VI, plus isolated comparator Target 9 (`target_adversarial_refutations`). Total audited Lean 4.35.0 declarations expanded from `120` to **`149`** (`139` core theorems across 5 modules + `10` isolated comparator targets).
+- **Palomar Registry `module` System & `lake check --paranoid` (`F29`):** Upgraded all 10 Lean 4.35.0 files to Palomar `module` headers (`public import`, `@[expose] public section`, `public theorem`) and enforced BOTH `lake check --paranoid` and 6-kernel `lake comparator --config comparator.json --paranoid` inside Linux `bubblewrap` CI.
+- **Interactive Lean 4 Proof Blueprint & Dependency Graph (`F31`):** Added zero-dependency strict-CSP `src/web/blueprint.{html,css,js}` (live at `https://0thernes.github.io/ultrametrica/web/blueprint.html`, linked from the Observatory `?` modal, `README.md`, and `paper/main.tex`) plus automated declaration-verification guard `scripts/check_blueprint.py` (`54/54` declarations + `10/10` comparator targets).
+- **Live Crossref DOI, Retraction & Prior-Art Audit (`F33`, `F36`):** Added `scripts/check_citations.py` (`--live` confirms `21/21` BibTeX↔LaTeX coverage, `18/18` DOIs HTTP 200 & exact year match, `0` retractions, `4/4` public URLs HTTP 200) and `docs/LITERATURE_SEARCH.md` (Playbook Gold Standard Item #15).
+- **Zero-Error Strict TypeScript JSDoc Type Checking (`F36`):** Added comprehensive JSDoc types across all 4 core engine files (`src/engine/{padic,holography,quantum,simulation}.js`) so `npx tsc --noEmit -p jsconfig.json` (`strict: true`) exits `0` with `0` errors (added report-only to CI).
+
+### Fixed
+- **CRITICAL LIVE PRODUCTION BUG (`F35` — `src/engine/holography.js`):** Live interactive browser stress testing on `ER=EPR Wormhole Surgery` + `BTZ Hole` exposed `Uncaught RangeError: Invalid array length` at `holography.js:92` caused by IEEE-754 floating-point negative-cost residual cycles (`~1e-13`) inside SPFA when curved BTZ edge lengths reached $a_e > 24\times$. Replaced SPFA in `exactWassersteinBipartite` with **Johnson potential-reduced Dijkstra** (`rc = Math.max(0, e.cost + pi[u] - pi[e.to]) >= 0`, mathematically impossible to cycle, exact $O(V^2)$) and locked regression protection via `test/verify.mjs` Theorem 10 Part F and `test/properties.mjs` (`200` extreme curved-BTZ horizon trials; `27/27` Node tests PASS).
+- **BibTeX Title Accuracy (`F36`):** Corrected `Kozyrev2002` title in `paper/refs.bib` to match official Crossref metadata verbatim (`Wavelet theory as $p$-adic spectral analysis`).
+- **Cross-Artifact Benchmark Sync (`F32`):** Re-froze `results/perf-benchmarks.json` under `v1.5.0` (`0.7307 ms` coupled BTZ frame, `0.1584 ms` N=625 bulk KG+Dijkstra Ricci+RT, `445.37×` FFT speedup) and synchronized all tables, prose, and `paper/main.tex`.
 
 ## [1.4.1] — 2026-11-25
 

@@ -9,11 +9,7 @@
     "noEmit": true
   },
   "include": [
-    "server.mjs",
-    "src/**/*.js",
-    "test/**/*.mjs",
-    "examples/**/*.mjs",
-    "scripts/**/*.mjs"
+    "src/engine/*.js"
   ],
   "exclude": [
     "node_modules",

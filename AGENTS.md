@@ -4,7 +4,7 @@
 
 ## 1. Project Identity & Scope
 
-- **Project:** **ULTRAMETRICA** (`0thernes/ultrametrica`, `v1.4.1`) — zero-dependency real-time $p$-adic AdS/CFT holographic quantum gravity, rotating Tate-curve Kerr-BTZ black hole, Kozyrev wavelet, 48 kHz prime-power AudioWorklet, and pure Lean 4 (`v4.35.0`) formal verification laboratory.
+- **Project:** **ULTRAMETRICA** (`0thernes/ultrametrica`, `v1.5.0`) — zero-dependency real-time $p$-adic AdS/CFT holographic quantum gravity, rotating Tate-curve Kerr-BTZ black hole, Kozyrev wavelet, 48 kHz prime-power AudioWorklet, and pure Lean 4 (`v4.35.0`) formal verification laboratory.
 - **Author & Affiliation:** Alexander Stephen Donahue (`Alexander S. Donahue`), ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648), **Independent Researcher, Spokane, WA, USA** (`0_0@0thernes.art`, `https://0thernes.art`, `https://github.com/0thernes`). Never assert `"0thernes LLC"` as a legal entity.
 - **License:** `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` ([`LICENSE`](LICENSE)). Keep attribution intact; see [`LEGAL.md`](LEGAL.md) and [`docs/adr/0005-cosmogonic-noncommercial-license.md`](docs/adr/0005-cosmogonic-noncommercial-license.md).
 
@@ -26,7 +26,7 @@
 | `src/engine/` | Pure zero-dependency ES modules (`padic.js`, `holography.js`, `quantum.js`, `simulation.js`) |
 | `src/web/` | WebGL2 3D observatory (`renderer3d.js`), 2D panels (`panels2d.js`), 48 kHz AudioWorklet (`audio*.js`), WCAG 2.2 AA UI (`index.html`, `styles.css`, `app.js`) |
 | `server.mjs` | Hardened static server with `/healthz`, strict CSP, fail-fast `PORT` validation, structured JSON logging |
-| `lean/` | Pure Lean `v4.35.0` formalization (0 Mathlib): `UltrametricaProofs/{Spec,Basic,AdelicSymmetry,HolographyCurvature,SolitonAndSolver}.lean`, `VerifyAxioms.lean` (120 decls), `Challenge.lean`, `Solution.lean`, `comparator.json` |
+| `lean/` | Pure Lean `v4.35.0` formalization (Palomar `module`, 0 Mathlib): `UltrametricaProofs/{Spec,Basic,AdelicSymmetry,HolographyCurvature,SolitonAndSolver,AdversarialTests}.lean`, `VerifyAxioms.lean` (149 decls), `Challenge.lean`, `Solution.lean`, `comparator.json` |
 | `test/` | `verify.mjs` (10 theorems), `mutants.mjs` (8 killed mutants), `properties.mjs` (3,200+ property/metamorphic/negative cases), `server.mjs` (HTTP contract + EIO failure injection), `golden.mjs` |
 | `reference/` | Independent textbook Python oracle (`padic_oracle.py`) |
 | `scripts/` | `verify_exact.py`, `check_readme_axioms.py`, `discover.mjs`, `bench.mjs`, `stats_eval.mjs`, `generate_figures.py`, `package_dist.py`, `Audit-Repo.ps1`, `audit-repo.sh` |

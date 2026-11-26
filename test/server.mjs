@@ -53,7 +53,7 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
   const server = createUltrametricaServer({
     srcRoot: SRC_ROOT,
     logFn: (entry) => logs.push(entry),
-    version: '1.4.1',
+    version: '1.5.0',
   });
 
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -67,15 +67,18 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
     const payload = JSON.parse(health.body);
     assert.equal(payload.status, 'ok');
     assert.equal(payload.service, 'ultrametrica');
-    assert.equal(payload.version, '1.4.1');
+    assert.equal(payload.version, '1.5.0');
     assert.equal(typeof payload.uptime_s, 'number');
 
-    // 2. Root redirect preserving query permalink
+    // 2. Root & /blueprint redirects preserving query permalink
     const redir = await rawRequest(port, 'GET', '/?exp=btz_black_hole&p=5');
     assert.equal(redir.status, 302);
     assert.equal(redir.headers.location, '/web/?exp=btz_black_hole&p=5');
+    const bpRedir = await rawRequest(port, 'GET', '/blueprint');
+    assert.equal(bpRedir.status, 302);
+    assert.equal(bpRedir.headers.location, '/web/blueprint.html');
 
-    // 3. Static HTML + Security Headers (CSP, nosniff, CORP, Referrer-Policy)
+    // 3. Static HTML + Blueprint HTML + Security Headers (CSP, nosniff, CORP, Referrer-Policy)
     const idx = await rawRequest(port, 'GET', '/web/');
     assert.equal(idx.status, 200);
     assert.match(idx.headers['content-type'], /^text\/html/);
@@ -83,6 +86,11 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
     for (const [k, v] of Object.entries(SECURITY_HEADERS)) {
       assert.equal(idx.headers[k.toLowerCase()], v, `Missing/mismatched security header ${k}`);
     }
+    const bp = await rawRequest(port, 'GET', '/web/blueprint.html');
+    assert.equal(bp.status, 200);
+    assert.match(bp.headers['content-type'], /^text\/html/);
+    assert.ok(bp.body.includes('data-lean-decl='));
+    assert.equal(bp.headers['content-security-policy'], SECURITY_HEADERS['Content-Security-Policy']);
 
     // 4. HEAD returns empty body with Content-Length
     const head = await rawRequest(port, 'HEAD', '/web/index.html');
@@ -131,7 +139,7 @@ test('B21 Failure Injection: Induced disk EIO read error returns clean 500 & log
     srcRoot: SRC_ROOT,
     fsImpl: faultyFs,
     logFn: (entry) => logs.push(entry),
-    version: '1.4.1',
+    version: '1.5.0',
   });
 
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));

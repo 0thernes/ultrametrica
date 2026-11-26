@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA (v1.4.1) — Independent Zero-Dependency Exact-Rational Falsifier,
+ULTRAMETRICA (v1.5.0) — Independent Zero-Dependency Exact-Rational Falsifier,
 Metadata/Affiliation/Citation Auditor & SHA-256 Manifest Verifier.
 
 Completely decoupled from both the JavaScript simulation engine and Lean 4 proofs.
@@ -71,6 +71,7 @@ MANIFEST_FILES = [
     "docs/MASTER_REPORT.md",
     "docs/AUDIT_AND_CONTRAST_ANALYSIS.md",
     "docs/MEGA_ATLAS_CROSSCHECK.md",
+    "docs/LITERATURE_SEARCH.md",
     "docs/preregistration.md",
     "docs/statement-fidelity.md",
     "src/engine/padic.js",
@@ -80,6 +81,9 @@ MANIFEST_FILES = [
     "src/web/index.html",
     "src/web/styles.css",
     "src/web/app.js",
+    "src/web/blueprint.html",
+    "src/web/blueprint.css",
+    "src/web/blueprint.js",
     "src/web/renderer3d.js",
     "src/web/panels2d.js",
     "src/web/audio.js",
@@ -96,6 +100,8 @@ MANIFEST_FILES = [
     "scripts/stats_eval.mjs",
     "scripts/verify_exact.py",
     "scripts/check_readme_axioms.py",
+    "scripts/check_citations.py",
+    "scripts/check_blueprint.py",
     "scripts/generate_figures.py",
     "scripts/package_dist.py",
     "lean/lean-toolchain",
@@ -112,6 +118,7 @@ MANIFEST_FILES = [
     "lean/UltrametricaProofs/AdelicSymmetry.lean",
     "lean/UltrametricaProofs/HolographyCurvature.lean",
     "lean/UltrametricaProofs/SolitonAndSolver.lean",
+    "lean/UltrametricaProofs/AdversarialTests.lean",
     "results/lean4-audit.txt",
     "results/discovery-benchmarks.json",
     "results/stats-eval.json",
@@ -811,7 +818,7 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
             assert used.issubset(allowed), f"Forbidden axiom in line: {line}"
         elif "does not depend on any axioms" in line:
             audited += 1
-    assert audited >= 120, f"Expected >= 120 audited Lean declarations, found {audited}"
+    assert audited >= 149, f"Expected >= 149 audited Lean declarations, found {audited}"
     assert "comparator" in audit_text.lower() or "nanoda" in audit_text.lower(), (
         "results/lean4-audit.txt missing multi-kernel comparator verification output"
     )

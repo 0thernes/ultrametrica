@@ -43,6 +43,22 @@ jobs:
           </body>
           </html>
           HTML
+          cat <<'HTML' > _site/blueprint.html
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <title>ULTRAMETRICA — Lean 4 Proof Blueprint</title>
+            <meta http-equiv="refresh" content="0; url=./web/blueprint.html" />
+            <script>
+              window.location.replace('./web/blueprint.html' + window.location.search + window.location.hash);
+            </script>
+          </head>
+          <body style="background:#06080d;color:#eef2f8;font-family:system-ui,sans-serif;display:grid;place-items:center;height:100vh;margin:0;">
+            <p>Opening <a href="./web/blueprint.html" style="color:#38bdf8;">ULTRAMETRICA Lean 4 Proof Blueprint</a>&hellip;</p>
+          </body>
+          </html>
+          HTML
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

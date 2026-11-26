@@ -13,6 +13,7 @@ import { PadicSpace } from './padic.js';
 import { BruhatTitsBulk } from './holography.js';
 import { PadicQuantumEngine } from './quantum.js';
 
+/** @type {Record<number, { n: number, btzDepth: number }>} */
 export const PRIME_DEFAULTS = {
   2: { n: 8, btzDepth: 3 }, // N = 256 leaves, L = 8 BTZ horizon
   3: { n: 5, btzDepth: 2 }, // N = 243 leaves, L = 9 BTZ horizon
@@ -66,6 +67,19 @@ export const EXPERIMENTS = [
 ];
 
 export class UltrametricaSimulation {
+  /** @type {PadicSpace} */ space;
+  /** @type {BruhatTitsBulk} */ bulk;
+  /** @type {PadicQuantumEngine} */ quantum;
+  /** @type {Float64Array} */ _potScratch;
+  /** @type {number[]} */ triangleLeaves = [0, 0, 0];
+  /** @type {ReturnType<PadicSpace['proveUltrametricTriangle']> | null} */ triangleProof = null;
+  /** @type {Array<ReturnType<BruhatTitsBulk['shortestGeodesic']>>} */ triangleGeodesics = [];
+
+  /**
+   * @param {number} [p=3]
+   * @param {number | null} [n=null]
+   * @param {number} [horizonDepth=0]
+   */
   constructor(p = 3, n = null, horizonDepth = 0) {
     const def = PRIME_DEFAULTS[p] || PRIME_DEFAULTS[3];
     this.p = p;
@@ -80,14 +94,22 @@ export class UltrametricaSimulation {
 
     this.activeExperiment = 'kozyrev_trap';
     this.rtFraction = 0.38;
-    this.triangleLeaves = [0, 0, 0];
-    this.triangleProof = null;
-    this.triangleGeodesics = [];
+
+    this.space = new PadicSpace(this.p, this.n);
+    this.bulk = new BruhatTitsBulk(this.space, this.horizonDepth);
+    this.horizonDepth = this.bulk.horizonDepth;
+    this.quantum = new PadicQuantumEngine(this.space);
+    this._potScratch = new Float64Array(this.space.N);
 
     this._initUniverse(this.p, this.n, this.horizonDepth);
     this.loadExperiment('kozyrev_trap', { keepTopology: true });
   }
 
+  /**
+   * @param {number} p
+   * @param {number} n
+   * @param {number} horizonDepth
+   */
   _initUniverse(p, n, horizonDepth) {
     this.p = p;
     this.n = n;
@@ -110,7 +132,10 @@ export class UltrametricaSimulation {
     this.updateTriangleProof();
   }
 
-  /** Rebuild the universe with a new prime p, depth n, or BTZ horizon depth h. */
+  /**
+   * Rebuild the universe with a new prime p, depth n, or BTZ horizon depth h.
+   * @param {{ p?: number, n?: number | null, horizonDepth?: number, btz?: boolean | null }} [opts]
+   */
   reconfigure({ p = this.p, n = null, horizonDepth = this.horizonDepth, btz = null } = {}) {
     const def = PRIME_DEFAULTS[p] || PRIME_DEFAULTS[3];
     const targetN = n ?? def.n;
@@ -122,6 +147,7 @@ export class UltrametricaSimulation {
     this.loadExperiment(prevExp, { keepTopology: true });
   }
 
+  /** @param {boolean} enabled */
   setBTZEnabled(enabled) {
     const def = PRIME_DEFAULTS[this.p] || PRIME_DEFAULTS[3];
     const targetH = enabled ? def.btzDepth : 0;
@@ -135,7 +161,11 @@ export class UltrametricaSimulation {
     this.updateTriangleProof();
   }
 
-  /** Load one of the 6 curated alien physics experiments. */
+  /**
+   * Load one of the 6 curated alien physics experiments.
+   * @param {string} id
+   * @param {{ keepTopology?: boolean }} [opts]
+   */
   loadExperiment(id, { keepTopology = false } = {}) {
     if (!EXPERIMENTS.some((e) => e.id === id)) {
       throw new RangeError(`Unknown experiment id '${id}'. Valid ids: ${EXPERIMENTS.map((e) => e.id).join(', ')}.`);
@@ -308,7 +338,11 @@ export class UltrametricaSimulation {
     this.updateTriangleProof();
   }
 
-  /** Set Ryu-Takayanagi boundary region A to a single p-adic ball (j, ballIndex). */
+  /**
+   * Set Ryu-Takayanagi boundary region A to a single p-adic ball (j, ballIndex).
+   * @param {number} j
+   * @param {number} ballIndex
+   */
   setRTRegionBall(j, ballIndex) {
     const N = this.space.N;
     const ballSize = this.space.powP[this.n - j];
@@ -320,7 +354,10 @@ export class UltrametricaSimulation {
     this.bulk.computeRyuTakayanagi(region);
   }
 
-  /** Set Ryu-Takayanagi boundary region A to contiguous fraction f in [0, 1] of leaves. */
+  /**
+   * Set Ryu-Takayanagi boundary region A to contiguous fraction f in [0, 1] of leaves.
+   * @param {number} frac
+   */
   setRTRegionFraction(frac) {
     const f = Math.max(0.02, Math.min(0.98, frac));
     this.rtFraction = f;
@@ -331,7 +368,11 @@ export class UltrametricaSimulation {
     this.bulk.computeRyuTakayanagi(region);
   }
 
-  /** Toggle a p-adic ball around clicked leaf in RT region A. */
+  /**
+   * Toggle a p-adic ball around clicked leaf in RT region A.
+   * @param {number} leaf
+   * @param {number} [scaleOffset=2]
+   */
   toggleRTRegionAtLeaf(leaf, scaleOffset = 2) {
     const j = Math.max(1, this.n - scaleOffset);
     const ballSize = this.space.powP[this.n - j];
@@ -348,7 +389,12 @@ export class UltrametricaSimulation {
     this.bulk.computeRyuTakayanagi(this.bulk.rtRegionA);
   }
 
-  /** Inject a Kozyrev wavelet centered on any clicked bulk node or leaf! */
+  /**
+   * Inject a Kozyrev wavelet centered on any clicked bulk node or leaf!
+   * @param {number} nodeId
+   * @param {number} [characterM=1]
+   * @param {boolean} [replace=false]
+   */
   injectAtNode(nodeId, characterM = 1, replace = false) {
     const depth = this.bulk.nodeDepth[nodeId];
     const idx = this.bulk.nodeIndexInLevel[nodeId];
@@ -359,7 +405,10 @@ export class UltrametricaSimulation {
     return w;
   }
 
-  /** Update the 3-point ultrametric triangle probe by cycling in a newly clicked leaf. */
+  /**
+   * Update the 3-point ultrametric triangle probe by cycling in a newly clicked leaf.
+   * @param {number} leaf
+   */
   pushTriangleProbeLeaf(leaf) {
     this.triangleLeaves = [this.triangleLeaves[1], this.triangleLeaves[2], leaf];
     this.updateTriangleProof();
@@ -384,6 +433,7 @@ export class UltrametricaSimulation {
 
   /**
    * Advance the entire coupled holographic universe by dt seconds.
+   * @param {number} dt
    */
   step(dt) {
     if (this.paused) return;

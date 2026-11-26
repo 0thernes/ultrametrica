@@ -3,7 +3,7 @@
 
 standard: "1.2.0"
 name: "ultrametrica"
-version: "1.4.1"
+version: "1.5.0"
 project_type: "research"
 owner: "Alexander Stephen Donahue (0thernes)"
 orcid: "0009-0006-8168-9648"
@@ -39,9 +39,9 @@ items:
   A03: { status: done, evidence: "README.md Quickstart + zero-dependency clone/run commands" }
   A04: { status: done, evidence: "README.md ## Usage section + examples/ scripts" }
   A05: { status: done, evidence: "docs/media/ultrametrica-observatory.png embedded in README.md" }
-  A06: { status: done, evidence: "CITATION.cff v1.4.1 with canonical ORCID 0009-0006-8168-9648" }
-  A07: { status: done, evidence: "CHANGELOG.md (Keep a Changelog format with ## [Unreleased] + v1.4.1)" }
-  A08: { status: done, evidence: "VERSION (1.4.1) synchronized across package.json, CITATION.cff, paper/main.tex" }
+  A06: { status: done, evidence: "CITATION.cff v1.5.0 with canonical ORCID 0009-0006-8168-9648" }
+  A07: { status: done, evidence: "CHANGELOG.md (Keep a Changelog format with ## [Unreleased] + v1.5.0)" }
+  A08: { status: done, evidence: "VERSION (1.5.0) synchronized across package.json, CITATION.cff, paper/main.tex" }
   A09: { status: done, evidence: ".gitignore covering .lake, paper/build, node_modules, OS artifacts" }
   A10: { status: done, evidence: "Linear direct-to-main workflow (R1/R2); zero branch protection or git hooks" }
   A11: { status: done, evidence: ".github/workflows/release.yml attaching frozen PDF, arXiv tarball, SHA256SUMS" }
@@ -98,11 +98,11 @@ items:
   B15: { status: n/a, reason: "No C/C++/Rust native binary parsers exposed (native: false)" }
   B16: { status: n/a, reason: "Zero C/C++/Rust/WASM native memory code (native: false)" }
   B17: { status: done, evidence: "pyproject.toml (ruff) + node --check run report-only in CI (.github/workflows/ci.yml)" }
-  B18: { status: done, evidence: "jsconfig.json (strict checkJs) + pyproject.toml (mypy) run report-only in CI" }
+  B18: { status: done, evidence: "jsconfig.json (strict checkJs, 0 errors via tsc --noEmit) + pyproject.toml (mypy, 0 errors) run report-only in CI" }
   B19: { status: n/a, reason: "Single-threaded deterministic JS engine & lock-free AudioWorklet ring (concurrent: false)" }
-  B20: { status: done, evidence: "Finite/positive/bounds guards across src/engine/*.js & audio-worklet.js verified in test/properties.mjs" }
+  B20: { status: done, evidence: "Finite/positive/bounds guards + Johnson potential-reduced Dijkstra across src/engine/*.js verified in test/properties.mjs" }
   B21: { status: done, evidence: "test/server.mjs B21 injects disk EIO failure -> verifies clean 500, stack trace log & server survival" }
-  B22: { status: done, evidence: "lean/UltrametricaProofs/ (120 decls) + Challenge/Solution 6-kernel lake comparator --paranoid" }
+  B22: { status: done, evidence: "lean/UltrametricaProofs/ (149 decls, Palomar module headers, AdversarialTests.lean) + Challenge/Solution 6-kernel lake check & comparator --paranoid" }
   B23: { status: n/a, reason: "Formal verification uses Lean 4.35.0 theorem proving (B22) rather than TLA+/SPIN model checking" }
   B24: { status: n/a, reason: "Formal verification uses Lean 4.35.0 (B22) rather than Dafny/F* contract provers" }
   B25: { status: n/a, reason: "Zero C/Rust code (native: false); Lean 4 kernel + 6-kernel comparator provides formal soundness" }

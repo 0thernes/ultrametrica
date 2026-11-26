@@ -23,15 +23,15 @@ Three independent durability layers protect every frozen release:
 3. **Offsite Git Bundle & Software Heritage Cold Preservation:**
    - Create a self-contained single-file cold backup bundle (all refs, tags, full history) at any time:
      ```bash
-     git bundle create ../ultrametrica-v1.4.1.bundle --all
-     git bundle verify ../ultrametrica-v1.4.1.bundle
+     git bundle create ../ultrametrica-v1.5.0.bundle --all
+     git bundle verify ../ultrametrica-v1.5.0.bundle
      ```
    - Trigger immutable offsite archival on **Software Heritage** (`https://archive.softwareheritage.org/save/` -> Origin URL `https://github.com/0thernes/ultrametrica`) after each tagged release, recording the SWHID in `0thernes-research-archive`.
 
 ### Restoring from a Git Bundle
 
 ```bash
-git clone ultrametrica-v1.4.1.bundle ultrametrica-restored
+git clone ultrametrica-v1.5.0.bundle ultrametrica-restored
 cd ultrametrica-restored
 python scripts/verify_exact.py --check-checksums
 ```

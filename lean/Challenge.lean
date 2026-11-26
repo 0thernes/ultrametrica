@@ -1,31 +1,31 @@
-/-
-  ULTRAMETRICA (v1.4.0) — Isolated Statement-Only Challenge File (`lake comparator`).
+module
 
+public import UltrametricaProofs.Spec
+
+/-!
+  ULTRAMETRICA (v1.5.0) — Isolated Statement-Only Challenge File (`lake comparator`).
+
+  Palomar Registry compliant Lean 4.35.0 `module` (< 200 lines, < 10 KiB).
   Imports ONLY `UltrametricaProofs.Spec` (pure definitions, zero proofs) and NONE of the
-  four proof modules (`Basic`, `AdelicSymmetry`, `HolographyCurvature`, `SolitonAndSolver`).
+  five proof modules (`Basic`, `AdelicSymmetry`, `HolographyCurvature`, `SolitonAndSolver`,
+  `AdversarialTests`).
 
   Every `sorry` in this file is intentional — matched strictly against sorry-free `Solution.lean` by:
       lake comparator --config comparator.json --paranoid
 -/
 
-import UltrametricaProofs.Spec
-
 namespace Ultrametrica.ComparatorTarget
 
-/-- Target 1 (Theorem I — Universal Monna Involution, Complement Commutation & Prime-Parity Dichotomy):
-    For all p >= 2, n : Nat, x < p^n: R_p(R_p(x)) = x, digit-complement commutes with R_p,
-    odd primes p >= 3 separate all conjugate residues (m != p - m), and p = 2 is self-conjugate. -/
-theorem target_thm1_monna_and_parity :
+/-- Target 1 (Theorem I — Universal Monna Involution, Complement Commutation & Prime-Parity Dichotomy). -/
+public theorem target_thm1_monna_and_parity :
     (∀ p n x, 2 ≤ p → x < p ^ n → Spec.revBase p n (Spec.revBase p n x) = x) ∧
     (∀ p n x, 2 ≤ p → x < p ^ n → Spec.revBase p n (p ^ n - 1 - x) = p ^ n - 1 - Spec.revBase p n x) ∧
     (∀ p m, p % 2 = 1 → 1 ≤ m → m < p → m ≠ p - m) ∧
     (1 = 2 - 1) := by
   sorry
 
-/-- Target 2 (Proposition 4.2 — Universal Modular Picket-Fence Spacing Law):
-    For all p >= 2, 1 <= m, 2*m <= p, and all a : Nat, folded frequencies in W_{0, m}
-    interleave monotonically with exact alternating gaps (p - 2*m) and (2*m) summing to p. -/
-theorem target_thm1_picket_fence_law :
+/-- Target 2 (Proposition 4.2 — Universal Modular Picket-Fence Spacing Law). -/
+public theorem target_thm1_picket_fence_law :
     ∀ p m a, 2 ≤ p → 1 ≤ m → 2 * m ≤ p →
       Spec.picketVal p m (2 * a) ≤ Spec.picketVal p m (2 * a + 1) ∧
       Spec.picketVal p m (2 * a + 1) < Spec.picketVal p m (2 * a + 2) ∧
@@ -33,11 +33,8 @@ theorem target_thm1_picket_fence_law :
       Spec.picketVal p m (2 * a + 2) - Spec.picketVal p m (2 * a + 1) = 2 * m := by
   sorry
 
-/-- Target 3 (Theorem II — First-Principles Cycle-Metric Kantorovich BTZ Ollivier-Ricci Law & L_c = 5):
-    For all p >= 2, L >= 3, M >= 1, EVERY feasible non-negative rational bipartite transport plan P
-    on the literal L-cycle BTZ horizon graph obeys cost(P) >= M*(3p + 2 - max(0, 6-L)), and
-    (p+1)*(p+2)*(kappa_BTZ - kappa_AdS) = (p+1)*max(0, 6-L) - 4 with exact L_c = 5 trichotomy. -/
-theorem target_thm2_btz_ollivier_ricci :
+/-- Target 3 (Theorem II — First-Principles Cycle-Metric Kantorovich BTZ Ollivier-Ricci Law & L_c = 5). -/
+public theorem target_thm2_btz_ollivier_ricci :
     (∀ p L M : Int, 2 ≤ p → 3 ≤ L → 1 ≤ M →
       ∀ P : Spec.BTZNbrClass → Spec.BTZNbrClass → Int,
         (∀ i j, 0 ≤ P i j) →
@@ -53,10 +50,8 @@ theorem target_thm2_btz_ollivier_ricci :
         (p + 1) * max 0 (6 - L) - 4) := by
   sorry
 
-/-- Target 4 (Theorem III — Arbitrary K-Ball Disjoint Kozyrev Compacton-Soliton Invariance):
-    For ANY finite list of K pairwise-disjoint compacton modes and ANY local nonlinearity F,
-    the pointwise nonlinear term F(|sum psi_r|^2)(sum psi_r) splits with zero inter-ball cross-talk. -/
-theorem target_thm3_multiball_soliton :
+/-- Target 4 (Theorem III — Arbitrary K-Ball Disjoint Kozyrev Compacton-Soliton Invariance). -/
+public theorem target_thm3_multiball_soliton :
     ∀ (X : Type) (F : Int → Int) (modes : List ((X → Spec.CInt) × Int)),
       (∀ m ∈ modes, ∀ x, m.1 x = Spec.CInt.zero ∨ (m.1 x).normSq = m.2) →
       (∀ i j (hi : i < modes.length) (hj : j < modes.length),
@@ -67,10 +62,8 @@ theorem target_thm3_multiball_soliton :
           modes.foldr (fun m acc => Spec.CInt.add (Spec.CInt.smul (F m.2) (m.1 x)) acc) Spec.CInt.zero := by
   sorry
 
-/-- Target 5 (Theorem IV — Unconditional Rank-1 Kerr-BTZ Denominator >= 1 & Exact Flux Parity):
-    Horizon wrap edge is PSD, denominator 1 + w*q >= 1 > 0, and reversing flux phase conjugates
-    edge stress evenly (E(-Omega) = E(Omega)) and horizon current oddly (J(-Omega) = -J(Omega)). -/
-theorem target_thm4_kerr_solver_and_parity :
+/-- Target 5 (Theorem IV — Unconditional Rank-1 Kerr-BTZ Denominator >= 1 & Exact Flux Parity). -/
+public theorem target_thm4_kerr_solver_and_parity :
     (∀ w q : Int, 0 ≤ w → 0 ≤ q → 1 ≤ 1 + w * q) ∧
     (∀ w : Int, ∀ z0 z1 ph : Spec.CInt,
       let d1 := Spec.CInt.sub z0 (Spec.CInt.mul ph z1)
@@ -82,11 +75,8 @@ theorem target_thm4_kerr_solver_and_parity :
       j2 = -j1) := by
   sorry
 
-/-- Target 6 (Theorem V-Global — Arbitrary Multi-Edge Curved AdS Gauss-Bonnet Charge Decomposition):
-    Every weighted interior bridge edge e = (u, v) decomposes identically into vertex half-charges
-    minus the non-negative supercritical pinch deficit, and every vertex's incident half-charges
-    sum identically to -(p - 1) regardless of arbitrary positive edge weights. -/
-theorem target_thm5_global_curved_gauss_bonnet :
+/-- Target 6 (Theorem V-Global — Arbitrary Multi-Edge Curved AdS Gauss-Bonnet Charge Decomposition). -/
+public theorem target_thm5_global_curved_gauss_bonnet :
     (∀ p w Wu Wv : Int,
       Spec.curvedGenKappaNum p w Wu Wv =
         -(p - 1) * w * Wv + -(p - 1) * w * Wu - Spec.curvedGenDeficitNum w Wu Wv) ∧
@@ -94,10 +84,28 @@ theorem target_thm5_global_curved_gauss_bonnet :
       Spec.sumInt (ws.map (fun w => -(p - 1) * w)) = -(p - 1) * Spec.sumInt ws) := by
   sorry
 
-/-- Target 7 (Theorem VI — Universal Holographic Ryu-Takayanagi Strong Subadditivity on Any Weighted Graph):
-    On ANY finite weighted graph, S(A union B union C) + S(B) <= S(A union B) + S(B union C)
-    for all disjoint boundary regions A, C and arbitrary homologous minimal cuts. -/
-theorem target_thm6_holographic_ssa :
+/-- Target 7 (Theorem V-Global First-Principles Multi-Edge Inhomogeneous Kantorovich Duality):
+    For ARBITRARY prime degree p and ARBITRARY inhomogeneous positive incident conductances
+    (w, uW, vW) with lengths (ae, uA, vA), EVERY non-negative rational coupling P obeys the exact
+    subcritical and supercritical Kantorovich 1-Wasserstein lower bounds identically! -/
+public theorem target_thm5_kantorovich_dual :
+    (∀ (p : Nat) (D ae w Wu Wv M : Int) (uW vW uA vA : Fin p → Int)
+       (P00 : Int) (P0y Px0 : Fin p → Int) (Pxy : Fin p → Fin p → Int),
+      0 ≤ ae → w * ae = D →
+      (∀ r, uW r * uA r = D) → (∀ s, vW s * vA s = D) →
+      w + Spec.finSum p uW = Wu →
+      0 ≤ P00 → (∀ r s, 0 ≤ Pxy r s) →
+      (∀ r, Px0 r + Spec.finSum p (fun s => Pxy r s) = uW r * Wv * M) →
+      P00 + Spec.finSum p Px0 = w * Wu * M →
+      (∀ s, P0y s + Spec.finSum p (fun r => Pxy r s) = vW s * Wu * M) →
+      ae * M * (Wu * Wv + ((p : Int) - 1) * w * (Wu + Wv)) ≤
+        Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy ∧
+      ae * M * (((p : Int) + 1) * w * (Wu + Wv) - Wu * Wv) ≤
+        Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy) := by
+  sorry
+
+/-- Target 8 (Theorem VI — Universal Holographic Ryu-Takayanagi Strong Subadditivity on Any Weighted Graph). -/
+public theorem target_thm6_holographic_ssa :
     ∀ (edges : List (Nat × Nat × Nat)) (bdry A B C W_AB W_BC : Nat → Bool) (S_ABC S_B : Nat),
       (∀ v, bdry v = true → (A v && C v) = false) →
       Spec.IsHomologous bdry (fun v => A v || B v) W_AB →
@@ -107,9 +115,20 @@ theorem target_thm6_holographic_ssa :
       S_ABC + S_B ≤ Spec.rtCutCap edges W_AB + Spec.rtCutCap edges W_BC := by
   sorry
 
-/-- Target 8 (Non-Vacuity Sanity Witnesses):
-    Exhibits concrete non-trivial witnesses confirming non-vacuity across Theorems I, II, V-Global & VI. -/
-theorem target_nonvacuity_witnesses :
+/-- Target 9 (Adversarial False-Variant Refutations — Sharpness of Theorems I, V-Global & VI):
+    Proves explicit negations confirming p = 2 breaks odd-prime disjointness, supercritical pinch
+    has strictly nonzero deficit, and RT SSA is a strict inequality (not trivial equality). -/
+public theorem target_adversarial_refutations :
+    ¬ (∀ m : Nat, 1 ≤ m → m < 2 → m ≠ 2 - m) ∧
+    Spec.curvedGenDeficitNum 8 10 10 ≠ 0 ∧
+    ¬ (Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 1 || v == 2) +
+       Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 2 || v == 3) ≤
+       Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 1 || v == 2 || v == 3) +
+       Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 2)) := by
+  sorry
+
+/-- Target 10 (Non-Vacuity Sanity Witnesses). -/
+public theorem target_nonvacuity_witnesses :
     Spec.revBase 3 4 5 = 63 ∧
     Spec.picketVal 5 1 1 - Spec.picketVal 5 1 0 = 3 ∧
     Spec.curvedGenDeficitNum 2 5 7 = 0 ∧

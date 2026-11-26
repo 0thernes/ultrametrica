@@ -1,4 +1,4 @@
-# ULTRAMETRICA (v1.4.1) — Canonical Task Runner (`justfile`, Build Standard A31/A36/B01)
+# ULTRAMETRICA (v1.5.0) — Canonical Task Runner (`justfile`, Build Standard A31/A36/B01)
 set shell := ["bash", "-euo", "pipefail", "-c"]
 set windows-shell := ["pwsh", "-NoProfile", "-Command"]
 
@@ -10,7 +10,7 @@ setup:
     node --version
     python --version
 
-# Run all 26 Node tests (10 theorems + 8 killed mutants + 3,200+ properties + server contract/EIO + golden)
+# Run all 27 Node tests (10 theorems + 8 killed mutants + 3,400+ properties/stress + server contract/EIO + golden)
 test:
     npm run verify:all
 
@@ -38,18 +38,21 @@ stats:
 discover:
     npm run discover
 
-# Independent textbook Python differential oracle + exact-rational falsifier + checksums
+# Independent textbook Python differential oracle + blueprint/citation guards + exact-rational falsifier + checksums
 oracle:
     python reference/padic_oracle.py
     python scripts/check_readme_axioms.py
+    python scripts/check_citations.py
+    python scripts/check_blueprint.py
     python scripts/verify_exact.py --check-checksums
 
 # Report-only syntax & static checks (non-blocking per Hard Rules R1/R3)
 lint:
-    node --check server.mjs src/engine/padic.js src/engine/holography.js src/engine/quantum.js src/engine/simulation.js src/web/app.js src/web/renderer3d.js src/web/panels2d.js src/web/audio.js src/web/audio-worklet.js
-    python -m py_compile scripts/verify_exact.py scripts/check_readme_axioms.py scripts/generate_figures.py scripts/package_dist.py scripts/build_llms_full.py reference/padic_oracle.py
+    node --check server.mjs src/engine/padic.js src/engine/holography.js src/engine/quantum.js src/engine/simulation.js src/web/app.js src/web/blueprint.js src/web/renderer3d.js src/web/panels2d.js src/web/audio.js src/web/audio-worklet.js
+    npx --yes -p typescript tsc --noEmit -p jsconfig.json
+    python -m py_compile scripts/verify_exact.py scripts/check_readme_axioms.py scripts/check_citations.py scripts/check_blueprint.py scripts/generate_figures.py scripts/package_dist.py scripts/build_llms_full.py reference/padic_oracle.py
 
-# Build & audit pure Lean 4.35.0 proofs (120 decls + leanchecker + 6-kernel comparator on Linux)
+# Build & audit pure Lean 4.35.0 proofs (149 decls + leanchecker + 6-kernel lake check/comparator on Linux)
 lean:
     cd lean && lake build UltrametricaProofs Challenge Solution && lake env lean VerifyAxioms.lean && lake env leanchecker --fresh UltrametricaProofs && lake env leanchecker --fresh Solution
 

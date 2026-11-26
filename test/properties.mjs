@@ -344,3 +344,26 @@ test('B06 Negative Tests & B20 Numeric Edge-Value Guards: All invalid public inp
   const sim = new UltrametricaSimulation(3, 4, 0);
   assert.throws(() => sim.loadExperiment('nonexistent_experiment'), RangeError);
 });
+
+test('B10/B20 Curved BTZ Horizon Optimal-Transport Stress (200 trials across p=2,3,5,7): Zero SPFA/Dijkstra negative-cycle crashes (F35)', () => {
+  const cfgs = [
+    [2, 5, 2],
+    [3, 4, 1],
+    [5, 3, 1],
+    [7, 2, 1],
+  ];
+  const bulks = cfgs.map(([p, n, h]) => new BruhatTitsBulk(new PadicSpace(p, n), h));
+  prop_check('curved_btz_wasserstein_stability', 200, 0xf350f350, (rng) => {
+    const bulk = bulks[Math.floor(rng() * bulks.length)];
+    for (let ei = 0; ei < bulk.numEdges; ei++) {
+      bulk.sigma[ei] = (rng() * 7.0) - 3.0; // extreme a_e in [e^-3, e^4] ~ [0.05, 54.6]
+    }
+    bulk._syncWeights();
+    bulk.computeOllivierRicci();
+    assert.ok(Number.isFinite(bulk.meanCurvature), `Non-finite meanCurvature=${bulk.meanCurvature}`);
+    for (let j = 0; j < bulk.horizonEdges.length; j++) {
+      const k = bulk.ricciCurvature[bulk.horizonEdges[j]];
+      assert.ok(Number.isFinite(k) && k <= 1.0 + 1e-9, `Invalid horizon curvature k=${k}`);
+    }
+  });
+});

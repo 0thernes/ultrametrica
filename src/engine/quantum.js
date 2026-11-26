@@ -93,6 +93,7 @@ export class PadicQuantumEngine {
     this._rebuildSpectra();
   }
 
+  /** @param {number} alpha */
   setAlpha(alpha) {
     if (!Number.isFinite(alpha) || alpha <= 0) {
       throw new RangeError(`Vladimirov exponent alpha must be a finite positive number, got ${alpha}.`);
@@ -135,7 +136,10 @@ export class PadicQuantumEngine {
     }
   }
 
-  /** Set external gravitational potential from bulk (provided in leaf order). */
+  /**
+   * Set external gravitational potential from bulk (provided in leaf order).
+   * @param {Float64Array} potLeaf
+   */
   setPotentialLeaf(potLeaf) {
     this.potentialLeaf.set(potLeaf);
     const rev = this.space.revTable;
@@ -154,7 +158,11 @@ export class PadicQuantumEngine {
     }
   }
 
-  /** Normalize a state vector (re, im) to exact unit L2 norm. */
+  /**
+   * Normalize a state vector (re, im) to exact unit L2 norm.
+   * @param {Float64Array} re
+   * @param {Float64Array} im
+   */
   _normalize(re, im) {
     let norm2 = 0;
     for (let i = 0; i < this.N; i++) {
@@ -172,6 +180,10 @@ export class PadicQuantumEngine {
   /**
    * Initialize BOTH Q_p and the Archimedean R Twin from the EXACT same initial wavefunction
    * (provided in p-adic x order), and set tracked support ball [leafStart, leafEnd).
+   * @param {Float64Array} rePadic
+   * @param {Float64Array} imPadic
+   * @param {number} [trackedLeafStart=0]
+   * @param {number} [trackedLeafEnd]
    */
   setState(rePadic, imPadic, trackedLeafStart = 0, trackedLeafEnd = this.N) {
     if (!rePadic || !imPadic || rePadic.length !== this.N || imPadic.length !== this.N) {
@@ -208,6 +220,11 @@ export class PadicQuantumEngine {
   /**
    * Inject (superpose) an exact Kozyrev p-adic wavelet psi_{j, b, m} into BOTH
    * Q_p and the Archimedean Twin (renormalizing cleanly to unit L2 norm).
+   * @param {number} j
+   * @param {number} ballIndex
+   * @param {number} [characterM=1]
+   * @param {number} [amplitude=0.85]
+   * @param {boolean} [replace=false]
    */
   injectKozyrevWavelet(j, ballIndex, characterM = 1, amplitude = 0.85, replace = false) {
     const w = this.space.createKozyrevWavelet(j, ballIndex, characterM);
@@ -239,6 +256,11 @@ export class PadicQuantumEngine {
   /**
    * Exact nonlinear + potential phase rotation step:
    *   psi <- exp(-i * dt * (V + g * |psi|^2)) * psi
+   * @param {Float64Array} re
+   * @param {Float64Array} im
+   * @param {Float64Array} pot
+   * @param {number} g
+   * @param {number} dt
    */
   _applyPotentialNonlinearStep(re, im, pot, g, dt) {
     const N = this.N;
@@ -256,6 +278,10 @@ export class PadicQuantumEngine {
   /**
    * Exact unitary linear kinetic step in Fourier space:
    *   psi <- IFFT( exp(-i * dt * weight * spec[k]) * FFT(psi) )
+   * @param {Float64Array} re
+   * @param {Float64Array} im
+   * @param {Float64Array} spec
+   * @param {number} scaleDt
    */
   _applyKineticFFT(re, im, spec, scaleDt) {
     if (Math.abs(scaleDt) < 1e-18) return;
@@ -279,6 +305,9 @@ export class PadicQuantumEngine {
    * Exact unitary Archimedean kinetic step applied to a p-adic-ordered state
    * (used during Adelic Hybrid Morph 0 <= theta < 1):
    * converts x-order -> leaf-order, applies (-Delta_R)^{alpha/2} via FFT, converts back.
+   * @param {Float64Array} re
+   * @param {Float64Array} im
+   * @param {number} scaleDt
    */
   _applyArchimedeanToPadic(re, im, scaleDt) {
     if (Math.abs(scaleDt) < 1e-18) return;
@@ -301,6 +330,7 @@ export class PadicQuantumEngine {
 
   /**
    * Single symmetric 2nd-order Strang step S_2(tau) for Q_p / Adelic state.
+   * @param {number} tau
    */
   _strangStepPadic(tau) {
     const theta = this.adelicMix;
@@ -329,6 +359,7 @@ export class PadicQuantumEngine {
 
   /**
    * Single symmetric 2nd-order Strang step S_2(tau) for Archimedean R Twin.
+   * @param {number} tau
    */
   _strangStepTwin(tau) {
     const g = this.nonlinearity;
@@ -342,6 +373,8 @@ export class PadicQuantumEngine {
    * Advance BOTH Q_p/Adelic universe and Archimedean R Twin by dt using
    * exact 4th-order Yoshida symplectic integration:
    *   S_4(dt) = S_2(w_1 * dt) o S_2(w_0 * dt) o S_2(w_1 * dt).
+   * @param {number} dt
+   * @param {number} [substeps=1]
    */
   step(dt, substeps = 1) {
     if (!Number.isFinite(dt)) {

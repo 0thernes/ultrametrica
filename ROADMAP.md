@@ -1,6 +1,6 @@
 # Roadmap
 
-Current release: **`v1.4.1`** (2026-11-25, status: `active`).
+Current release: **`v1.5.0`** (2026-11-26, status: `active`).
 
 ## Completed Milestones
 

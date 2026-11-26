@@ -600,4 +600,27 @@ test('Theorem 10: Theorem V Curved AdS Gauss-Bonnet Conservation, BF Margin & Ad
   const bi = new Float64Array(spBF.N).fill(-0.3);
   bBF.solveBulkField(br, bi);
   assert.ok(bBF.maxResidual < 1e-12, `BF tachyonic margin residual failed: ${bBF.maxResidual}`);
+
+  // Part F: Audit F35 regression — extreme curved BTZ Wormhole Surgery across ALL primes {2,3,5,7}
+  // Previously triggered infinite float negative-cycle SPFA -> RangeError: Invalid array length
+  for (const p of [2, 3, 5, 7]) {
+    const simW = new UltrametricaSimulation(p, null, 0);
+    simW.loadExperiment('wormhole_surgery');
+    simW.setBTZEnabled(true);
+    simW.loadExperiment('wormhole_surgery', { keepTopology: true });
+    // Apply extreme positive & negative throat pins on multiple horizon edges simultaneously
+    for (let j = 0; j < simW.bulk.horizonEdges.length; j++) {
+      simW.bulk.pinchEdge(simW.bulk.horizonEdges[j], j % 2 === 0 ? 4.2 : -3.0);
+    }
+    for (let step = 0; step < 10; step++) {
+      simW.step(0.016);
+    }
+    assert.ok(Number.isFinite(simW.bulk.meanCurvature), `F35 regression: non-finite curvature for p=${p}`);
+    for (let ei = 0; ei < simW.bulk.numEdges; ei++) {
+      assert.ok(
+        Number.isFinite(simW.bulk.ricciCurvature[ei]),
+        `F35 regression: non-finite edge curvature at p=${p}, edge=${ei}`
+      );
+    }
+  }
 });

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ULTRAMETRICA v1.5.0 — Interactive Lean 4 Proof Blueprint &amp; Dependency Graph</title>
+  <link rel="stylesheet" href="./blueprint.css" />
+</head>
+<body>
+  <div class="bp-shell">
+    <header class="bp-topbar">
+      <div class="bp-brand">
+        <div class="bp-mark" aria-hidden="true"></div>
+        <div>
+          <h1 class="bp-title">ULTRAMETRICA <span class="bp-ver">v1.5.0</span> — Lean 4 Proof Blueprint</h1>
+          <p class="bp-sub">
+            Pure Lean 4.35.0 (Palomar <code>module</code>, zero Mathlib) &middot; <strong>149 audited declarations</strong>
+            (139 core theorems across 5 modules + 10 isolated comparator targets) &middot; 6-kernel verified
+          </p>
+        </div>
+      </div>
+      <nav class="bp-nav" aria-label="Blueprint navigation">
+        <a class="bp-btn bp-btn-primary" href="./index.html">&larr; Live 3D Observatory</a>
+        <a class="bp-btn" href="https://github.com/0thernes/ultrametrica" target="_blank" rel="noopener">GitHub Repo</a>
+        <a class="bp-btn" href="https://github.com/0thernes/ultrametrica/blob/main/dist/Donahue_2026_Ultrametrica.pdf" target="_blank" rel="noopener">AMS-LaTeX PDF</a>
+        <a class="bp-btn" href="https://github.com/0thernes/ultrametrica/blob/main/results/lean4-audit.txt" target="_blank" rel="noopener">Raw Axiom Log</a>
+      </nav>
+    </header>
+
+    <section class="bp-kpis" aria-label="Verification summary metrics">
+      <div class="kpi-card">
+        <span class="kpi-label">LEAN 4 DECLARATIONS</span>
+        <span class="kpi-value mono">149 / 149</span>
+        <span class="kpi-note">0 sorry &middot; 0 native_decide &middot; 0 custom axioms</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">INDEPENDENT KERNELS</span>
+        <span class="kpi-value mono">6 Kernels</span>
+        <span class="kpi-note">lean4 &middot; leanchecker &middot; lean4lean &middot; con-leche &middot; con-ron &middot; nanoda</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">COMPARATOR TARGETS</span>
+        <span class="kpi-value mono">10 / 10</span>
+        <span class="kpi-note">lake check --paranoid &amp; lake comparator --paranoid</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">EXACT ORACLE &amp; CITATIONS</span>
+        <span class="kpi-value mono">100% PASS</span>
+        <span class="kpi-note">Python Fraction oracle + 18/18 live Crossref DOIs (0 retractions)</span>
+      </div>
+    </section>
+
+    <section class="bp-controls" aria-label="Filter proof nodes">
+      <div class="filter-group" role="group" aria-label="Filter by theorem family">
+        <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All Modules (149)</button>
+        <button type="button" class="filter-btn" data-filter="thm1" aria-pressed="false">Thm I &amp; Prop 4.2</button>
+        <button type="button" class="filter-btn" data-filter="thm2" aria-pressed="false">Thm II (BTZ Ricci)</button>
+        <button type="button" class="filter-btn" data-filter="thm34" aria-pressed="false">Thm III &amp; IV</button>
+        <button type="button" class="filter-btn" data-filter="thm56" aria-pressed="false">Thm V-Global &amp; VI</button>
+        <button type="button" class="filter-btn" data-filter="adv" aria-pressed="false">Adversarial &amp; Targets</button>
+      </div>
+      <div class="bp-search-wrap">
+        <label class="sr-only" for="bpSearch">Search theorem name or statement</label>
+        <input id="bpSearch" class="bp-search mono" type="search" placeholder="Filter declaration name, paper theorem, or axiom..." />
+      </div>
+    </section>
+
+    <section class="bp-dag-panel" aria-label="Theorem dependency graph">
+      <div class="panel-head">
+        <h2>Theorem Dependency DAG (Click Any Node to Highlight &amp; Inspect)</h2>
+        <span class="legend">
+          <span class="leg-item"><span class="leg-dot dot-core"></span>Kernel-Checked Core Theorem</span>
+          <span class="leg-item"><span class="leg-dot dot-target"></span>Isolated Comparator Target</span>
+          <span class="leg-item"><span class="leg-dot dot-adv"></span>Adversarial False-Variant Refutation</span>
+        </span>
+      </div>
+      <div class="dag-scroll">
+        <svg id="dagSvg" class="dag-svg" viewBox="0 0 1160 440" role="img" aria-label="Interactive dependency graph connecting Spec.lean through the five Lean proof modules to the ten isolated comparator targets">
+          <defs>
+            <marker id="arrowHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 9 5 L 0 9 z" class="dag-arrow" />
+            </marker>
+          </defs>
+          <g id="dagEdges"></g>
+          <g id="dagNodes"></g>
+        </svg>
+      </div>
+    </section>
+
+    <main class="bp-grid" id="bpGrid">
+      <!-- Module 1 -->
+      <article class="bp-card" data-family="thm1" data-node-id="mod-basic">
+        <div class="card-head">
+          <span class="pill pill-core">Module 1 &middot; Basic.lean (26)</span>
+          <span class="pill pill-ok">0 sorry</span>
+        </div>
+        <h3>Ultrametric Geometry &amp; Universal Monna Bijection</h3>
+        <p>Proves the strong triangle isosceles theorem, universal base-p digit-reversal involution across all <code>p &ge; 2</code> and <code>n &ge; 1</code>, exact ball-to-subtree contiguity, and Bruhat-Tits leaf hop-metric ultrametricity.</p>
+        <ul class="decl-list mono">
+          <li data-lean-decl="Ultrametrica.ultrametric_two_longest_equal">ultrametric_two_longest_equal</li>
+          <li data-lean-decl="Ultrametrica.monna_involution_universal">monna_involution_universal</li>
+          <li data-lean-decl="Ultrametrica.complement_commutes_monna_universal">complement_commutes_monna_universal</li>
+          <li data-lean-decl="Ultrametrica.padic_ball_monna_contiguity">padic_ball_monna_contiguity</li>
+          <li data-lean-decl="Ultrametrica.monna_injective">monna_injective</li>
+          <li data-lean-decl="Ultrametrica.monna_surjective">monna_surjective</li>
+          <li data-lean-decl="Ultrametrica.bruhatTits_leaves_isosceles">bruhatTits_leaves_isosceles</li>
+        </ul>
+        <div class="card-foot">
+          <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/UltrametricaProofs/Basic.lean" target="_blank" rel="noopener">View Basic.lean &rarr;</a>
+          <span class="mono">Paper &sect;2, &sect;4</span>
+        </div>
+      </article>
+
+      <!-- Module 2 -->
+      <article class="bp-card" data-family="thm1" data-node-id="mod-adelic">
+        <div class="card-head">
+          <span class="pill pill-core">Module 2 &middot; AdelicSymmetry.lean (23)</span>
+          <span class="pill pill-ok">0 sorry</span>
+        </div>
+        <h3>Theorem I &amp; Prop 4.2 — Adelic Parity-Doubling &amp; Picket-Fence Law</h3>
+        <p>Proves Hilbert sector completeness, exact subtree shift isometry, Pontryagin character separation, odd-prime conjugate doublet protection (<code>m &ne; p &minus; m</code>), dyadic self-conjugacy (<code>p = 2</code>), and exact alternating gaps <code>(p &minus; 2m, 2m)</code>.</p>
+        <ul class="decl-list mono">
+          <li data-lean-decl="Ultrametrica.hilbert_sector_completeness">hilbert_sector_completeness</li>
+          <li data-lean-decl="Ultrametrica.subtreeShift_preserves_ultrametric_prefix">subtreeShift_preserves_ultrametric_prefix</li>
+          <li data-lean-decl="Ultrametrica.fourier_sector_nonconstant_phase">fourier_sector_nonconstant_phase</li>
+          <li data-lean-decl="Ultrametrica.odd_prime_conjugate_sector_disjoint">odd_prime_conjugate_sector_disjoint</li>
+          <li data-lean-decl="Ultrametrica.even_prime_self_conjugate">even_prime_self_conjugate</li>
+          <li data-lean-decl="Ultrametrica.picket_fence_monotone">picket_fence_monotone</li>
+          <li data-lean-decl="Ultrametrica.picket_fence_even_gap">picket_fence_even_gap</li>
+          <li data-lean-decl="Ultrametrica.picket_fence_odd_gap">picket_fence_odd_gap</li>
+        </ul>
+        <div class="card-foot">
+          <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/UltrametricaProofs/AdelicSymmetry.lean" target="_blank" rel="noopener">View AdelicSymmetry.lean &rarr;</a>
+          <span class="mono">Paper Thm 4.1, Prop 4.2</span>
+        </div>
+      </article>
+
+      <!-- Module 3A -->
+      <article class="bp-card" data-family="thm2" data-node-id="mod-btz">
+        <div class="card-head">
+          <span class="pill pill-core">Module 3a &middot; HolographyCurvature.lean</span>
+          <span class="pill pill-ok">First-Principles W₁</span>
+        </div>
+        <h3>Theorem II — BTZ Ollivier-Ricci Law, L<sub>c</sub> = 5 &amp; BF Bound</h3>
+        <p>Derives <code>&kappa;_BTZ(p, L) = &minus;(2p &minus; max(0, 6 &minus; L)) / (p + 2)</code> from first-principles cycle-graph shortest paths and Kantorovich primal-dual 1-Wasserstein optimal transport, proving the exact <code>L_c = 5</code> prime-dependent trichotomy and Gubser BF bound.</p>
+        <ul class="decl-list mono">
+          <li data-lean-decl="Ultrametrica.btz_graph_metric_eq_classDist">btz_graph_metric_eq_classDist</li>
+          <li data-lean-decl="Ultrametrica.btz_dual_1lipschitz">btz_dual_1lipschitz</li>
+          <li data-lean-decl="Ultrametrica.btz_wasserstein_lower_bound">btz_wasserstein_lower_bound</li>
+          <li data-lean-decl="Ultrametrica.btz_primal_cost_exact">btz_primal_cost_exact</li>
+          <li data-lean-decl="Ultrametrica.btz_curvature_excess_identity">btz_curvature_excess_identity</li>
+          <li data-lean-decl="Ultrametrica.btz_critical_L5_p2">btz_critical_L5_p2</li>
+          <li data-lean-decl="Ultrametrica.btz_critical_L5_p3">btz_critical_L5_p3</li>
+          <li data-lean-decl="Ultrametrica.gubser_bf_bound_exact_square">gubser_bf_bound_exact_square</li>
+        </ul>
+        <div class="card-foot">
+          <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/UltrametricaProofs/HolographyCurvature.lean" target="_blank" rel="noopener">View HolographyCurvature.lean &rarr;</a>
+          <span class="mono">Paper Thm 5.1, &sect;5</span>
+        </div>
+      </article>
+
+      <!-- Module 3B -->
+      <article class="bp-card" data-family="thm56" data-node-id="mod-vglobal">
+        <div class="card-head">
+          <span class="pill pill-core">Module 3b &middot; HolographyCurvature.lean (73 total)</span>
+          <span class="pill pill-new">NEW in v1.5.0</span>
+        </div>
+        <h3>Theorem V-Global &amp; VI — Multi-Edge Kantorovich Duality, Gauss-Bonnet &amp; RT SSA</h3>
+        <p>First-principles arbitrary-degree arbitrary-weight multi-edge inhomogeneous Kantorovich primal-dual duality (both subcritical &amp; supercritical regimes), exact curved Gauss-Bonnet charge conservation, and universal holographic Ryu-Takayanagi Strong Subadditivity.</p>
+        <ul class="decl-list mono">
+          <li data-lean-decl="Ultrametrica.gen_bridge_transport_cost_identity">gen_bridge_transport_cost_identity</li>
+          <li data-lean-decl="Ultrametrica.gen_bridge_wasserstein_lower_bound_sub">gen_bridge_wasserstein_lower_bound_sub</li>
+          <li data-lean-decl="Ultrametrica.gen_bridge_wasserstein_lower_bound_sup">gen_bridge_wasserstein_lower_bound_sup</li>
+          <li data-lean-decl="Ultrametrica.gen_bridge_primal_sub_optimal">gen_bridge_primal_sub_optimal</li>
+          <li data-lean-decl="Ultrametrica.gen_bridge_primal_sup_optimal">gen_bridge_primal_sup_optimal</li>
+          <li data-lean-decl="Ultrametrica.gen_bridge_kappa_from_wasserstein">gen_bridge_kappa_from_wasserstein</li>
+          <li data-lean-decl="Ultrametrica.global_multi_edge_vertex_charge_conservation">global_multi_edge_vertex_charge_conservation</li>
+          <li data-lean-decl="Ultrametrica.rt_strong_subadditivity">rt_strong_subadditivity</li>
+        </ul>
+        <div class="card-foot">
+          <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/UltrametricaProofs/HolographyCurvature.lean" target="_blank" rel="noopener">View Section 12-13 &rarr;</a>
+          <span class="mono">Paper Thm 6.3, 6.4</span>
+        </div>
+      </article>
+
+      <!-- Module 4 -->
+      <article class="bp-card" data-family="thm34" data-node-id="mod-soliton">
+        <div class="card-head">
+          <span class="pill pill-core">Module 4 &middot; SolitonAndSolver.lean (12)</span>
+          <span class="pill pill-ok">0 sorry</span>
+        </div>
+        <h3>Theorems III &amp; IV — K-Ball Kozyrev Solitons &amp; Kerr-BTZ Solver</h3>
+        <p>Proves zero-crosstalk nonlinear invariance for arbitrary finite lists of pairwise-disjoint Kozyrev compactons, unconditional rank-1 Sherman-Morrison denominator <code>&ge; 1</code>, exact complex matrix identity, and Kerr flux stress-even / current-odd parity laws.</p>
+        <ul class="decl-list mono">
+          <li data-lean-decl="Ultrametrica.kozyrev_exact_nonlinear_soliton">kozyrev_exact_nonlinear_soliton</li>
+          <li data-lean-decl="Ultrametrica.disjoint_multi_soliton_no_crosstalk">disjoint_multi_soliton_no_crosstalk</li>
+          <li data-lean-decl="Ultrametrica.multi_ball_kozyrev_soliton_list">multi_ball_kozyrev_soliton_list</li>
+          <li data-lean-decl="Ultrametrica.horizon_edge_laplacian_psd">horizon_edge_laplacian_psd</li>
+          <li data-lean-decl="Ultrametrica.sherman_morrison_denominator_ge_one">sherman_morrison_denominator_ge_one</li>
+          <li data-lean-decl="Ultrametrica.sherman_morrison_exact_identity">sherman_morrison_exact_identity</li>
+          <li data-lean-decl="Ultrametrica.kerr_flux_edge_stress_even">kerr_flux_edge_stress_even</li>
+          <li data-lean-decl="Ultrametrica.kerr_flux_edge_current_odd">kerr_flux_edge_current_odd</li>
+        </ul>
+        <div class="card-foot">
+          <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/UltrametricaProofs/SolitonAndSolver.lean" target="_blank" rel="noopener">View SolitonAndSolver.lean &rarr;</a>
+          <span class="mono">Paper Thm 6.1, 6.2</span>
+        </div>
+      </article>
+
+      <!-- Module 5 -->
+      <article class="bp-card" data-family="adv" data-node-id="mod-adv">
+        <div class="card-head">
+          <span class="pill pill-adv">Module 5 &middot; AdversarialTests.lean (5)</span>
+          <span class="pill pill-new">NEW in v1.5.0</span>
+        </div>
+        <h3>Adversarial False-Variant Refutations (Playbook #12)</h3>
+        <p>Kernel-checked explicit negations <code>&not; (...)</code> refuting weakened or false variants of Theorems I, II, III, V/V-Global, and VI — guaranteeing every theorem hypothesis is mathematically sharp and non-vacuous.</p>
+        <ul class="decl-list mono">
+          <li data-lean-decl="Ultrametrica.Adversarial.adv_dyadic_breaks_odd_doublet_protection">adv_dyadic_breaks_odd_doublet_protection</li>
+          <li data-lean-decl="Ultrametrica.Adversarial.adv_btz_L5_not_universally_flatter">adv_btz_L5_not_universally_flatter</li>
+          <li data-lean-decl="Ultrametrica.Adversarial.adv_supercritical_pinch_breaks_conservation">adv_supercritical_pinch_breaks_conservation</li>
+          <li data-lean-decl="Ultrametrica.Adversarial.adv_overlapping_modes_violate_zero_crosstalk">adv_overlapping_modes_violate_zero_crosstalk</li>
+          <li data-lean-decl="Ultrametrica.Adversarial.adv_rt_ssa_reverse_inequality_false">adv_rt_ssa_reverse_inequality_false</li>
+        </ul>
+        <div class="card-foot">
+          <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/UltrametricaProofs/AdversarialTests.lean" target="_blank" rel="noopener">View AdversarialTests.lean &rarr;</a>
+          <span class="mono">Playbook Gold #12</span>
+        </div>
+      </article>
+
+      <!-- Isolated Comparator Targets -->
+      <article class="bp-card bp-card-wide" data-family="adv" data-node-id="mod-targets">
+        <div class="card-head">
+          <span class="pill pill-target">Isolated Palomar Comparator &middot; Challenge.lean &harr; Solution.lean (10 Targets)</span>
+          <span class="pill pill-ok">6-Kernel Paranoid</span>
+        </div>
+        <h3>Zero-Trust Statement Isolation (`Challenge.lean` imports ONLY `Spec.lean`)</h3>
+        <p>Every target statement is frozen in <code>Challenge.lean</code> (&lt;150 lines, zero proof imports) and verified strictly against sorry-free <code>Solution.lean</code> inside a Linux <code>bubblewrap</code> sandbox via <code>lake check --paranoid</code> and <code>lake comparator --config comparator.json --paranoid</code>.</p>
+        <ul class="decl-list decl-cols mono">
+          <li data-lean-decl="Ultrametrica.ComparatorTarget.target_thm1_monna_and_parity">target_thm1_monna_and_parity</li>
+          <li data-lean-decl="Ultrametrica.ComparatorTarget.target_thm1_picket_fence_law">target_thm1_picket_fence_law</li>
+          <li data-lean-decl="Ultrametrica.ComparatorTarget.target_thm2_btz_ollivier_ricci">target_thm2_btz_ollivier_ricci</li>
+          <li data-lean-decl="Ultrametrica.ComparatorTarget.target_thm3_multiball_soliton">target_thm3_multiball_soliton</li>
+          <li data-lean-decl="Ultrametrica.ComparatorTarget.target_thm4_kerr_solver_and_parity">target_thm4_kerr_solver_and_parity</li>
+          <li data-lean-decl="Ultrametrica.ComparatorTarget.target_thm5_global_curved_gauss_bonnet">target_thm5_global_curved_gauss_bonnet</li>
+          <li data-lean-decl="Ultrametrica.ComparatorTarget.target_thm5_kantorovich_dual">target_thm5_kantorovich_dual</li>
+          <li data-lean-decl="Ultrametrica.ComparatorTarget.target_thm6_holographic_ssa">target_thm6_holographic_ssa</li>
+          <li data-lean-decl="Ultrametrica.ComparatorTarget.target_adversarial_refutations">target_adversarial_refutations</li>
+          <li data-lean-decl="Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses">target_nonvacuity_witnesses</li>
+        </ul>
+        <div class="card-foot">
+          <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/Challenge.lean" target="_blank" rel="noopener">View Challenge.lean &rarr;</a>
+          <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/Solution.lean" target="_blank" rel="noopener">View Solution.lean &rarr;</a>
+          <a href="https://github.com/0thernes/ultrametrica/blob/main/docs/statement-fidelity.md" target="_blank" rel="noopener">Statement Fidelity Audit &rarr;</a>
+        </div>
+      </article>
+    </main>
+
+    <footer class="bp-footer">
+      <p>
+        ULTRAMETRICA v1.5.0 &middot; Author: Alexander Stephen Donahue (ORCID
+        <a href="https://orcid.org/0009-0006-8168-9648" target="_blank" rel="noopener">0009-0006-8168-9648</a>) &middot;
+        Every <code>data-lean-decl</code> identifier on this page is verified automatically by
+        <code>scripts/check_blueprint.py</code> against <code>results/lean4-audit.txt</code>.
+      </p>
+    </footer>
+  </div>
+
+  <script type="module" src="./blueprint.js"></script>
+</body>
+</html>

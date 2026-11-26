@@ -1,7 +1,11 @@
-/-
-  ULTRAMETRICA — Lean 4 Formal Proofs (Module 1: Basic Ultrametric Geometry & Universal Monna Involution)
-  Machine-checked in pure Lean 4 (v4.35.0) with zero Mathlib dependencies, zero native_decide, and zero sorry.
+module
+
+/-!
+  ULTRAMETRICA (v1.5.0) — Lean 4 Formal Proofs (Module 1: Basic Ultrametric Geometry & Universal Monna Involution)
+  Palomar-compliant Lean 4.35.0 `module`, zero Mathlib, zero `native_decide`, zero `sorry`.
 -/
+
+@[expose] public section
 
 namespace Ultrametrica
 
@@ -377,3 +381,4 @@ theorem bruhatTits_leaves_isosceles (p n x y z : Nat) :
   ultrametric_two_longest_equal (bruhatTitsUltrametric p n) x y z
 
 end Ultrametrica
+end

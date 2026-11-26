@@ -17,9 +17,17 @@
 /**
  * Solve exact 1-Wasserstein earth-mover distance between two discrete distributions
  * muU (size m) and muV (size k) given pairwise cost matrix cost[i * k + j] >= 0,
- * using successive shortest augmenting paths (Bellman-Ford on residual bipartite graph).
- * Used ONLY on the tiny BTZ horizon edges (m, k <= p + 1 <= 8), so it is both
- * 100% mathematically exact and runs in microseconds.
+ * using Johnson potential-reduced Dijkstra successive shortest augmenting paths.
+ *
+ * Unlike floating-point SPFA, clamping reduced costs rc = max(0, e.cost + pi[u] - pi[v]) >= 0
+ * makes IEEE-754 negative-cost residual cycles mathematically impossible even under extreme
+ * curved BTZ horizon distortions (e.g. a_e > 24x in ER=EPR Wormhole Surgery + BTZ Hole; F35).
+ * Used ONLY on tiny BTZ horizon edges (m, k <= p + 2 <= 9), so it is both 100% exact and O(V^2).
+ *
+ * @param {Float64Array} muU
+ * @param {Float64Array} muV
+ * @param {Float64Array} cost
+ * @returns {number}
  */
 function exactWassersteinBipartite(muU, muV, cost) {
   const m = muU.length;
@@ -28,8 +36,9 @@ function exactWassersteinBipartite(muU, muV, cost) {
   const T = 1 + m + k;
   const V = T + 1;
 
-  // Build residual graph adjacency list
+  /** @type {Array<Array<{ to: number, rev: number, cap: number, cost: number }>>} */
   const adj = Array.from({ length: V }, () => []);
+  /** @param {number} u @param {number} v @param {number} cap @param {number} c */
   const addEdge = (u, v, cap, c) => {
     const fwd = { to: v, rev: adj[v].length, cap, cost: c };
     const bwd = { to: u, rev: adj[u].length, cap: 0, cost: -c };
@@ -51,46 +60,53 @@ function exactWassersteinBipartite(muU, muV, cost) {
   }
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < k; j++) {
-      addEdge(1 + i, 1 + m + j, 1.0, cost[i * k + j]);
+      const c = cost[i * k + j];
+      addEdge(1 + i, 1 + m + j, 1.0, c > 0 ? c : 0);
     }
   }
 
   let flow = 0;
   let totalCost = 0;
+  const pi = new Float64Array(V);
   const dist = new Float64Array(V);
   const prevV = new Int32Array(V);
   const prevE = new Int32Array(V);
-  const inQueue = new Uint8Array(V);
+  const visited = new Uint8Array(V);
 
-  const EPS = 1e-13;
-  while (flow < totalSupply - 1e-12) {
+  const CAP_EPS = 1e-14;
+  const maxIters = V * V + 8;
+
+  for (let iter = 0; iter < maxIters && flow < totalSupply - 1e-12; iter++) {
     dist.fill(Infinity);
     prevV.fill(-1);
     prevE.fill(-1);
-    inQueue.fill(0);
+    visited.fill(0);
     dist[S] = 0;
 
-    // SPFA / Bellman-Ford
-    const queue = [S];
-    inQueue[S] = 1;
-    let qHead = 0;
-    while (qHead < queue.length) {
-      const u = queue[qHead++];
-      inQueue[u] = 0;
-      const du = dist[u];
+    // Exact O(V^2) Dijkstra over non-negative reduced costs (V <= 20)
+    for (let step = 0; step < V; step++) {
+      let u = -1;
+      let best = Infinity;
+      for (let v = 0; v < V; v++) {
+        if (!visited[v] && dist[v] < best) {
+          best = dist[v];
+          u = v;
+        }
+      }
+      if (u === -1) break;
+      visited[u] = 1;
       const edges = adj[u];
+      const piU = pi[u];
       for (let ei = 0; ei < edges.length; ei++) {
         const e = edges[ei];
-        if (e.cap > EPS) {
-          const nd = du + e.cost;
-          if (nd < dist[e.to] - 1e-13) {
+        if (e.cap > CAP_EPS) {
+          let rc = e.cost + piU - pi[e.to];
+          if (rc < 0) rc = 0;
+          const nd = best + rc;
+          if (nd < dist[e.to]) {
             dist[e.to] = nd;
             prevV[e.to] = u;
             prevE[e.to] = ei;
-            if (!inQueue[e.to]) {
-              inQueue[e.to] = 1;
-              queue.push(e.to);
-            }
           }
         }
       }
@@ -98,31 +114,121 @@ function exactWassersteinBipartite(muU, muV, cost) {
 
     if (!Number.isFinite(dist[T])) break;
 
+    for (let v = 0; v < V; v++) {
+      if (Number.isFinite(dist[v])) pi[v] += dist[v];
+    }
+
     let push = totalSupply - flow;
     for (let v = T; v !== S; v = prevV[v]) {
       const e = adj[prevV[v]][prevE[v]];
       if (e.cap < push) push = e.cap;
     }
+    if (push <= CAP_EPS) break;
 
+    let pathCost = 0;
     for (let v = T; v !== S; v = prevV[v]) {
       const u = prevV[v];
       const ei = prevE[v];
       const e = adj[u][ei];
       e.cap -= push;
       adj[v][e.rev].cap += push;
+      pathCost += e.cost;
     }
 
     flow += push;
-    totalCost += push * dist[T];
+    totalCost += push * pathCost;
   }
 
   return totalCost;
 }
 
+/**
+ * @typedef {{ id: number, u: number, v: number, isHorizon: boolean, depth: number, horizonIndex?: number }} BulkEdge
+ * @typedef {{ to: number, edge: number, dir: number }} AdjEntry
+ */
+
 export class BruhatTitsBulk {
+  /** @type {number} */ numNodes = 0;
+  /** @type {Int32Array} */ levelOffset = new Int32Array(0);
+  /** @type {Int32Array} */ nodeDepth = new Int32Array(0);
+  /** @type {Int32Array} */ nodeIndexInLevel = new Int32Array(0);
+  /** @type {Int32Array} */ parent = new Int32Array(0);
+  /** @type {Int32Array} */ parentEdge = new Int32Array(0);
+  /** @type {Uint8Array} */ isLeaf = new Uint8Array(0);
+  /** @type {Uint8Array} */ isHorizon = new Uint8Array(0);
+  /** @type {number[][]} */ children = [];
+  /** @type {AdjEntry[][]} */ adj = [];
+  /** @type {Int32Array} */ horizonNodes = new Int32Array(0);
+  /** @type {Int32Array} */ horizonEdges = new Int32Array(0);
+  /** @type {BulkEdge[]} */ edges = [];
+  /** @type {number} */ numEdges = 0;
+  /** @type {Int32Array} */ leafNodes = new Int32Array(0);
+  /** @type {Int32Array} */ internalTreeOrder = new Int32Array(0);
+  /** @type {Int32Array[]} */ edgeNeighbors = [];
+  /** @type {Float64Array} */ phiRe = new Float64Array(0);
+  /** @type {Float64Array} */ phiIm = new Float64Array(0);
+  /** @type {Float64Array} */ sigma = new Float64Array(0);
+  /** @type {Float64Array} */ sigmaVel = new Float64Array(0);
+  /** @type {Float64Array} */ pinSigma = new Float64Array(0);
+  /** @type {Float64Array} */ edgeLength = new Float64Array(0);
+  /** @type {Float64Array} */ edgeWeight = new Float64Array(0);
+  /** @type {Float64Array} */ edgeStress = new Float64Array(0);
+  /** @type {Float64Array} */ ricciCurvature = new Float64Array(0);
+  /** @type {number} */ delta = 1.5;
+  /** @type {number} */ horizonFlux = 0.0;
+  /** @type {boolean} */ asymptoticRoot = true;
+  /** @type {number} */ maxResidual = 0;
+  /** @type {number} */ meanCurvature = 0;
+  /** @type {number} */ horizonEntropy = 0;
+  /** @type {number} */ horizonFluxCurrent = 0;
+  /** @type {number} */ totalGravEnergy = 0;
+  /** @type {Float64Array} */ _D = new Float64Array(0);
+  /** @type {Float64Array} */ _bRe = new Float64Array(0);
+  /** @type {Float64Array} */ _bIm = new Float64Array(0);
+  /** @type {Float64Array} */ _mu = new Float64Array(0);
+  /** @type {Float64Array} */ _sigmaSnap = new Float64Array(0);
+  /** @type {Float64Array} */ _sumW = new Float64Array(0);
+  /** @type {Float64Array} */ _rtDp0 = new Float64Array(0);
+  /** @type {Float64Array} */ _rtDp1 = new Float64Array(0);
+  /** @type {Uint8Array} */ _rtPickSide = new Uint8Array(0);
+  /** @type {Float64Array} */ _hDiag = new Float64Array(0);
+  /** @type {Float64Array} */ _hSupRe = new Float64Array(0);
+  /** @type {Float64Array} */ _hSupIm = new Float64Array(0);
+  /** @type {Float64Array} */ _hSubRe = new Float64Array(0);
+  /** @type {Float64Array} */ _hSubIm = new Float64Array(0);
+  /** @type {Float64Array} */ _hRhsRe = new Float64Array(0);
+  /** @type {Float64Array} */ _hRhsIm = new Float64Array(0);
+  /** @type {Float64Array} */ _hYRe = new Float64Array(0);
+  /** @type {Float64Array} */ _hYIm = new Float64Array(0);
+  /** @type {Float64Array} */ _hZRe = new Float64Array(0);
+  /** @type {Float64Array} */ _hZIm = new Float64Array(0);
+  /** @type {Float64Array} */ _hURe = new Float64Array(0);
+  /** @type {Float64Array} */ _hUIm = new Float64Array(0);
+  /** @type {Float64Array} */ _tCRe = new Float64Array(0);
+  /** @type {Float64Array} */ _tCIm = new Float64Array(0);
+  /** @type {Float64Array} */ _tDRe = new Float64Array(0);
+  /** @type {Float64Array} */ _tDIm = new Float64Array(0);
+  /** @type {Float64Array} */ _hDist = new Float64Array(0);
+  /** @type {Float64Array} */ _ringCum = new Float64Array(0);
+  /** @type {Uint8Array} */ _rtBestAssign = new Uint8Array(0);
+  /** @type {Float64Array} */ _rtRDp0 = new Float64Array(0);
+  /** @type {Float64Array} */ _rtRDp1 = new Float64Array(0);
+  /** @type {Uint8Array} */ _rtRPrev0 = new Uint8Array(0);
+  /** @type {Uint8Array} */ _rtRPrev1 = new Uint8Array(0);
+  /** @type {Float64Array} */ _wMuU = new Float64Array(0);
+  /** @type {Float64Array} */ _wMuV = new Float64Array(0);
+  /** @type {Float64Array} */ _wCost = new Float64Array(0);
+  /** @type {Uint8Array} */ rtRegionA = new Uint8Array(0);
+  /** @type {Uint8Array} */ rtCutEdges = new Uint8Array(0);
+  /** @type {Uint8Array} */ rtWedgeNodes = new Uint8Array(0);
+  /** @type {number} */ rtEntropy = 0;
+  /** @type {number} */ rtCutCount = 0;
+  /** @type {boolean} */ rtTouchesHorizon = false;
+  /** @type {number} */ rtHorizonNodesInWedge = 0;
+
   /**
    * @param {import('./padic.js').PadicSpace} space
-   * @param {number} horizonDepth 0 for pure Bruhat-Tits AdS tree, >=1 for BTZ black hole ring of L = p^horizonDepth
+   * @param {number} [horizonDepth=0] 0 for pure Bruhat-Tits AdS tree, >=1 for BTZ black hole ring of L = p^horizonDepth
    */
   constructor(space, horizonDepth = 0) {
     if (!space || !Number.isInteger(space.p) || !Number.isInteger(space.n)) {
@@ -172,9 +278,10 @@ export class BruhatTitsBulk {
     this.parentEdge = new Int32Array(totalNodes).fill(-1);
     this.isLeaf = new Uint8Array(totalNodes);
     this.isHorizon = new Uint8Array(totalNodes);
-    this.children = Array.from({ length: totalNodes }, () => []);
-    this.adj = Array.from({ length: totalNodes }, () => []); // { to, edge, dir (+1 for u->v, -1 for v->u) }
+    this.children = Array.from({ length: totalNodes }, () => /** @type {number[]} */ ([]));
+    this.adj = Array.from({ length: totalNodes }, () => /** @type {AdjEntry[]} */ ([])); // { to, edge, dir (+1 for u->v, -1 for v->u) }
 
+    /** @type {BulkEdge[]} */
     const edges = [];
 
     for (let d = startDepth; d <= n; d++) {
@@ -257,6 +364,7 @@ export class BruhatTitsBulk {
     // Precompute edge adjacency (edges sharing a vertex) for gravitational wave propagation
     this.edgeNeighbors = Array.from({ length: this.numEdges }, (_, ei) => {
       const e = edges[ei];
+      /** @type {Set<number>} */
       const set = new Set();
       for (const a of this.adj[e.u]) if (a.edge !== ei) set.add(a.edge);
       for (const a of this.adj[e.v]) if (a.edge !== ei) set.add(a.edge);
@@ -374,7 +482,11 @@ export class BruhatTitsBulk {
     }
   }
 
-  /** User wormhole surgery: pinch (positive deltaSigma -> longer/weaker edge) or amplify bulk edge. */
+  /**
+   * User wormhole surgery: pinch (positive deltaSigma -> longer/weaker edge) or amplify bulk edge.
+   * @param {number} edgeId
+   * @param {number} deltaSigma
+   */
   pinchEdge(edgeId, deltaSigma) {
     if (!Number.isInteger(edgeId) || edgeId < 0 || edgeId >= this.numEdges) return;
     if (!Number.isFinite(deltaSigma)) {
@@ -396,6 +508,16 @@ export class BruhatTitsBulk {
    * Exact Complex Thomas Algorithm for tridiagonal system T x = rhs
    * where T has real diagonal diag[0..L-1], complex superdiagonal sup[0..L-2],
    * and complex subdiagonal sub[0..L-2].
+   * @param {number} L
+   * @param {Float64Array} diag
+   * @param {Float64Array} supRe
+   * @param {Float64Array} supIm
+   * @param {Float64Array} subRe
+   * @param {Float64Array} subIm
+   * @param {Float64Array} rhsRe
+   * @param {Float64Array} rhsIm
+   * @param {Float64Array} outRe
+   * @param {Float64Array} outIm
    */
   _solveTridiagonal(L, diag, supRe, supIm, subRe, subIm, rhsRe, rhsIm, outRe, outIm) {
     const cRe = this._tCRe;
@@ -449,6 +571,8 @@ export class BruhatTitsBulk {
    * with Dirichlet boundary data phi(leaf_l) = boundary[l] (leaf-ordered!).
    *
    * Complexity: O(V) exact to machine precision (~1e-14).
+   * @param {Float64Array} boundaryLeafRe
+   * @param {Float64Array} boundaryLeafIm
    */
   solveBulkField(boundaryLeafRe, boundaryLeafIm) {
     if (!boundaryLeafRe || !boundaryLeafIm || boundaryLeafRe.length < this.N || boundaryLeafIm.length < this.N) {
@@ -612,6 +736,7 @@ export class BruhatTitsBulk {
     this._computeStressAndResidual(m2);
   }
 
+  /** @param {number} m2 */
   _computeStressAndResidual(m2) {
     const V = this.numNodes;
     const E = this.numEdges;
@@ -689,6 +814,8 @@ export class BruhatTitsBulk {
    * Gubser-Heydeman-Jepsen-Marcolli Dynamic Edge-Length Einstein Gravity step.
    * Evolves gravitational log-lengths sigma_e via damped wave equation coupled to
    * bulk matter stress-energy T_e, using symplectic semi-implicit Euler.
+   * @param {number} dt
+   * @param {{ newtonG?: number, stiffness?: number, coupling?: number, damping?: number }} [opts]
    */
   stepGravity(dt, { newtonG = 1.2, stiffness = 2.4, coupling = 1.6, damping = 1.4 } = {}) {
     const E = this.numEdges;
@@ -739,6 +866,8 @@ export class BruhatTitsBulk {
   /**
    * Compute exact holographic gravitational backreaction potential V_grav(leaf)
    * felt on the boundary Z_p / p^n Z_p from bulk radial metric distortion a_e - 1.
+   * @param {Float64Array} outLeafPotential
+   * @param {number} [strength=1.0]
    */
   computeBoundaryPotential(outLeafPotential, strength = 1.0) {
     for (let l = 0; l < this.N; l++) {
@@ -789,10 +918,10 @@ export class BruhatTitsBulk {
     }
 
     // If BTZ, precompute exact shortest-path distances among horizon nodes
-    let hDist = null;
+    /** @type {Float64Array} */
+    const hDist = this._hDist;
     if (this.isBTZ) {
       const L = this.horizonLength;
-      hDist = this._hDist;
       const ringCum = this._ringCum;
       ringCum[0] = 0;
       for (let j = 0; j < L; j++) {
@@ -1106,6 +1235,8 @@ export class BruhatTitsBulk {
   /**
    * Compute exact shortest weighted geodesic path between two boundary leaves
    * (used for the Ultrametric Triangle & Geodesic Prover).
+   * @param {number} leafA
+   * @param {number} leafB
    */
   shortestGeodesic(leafA, leafB) {
     if (!Number.isInteger(leafA) || leafA < 0 || leafA >= this.N) {

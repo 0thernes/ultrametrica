@@ -8,7 +8,9 @@
     "Ultrametrica.ComparatorTarget.target_thm3_multiball_soliton",
     "Ultrametrica.ComparatorTarget.target_thm4_kerr_solver_and_parity",
     "Ultrametrica.ComparatorTarget.target_thm5_global_curved_gauss_bonnet",
+    "Ultrametrica.ComparatorTarget.target_thm5_kantorovich_dual",
     "Ultrametrica.ComparatorTarget.target_thm6_holographic_ssa",
+    "Ultrametrica.ComparatorTarget.target_adversarial_refutations",
     "Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses"
   ],
   "permitted_axioms": [

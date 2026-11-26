@@ -1,21 +1,10 @@
-ULTRAMETRICA (v1.4.0) — Pure Lean 4.35.0 Kernel & Multi-Kernel Axiom Audit
-Toolchain: leanprover/lean4:v4.35.0 (zero Mathlib, autoImplicit = false, relaxedAutoImplicit = false)
-Author: Alexander Stephen Donahue (ORCID 0009-0006-8168-9648) — Independent Researcher, Spokane, WA, USA
-
-Independent Kernel Checks Executed:
-  1. lake build UltrametricaProofs Challenge Solution     -> PASS (0 warnings/errors in UltrametricaProofs & Solution)
-  2. lake env lean VerifyAxioms.lean                      -> PASS (120/120 declarations strictly in [propext, Classical.choice, Quot.sound])
-  3. lake env leanchecker --fresh UltrametricaProofs      -> PASS (EXIT 0)
-  4. lake env leanchecker --fresh Solution                -> PASS (EXIT 0)
-  5. lake env leanchecker-paranoid --fresh UltrametricaProofs & Solution -> PASS (EXIT 0)
-  6. con-leche --verified .lake/solution-targets.ndjson   -> PASS (accepted 1886 pruned target decls & 58743 full decls, EXIT 0)
-  7. con-ron --verified .lake/solution-targets.ndjson     -> PASS (accepted 1886 pruned target decls & 58743 full decls, EXIT 0)
-  8. nanoda_bin .lake/nanoda-config.json (pruned targets) -> PASS (independent Rust kernel 0.4.19, strict [propext, Quot.sound, Classical.choice], EXIT 0)
-  9. lake comparator --config comparator.json --paranoid  -> Enforced inside bubblewrap Linux sandbox in GitHub Actions CI (.github/workflows/ci.yml, adds 6th kernel lean4lean)
-
-==============================================================================
-Verbatim `lake env lean VerifyAxioms.lean` Output (120 Audited Declarations):
-==============================================================================
+# ULTRAMETRICA v1.5.0 — Machine-Checked Lean 4 (v4.35.0) Axiom & Kernel Audit
+# Toolchain: leanprover/lean4:v4.35.0 (Palomar Registry module headers, zero Mathlib)
+# Command: cd lean && lake build UltrametricaProofs Challenge Solution && lake env lean VerifyAxioms.lean
+# Verified: 149 declarations (139 core theorems across 5 modules + 10 isolated comparator targets)
+# Also verified by: lake env leanchecker --fresh UltrametricaProofs && lake env leanchecker --fresh Solution
+# CI 6-kernel verification: lake check --paranoid && lake comparator --config comparator.json --paranoid
+# Allowed axioms: strictly within [propext, Classical.choice, Quot.sound] (zero sorry, zero native_decide, zero custom axioms)
 
 'Ultrametrica.ultrametric_isosceles_lt' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ultrametric_two_longest_equal' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -125,6 +114,20 @@ Verbatim `lake env lean VerifyAxioms.lean` Output (120 Audited Declarations):
 'Ultrametrica.rt_strong_subadditivity' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.rt_subadditivity' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.rt_ssa_nonvacuous_witness' does not depend on any axioms
+'Ultrametrica.finSum_congr' does not depend on any axioms
+'Ultrametrica.finSum_add' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finSum_const' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finSum_mul_left' depends on axioms: [propext]
+'Ultrametrica.finSum_mul_right' depends on axioms: [propext]
+'Ultrametrica.finSum_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.finSum_swap' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gen_bridge_transport_cost_identity' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gen_bridge_excess_balance' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gen_bridge_wasserstein_lower_bound_sub' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gen_bridge_wasserstein_lower_bound_sup' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.gen_bridge_primal_sub_optimal' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gen_bridge_primal_sup_optimal' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gen_bridge_kappa_from_wasserstein' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.kozyrev_exact_nonlinear_soliton' depends on axioms: [propext]
 'Ultrametrica.disjoint_multi_soliton_no_crosstalk' depends on axioms: [propext]
 'Ultrametrica.multi_ball_kozyrev_soliton_list' depends on axioms: [propext]
@@ -137,3 +140,18 @@ Verbatim `lake env lean VerifyAxioms.lean` Output (120 Audited Declarations):
 'Ultrametrica.sherman_morrison_exact_identity' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.kerr_flux_edge_stress_even' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.kerr_flux_edge_current_odd' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.Adversarial.adv_dyadic_breaks_odd_doublet_protection' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.Adversarial.adv_btz_L5_not_universally_flatter' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.Adversarial.adv_supercritical_pinch_breaks_conservation' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.Adversarial.adv_overlapping_modes_violate_zero_crosstalk' does not depend on any axioms
+'Ultrametrica.Adversarial.adv_rt_ssa_reverse_inequality_false' does not depend on any axioms
+'Ultrametrica.ComparatorTarget.target_thm1_monna_and_parity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm1_picket_fence_law' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm2_btz_ollivier_ricci' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm3_multiball_soliton' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm4_kerr_solver_and_parity' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm5_global_curved_gauss_bonnet' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm5_kantorovich_dual' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm6_holographic_ssa' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ComparatorTarget.target_adversarial_refutations' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses' does not depend on any axioms
