@@ -14,7 +14,6 @@ import json
 import math
 import random
 import subprocess
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -127,7 +126,7 @@ process.stdout.write(JSON.stringify({ qOut, vOut }));
     js_res = json.loads(proc.stdout)
 
     # Compare all 1,000 arithmetic/ultrametric queries identically
-    for idx, ((p, n, a, b), (js_rev, js_val, js_dist)) in enumerate(zip(queries, js_res["qOut"])):
+    for idx, ((p, n, a, b), (js_rev, js_val, js_dist)) in enumerate(zip(queries, js_res["qOut"], strict=True)):
         exp_rev = ref_monna_rev(p, n, a)
         exp_val = ref_valuation(p, n, (a - b) % (p**n))
         exp_dist = 0.0 if a == b else p ** (-exp_val)
@@ -137,9 +136,9 @@ process.stdout.write(JSON.stringify({ qOut, vOut }));
 
     # Compare all 40 full complex Vladimirov operator outputs against textbook O(N^2) DFT
     max_err = 0.0
-    for idx, ((p, n, alpha, vec), (js_re, js_im)) in enumerate(zip(vec_cases, js_res["vOut"])):
+    for _idx, ((p, n, alpha, vec), (js_re, js_im)) in enumerate(zip(vec_cases, js_res["vOut"], strict=True)):
         ref_out = ref_vladimirov_apply(p, n, alpha, vec)
-        for z_ref, r_js, i_js in zip(ref_out, js_re, js_im):
+        for z_ref, r_js, i_js in zip(ref_out, js_re, js_im, strict=True):
             err = abs(z_ref - complex(r_js, i_js))
             if err > max_err:
                 max_err = err

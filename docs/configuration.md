@@ -20,7 +20,7 @@ See also [`.env.example`](../.env.example).
 {
   "status": "ok",
   "service": "ultrametrica",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "uptime_s": 12.345
 }
 ```

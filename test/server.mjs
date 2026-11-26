@@ -53,7 +53,7 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
   const server = createUltrametricaServer({
     srcRoot: SRC_ROOT,
     logFn: (entry) => logs.push(entry),
-    version: '1.4.0',
+    version: '1.4.1',
   });
 
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -67,7 +67,7 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
     const payload = JSON.parse(health.body);
     assert.equal(payload.status, 'ok');
     assert.equal(payload.service, 'ultrametrica');
-    assert.equal(payload.version, '1.4.0');
+    assert.equal(payload.version, '1.4.1');
     assert.equal(typeof payload.uptime_s, 'number');
 
     // 2. Root redirect preserving query permalink
@@ -131,7 +131,7 @@ test('B21 Failure Injection: Induced disk EIO read error returns clean 500 & log
     srcRoot: SRC_ROOT,
     fsImpl: faultyFs,
     logFn: (entry) => logs.push(entry),
-    version: '1.4.0',
+    version: '1.4.1',
   });
 
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));

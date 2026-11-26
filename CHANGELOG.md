@@ -6,6 +6,13 @@ All notable releases, mathematical proofs, verification suites, and engine chang
 
 - Future genus-$g \ge 2$ Mumford-Schottky wormhole curvature generalization and finite multi-prime adelic product lattice ($\mathbb{A}_{\mathbb{Q}}$ truncation) planned for `v1.5.0+` (see [`ROADMAP.md`](ROADMAP.md)).
 
+## [1.4.1] — 2026-11-25
+
+### Fixed
+- **AMS-LaTeX visual typography, float barriers & complete bibliography (`F23`–`F26`):** Replaced `\usepackage{xurl}` with punctuation-only URL breaks (`\def\UrlBreaks{\do\/\do\-\do\_\do\.}`) to eliminate mid-word `0th/ernes` splits, added `\usepackage[section]{placeins}` + `\FloatBarrier` at the end of Section 8 so benchmark tables and figures never spill into Section 9, replaced `\code{--paranoid}` with `\code{{-}{-}paranoid}` to prevent en-dash ligature rendering, and restored `\cite{deMouraUllrich2021}` so all `21/21` verified references in `paper/refs.bib` appear cleanly in the compiled 19-page PDF (`0` LaTeX warnings).
+- **Zero-warning Python static analysis (`F27`):** Resolved all `20` report-only `ruff` warnings across `reference/padic_oracle.py` and `scripts/verify_exact.py` (`F401`, `B007`, `B023`, `B905`, `SIM114`) and `1` `mypy` type-narrowing error (`scripts/verify_exact.py:285`); split `ruff` and `mypy` into independent steps in `.github/workflows/ci.yml` so both exit `0`.
+- **Live Observatory responsive layout & modal audit count (`F28`–`F29`):** Added explicit `120 Declarations` count to the `?` modal header in `src/web/index.html`, added responsive CSS breakpoints (`<= 1240px`, `<= 1020px`, `<= 760px`) in `src/web/styles.css` preventing narrow-viewport topbar overflow and overlay/panel collisions, and refreshed `docs/media/ultrametrica-observatory.png` from the live verified `1440x900` GitHub Pages Kerr-BTZ capture.
+
 ## [1.4.0] — 2026-11-25
 
 ### Added

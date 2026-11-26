@@ -24,7 +24,7 @@ body:
     id: commit
     attributes:
       label: Git Tag / Commit SHA Tested
-      placeholder: "v1.4.0"
+      placeholder: "v1.4.1"
     validations:
       required: true
   - type: textarea

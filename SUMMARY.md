@@ -1,4 +1,4 @@
-# Executive Summary Paper — ULTRAMETRICA (`v1.4.0`)
+# Executive Summary Paper — ULTRAMETRICA (`v1.4.1`)
 
 **Author:** Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA · handle `0thernes` · `0_0@0thernes.art` · ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648))  
 **Frozen PDF:** [`dist/Donahue_2026_Ultrametrica.pdf`](dist/Donahue_2026_Ultrametrica.pdf) · **Claims Ledger:** [`CLAIMS.md`](CLAIMS.md) · **Limitations:** [`LIMITATIONS.md`](LIMITATIONS.md) · **Mega-Atlas Cross-Check:** [`docs/MEGA_ATLAS_CROSSCHECK.md`](docs/MEGA_ATLAS_CROSSCHECK.md) · **Lean 4 Audit:** [`results/lean4-audit.txt`](results/lean4-audit.txt) · **Live Lab:** [https://0thernes.github.io/ultrametrica/](https://0thernes.github.io/ultrametrica/)
@@ -7,7 +7,7 @@
 
 ## 1. One-Paragraph Overview
 
-**ULTRAMETRICA (`v1.4.0`)** is a zero-dependency, multi-kernel machine-verified mathematical-physics laboratory coupling exact discrete $p$-adic quantum dynamics on $\mathbb{Z}_p / p^n\mathbb{Z}_p$ ($p \in \{2, 3, 5, 7\}$) to curved holographic bulk gravity on the Bruhat-Tits tree $T_p$ and its rotating Tate-curve BTZ black hole quotients $T_p / p^{h\mathbb{Z}}$. Every frame solves the bulk Klein-Gordon equation to $\sim 10^{-16}$ residual in exact $O(V)$ time (`0.388 ms` median coupled frame step), evolves nonlinear boundary quantum waves via 4th-order Yoshida symplectic Radix-$p$ Pontryagin FFTs (`319.9×` faster than naive DFT at $N = 625$) alongside a synchronized Euclidean $\mathbb{R}$ twin, computes exact Ollivier-Ricci discrete curvature and exact $O(V)$ Ryu-Takayanagi minimal cuts, updates symmetric Jacobi dynamic edge-length gravity, renders the 3D hyperbolic manifold in WebGL2 (WCAG 2.2 AA, live on GitHub Pages with shareable permalinks and PNG capture), and synthesizes prime-power Vladimirov harmonic shells ($3^x$ tritaves, $5^x$ pentaves, $7^x$ heptaves) in a click-free 48 kHz `AudioWorklet`.
+**ULTRAMETRICA (`v1.4.1`)** is a zero-dependency, multi-kernel machine-verified mathematical-physics laboratory coupling exact discrete $p$-adic quantum dynamics on $\mathbb{Z}_p / p^n\mathbb{Z}_p$ ($p \in \{2, 3, 5, 7\}$) to curved holographic bulk gravity on the Bruhat-Tits tree $T_p$ and its rotating Tate-curve BTZ black hole quotients $T_p / p^{h\mathbb{Z}}$. Every frame solves the bulk Klein-Gordon equation to $\sim 10^{-16}$ residual in exact $O(V)$ time (`0.388 ms` median coupled frame step), evolves nonlinear boundary quantum waves via 4th-order Yoshida symplectic Radix-$p$ Pontryagin FFTs (`319.9×` faster than naive DFT at $N = 625$) alongside a synchronized Euclidean $\mathbb{R}$ twin, computes exact Ollivier-Ricci discrete curvature and exact $O(V)$ Ryu-Takayanagi minimal cuts, updates symmetric Jacobi dynamic edge-length gravity, renders the 3D hyperbolic manifold in WebGL2 (WCAG 2.2 AA, live on GitHub Pages with shareable permalinks and PNG capture), and synthesizes prime-power Vladimirov harmonic shells ($3^x$ tritaves, $5^x$ pentaves, $7^x$ heptaves) in a click-free 48 kHz `AudioWorklet`.
 
 ## 2. Honest Scientific Verdict: New Physics, New Math, or Solved Mega-Atlas Problems?
 
@@ -21,7 +21,7 @@
   5. **Theorem V & Theorem V-Global:** Non-perturbative single-edge AND **arbitrary simultaneous multi-edge** curved AdS Gauss-Bonnet charge conservation ($\sum_e (\kappa_e - \kappa_{\mathrm{AdS}}) \equiv 0$ whenever $w_e/W_u + w_e/W_v \le 1$ on all interior edges, else exact negative deficit $-2\sum(w_e/W_u + w_e/W_v - 1)$), verified in Lean 4, `69` exact `Fraction` plans, and `1,000` multi-edge JS property cases (`< 1e-11`).
   6. **Theorem VI:** Universal discrete **Holographic Ryu-Takayanagi Strong Subadditivity** $S(A \cup B \cup C) + S(B) \le S(A \cup B) + S(B \cup C)$ proved in Lean 4 on arbitrary finite weighted graphs (trees, curved BTZ black holes, higher-genus quotients) and confirmed over `4,352` exhaustive brute-force partitions and `1,000` random JS graphs.
 
-## 3. Verification Status Snapshot (`v1.4.0`)
+## 3. Verification Status Snapshot (`v1.4.1`)
 
 | Verification Layer | Command / Artifact | Result |
 |---|---|---|

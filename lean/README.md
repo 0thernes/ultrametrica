@@ -1,6 +1,6 @@
 # ULTRAMETRICA — Lean 4 Machine-Checked Proof Suite (`v4.35.0`, 6-Kernel Verified)
 
-This directory contains a **zero-dependency, pure Lean 4 (`leanprover/lean4:v4.35.0`)** formal proof library verifying the algebraic, ultrametric, symmetry, optimal-transport curvature, global multi-edge curved Gauss-Bonnet, universal holographic Ryu-Takayanagi Strong Subadditivity, compacton-soliton, and complex Hermitian linear-algebra theorems of **ULTRAMETRICA (`v1.4.0`)**.
+This directory contains a **zero-dependency, pure Lean 4 (`leanprover/lean4:v4.35.0`)** formal proof library verifying the algebraic, ultrametric, symmetry, optimal-transport curvature, global multi-edge curved Gauss-Bonnet, universal holographic Ryu-Takayanagi Strong Subadditivity, compacton-soliton, and complex Hermitian linear-algebra theorems of **ULTRAMETRICA (`v1.4.1`)**.
 
 - **Zero Mathlib dependency & Strict Options:** `autoImplicit = false` and `relaxedAutoImplicit = false` in [`lakefile.toml`](lakefile.toml); clean-builds from scratch in seconds on any machine with Lean `v4.35.0`.
 - **Zero `sorry` / `admit` / `native_decide` / `unsafe` / `implemented_by` / `@[extern` / custom axioms** in `UltrametricaProofs.lean`, `UltrametricaProofs/*.lean`, and `Solution.lean` (`Challenge.lean` intentionally holds specification `sorry`s matched against sorry-free `Solution.lean`).

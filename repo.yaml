@@ -3,7 +3,7 @@
 
 standard: "1.2.0"
 name: "ultrametrica"
-version: "1.4.0"
+version: "1.4.1"
 project_type: "research"
 owner: "Alexander Stephen Donahue (0thernes)"
 orcid: "0009-0006-8168-9648"
@@ -39,9 +39,9 @@ items:
   A03: { status: done, evidence: "README.md Quickstart + zero-dependency clone/run commands" }
   A04: { status: done, evidence: "README.md ## Usage section + examples/ scripts" }
   A05: { status: done, evidence: "docs/media/ultrametrica-observatory.png embedded in README.md" }
-  A06: { status: done, evidence: "CITATION.cff v1.4.0 with canonical ORCID 0009-0006-8168-9648" }
-  A07: { status: done, evidence: "CHANGELOG.md (Keep a Changelog format with ## [Unreleased] + v1.4.0)" }
-  A08: { status: done, evidence: "VERSION (1.4.0) synchronized across package.json, CITATION.cff, paper/main.tex" }
+  A06: { status: done, evidence: "CITATION.cff v1.4.1 with canonical ORCID 0009-0006-8168-9648" }
+  A07: { status: done, evidence: "CHANGELOG.md (Keep a Changelog format with ## [Unreleased] + v1.4.1)" }
+  A08: { status: done, evidence: "VERSION (1.4.1) synchronized across package.json, CITATION.cff, paper/main.tex" }
   A09: { status: done, evidence: ".gitignore covering .lake, paper/build, node_modules, OS artifacts" }
   A10: { status: done, evidence: "Linear direct-to-main workflow (R1/R2); zero branch protection or git hooks" }
   A11: { status: done, evidence: ".github/workflows/release.yml attaching frozen PDF, arXiv tarball, SHA256SUMS" }

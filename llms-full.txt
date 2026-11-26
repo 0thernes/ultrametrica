@@ -12,7 +12,7 @@ Generated deterministically by `python scripts/build_llms_full.py`.
 > Zero-dependency real-time $p$-adic AdS/CFT holographic quantum gravity, rotating Tate-curve Kerr-BTZ black hole, Kozyrev wavelet, 48 kHz AudioWorklet, and pure Lean 4.35.0 formal verification laboratory (120 kernel-audited declarations, verified across 6 independent Lean kernels via `lake comparator --paranoid`).
 
 - Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID `0009-0006-8168-9648`)
-- Version: `1.4.0`
+- Version: `1.4.1`
 - Repository: https://github.com/0thernes/ultrametrica
 - Live Observatory: https://0thernes.github.io/ultrametrica/
 - License: `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` ([`LICENSE`](LICENSE))
@@ -56,7 +56,7 @@ Generated deterministically by `python scripts/build_llms_full.py`.
 
 ## 1. Project Identity & Scope
 
-- **Project:** **ULTRAMETRICA** (`0thernes/ultrametrica`, `v1.4.0`) — zero-dependency real-time $p$-adic AdS/CFT holographic quantum gravity, rotating Tate-curve Kerr-BTZ black hole, Kozyrev wavelet, 48 kHz prime-power AudioWorklet, and pure Lean 4 (`v4.35.0`) formal verification laboratory.
+- **Project:** **ULTRAMETRICA** (`0thernes/ultrametrica`, `v1.4.1`) — zero-dependency real-time $p$-adic AdS/CFT holographic quantum gravity, rotating Tate-curve Kerr-BTZ black hole, Kozyrev wavelet, 48 kHz prime-power AudioWorklet, and pure Lean 4 (`v4.35.0`) formal verification laboratory.
 - **Author & Affiliation:** Alexander Stephen Donahue (`Alexander S. Donahue`), ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648), **Independent Researcher, Spokane, WA, USA** (`0_0@0thernes.art`, `https://0thernes.art`, `https://github.com/0thernes`). Never assert `"0thernes LLC"` as a legal entity.
 - **License:** `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` ([`LICENSE`](LICENSE)). Keep attribution intact; see [`LEGAL.md`](LEGAL.md) and [`docs/adr/0005-cosmogonic-noncommercial-license.md`](docs/adr/0005-cosmogonic-noncommercial-license.md).
 
@@ -145,7 +145,7 @@ bash scripts/audit-repo.sh .                           # Linux/macOS
 [![License: Cosmogonic Non-Commercial](https://img.shields.io/badge/License-Cosmogonic_Non--Commercial-0ea5e9)](LICENSE)
 
 **Author:** Alexander Stephen Donahue (`Independent Researcher, Spokane, WA, USA` · project handle [`0thernes`](https://0thernes.art) · `0_0@0thernes.art` · ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648))  
-**Release:** `v1.4.0` · **Status:** `active` (Research Preprint & Interactive Laboratory — Non-Commercial Research & Play; see [`LICENSE`](LICENSE) and [`LEGAL.md`](LEGAL.md))  
+**Release:** `v1.4.1` · **Status:** `active` (Research Preprint & Interactive Laboratory — Non-Commercial Research & Play; see [`LICENSE`](LICENSE) and [`LEGAL.md`](LEGAL.md))  
 **Live Interactive WebGL2 + 48 kHz AudioWorklet Observatory:** **[https://0thernes.github.io/ultrametrica/](https://0thernes.github.io/ultrametrica/)**
 
 ![ULTRAMETRICA Live WebGL2 Bruhat-Tits AdS & Rotating Kerr-BTZ Observatory](docs/media/ultrametrica-observatory.png)
@@ -277,7 +277,7 @@ Licensed under the **COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY** ([`
 
 ## FILE: `CLAIMS.md`
 
-# ULTRAMETRICA (`v1.4.0`) — Complete 1-to-1 Claim & Falsification Ledger (`CLAIMS.md`)
+# ULTRAMETRICA (`v1.4.1`) — Complete 1-to-1 Claim & Falsification Ledger (`CLAIMS.md`)
 
 > Build Standard `B04` & `B42`, Playbook Section 5. Author: **Alexander Stephen Donahue** (Independent Researcher, Spokane, WA, USA; ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648)).
 > Every scientific, mathematical, formal, statistical, and computational claim in ULTRAMETRICA is mapped 1-to-1 below to its exact verification tier, reproducible command, test/proof symbol, verified measurement, and explicit **falsification criterion** (*What Would Prove Us Wrong*).
@@ -440,16 +440,17 @@ Every clean-environment reproduction (local or independent CI runner) is recorde
 | 2026-11-21 | Author + GitHub Actions CI (`ubuntu-latest`) | `v1.2.0` (`a3a3dc1`) | Node 22, Python 3.12, Lean `v4.35.0`, Tectonic `0.15` | PASS | 9/9 theorems, 6/6 mutants, 71 Lean decls, GitHub Pages live |
 | 2026-11-21 | Author + GitHub Actions CI (`ubuntu-latest`) | `v1.3.0` (`e42e6af`) | Node 22, Python 3.12, Lean `v4.35.0`, Tectonic `0.15` | PASS | 10/10 theorems, 8/8 mutants, 101 Lean decls, 60 curved Fraction plans |
 | 2026-11-25 | Author (Windows 11 local workstation) | `v1.4.0` | Intel Core Ultra 9 275HX, Node `v25.8.2`, Python `3.13`, Lean `v4.35.0`, Tectonic `0.17.0` | PASS | 26/26 Node tests, 3,200+ properties, 1,000+ Python oracle queries, 120 Lean decls + external kernels, Exp I 4/4 (`p_holm=0.0004`), zero-warning PDF |
-| 2026-11-25 | GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.4.0` | Clean GitHub-hosted runners + `bubblewrap` 6-kernel `lake comparator --paranoid` | PASS (verified post-push in Actions) | Independent clean-clone verification across 3 operating systems + sandboxed 6-kernel Lean verification |
+| 2026-11-25 | GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.4.0` | Clean GitHub-hosted runners + `bubblewrap` 6-kernel `lake comparator --paranoid` | PASS (`#45726457779`) | Independent clean-clone verification across 3 operating systems + sandboxed 6-kernel Lean verification (Rekor `4114476726`) |
+| 2026-11-25 | Author Local + GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.4.1` | Intel Core Ultra 9 275HX + 3-OS GitHub runners + `bubblewrap` 6-kernel comparator | PASS | Zero-warning PDF (`19` pages, `21/21` refs), `0` `ruff` / `0` `mypy` warnings, responsive live observatory QA, `26/26` Node + `1,000+` Python + `120` Lean decls |
 
 
 ---
 
 ## FILE: `VERIFICATION.md`
 
-# Verification, Falsifiability & Authentication Protocol (`v1.4.0`)
+# Verification, Falsifiability & Authentication Protocol (`v1.4.1`)
 
-**ULTRAMETRICA (`v1.4.0`)** is engineered to be **Provable**, **Falsifiable**, **Verifiable**, and **Authenticated** across seven independent layers: (1) pure Lean 4 (`v4.35.0`, `autoImplicit = false`) kernel proofs (**120 audited declarations** + **8 isolated `Spec`/`Challenge`/`Solution` targets** verified across `Lean 4.35.0`, `leanchecker`, `leanchecker-paranoid`, `con-leche`, `con-ron`, `nanoda_bin 0.4.19`, plus `lean4lean` inside Linux `bubblewrap` `lake comparator --paranoid` in CI), (2) zero-dependency exact-rational Python (`int`, `fractions.Fraction`, $\mathbb{Q}(i)$, and exhaustive brute-force) falsification across Theorems I–VI + independent textbook differential oracle (`reference/padic_oracle.py`), (3) deterministic Node.js `26`-test suite (`10` theorems, `8/8` planted negative mutants killed, `3,200+` seeded property/metamorphic/negative tests, HTTP contract + disk `EIO` failure injection, golden snapshot) + `3` runnable examples, (4) git-sealed pre-registered confirmatory Experiment I (`docs/preregistration.md`, `c171b1b` -> `4/4` confirmed at `p_holm = 0.0004`) + hardware-tagged performance budgets (`scripts/bench.mjs`), (5) zero-warning AMS-LaTeX PDF (5 vector figures) + standalone arXiv bundle, (6) bit-exact cryptographic manifests (`CHECKSUMS.sha256` & `data/MANIFEST.sha256` + SLSA release provenance), and (7) verbatim README `#print axioms` check (`scripts/check_readme_axioms.py`).
+**ULTRAMETRICA (`v1.4.1`)** is engineered to be **Provable**, **Falsifiable**, **Verifiable**, and **Authenticated** across seven independent layers: (1) pure Lean 4 (`v4.35.0`, `autoImplicit = false`) kernel proofs (**120 audited declarations** + **8 isolated `Spec`/`Challenge`/`Solution` targets** verified across `Lean 4.35.0`, `leanchecker`, `leanchecker-paranoid`, `con-leche`, `con-ron`, `nanoda_bin 0.4.19`, plus `lean4lean` inside Linux `bubblewrap` `lake comparator --paranoid` in CI), (2) zero-dependency exact-rational Python (`int`, `fractions.Fraction`, $\mathbb{Q}(i)$, and exhaustive brute-force) falsification across Theorems I–VI + independent textbook differential oracle (`reference/padic_oracle.py`), (3) deterministic Node.js `26`-test suite (`10` theorems, `8/8` planted negative mutants killed, `3,200+` seeded property/metamorphic/negative tests, HTTP contract + disk `EIO` failure injection, golden snapshot) + `3` runnable examples, (4) git-sealed pre-registered confirmatory Experiment I (`docs/preregistration.md`, `c171b1b` -> `4/4` confirmed at `p_holm = 0.0004`) + hardware-tagged performance budgets (`scripts/bench.mjs`), (5) zero-warning AMS-LaTeX PDF (5 vector figures) + standalone arXiv bundle, (6) bit-exact cryptographic manifests (`CHECKSUMS.sha256` & `data/MANIFEST.sha256` + SLSA release provenance), and (7) verbatim README `#print axioms` check (`scripts/check_readme_axioms.py`).
 
 ---
 

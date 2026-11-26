@@ -1,4 +1,4 @@
-# ULTRAMETRICA (`v1.4.0`) — Complete 1-to-1 Claim & Falsification Ledger (`CLAIMS.md`)
+# ULTRAMETRICA (`v1.4.1`) — Complete 1-to-1 Claim & Falsification Ledger (`CLAIMS.md`)
 
 > Build Standard `B04` & `B42`, Playbook Section 5. Author: **Alexander Stephen Donahue** (Independent Researcher, Spokane, WA, USA; ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648)).
 > Every scientific, mathematical, formal, statistical, and computational claim in ULTRAMETRICA is mapped 1-to-1 below to its exact verification tier, reproducible command, test/proof symbol, verified measurement, and explicit **falsification criterion** (*What Would Prove Us Wrong*).

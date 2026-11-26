@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA (v1.4.0) — Independent Zero-Dependency Exact-Rational Falsifier,
+ULTRAMETRICA (v1.4.1) — Independent Zero-Dependency Exact-Rational Falsifier,
 Metadata/Affiliation/Citation Auditor & SHA-256 Manifest Verifier.
 
 Completely decoupled from both the JavaScript simulation engine and Lean 4 proofs.
@@ -30,7 +30,6 @@ import argparse
 import hashlib
 import json
 import re
-import sys
 from collections import deque
 from fractions import Fraction
 from pathlib import Path
@@ -264,7 +263,8 @@ def exact_wasserstein_bipartite(
                             in_q[to] = True
                             q.append(to)
 
-        assert dist[sink] is not None, "Failed to find augmenting path in exact transport"
+        d_sink = dist[sink]
+        assert d_sink is not None, "Failed to find augmenting path in exact transport"
         push = one - flow
         v = sink
         while v != src:
@@ -283,7 +283,7 @@ def exact_wasserstein_bipartite(
             v = u
 
         flow += push
-        total_cost += push * dist[sink]
+        total_cost += push * d_sink
 
     assert flow == one
     return total_cost
@@ -362,9 +362,9 @@ def verify_theorem_2_btz_ollivier_ricci_exact() -> None:
         kappa_ads = Fraction(-2 * (p - 1), p + 1)
 
         for L in lengths:
-            def ring_dist(a: int, b: int) -> int:
-                cw = (b - a) % L
-                return min(cw, L - cw)
+            def ring_dist(a: int, b: int, ring_len: int = L) -> int:
+                cw = (b - a) % ring_len
+                return min(cw, ring_len - cw)
 
             u_nbs = [(1, 0), (L - 1, 0)] + [(0, 1) for _ in range(p)]
             v_nbs = [(0, 0), (2 % L, 0)] + [(1, 1) for _ in range(p)]
@@ -526,9 +526,7 @@ def verify_theorem_5_and_5global_exact() -> None:
             for i in range(p + 1):
                 row = []
                 for j in range(p + 1):
-                    if i == 0 and j == 0:
-                        row.append(Fraction(1))
-                    elif i == 0:
+                    if i == 0:
                         row.append(Fraction(1))
                     elif j == 0:
                         row.append(len_u[i])
@@ -585,14 +583,19 @@ def verify_theorem_5_and_5global_exact() -> None:
                 ew[(v, u)] = w
 
             # Compute exact SPFA Ollivier-Ricci on every edge whose endpoints both have degree p+1 (depth <= 2)
-            def exact_kappa_on_tree_edge(u: int, v: int) -> Fraction:
-                a_uv = Fraction(1, ew[(u, v)])
-                nbs_u = adj[u]
-                nbs_v = adj[v]
-                Wu = sum(ew[(u, x)] for x in nbs_u)
-                Wv = sum(ew[(v, y)] for y in nbs_v)
-                mu_u = [ew[(u, x)] / Wu for x in nbs_u]
-                mu_v = [ew[(v, y)] / Wv for y in nbs_v]
+            def exact_kappa_on_tree_edge(
+                u: int,
+                v: int,
+                adj_map: dict[int, list[int]] = adj,
+                edge_w: dict[tuple[int, int], Fraction] = ew,
+            ) -> Fraction:
+                a_uv = Fraction(1, edge_w[(u, v)])
+                nbs_u = adj_map[u]
+                nbs_v = adj_map[v]
+                Wu = sum(edge_w[(u, x)] for x in nbs_u)
+                Wv = sum(edge_w[(v, y)] for y in nbs_v)
+                mu_u = [edge_w[(u, x)] / Wu for x in nbs_u]
+                mu_v = [edge_w[(v, y)] / Wv for y in nbs_v]
                 cost_m = []
                 for x in nbs_u:
                     row = []
@@ -600,11 +603,11 @@ def verify_theorem_5_and_5global_exact() -> None:
                         if x == v and y == u:
                             row.append(a_uv)
                         elif x == v:
-                            row.append(Fraction(1, ew[(v, y)]))
+                            row.append(Fraction(1, edge_w[(v, y)]))
                         elif y == u:
-                            row.append(Fraction(1, ew[(u, x)]))
+                            row.append(Fraction(1, edge_w[(u, x)]))
                         else:
-                            row.append(Fraction(1, ew[(u, x)]) + a_uv + Fraction(1, ew[(v, y)]))
+                            row.append(Fraction(1, edge_w[(u, x)]) + a_uv + Fraction(1, edge_w[(v, y)]))
                     cost_m.append(row)
                 w1_val = exact_wasserstein_bipartite(mu_u, mu_v, cost_m)
                 return Fraction(1) - w1_val / a_uv

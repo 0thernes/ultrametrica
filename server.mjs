@@ -52,7 +52,7 @@ export function createUltrametricaServer({
   srcRoot = DEFAULT_SRC_ROOT,
   fsImpl = fs,
   logFn = null,
-  version = '1.4.0',
+  version = '1.4.1',
 } = {}) {
   const rootAbs = path.resolve(srcRoot);
   const startedAt = Date.now();
@@ -209,7 +209,7 @@ if (isMain) {
   const PORT = parsePort(process.env.PORT);
   const HOST = process.env.HOST || '127.0.0.1';
   const jsonLogs = process.env.LOG_FORMAT === 'json';
-  let version = '1.4.0';
+  let version = '1.4.1';
   try {
     version = (await fs.readFile(VERSION_PATH, 'utf8')).trim() || version;
   } catch {}

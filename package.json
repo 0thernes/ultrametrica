@@ -1,6 +1,6 @@
 {
   "name": "ultrametrica",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Real-time p-adic AdS/CFT Holographic Quantum Gravity, Bruhat-Tits BTZ Black Hole, Kozyrev Wavelet & Ultrametric Acoustic Engine with 120 Pure Lean 4.35.0 Formal Proofs Verified Across 6 Independent Kernels",
   "type": "module",
   "scripts": {

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-25T23:39:39.848Z",
-  "version": "1.4.0",
+  "generated_at": "2026-11-26T01:58:40.942Z",
+  "version": "1.4.1",
   "environment": {
     "node": "v25.8.2",
     "platform": "win32-x64",
@@ -16,76 +16,76 @@
     {
       "name": "radix_p_fft_p3_n2_N9_x200",
       "runs": 15,
-      "median_ms": 0.0288,
-      "iqr_ms": 0.0041,
-      "min_ms": 0.0286,
-      "max_ms": 0.1736,
+      "median_ms": 0.0367,
+      "iqr_ms": 0.0114,
+      "min_ms": 0.0357,
+      "max_ms": 0.2577,
       "checksum": "maxErr=1.02e-15"
     },
     {
       "name": "naive_dft_p3_n2_N9_x20",
       "runs": 10,
-      "median_ms": 0.02,
-      "iqr_ms": 0,
-      "min_ms": 0.0197,
-      "max_ms": 0.0212,
+      "median_ms": 0.0234,
+      "iqr_ms": 0.0005,
+      "min_ms": 0.0232,
+      "max_ms": 0.0264,
       "checksum": "N=9",
-      "speedup_fft_vs_dft": 6.94
+      "speedup_fft_vs_dft": 6.38
     },
     {
       "name": "radix_p_fft_p3_n5_N243_x20",
       "runs": 15,
-      "median_ms": 0.1505,
-      "iqr_ms": 0.0269,
-      "min_ms": 0.1476,
-      "max_ms": 0.2529,
+      "median_ms": 0.2507,
+      "iqr_ms": 0.0215,
+      "min_ms": 0.1795,
+      "max_ms": 0.5423,
       "checksum": "maxErr=1.12e-14"
     },
     {
       "name": "naive_dft_p3_n5_N243_x2",
       "runs": 10,
-      "median_ms": 1.8497,
-      "iqr_ms": 0.0602,
-      "min_ms": 1.8338,
-      "max_ms": 2.0056,
+      "median_ms": 2.6533,
+      "iqr_ms": 0.7824,
+      "min_ms": 2.1487,
+      "max_ms": 3.3358,
       "checksum": "N=243",
-      "speedup_fft_vs_dft": 122.9
+      "speedup_fft_vs_dft": 105.84
     },
     {
       "name": "radix_p_fft_p5_n4_N625_x10",
       "runs": 15,
-      "median_ms": 0.1829,
-      "iqr_ms": 0.0012,
-      "min_ms": 0.1827,
-      "max_ms": 0.1875,
+      "median_ms": 0.2479,
+      "iqr_ms": 0.0253,
+      "min_ms": 0.2208,
+      "max_ms": 0.2971,
       "checksum": "maxErr=1.07e-14"
     },
     {
       "name": "naive_dft_p5_n4_N625_x1",
       "runs": 10,
-      "median_ms": 5.8508,
-      "iqr_ms": 0.0924,
-      "min_ms": 5.7924,
-      "max_ms": 6.0517,
+      "median_ms": 9.7395,
+      "iqr_ms": 1.0962,
+      "min_ms": 8.8776,
+      "max_ms": 10.8145,
       "checksum": "N=625",
-      "speedup_fft_vs_dft": 319.89
+      "speedup_fft_vs_dft": 392.88
     },
     {
       "name": "coupled_btz_frame_step_p3_n5_L9",
       "runs": 15,
-      "median_ms": 0.3882,
-      "iqr_ms": 0.1318,
-      "min_ms": 0.3407,
-      "max_ms": 0.7412,
+      "median_ms": 0.79,
+      "iqr_ms": 0.5532,
+      "min_ms": 0.4755,
+      "max_ms": 1.6231,
       "checksum": "kgRes=1.20e-16,normDrift=3.11e-14"
     },
     {
       "name": "bulk_kg_ricci_rt_p5_n4_N625_BTZ",
       "runs": 15,
-      "median_ms": 0.2223,
-      "iqr_ms": 0.1284,
-      "min_ms": 0.1398,
-      "max_ms": 0.4895,
+      "median_ms": 0.5503,
+      "iqr_ms": 0.7011,
+      "min_ms": 0.1696,
+      "max_ms": 1.9405,
       "checksum": "kgRes=1.78e-15,S_A=12.8755"
     }
   ]

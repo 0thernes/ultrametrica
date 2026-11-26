@@ -28,3 +28,7 @@
 
 ### 2026-11-25 — `v1.4.0` Cycles 2 & 3 Compliance, White Paper & Release Freeze
 - Completed full 90-item Build Standard `v1.2.0` (`Audit-Repo.ps1`: 100% applicable pass) and Playbook `v1.3` upgrades (affiliation correction removing unformed `"0thernes LLC"`, statement-fidelity audit, citation/DOI checks, verbatim README `#print axioms` check, zero-warning AMS-LaTeX PDF + standalone arXiv tarball, browser QA screenshot & social preview, cross-platform + 6-kernel `bubblewrap` CI, release `v1.4.0` + `0thernes-research-archive` sync).
+
+### 2026-11-25 — `v1.4.1` Post-Release Visual PDF, Static-Analysis & Live Browser QA Polish
+- Conducted page-by-page visual inspection of the rendered PDF, CI report-only linter logs, and live public GitHub Pages browser QA (`https://0thernes.github.io/ultrametrica/web/`).
+- Resolved `F23`–`F28`: eliminated `--paranoid` en-dash ligatures, added `\usepackage[section]{placeins}` + `\FloatBarrier` so Section 8 floats never spill into Section 9, restored `\cite{deMouraUllrich2021}` (`21/21` references), replaced `\usepackage{xurl}` with punctuation-only URL breaks, cleared all `20` `ruff` warnings and `1` `mypy` error (both exit `0`), split `ruff`/`mypy` CI steps, added explicit `120 Declarations` to `?` modal + responsive `<= 1240px` / `<= 1020px` / `<= 760px` CSS rules, refreshed `docs/media/ultrametrica-observatory.png`, and shipped immutable patch release `v1.4.1` + `0TH-BUILD-003` archive sync.

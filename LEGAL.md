@@ -2,7 +2,7 @@
 
 ## Ownership & License
 
-**ULTRAMETRICA** (`v1.4.0`) is authored and owned by **Alexander Stephen Donahue** (`Copyright (c) 2026 Alexander Stephen Donahue (0thernes) <0_0@0thernes.art>`). `0thernes` is the author's independent project and research handle (`https://0thernes.art`, `https://github.com/0thernes`); no LLC, nonprofit, university, or corporate legal entity is asserted here.
+**ULTRAMETRICA** (`v1.4.1`) is authored and owned by **Alexander Stephen Donahue** (`Copyright (c) 2026 Alexander Stephen Donahue (0thernes) <0_0@0thernes.art>`). `0thernes` is the author's independent project and research handle (`https://0thernes.art`, `https://github.com/0thernes`); no LLC, nonprofit, university, or corporate legal entity is asserted here.
 
 This repository and every file inside it (source code, shaders, DSP processors, Lean 4 formal proofs, white paper, summary paper, master report, claim ledger, benchmark artifacts, and documentation) are governed by the **COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY** in [`LICENSE`](LICENSE).
 

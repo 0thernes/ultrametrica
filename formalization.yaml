@@ -1,6 +1,6 @@
 title: "ULTRAMETRICA: Exact Non-Archimedean Holography, Recursive Adelic Symmetries, Tate-Curve BTZ Ollivier-Ricci Curvature, Global Curved Gauss-Bonnet & Holographic Strong Subadditivity"
 repository: "https://github.com/0thernes/ultrametrica"
-version: "1.4.0"
+version: "1.4.1"
 date: "2026-11-25"
 license:
   code: "NOASSERTION (COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY; see LICENSE; re-licensing to Apache-2.0 / CC-BY-4.0 is an owner-controlled prerequisite for JOSS or Mathlib upstreaming)"
@@ -38,7 +38,7 @@ kernels_configured:
 automation:
   origin: "AI-assisted mathematical derivation, formalization, exact-rational certification, interactive WebGL2/AudioWorklet engineering, and manuscript drafting under human direction"
   models_used:
-    - "Google Gemini / Antigravity: v1.0.0–v1.4.0 simulation engine, Lean 4 formalizations, exact-rational & property/mutant verification, and AMS-LaTeX manuscript drafting"
+    - "Google Gemini / Antigravity: v1.0.0–v1.4.1 simulation engine, Lean 4 formalizations, exact-rational & property/mutant verification, and AMS-LaTeX manuscript drafting"
   human_line_by_line_review_recorded: false
   statement_fidelity_table: "docs/statement-fidelity.md"
 review_status: "Research preprint; NOT externally peer reviewed; NOT yet submitted to Palomar Registry, arXiv, or Zenodo."

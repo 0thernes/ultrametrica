@@ -71,12 +71,15 @@ jobs:
         continue-on-error: true
         run: |
           node --check server.mjs src/engine/*.js src/web/*.js test/*.mjs examples/*.mjs scripts/*.mjs
-      - name: Python ruff & mypy report-only static checks
+      - name: Install Python static analyzers (report-only)
         continue-on-error: true
-        run: |
-          python -m pip install --quiet ruff mypy
-          ruff check scripts reference
-          mypy --config-file pyproject.toml
+        run: python -m pip install --quiet ruff mypy
+      - name: Python ruff lint check (report-only)
+        continue-on-error: true
+        run: ruff check scripts reference
+      - name: Python mypy type check (report-only)
+        continue-on-error: true
+        run: mypy --config-file pyproject.toml
       - name: Secret scan via gitleaks (report-only)
         uses: gitleaks/gitleaks-action@v2
         continue-on-error: true
