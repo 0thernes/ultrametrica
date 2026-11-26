@@ -125,39 +125,57 @@ export class RealitySplitPanel {
       ctx.fillRect(x, baseBot - h, barW + 0.4, h);
     }
 
-    // Crisp labels & exact leakage readouts
-    ctx.font = '600 10px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
-    const labelTop =
+    // Crisp adaptive labels & exact leakage readouts (zero overlap at any viewport width)
+    ctx.font = '600 9.5px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+    const leakP = q.leakagePadic * 100;
+    const leakPStr = leakP < 1e-4 ? '0.000000%' : `${leakP.toFixed(2)}%`;
+    const leakPShort = leakP < 1e-4 ? '0.0000%' : `${leakP.toFixed(2)}%`;
+    const fullTopL =
       q.adelicMix >= 0.99
         ? `Q_${p} NON-ARCHIMEDEAN (D_${p}^${q.alpha.toFixed(2)})`
         : q.adelicMix <= 0.01
         ? `R ARCHIMEDEAN (theta=0.00)`
         : `ADELIC HYBRID (theta=${q.adelicMix.toFixed(2)})`;
+    const shortTopL =
+      q.adelicMix >= 0.99
+        ? `Q_${p} (D_${p}^${q.alpha.toFixed(2)})`
+        : q.adelicMix <= 0.01
+        ? `R (theta=0.00)`
+        : `ADELIC (${q.adelicMix.toFixed(2)})`;
+    const fullTopR = `BALL LEAKAGE: ${leakPStr}  |  IPR ${q.iprPadic.toFixed(3)}`;
+    const shortTopR = `LEAK ${leakPShort} | IPR ${q.iprPadic.toFixed(2)}`;
+    const fitTopFull = ctx.measureText(fullTopL).width + ctx.measureText(fullTopR).width + 14 <= plotW;
+    const topL = fitTopFull ? fullTopL : shortTopL;
+    const topR = fitTopFull ? fullTopR : shortTopR;
+    const topRW = Math.min(ctx.measureText(topR).width, plotW * 0.56);
+    const topLW = Math.max(40, plotW - topRW - 10);
+
     ctx.fillStyle = '#67e8f9';
     ctx.textAlign = 'left';
-    ctx.fillText(labelTop, padL + 2, 12);
+    ctx.fillText(topL, padL + 2, 12, topLW);
 
-    const leakP = q.leakagePadic * 100;
     ctx.textAlign = 'right';
     ctx.fillStyle = leakP < 1e-4 ? '#34d399' : '#fbbf24';
-    ctx.fillText(
-      `BALL LEAKAGE: ${leakP < 1e-4 ? '0.000000%' : leakP.toFixed(2) + '%'}  |  IPR ${q.iprPadic.toFixed(3)}`,
-      W - padR - 2,
-      12
-    );
+    ctx.fillText(topR, W - padR - 2, 12, topRW);
+
+    const leakT = q.leakageTwin * 100;
+    const fullBotL = `R EUCLIDEAN TWIN (-Delta^${(q.alpha * 0.5).toFixed(2)}, SAME E_0)`;
+    const shortBotL = `R TWIN (-Delta^${(q.alpha * 0.5).toFixed(2)})`;
+    const fullBotR = `BALL LEAKAGE: ${leakT.toFixed(2)}%  |  IPR ${q.iprTwin.toFixed(3)}`;
+    const shortBotR = `LEAK ${leakT.toFixed(2)}% | IPR ${q.iprTwin.toFixed(2)}`;
+    const fitBotFull = ctx.measureText(fullBotL).width + ctx.measureText(fullBotR).width + 14 <= plotW;
+    const botL = fitBotFull ? fullBotL : shortBotL;
+    const botR = fitBotFull ? fullBotR : shortBotR;
+    const botRW = Math.min(ctx.measureText(botR).width, plotW * 0.56);
+    const botLW = Math.max(40, plotW - botRW - 10);
 
     ctx.textAlign = 'left';
     ctx.fillStyle = '#fca5a5';
-    ctx.fillText(`R EUCLIDEAN TWIN (-Delta^${(q.alpha * 0.5).toFixed(2)}, SAME E_0)`, padL + 2, midY + 13);
+    ctx.fillText(botL, padL + 2, midY + 13, botLW);
 
-    const leakT = q.leakageTwin * 100;
     ctx.textAlign = 'right';
     ctx.fillStyle = leakT > 20 ? '#f87171' : '#cbd5e1';
-    ctx.fillText(
-      `BALL LEAKAGE: ${leakT.toFixed(2)}%  |  IPR ${q.iprTwin.toFixed(3)}`,
-      W - padR - 2,
-      midY + 13
-    );
+    ctx.fillText(botR, W - padR - 2, midY + 13, botRW);
   }
 }
 
@@ -286,7 +304,7 @@ export class UltrametricTrianglePanel {
     ctx.fillText(rightBadge, W - 8, 12);
 
     // Draw an actual isosceles ultrametric triangle diagram on the left half
-    const triW = Math.min(118, W * 0.44);
+    const triW = Math.min(104, W * 0.39);
     const cx = padL + triW * 0.5;
     const topY = 28;
     const botY = H - 30;
@@ -367,24 +385,26 @@ export class UltrametricTrianglePanel {
     ctx.fillText(fmtPow(base), cx, botY + 13);
 
     // Right column: Exact p-adic digit coordinates & Bruhat-Tits geodesic hops
-    const rx = padL + triW + 10;
+    const rx = padL + triW + 8;
+    const keyW = W < 285 ? 36 : 42;
+    const maxValW = Math.max(40, W - (rx + keyW) - 6);
     ctx.textAlign = 'left';
-    ctx.font = '500 9.5px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+    ctx.font = '500 9.25px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
     const lines = [
       { k: 'A', v: proof.formatted[0], c: '#e2e8f0' },
       { k: 'B', v: proof.formatted[1], c: '#e2e8f0' },
       { k: 'C', v: proof.formatted[2], c: '#fde047' },
-      { k: 'T_p', v: `hops ${treeAB} / ${treeBC} / ${treeAC}`, c: '#7dd3fc' },
-      { k: 'Gromov', v: `(A|B)_C = ${proof.gromovProduct.toFixed(0)} hops`, c: '#a7f3d0' },
+      { k: 'T_p', v: `${treeAB} / ${treeBC} / ${treeAC} hops`, c: '#7dd3fc' },
+      { k: W < 285 ? 'Grom.' : 'Gromov', v: `(A|B)_C = ${proof.gromovProduct.toFixed(0)}`, c: '#a7f3d0' },
     ];
 
     let y = 32;
     for (const row of lines) {
       ctx.fillStyle = '#64748b';
-      ctx.fillText(row.k, rx, y);
+      ctx.fillText(row.k, rx, y, keyW - 4);
       ctx.fillStyle = row.c;
-      ctx.fillText(row.v, rx + 42, y);
+      ctx.fillText(row.v, rx + keyW, y, maxValW);
       y += 17;
     }
 
