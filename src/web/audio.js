@@ -114,6 +114,14 @@ export class PadicAudioEngine {
       return true;
     } catch (err) {
       console.error('Failed to start p-adic AudioWorklet:', err);
+      if (this.ctx && !this.node) {
+        try {
+          await this.ctx.close();
+        } catch {
+          // ignore close error on half-initialized context
+        }
+        this.ctx = null;
+      }
       this.enabled = false;
       return false;
     } finally {

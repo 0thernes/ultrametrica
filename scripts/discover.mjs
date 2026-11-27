@@ -1,5 +1,5 @@
 /**
- * ULTRAMETRICA — Reproducible Scientific Discovery & Falsification Benchmark Suite (v1.3.0).
+ * ULTRAMETRICA — Reproducible Scientific Discovery & Falsification Benchmark Suite (v1.8.0).
  *
  * Runs 8 exact quantitative experiments and writes reproducible JSON results to results/:
  *   Exp A: Full exact eigenspectrum & level-spacing statistics (<r>, IPR, commutator norm)

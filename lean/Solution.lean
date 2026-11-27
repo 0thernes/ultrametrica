@@ -2,273 +2,24 @@ module
 
 public import UltrametricaProofs.Spec
 public import UltrametricaProofs
+public import SolutionBridge
 
 /-!
-  ULTRAMETRICA (v1.7.0) — Sorry-Free Solution Module Matched Against `Challenge.lean`.
+  ULTRAMETRICA (v1.8.0) — Sorry-Free Solution Module Matched Against `Challenge.lean`.
 
-  Palomar Registry compliant Lean 4.35.0 `module`.
-  Proves all 12 upgraded targets in `Ultrametrica.ComparatorTarget` with ZERO `sorry`,
+  Palomar Registry compliant Lean 4.35.0 `module` (< 750 lines).
+  Proves all 15 upgraded targets in `Ultrametrica.ComparatorTarget` with ZERO `sorry`,
   ZERO `native_decide`, ZERO custom axioms, and ZERO Mathlib dependencies, verified across
   6 independent Lean kernels via:
       lake check --paranoid
       lake comparator --config comparator.json --paranoid
 -/
 
+open Ultrametrica.SolutionBridge
+
 namespace Ultrametrica.ComparatorTarget
 
--- ---- Exact 1-to-1 Bridges Between Spec Definitions and Proof Modules ----
-
-private theorem spec_revBaseAux_eq (p d v acc : Nat) :
-    Spec.revBaseAux p d v acc = Ultrametrica.revBaseAux p d v acc := by
-  induction d generalizing v acc with
-  | zero => rfl
-  | succ k ih => exact ih (v / p) (acc * p + v % p)
-
-private theorem spec_revBase_eq (p n x : Nat) :
-    Spec.revBase p n x = Ultrametrica.revBase p n x :=
-  spec_revBaseAux_eq p n x 0
-
-private def toCoreNbr : Spec.BTZNbrClass → Ultrametrica.BTZNbrClass
-  | .opp   => .opp
-  | .back  => .back
-  | .child => .child
-
-private def fromCoreNbr : Ultrametrica.BTZNbrClass → Spec.BTZNbrClass
-  | .opp   => .opp
-  | .back  => .back
-  | .child => .child
-
-private theorem spec_btzGraphDist_eq_core (L : Int) (i j : Spec.BTZNbrClass) :
-    Spec.btzGraphDist L i j = Ultrametrica.btzGraphDist L (toCoreNbr i) (toCoreNbr j) := by
-  cases i <;> cases j <;> (
-    simp only [Spec.btzGraphDist, Ultrametrica.btzGraphDist, toCoreNbr,
-      Ultrametrica.btzAnchorU, Ultrametrica.btzAnchorV, Ultrametrica.btzRadialOffset,
-      Spec.cycleDist, Ultrametrica.cycleDist]
-    omega
-  )
-
-private theorem spec_btzGraphDist_eq_classDist (L : Int) (hL : 3 ≤ L) (i j : Spec.BTZNbrClass) :
-    Spec.btzGraphDist L i j = Ultrametrica.btzClassDist L (toCoreNbr i) (toCoreNbr j) := by
-  rw [spec_btzGraphDist_eq_core]
-  exact Ultrametrica.btz_graph_metric_eq_classDist L hL (toCoreNbr i) (toCoreNbr j)
-
-private theorem spec_btzTransportCost_eq (L : Int) (hL : 3 ≤ L)
-    (P : Spec.BTZNbrClass → Spec.BTZNbrClass → Int) :
-    Spec.btzTransportCost L P =
-      Ultrametrica.btzTransportCost L (fun i j => P (fromCoreNbr i) (fromCoreNbr j)) := by
-  unfold Spec.btzTransportCost Ultrametrica.btzTransportCost
-  rw [spec_btzGraphDist_eq_classDist L hL .opp .opp,
-      spec_btzGraphDist_eq_classDist L hL .opp .back,
-      spec_btzGraphDist_eq_classDist L hL .opp .child,
-      spec_btzGraphDist_eq_classDist L hL .back .opp,
-      spec_btzGraphDist_eq_classDist L hL .back .back,
-      spec_btzGraphDist_eq_classDist L hL .back .child,
-      spec_btzGraphDist_eq_classDist L hL .child .opp,
-      spec_btzGraphDist_eq_classDist L hL .child .back,
-      spec_btzGraphDist_eq_classDist L hL .child .child]
-  rfl
-
-private theorem spec_finSum_eq (n : Nat) (f : Fin n → Int) :
-    Spec.finSum n f = Ultrametrica.finSum n f := by
-  induction n with
-  | zero => rfl
-  | succ k ih =>
-    simp only [Spec.finSum, Ultrametrica.finSum]
-    rw [ih (fun i => f i.castSucc)]
-
-private theorem spec_genBridgeTransportCost_eq (p : Nat) (ae : Int) (uA vA : Fin p → Int)
-    (P00 : Int) (P0y Px0 : Fin p → Int) (Pxy : Fin p → Fin p → Int) :
-    Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy =
-      Ultrametrica.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy := by
-  unfold Spec.genBridgeTransportCost Ultrametrica.genBridgeTransportCost
-  rw [spec_finSum_eq, spec_finSum_eq, spec_finSum_eq]
-  have hinner : (fun r => Spec.finSum p (fun s => Pxy r s * (uA r + ae + vA s))) =
-      (fun r => Ultrametrica.finSum p (fun s => Pxy r s * (uA r + ae + vA s))) := by
-    funext r
-    exact spec_finSum_eq p _
-  rw [hinner]
-
-private def toCoreCInt (z : Spec.CInt) : Ultrametrica.CInt := ⟨z.re, z.im⟩
-private def fromCoreCInt (z : Ultrametrica.CInt) : Spec.CInt := ⟨z.re, z.im⟩
-
-private theorem fromCore_toCore_CInt (z : Spec.CInt) : fromCoreCInt (toCoreCInt z) = z := by
-  cases z; rfl
-
-private theorem toCore_fromCore_CInt (z : Ultrametrica.CInt) : toCoreCInt (fromCoreCInt z) = z := by
-  cases z; rfl
-
-private def toCoreCVec {L : Nat} (v : Spec.CVec L) : Ultrametrica.CVec L := fun i => toCoreCInt (v i)
-private def fromCoreCVec {L : Nat} (v : Ultrametrica.CVec L) : Spec.CVec L := fun i => fromCoreCInt (v i)
-
-private theorem fromCore_toCore_CVec {L : Nat} (v : Spec.CVec L) : fromCoreCVec (toCoreCVec v) = v := by
-  funext i; exact fromCore_toCore_CInt (v i)
-
-private theorem toCore_fromCore_CVec {L : Nat} (v : Ultrametrica.CVec L) : toCoreCVec (fromCoreCVec v) = v := by
-  funext i; exact toCore_fromCore_CInt (v i)
-
-private theorem toCore_add (a b : Spec.CInt) :
-    toCoreCInt (Spec.CInt.add a b) = Ultrametrica.CInt.add (toCoreCInt a) (toCoreCInt b) := by
-  cases a; cases b; rfl
-
-private theorem toCore_sub (a b : Spec.CInt) :
-    toCoreCInt (Spec.CInt.sub a b) = Ultrametrica.CInt.sub (toCoreCInt a) (toCoreCInt b) := by
-  cases a; cases b; rfl
-
-private theorem toCore_mul (a b : Spec.CInt) :
-    toCoreCInt (Spec.CInt.mul a b) = Ultrametrica.CInt.mul (toCoreCInt a) (toCoreCInt b) := by
-  cases a; cases b; rfl
-
-private theorem toCore_smul (s : Int) (a : Spec.CInt) :
-    toCoreCInt (Spec.CInt.smul s a) = Ultrametrica.CInt.smul s (toCoreCInt a) := by
-  cases a; rfl
-
-private theorem toCore_conj (a : Spec.CInt) :
-    toCoreCInt (Spec.CInt.conj a) = Ultrametrica.CInt.conj (toCoreCInt a) := by
-  cases a; rfl
-
-private theorem toCore_finSumCInt (n : Nat) (f : Fin n → Spec.CInt) :
-    toCoreCInt (Spec.finSumCInt n f) = Ultrametrica.finSumCInt n (fun i => toCoreCInt (f i)) := by
-  induction n with
-  | zero => rfl
-  | succ k ih =>
-    simp only [Spec.finSumCInt, Ultrametrica.finSumCInt]
-    rw [toCore_add, ih (fun i => f i.castSucc)]
-
-private theorem toCore_hermitianDot {L : Nat} (u v : Spec.CVec L) :
-    toCoreCInt (Spec.hermitianDot u v) = Ultrametrica.hermitianDot (toCoreCVec u) (toCoreCVec v) := by
-  unfold Spec.hermitianDot Ultrametrica.hermitianDot toCoreCVec
-  rw [toCore_finSumCInt]
-  have hfn : (fun i : Fin L => toCoreCInt (Spec.CInt.mul (Spec.CInt.conj (u i)) (v i))) =
-      (fun i : Fin L => Ultrametrica.CInt.mul (Ultrametrica.CInt.conj (toCoreCInt (u i))) (toCoreCInt (v i))) := by
-    funext i
-    rw [toCore_mul, toCore_conj]
-  rw [hfn]
-
-private theorem spec_cint_add_zero_left (a : Spec.CInt) :
-    Spec.CInt.add Spec.CInt.zero a = a := by
-  cases a; unfold Spec.CInt.add Spec.CInt.zero; simp
-
-private theorem spec_cint_add_zero_right (a : Spec.CInt) :
-    Spec.CInt.add a Spec.CInt.zero = a := by
-  cases a; unfold Spec.CInt.add Spec.CInt.zero; simp
-
-private theorem spec_cint_smul_zero (s : Int) :
-    Spec.CInt.smul s Spec.CInt.zero = Spec.CInt.zero := by
-  unfold Spec.CInt.smul Spec.CInt.zero; simp
-
-private theorem spec_foldr_zero_of_all_zero {X : Type} (modes : List ((X → Spec.CInt) × Int)) (x : X)
-    (hz : ∀ m ∈ modes, m.1 x = Spec.CInt.zero) :
-    modes.foldr (fun m acc => Spec.CInt.add (m.1 x) acc) Spec.CInt.zero = Spec.CInt.zero := by
-  induction modes with
-  | nil => rfl
-  | cons hd tl ih =>
-    simp only [List.foldr_cons]
-    have hhd : hd.1 x = Spec.CInt.zero := hz hd (List.mem_cons_self)
-    have htl : tl.foldr (fun m acc => Spec.CInt.add (m.1 x) acc) Spec.CInt.zero = Spec.CInt.zero :=
-      ih (fun m hm => hz m (List.mem_cons_of_mem hd hm))
-    rw [hhd, htl, spec_cint_add_zero_left]
-
-private theorem spec_foldr_smul_zero_of_all_zero {X : Type} (F : Int → Int)
-    (modes : List ((X → Spec.CInt) × Int)) (x : X)
-    (hz : ∀ m ∈ modes, m.1 x = Spec.CInt.zero) :
-    modes.foldr (fun m acc => Spec.CInt.add (Spec.CInt.smul (F m.2) (m.1 x)) acc) Spec.CInt.zero =
-      Spec.CInt.zero := by
-  induction modes with
-  | nil => rfl
-  | cons hd tl ih =>
-    simp only [List.foldr_cons]
-    have hhd : hd.1 x = Spec.CInt.zero := hz hd (List.mem_cons_self)
-    have htl : tl.foldr (fun m acc => Spec.CInt.add (Spec.CInt.smul (F m.2) (m.1 x)) acc) Spec.CInt.zero =
-        Spec.CInt.zero :=
-      ih (fun m hm => hz m (List.mem_cons_of_mem hd hm))
-    rw [hhd, spec_cint_smul_zero, htl, spec_cint_add_zero_left]
-
-private theorem spec_rtCutCap_eq (edges : List (Nat × Nat × Nat)) (S : Nat → Bool) :
-    Spec.rtCutCap edges S = Ultrametrica.rtCutCap edges S := by
-  induction edges with
-  | nil => rfl
-  | cons e rest ih =>
-    rcases e with ⟨u, v, c⟩
-    simp only [Spec.rtCutCap, Ultrametrica.rtCutCap, ih]
-
-private theorem spec_sumInt_eq (ws : List Int) :
-    Spec.sumInt ws = Ultrametrica.sumInt ws := by
-  induction ws with
-  | nil => rfl
-  | cons w rest ih => simp only [Spec.sumInt, Ultrametrica.sumInt, ih]
-
-private def toCoreRatQ (q : Spec.RatQ) : Ultrametrica.RatQ := ⟨q.num, q.den, q.den_pos⟩
-
-private theorem toCoreRatQ_add (a b : Spec.RatQ) :
-    toCoreRatQ (Spec.RatQ.add a b) = Ultrametrica.RatQ.add (toCoreRatQ a) (toCoreRatQ b) := by
-  cases a; cases b; rfl
-
-private theorem toCoreRatQ_sub (a b : Spec.RatQ) :
-    toCoreRatQ (Spec.RatQ.sub a b) = Ultrametrica.RatQ.sub (toCoreRatQ a) (toCoreRatQ b) := by
-  cases a; cases b; rfl
-
-private theorem toCoreRatQ_sumList (xs : List Spec.RatQ) :
-    toCoreRatQ (Spec.RatQ.sumList xs) = Ultrametrica.RatQ.sumList (xs.map toCoreRatQ) := by
-  induction xs with
-  | nil => rfl
-  | cons x rest ih =>
-    simp only [Spec.RatQ.sumList, List.map_cons, Ultrametrica.RatQ.sumList, toCoreRatQ_add, ih]
-
-private theorem toCoreRatQ_eqv_iff (a b : Spec.RatQ) :
-    Spec.RatQ.eqv a b ↔ Ultrametrica.RatQ.eqv (toCoreRatQ a) (toCoreRatQ b) := by
-  cases a; cases b; rfl
-
-private def toCoreEdge {n : Nat} (e : Spec.WeightedEdge n) : Ultrametrica.WeightedEdge n :=
-  ⟨e.u, e.v, e.w⟩
-
-private theorem spec_graphVertexWeight_eq {n : Nat} (edges : List (Spec.WeightedEdge n)) (x : Fin n) :
-    Spec.graphVertexWeight edges x = Ultrametrica.graphVertexWeight (edges.map toCoreEdge) x := by
-  unfold Spec.graphVertexWeight Ultrametrica.graphVertexWeight
-  rw [spec_sumInt_eq, List.map_map]
-  rfl
-
-private theorem spec_padicValAux_eq (p fuel d : Nat) :
-    Spec.padicValAux p fuel d = Ultrametrica.padicValAux p fuel d := by
-  induction fuel generalizing d with
-  | zero => rfl
-  | succ k ih =>
-    simp only [Spec.padicValAux, Ultrametrica.padicValAux]
-    split <;> simp [ih]
-
-private theorem spec_padicValMod_eq (p n d : Nat) :
-    Spec.padicValMod p n d = Ultrametrica.padicValMod p n d :=
-  spec_padicValAux_eq p n (d % p ^ n)
-
-private theorem spec_padicDistVal_eq (p n x y : Nat) :
-    Spec.padicDistVal p n x y = Ultrametrica.padicDistVal p n x y :=
-  spec_padicValMod_eq p n ((x + p ^ n - y) % p ^ n)
-
-private theorem spec_kozyrevHaar_eq (p n j c : Nat) (hp : 2 ≤ p) (a : Fin p → Int) :
-    Spec.kozyrevHaar p n j c hp a = Ultrametrica.kozyrevHaar p n j c hp a := by
-  funext x; rfl
-
-private theorem spec_ultrametricOp_eq (p n : Nat) (K : Nat → Int) (f : Fin (p ^ n) → Int) (x : Fin (p ^ n)) :
-    Spec.ultrametricOp p n K f x = Ultrametrica.ultrametricOp p n K f x := by
-  unfold Spec.ultrametricOp Ultrametrica.ultrametricOp
-  rw [spec_finSum_eq]
-  apply Ultrametrica.finSum_congr
-  intro y
-  rw [spec_padicDistVal_eq]
-
-private theorem spec_ultrametricWaveletEigenvalue_eq (p n j : Nat) (K : Nat → Int) :
-    Spec.ultrametricWaveletEigenvalue p n j K = Ultrametrica.ultrametricWaveletEigenvalue p n j K := by
-  unfold Spec.ultrametricWaveletEigenvalue Ultrametrica.ultrametricWaveletEigenvalue
-  rw [spec_finSum_eq]
-  congr 1
-  apply Ultrametrica.finSum_congr
-  intro t
-  rw [spec_padicValMod_eq]
-
-private theorem spec_vecRev_eq (N : Nat) (v : Fin N → Int) :
-    Spec.vecRev N v = Ultrametrica.vecRev N v := by
-  funext i; rfl
-
--- ---- The 12 Upgraded Comparator Targets (Exact Match to `Challenge.lean`) ----
+-- ---- The 15 Upgraded Comparator Targets (Exact Match to `Challenge.lean`) ----
 
 public theorem target_thm1_monna_and_parity :
     (∀ p n x, 2 ≤ p → x < p ^ n → Spec.revBase p n (Spec.revBase p n x) = x) ∧
@@ -685,8 +436,18 @@ public theorem target_nonvacuity_witnesses :
      Spec.graphVertexWeight edges v2 = 3 ∧
      Spec.graphVertexWeight edges v3 = 5) ∧
     (let a : Fin 3 → Int := fun d => if d.val = 0 then 1 else if d.val = 1 then -1 else 0
-     Spec.finSum 3 a = 0 ∧ Spec.ultrametricWaveletEigenvalue 3 2 0 (fun v => (v : Int)) = 4) := by
-  refine ⟨by decide, by decide, by decide, ?_, rfl, by decide, ?_, by decide, by decide, by decide⟩
+     Spec.finSum 3 a = 0 ∧ Spec.ultrametricWaveletEigenvalue 3 2 0 (fun v => (v : Int)) = 4) ∧
+    (Spec.fullBtzDist 3 5 (.child ⟨0, Nat.zero_lt_succ 2⟩) (.child ⟨1, Nat.succ_lt_succ (Nat.zero_lt_succ 1)⟩) = 3 ∧
+     Spec.fullBtzDist 3 5 .back .back = 2) ∧
+    (let e1 : Spec.CVec (3 ^ 1) := fun k => if k.val = 1 then Spec.CInt.one else Spec.CInt.zero
+     let e2 := Spec.fourierConj (3 ^ 1) (Nat.pow_pos (Nat.zero_lt_succ 2)) e1
+     Spec.InSector 3 1 0 1 e1 ∧ Spec.InSector 3 1 0 2 e2 ∧ Spec.hermitianDot e1 e2 = Spec.CInt.zero) ∧
+    (let v0 : Fin 2 := ⟨0, Nat.zero_lt_succ 1⟩
+     let v1 : Fin 2 := ⟨1, Nat.lt_succ_self 1⟩
+     let gEdges : List (Spec.GaugeEdge 2) := [⟨v0, v1, 1, Spec.CInt.one⟩]
+     Spec.bulkQuadForm gEdges (fun _ => 2) (fun _ => Spec.CInt.one) = 4 ∧
+     (Spec.schurReducedDiag 2 3 1 (Int.ofNat_lt.mpr (Nat.zero_lt_succ 2))).num = 5) := by
+  refine ⟨by decide, by decide, by decide, ?_, rfl, by decide, ?_, by decide, by decide, by decide, by decide, ?_, by decide⟩
   · refine ⟨[(fun x => if x == 0 then Spec.CInt.one else Spec.CInt.zero, 1),
               (fun x => if x == 1 then Spec.CInt.one else Spec.CInt.zero, 1)], rfl, ?_, ?_⟩
     · intro m hm x
@@ -723,6 +484,24 @@ public theorem target_nonvacuity_witnesses :
       rcases s with ⟨v, hv⟩
       have hv2 : v = 0 ∨ v = 1 := by omega
       rcases hv2 with rfl | rfl <;> rfl
+  · refine ⟨?_, ?_, ?_⟩
+    · intro k hnot
+      rcases k with ⟨val, hval⟩
+      have hc : val = 0 ∨ val = 1 ∨ val = 2 := by omega
+      rcases hc with rfl | rfl | rfl
+      · rfl
+      · exact False.elim (hnot (show (1 : Nat) % 3 ^ 1 = 1 * 3 ^ 0 by decide))
+      · rfl
+    · intro k hnot
+      rcases k with ⟨val, hval⟩
+      have hc : val = 0 ∨ val = 1 ∨ val = 2 := by omega
+      rcases hc with rfl | rfl | rfl
+      · simp only [Spec.fourierConj, Spec.CInt.conj, Spec.CInt.zero]; simp
+      · simp only [Spec.fourierConj, Spec.CInt.conj, Spec.CInt.zero]; simp
+      · exact False.elim (hnot (show (2 : Nat) % 3 ^ 1 = 2 * 3 ^ 0 by decide))
+    · simp only [Spec.hermitianDot, Spec.finSumCInt, Spec.fourierConj, Spec.CInt.conj, Spec.CInt.mul,
+        Spec.CInt.add, Spec.CInt.one, Spec.CInt.zero, Fin.val_castSucc]
+      simp
 
 public theorem target_thm5_finite_graph_gauss_bonnet :
     (∀ (n : Nat) (p : Int) (edges : List (Spec.WeightedEdge n))
@@ -853,5 +632,199 @@ public theorem target_thm7_vladimirov_kozyrev_eigenfunction :
     · intro v hv
       rw [spec_vecRev_eq] at hv ⊢
       exact hcore.2 v hv
+
+public theorem target_thm2_full_graph_btz_reduction :
+    (∀ (p : Nat) (L M : Int), 3 ≤ L →
+      ∀ Q : Spec.BTZNbr p → Spec.BTZNbr p → Int,
+        (∀ x y, 0 ≤ Q x y) →
+        (∀ x, Spec.sumBTZNbr p (fun y => Q x y) = M) →
+        (∀ y, Spec.sumBTZNbr p (fun x => Q x y) = M) →
+        M * (3 * (p : Int) + 2 - max 0 (6 - L)) ≤ Spec.fullBtzTransportCost p L Q) ∧
+    (∀ (p : Nat) (L M : Int), 1 ≤ p → 3 ≤ L → 0 ≤ M →
+      ∃ Q : Spec.BTZNbr p → Spec.BTZNbr p → Int,
+        (∀ x y, 0 ≤ Q x y) ∧
+        (∀ x, Spec.sumBTZNbr p (fun y => Q x y) = (p : Int) * M) ∧
+        (∀ y, Spec.sumBTZNbr p (fun x => Q x y) = (p : Int) * M) ∧
+        Spec.fullBtzTransportCost p L Q = ((p : Int) * M) * (3 * (p : Int) + 2 - max 0 (6 - L))) := by
+  have hss : ∀ L : Int, Ultrametrica.shortcutSaving L = max 0 (6 - L) := by
+    intro L; unfold Ultrametrica.shortcutSaving; omega
+  constructor
+  · intro p L M hL Q hnn hrow hcol
+    rw [spec_fullBtzTransportCost_eq, ← hss L]
+    apply Ultrametrica.fullBtz_wasserstein_lower_bound p L M hL (fun x y => Q (fromCoreFullNbr x) (fromCoreFullNbr y))
+    · intro x y; exact hnn (fromCoreFullNbr x) (fromCoreFullNbr y)
+    · intro x
+      rw [← spec_sumBTZNbr_eq]
+      exact hrow (fromCoreFullNbr x)
+    · intro y
+      rw [← spec_sumBTZNbr_eq p (fun x => Q x (fromCoreFullNbr y))]
+      exact hcol (fromCoreFullNbr y)
+  · intro p L M hp hL hM
+    let Qspec : Spec.BTZNbr p → Spec.BTZNbr p → Int :=
+      fun x y => Ultrametrica.fullBtzOptimalPlan p M (toCoreFullNbr x) (toCoreFullNbr y)
+    have hopt := Ultrametrica.fullBtz_primal_optimal_exists p L M hp hL hM
+    have hmatch : (fun x y => Qspec (fromCoreFullNbr x) (fromCoreFullNbr y)) = Ultrametrica.fullBtzOptimalPlan p M := by
+      funext x y; cases x <;> cases y <;> rfl
+    refine ⟨Qspec, ?_, ?_, ?_, ?_⟩
+    · intro x y; exact hopt.1 (toCoreFullNbr x) (toCoreFullNbr y)
+    · intro x
+      rw [spec_sumBTZNbr_eq]
+      have hfn : (fun y => Qspec x (fromCoreFullNbr y)) =
+          (fun y => Ultrametrica.fullBtzOptimalPlan p M (toCoreFullNbr x) y) := by
+        funext y; cases y <;> rfl
+      rw [hfn]
+      exact hopt.2.1 (toCoreFullNbr x)
+    · intro y
+      rw [spec_sumBTZNbr_eq]
+      have hfn : (fun x => Qspec (fromCoreFullNbr x) y) =
+          (fun x => Ultrametrica.fullBtzOptimalPlan p M x (toCoreFullNbr y)) := by
+        funext x; cases x <;> rfl
+      rw [hfn]
+      exact hopt.2.2.1 (toCoreFullNbr y)
+    · rw [spec_fullBtzTransportCost_eq, hmatch, hopt.2.2.2, hss L]
+
+public theorem target_thm1_operator_orthogonal_doublets :
+    (∀ (N : Nat) (H : Fin N → Fin N → Spec.CInt) (d : Fin N → Int),
+      (∀ v : Spec.CVec N, Spec.matVecMul N H (Spec.diagOp d v) = Spec.diagOp d (Spec.matVecMul N H v)) →
+      ∀ i j : Fin N, d i ≠ d j → H i j = Spec.CInt.zero) ∧
+    (∀ (p n s m : Nat) (hpn : 0 < p ^ n),
+      2 ≤ p → p % 2 = 1 → s < n → 1 ≤ m → m < p →
+      ∀ (H : Spec.CVec (p ^ n) → Spec.CVec (p ^ n)),
+        (∀ u, H (Spec.fourierConj (p ^ n) hpn u) = Spec.fourierConj (p ^ n) hpn (H u)) →
+        ∀ (v : Spec.CVec (p ^ n)) (lam : Int),
+          Spec.InSector p n s m v →
+          (∃ k : Fin (p ^ n), v k ≠ Spec.CInt.zero) →
+          (H v = fun i => Spec.CInt.smul lam (v i)) →
+          let w := Spec.fourierConj (p ^ n) hpn v
+          Spec.InSector p n s (p - m) w ∧
+          (H w = fun i => Spec.CInt.smul lam (w i)) ∧
+          0 < (Spec.hermitianDot v v).re ∧
+          0 < (Spec.hermitianDot w w).re ∧
+          Spec.hermitianDot v w = Spec.CInt.zero) := by
+  constructor
+  · intro N H d hcomm i j hne
+    have hcore := Ultrametrica.commuting_diag_block_diagonal N (fun a b => toCoreCInt (H a b)) d ?_ i j hne
+    · have hb := congrArg fromCoreCInt hcore
+      rwa [fromCore_toCore_CInt] at hb
+    · intro v
+      have hv := congrArg toCoreCVec (hcomm (fromCoreCVec v))
+      rw [toCore_matVecMul, toCore_diagOp, toCore_diagOp, toCore_matVecMul, toCore_fromCore_CVec] at hv
+      exact hv
+  · intro p n s m hpn hp hp_odd hs hm1 hmp H hcomm v lam hv_sec hv_nz hv_eig
+    dsimp only
+    let Hcore : Ultrametrica.CVec (p ^ n) → Ultrametrica.CVec (p ^ n) :=
+      fun u => toCoreCVec (H (fromCoreCVec u))
+    have hcomm_core : ∀ u, Hcore (Ultrametrica.fourierConj (p ^ n) (Nat.pow_pos (by omega)) u) =
+        Ultrametrica.fourierConj (p ^ n) (Nat.pow_pos (by omega)) (Hcore u) := by
+      intro u
+      have hu := congrArg toCoreCVec (hcomm (fromCoreCVec u))
+      rw [toCore_fourierConj] at hu
+      have harg : fromCoreCVec (Ultrametrica.fourierConj (p ^ n) (Nat.pow_pos (by omega)) u) =
+          Spec.fourierConj (p ^ n) hpn (fromCoreCVec u) := by
+        funext k; rfl
+      show toCoreCVec (H (fromCoreCVec _)) = _
+      rw [harg, hu]
+    have hv_sec_c : Ultrametrica.InSector p n s m (toCoreCVec v) :=
+      (spec_InSector_iff p n s m v).mp hv_sec
+    have hv_nz_c : ∃ k : Fin (p ^ n), toCoreCVec v k ≠ Ultrametrica.CInt.zero := by
+      rcases hv_nz with ⟨k0, hk0⟩
+      refine ⟨k0, fun hz => hk0 ?_⟩
+      unfold toCoreCVec at hz
+      have hb := congrArg fromCoreCInt hz
+      rwa [fromCore_toCore_CInt] at hb
+    have hv_eig_c : Hcore (toCoreCVec v) = fun i => Ultrametrica.CInt.smul lam (toCoreCVec v i) := by
+      show toCoreCVec (H (fromCoreCVec (toCoreCVec v))) = _
+      rw [fromCore_toCore_CVec, hv_eig]
+      funext i; exact toCore_smul lam (v i)
+    have hcore := Ultrametrica.odd_prime_sector_eigenvector_orthogonal_doublet p n s m
+      hp hp_odd hs hm1 hmp Hcore hcomm_core (toCoreCVec v) lam hv_sec_c hv_nz_c hv_eig_c
+    have hwc : toCoreCVec (Spec.fourierConj (p ^ n) hpn v) =
+        Ultrametrica.fourierConj (p ^ n) (Nat.pow_pos (by omega)) (toCoreCVec v) := by
+      funext k; exact toCore_conj _
+    refine ⟨?_, ?_, ?_, ?_, ?_⟩
+    · rw [spec_InSector_iff, hwc]; exact hcore.1
+    · have hHw := congrArg fromCoreCVec hcore.2.1
+      have hlhs : fromCoreCVec (Hcore (Ultrametrica.fourierConj (p ^ n) (Nat.pow_pos (by omega)) (toCoreCVec v))) =
+          H (Spec.fourierConj (p ^ n) hpn v) := by
+        rw [← hwc, show Hcore (toCoreCVec (Spec.fourierConj (p ^ n) hpn v)) =
+            toCoreCVec (H (Spec.fourierConj (p ^ n) hpn v)) by
+          show toCoreCVec (H (fromCoreCVec (toCoreCVec _))) = _; rw [fromCore_toCore_CVec]]
+        exact fromCore_toCore_CVec _
+      rw [hlhs] at hHw
+      rw [hHw]
+      funext i
+      rw [← hwc]
+      dsimp only [fromCoreCVec, toCoreCVec]
+      cases Spec.fourierConj (p ^ n) hpn v i; rfl
+    · change 0 < (toCoreCInt (Spec.hermitianDot v v)).re
+      rw [toCore_hermitianDot]
+      exact hcore.2.2.1
+    · change 0 < (toCoreCInt (Spec.hermitianDot (Spec.fourierConj (p ^ n) hpn v) (Spec.fourierConj (p ^ n) hpn v))).re
+      rw [toCore_hermitianDot, hwc]
+      exact hcore.2.2.2.1
+    · have hvw := toCore_hermitianDot v (Spec.fourierConj (p ^ n) hpn v)
+      rw [hwc, hcore.2.2.2.2] at hvw
+      have hb := congrArg fromCoreCInt hvw
+      rwa [fromCore_toCore_CInt] at hb
+
+public theorem target_thm4_bulk_positivity_and_schur :
+    (∀ (n : Nat) (edges : List (Spec.GaugeEdge n)) (d : Fin n → Int),
+      (∀ e ∈ edges, 0 ≤ e.w) → (∀ x, 0 < d x) →
+      ∀ v : Spec.CVec n, (∃ x : Fin n, v x ≠ Spec.CInt.zero) →
+        0 < Spec.bulkQuadForm edges d v) ∧
+    (∀ (L : Nat) (T : Spec.CVec L → Spec.CVec L),
+      (∀ z : Spec.CVec L, 0 ≤ (Spec.hermitianDot z (T z)).re) →
+      ∀ (w : Int), 0 ≤ w → ∀ (u z : Spec.CVec L), T z = u →
+        let den := Spec.CInt.add Spec.CInt.one (Spec.CInt.smul w (Spec.hermitianDot u z))
+        1 ≤ den.re ∧ den ≠ Spec.CInt.zero) ∧
+    (∀ (Dp Dc w : Int) (hDc : 0 < Dc),
+      0 < w → w < Dc → w ≤ Dp →
+      0 < (Spec.schurReducedDiag Dp Dc w hDc).num ∧ 0 < (Spec.schurReducedDiag Dp Dc w hDc).den) ∧
+    (∀ Dp Dc w phiP phiC bP bC : Int,
+      Dc * phiC - w * phiP = bC →
+      Dp * phiP - w * phiC = bP →
+      (Dp * Dc - w * w) * phiP = Dc * bP + w * bC) := by
+  refine ⟨?_, ?_, ?_, Ultrametrica.tree_schur_elim_exact⟩
+  · intro n edges d hw hd v hnz
+    rw [spec_bulkQuadForm_eq]
+    apply Ultrametrica.bulk_operator_strictly_pos_def (edges.map toCoreGaugeEdge) d
+    · intro e he
+      rcases List.mem_map.mp he with ⟨es, hes, rfl⟩
+      exact hw es hes
+    · exact hd
+    · rcases hnz with ⟨x0, hx0⟩
+      refine ⟨x0, fun hz => hx0 ?_⟩
+      unfold toCoreCVec at hz
+      have hb := congrArg fromCoreCInt hz
+      rwa [fromCore_toCore_CInt] at hb
+  · intro L T hT_psd w hw u z hTz
+    dsimp only
+    let Tcore : Ultrametrica.CVec L → Ultrametrica.CVec L := fun v => toCoreCVec (T (fromCoreCVec v))
+    have hTcore_psd : ∀ zc : Ultrametrica.CVec L, 0 ≤ (Ultrametrica.hermitianDot zc (Tcore zc)).re := by
+      intro zc
+      have hspec := hT_psd (fromCoreCVec zc)
+      have hre := congrArg Ultrametrica.CInt.re (toCore_hermitianDot (fromCoreCVec zc) (T (fromCoreCVec zc)))
+      rw [toCore_fromCore_CVec] at hre
+      exact hre ▸ hspec
+    have hTcore_z : Tcore (toCoreCVec z) = toCoreCVec u := by
+      show toCoreCVec (T (fromCoreCVec (toCoreCVec z))) = toCoreCVec u
+      rw [fromCore_toCore_CVec, hTz]
+    have hcore := Ultrametrica.spd_operator_sherman_morrison_den_ge_one Tcore hTcore_psd w hw
+      (toCoreCVec u) (toCoreCVec z) hTcore_z
+    have hden : toCoreCInt (Spec.CInt.add Spec.CInt.one (Spec.CInt.smul w (Spec.hermitianDot u z))) =
+        Ultrametrica.CInt.add Ultrametrica.CInt.one
+          (Ultrametrica.CInt.smul w (Ultrametrica.hermitianDot (toCoreCVec u) (toCoreCVec z))) := by
+      rw [toCore_add, toCore_smul, toCore_hermitianDot]; rfl
+    refine ⟨?_, ?_⟩
+    · change 1 ≤ (toCoreCInt (Spec.CInt.add Spec.CInt.one (Spec.CInt.smul w (Spec.hermitianDot u z)))).re
+      rw [hden]
+      exact hcore.1
+    · intro hzero
+      apply hcore.2
+      rw [← hden, hzero]
+      rfl
+  · intro Dp Dc w hDc hw hDc_gt hDp_ge
+    have hcore := Ultrametrica.tree_schur_pivot_stays_positive Dp Dc w hw hDc_gt hDp_ge
+    exact hcore
 
 end Ultrametrica.ComparatorTarget

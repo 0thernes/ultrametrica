@@ -1,5 +1,5 @@
 /**
- * ULTRAMETRICA (v1.7.0) — TRUE Source-Code Mutation Testing Suite (Build Standard B13, F52, F83).
+ * ULTRAMETRICA (v1.8.0) — TRUE Source-Code Mutation Testing Suite (Build Standard B13, F52, F83, F98).
  *
  * Unlike synthetic mock tests, EVERY mutant below copies the real production `src/` tree
  * and real `test/verify.mjs` into an isolated temporary directory, mutates ONE real line
@@ -17,6 +17,8 @@
  *   M8  (`holography.js`): Drop `Math.abs` in bridge Wasserstein (breaks Theorem V supercritical pinch)
  *   M9  (`holography.js`): Drop outer-arm transport term in curved tree Ollivier-Ricci curvature
  *   M10 (`holography.js`): Zero out BTZ horizon cyclic wrap-around bond capacity in Ryu-Takayanagi DP
+ *   M11 (`padic.js`):      Shift Vladimirov valuation-shell exponent off by 1 (`n - vTab[k] - 1`)
+ *   M12 (`padic.js`):      Corrupt Kozyrev-Haar additive character denominator (`p` -> `p + 1`)
  */
 
 import test from 'node:test';
@@ -110,6 +112,22 @@ const MUTANTS = [
     target: 'const capWrap = w[this.horizonEdges[L - 1]] * lnP;',
     replacement: 'const capWrap = 0;',
     expectedTheorem: 'Theorem 8',
+  },
+  {
+    id: 'M11',
+    name: 'Off-by-1 Vladimirov valuation-shell exponent breaks Kozyrev eigenfunction eigenvalue (Theorem 2)',
+    relFile: 'src/engine/padic.js',
+    target: 'const val = p ** (alpha * (n - vTab[k]));',
+    replacement: 'const val = p ** (alpha * (n - vTab[k] - 1));',
+    expectedTheorem: 'Theorem 2',
+  },
+  {
+    id: 'M12',
+    name: 'Corrupted Kozyrev-Haar additive character denominator breaks zero-mean orthogonality (Theorem 2)',
+    relFile: 'src/engine/padic.js',
+    target: 'const angle = (TWO_PI * m * dj) / p;',
+    replacement: 'const angle = (TWO_PI * m * dj) / (p + 1);',
+    expectedTheorem: 'Theorem 2',
   },
 ];
 

@@ -20,7 +20,7 @@
 
 ## 2. Live Crossref DOI & Retraction Audit Summary
 
-Verified live via `python scripts/check_citations.py --live --write-report` (using balanced-brace BibTeX parsing, polite pacing + `429`/`503` retry, Crossref title Jaccard `>= 0.75`, and first-author surname checks) against `https://api.crossref.org/works/<doi>` on `2026-11-26`, archived in [`results/citation-audit.json`](../results/citation-audit.json):
+Verified live via `python scripts/check_citations.py --live --write-report` (using balanced-brace BibTeX parsing, polite pacing + `429`/`503` retry, Crossref title Jaccard `>= 0.75`, and first-author surname checks) against `https://api.crossref.org/works/<doi>` on `2026-11-27` (`v1.8.0`), archived in [`results/citation-audit.json`](../results/citation-audit.json):
 
 - **BibTeX ↔ LaTeX 1-to-1 coverage:** `21 / 21` entries cited in `paper/main.tex` (zero uncited orphans, zero missing keys).
 - **Crossref DOI, title & author resolution:** `18 / 18` DOIs resolved HTTP `200`, `18 / 18` publication years matched, `18 / 18` first-author surnames matched, **`min_title_jaccard = 1.00`** across all 18 DOIs, **`0 / 18` retractions** flagged in Crossref `update-to` / `updated-by` metadata.

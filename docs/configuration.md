@@ -1,6 +1,6 @@
 # Configuration Reference (`docs/configuration.md`)
 
-> Build Standard `A33`. Every environment variable, URL query parameter, and build-time option in ULTRAMETRICA (`v1.7.0`) has explicit defaults, strict bounds validation, and zero hidden magic values.
+> Build Standard `A33`. Every environment variable, URL query parameter, and build-time option in ULTRAMETRICA (`v1.8.0`) has explicit defaults, strict bounds validation, and zero hidden magic values.
 
 ## 1. Local Observatory Server (`server.mjs`)
 
@@ -20,7 +20,7 @@ See also [`.env.example`](../.env.example).
 {
   "status": "ok",
   "service": "ultrametrica",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "uptime_s": 12.345
 }
 ```
@@ -51,8 +51,8 @@ The live observatory (`https://0thernes.github.io/ultrametrica/web/` or `http://
 ## 3. Lean 4 Verification Configuration (`lean/`)
 
 - **`lean/lean-toolchain`:** Pins exact compiler version `leanprover/lean4:v4.35.0`.
-- **`lean/lakefile.toml`:** Sets `autoImplicit = false` and `relaxedAutoImplicit = false` globally across `UltrametricaProofs`, `Challenge`, and `Solution` (all Palomar `module` files).
-- **`lean/comparator.json`:** Pins all **12** isolated target bindings in `Ultrametrica.ComparatorTarget` and permitted axioms strictly to `["propext", "Quot.sound", "Classical.choice"]`.
+- **`lean/lakefile.toml`:** Sets `autoImplicit = false` and `relaxedAutoImplicit = false` globally across `UltrametricaProofs`, `SolutionBridge`, `Challenge`, and `Solution` (all Palomar `module` files).
+- **`lean/comparator.json`:** Pins all **15** isolated target bindings in `Ultrametrica.ComparatorTarget` and permitted axioms strictly to `["propext", "Quot.sound", "Classical.choice"]`.
 
 ## 4. Test & Script Flags
 

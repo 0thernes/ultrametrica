@@ -1,16 +1,16 @@
 # Independent Replication Protocol & Log
 
-> Build Standard `B43` & `B44`. Every quantitative result, theorem proof, benchmark figure, and PDF in ULTRAMETRICA (`v1.7.0`) can be reproduced end-to-end from a fresh clone with zero paid APIs, zero external runtime npm packages, and zero Mathlib downloads.
+> Build Standard `B43` & `B44`. Every quantitative result, theorem proof, benchmark figure, and PDF in ULTRAMETRICA (`v1.8.0`) can be reproduced end-to-end from a fresh clone with zero paid APIs, zero external runtime npm packages, and zero Mathlib downloads.
 
 ## 1. Environment & Resource Requirements
 
 | Component | Minimum Requirement | Tested Reference | Typical Runtime |
 |---|---|---|---|
-| **Node.js** | `>= 20.x` (tested on `22.x` & `25.x`) | Node `v22` (CI) / `v25.8.2` (Win11) | `~5 s` (all 34 tests incl. 10/10 real source mutants, B15 fuzz & B19 concurrency), `~7 s` (`discover` + `bench` + `stats`) |
+| **Node.js** | `>= 20.x` (tested on `22.x` & `25.x`) | Node `v22` (CI) / `v25.8.2` (Win11) | `~6 s` (all 36 tests incl. 12/12 real source mutants, B15 fuzz & B19 concurrency), `~7 s` (`discover` + `bench` + `stats`) |
 | **Python** | `>= 3.11` (standard library ONLY — zero `pip` packages) | Python `3.13` | `~2 s` (`padic_oracle.py` + `verify_exact.py` + `check_blueprint.py` + `stamp_manifest.py --verify`) |
-| **Lean 4** | Exact toolchain pinned in [`lean/lean-toolchain`](lean/lean-toolchain) (`leanprover/lean4:v4.35.0`) | Lean `v4.35.0` (0 Mathlib, Palomar `module`) | `~20 s` clean build + 6-kernel comparator + negative tamper gate |
+| **Lean 4** | Exact toolchain pinned in [`lean/lean-toolchain`](lean/lean-toolchain) (`leanprover/lean4:v4.35.0`) | Lean `v4.35.0` (0 Mathlib, Palomar `module`) | `~25 s` clean build + 6-kernel comparator + negative tamper gate |
 | **Tectonic** | `>= 0.15.0` (for optional PDF & vector figure rebuild) | Tectonic `0.17.0` | `~25 s` (5 figures + main PDF + arXiv check) |
-| **Hardware** | Any 64-bit x86_64 or arm64 CPU, `>= 2 GB` RAM, `>= 500 MB` free disk | Intel Core Ultra 9 275HX / GitHub Actions runners | Total full stack `< 65 s` |
+| **Hardware** | Any 64-bit x86_64 or arm64 CPU, `>= 2 GB` RAM, `>= 500 MB` free disk | Intel Core Ultra 9 275HX / GitHub Actions runners | Total full stack `< 70 s` |
 
 ---
 
@@ -20,7 +20,7 @@
 git clone https://github.com/0thernes/ultrametrica.git
 cd ultrametrica
 
-# 1. All 34 Node test suites (10 theorems + 10 true source mutants + 3,400+ properties + server/EIO/realpath + golden + 1,000 fuzz + concurrency)
+# 1. All 36 Node test suites (10 theorems + 12 true source mutants + 3,400+ properties + server/favicon/EIO/realpath + golden + 1,000 fuzz + concurrency)
 npm run verify:all
 
 # 2. All 3 runnable examples
@@ -39,10 +39,10 @@ npm run discover
 npm run bench
 npm run stats
 
-# 5. Pure Lean 4.35.0 clean build, 202-decl honest 4-bucket axiom audit, leanchecker, 6-kernel comparator & live negative tamper gate
+# 5. Pure Lean 4.35.0 clean build, 250-decl (100.0% coverage) axiom audit, leanchecker, 6-kernel comparator & live negative tamper gate
 cd lean
 lake clean
-lake build UltrametricaProofs Challenge Solution
+lake build UltrametricaProofs SolutionBridge Challenge Solution
 lake env lean VerifyAxioms.lean
 lake env leanchecker --fresh UltrametricaProofs
 lake env leanchecker --fresh Solution
@@ -60,8 +60,8 @@ python scripts/package_dist.py
 
 ## 3. Expected Tolerances & Exactness Criteria
 
-- **Lean 4 Proofs, 6-Kernel Comparator & Negative Tamper Gate:** Exact (`0` errors, `0` warnings in `UltrametricaProofs` & `Solution`, **202 audited declarations** = `127 core + 56 helpers + 7 adv + 12 isolated comparator bindings` strictly in `[propext, Classical.choice, Quot.sound]`, all `12/12` targets pass `lake check --paranoid` and `lake comparator --paranoid`, and `scripts/test_lean_negative.py` rejects tampered `sorry`/weakened copies).
-- **Python Exact-Rational Falsifier (`verify_exact.py`):** Exact (`0` rounding error — arbitrary-precision `int` & `fractions.Fraction`).
+- **Lean 4 Proofs, 6-Kernel Comparator & Negative Tamper Gate:** Exact (`0` errors, `0` warnings in `UltrametricaProofs`, `SolutionBridge` & `Solution`, **250 audited declarations — 100.0% public theorem coverage, `0` unaudited** = `144 core + 81 helpers + 10 adv + 15 isolated comparator bindings` strictly in `[propext, Classical.choice, Quot.sound]`, all `15/15` targets pass `lake check --paranoid` and `lake comparator --paranoid`, and `scripts/test_lean_negative.py` rejects tampered `sorry`/weakened copies).
+- **Python Exact-Rational Falsifier (`verify_exact.py`):** Exact (`0` rounding error — arbitrary-precision `int` & `fractions.Fraction`; enforces `0` unaudited public Lean theorems & `0` broken internal Markdown links).
 - **Deterministic Golden Snapshot (`test/golden.mjs`):** Exact match to `12` decimal digits (`test/golden/baseline-snapshot.json`).
 - **Pre-Registered Experiment I (`scripts/stats_eval.mjs`):** Deterministic seeded PRNG (`seeds 1001..1020`, `10,000` permutation/bootstrap resamples) — `4/4` hypotheses confirmed at primary `p_holm = 0.0004`, Mann-Whitney $U$ `p <= 4.8e-7`, 95% bootstrap CIs for all three effect sizes ($\Delta\langle r\rangle$, Cliff's $\delta$, Cohen's $d$), and non-pseudoreplicated matrix-level sensitivity `p_holm = 7.63e-6` (see [`DEVIATIONS.md`](DEVIATIONS.md)).
 - **IEEE-754 Engine & Differential Oracle (`test/verify.mjs`, `test/properties.mjs`, `reference/padic_oracle.py`):** Relative/absolute tolerance `< 1e-11` (actual measured errors `1e-15`–`1.23e-12`).
@@ -83,4 +83,5 @@ Every clean-environment reproduction (local or independent CI runner) is recorde
 | 2026-11-25 | Author Local + GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.4.1` | Intel Core Ultra 9 275HX + 3-OS GitHub runners + `bubblewrap` 6-kernel comparator | PASS | Zero-warning PDF (`19` pages, `21/21` refs), `0` `ruff` / `0` `mypy` warnings, responsive live observatory QA, `26/26` Node + `1,000+` Python + `120` Lean decls |
 | 2026-11-26 | Author Local + GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.5.0` | Intel Core Ultra 9 275HX + 3-OS GitHub runners + `bubblewrap` `lake check` & 6-kernel comparator | PASS | `27/27` Node (incl. 200 curved-BTZ Dijkstra stress trials), `149` Lean decls (Palomar `module`, multi-edge Kantorovich duality, `AdversarialTests.lean`), `18/18` live Crossref DOIs (`0` retractions), `54/54` Blueprint decls, `0` `tsc`/`ruff`/`mypy` errors, zero-warning PDF |
 | 2026-11-26 | Author Local + GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.6.0` | Intel Core Ultra 9 275HX + 3-OS GitHub runners + `bubblewrap` `lake check` & 6-kernel comparator | PASS | `32/32` Node (8/8 true source-code mutants, 1,000 B15 fuzz cases catching `F65`, B19 concurrency/AudioWorklet VM), honest 4-bucket `148` Lean decls (`MultiEdgeHolography.lean` split, all 11 files `< 1,000` lines, primal non-negativity + tightened comparator), Exp I MW + 3 CIs + matrix-level sensitivity (`p_holm=7.63e-6`), `DEVIATIONS.md`, CFF/LICENSE/export-control fixes, zero-warning PDF |
-| 2026-11-26 | Author Local + GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.7.0` | Intel Core Ultra 9 275HX + 3-OS GitHub runners + `bubblewrap` `lake check`, 6-kernel comparator & live negative tamper gate | PASS | `34/34` Node (`10/10` true source-code mutants, `F75`–`F79` guards), honest 4-bucket `202` Lean decls across 8 proof modules (all 13 files `< 1,000` lines; closed finite-graph Gauss-Bonnet `F70` & discrete Vladimirov/Kozyrev `F71`), live negative tamper gate (`F72`), DigiCert `.tsr` + Bitcoin `.ots` (`F73`), `18/18` Crossref DOIs (`j=1.00`, `results/citation-audit.json`), bit-identical deterministic arXiv tarball (`F81`), `Audit-Repo.ps1` `81/81` = `100.0%` from any cwd (`F66`) |
+| 2026-11-26 | Author Local + GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.7.0` | Intel Core Ultra 9 275HX + 3-OS GitHub runners + `bubblewrap` `lake check`, 6-kernel comparator & live negative tamper gate | PASS (`#45780283513`) | `34/34` Node (`10/10` true source-code mutants, `F75`–`F79` guards), honest 4-bucket `202` Lean decls across 8 proof modules (all 13 files `< 1,000` lines; closed finite-graph Gauss-Bonnet `F70` & discrete Vladimirov/Kozyrev `F71`), live negative tamper gate (`F72`), DigiCert `.tsr` + Bitcoin `.ots` (`F73`), `18/18` Crossref DOIs (`j=1.00`, `results/citation-audit.json`), bit-identical deterministic arXiv tarball (`F81`), `Audit-Repo.ps1` `81/81` = `100.0%` from any cwd (`F66`) |
+| 2026-11-27 | Author Local + GitHub Actions Clean Matrix (`ubuntu-24.04`, `macos-latest`, `windows-latest`) | `v1.8.0` | Intel Core Ultra 9 275HX + Node-24-clean 3-OS GitHub runners + `bubblewrap` `lake check`, 15-target 6-kernel comparator & live negative tamper gate | PASS | `36/36` Node (`12/12` true source-code mutants, `favicon.svg` `200`, `F93`–`F94` guards), **250/250 audited Lean decls (`100.0%` public coverage, `0` unaudited)** across 11 proof modules (all 17 `.lean` files `< 1,000` lines; closed full-graph BTZ `F88`, operator orthogonal doublets `F89`, bulk $T \succ 0$/Schur pivots `F90`), `0` broken internal Markdown links (`F91`), `0` BOM/CRLF (`F92`), fresh `v1.8.0` perf (`0.6539 ms` frame, `280.2×` FFT), `Audit-Repo.ps1` `81/81` = `100.0%` from any cwd, live Chrome QA literal `0` console errors & `0` 404s |

@@ -1,20 +1,23 @@
 /**
- * ULTRAMETRICA v1.7.0 — Interactive Lean 4 Proof Blueprint DAG & Filter Controller.
+ * ULTRAMETRICA v1.8.0 — Interactive Lean 4 Proof Blueprint DAG & Filter Controller.
  * Zero external dependencies, strict CSP compliant (no inline scripts/styles).
  */
 
 const DAG_NODES = [
-  { id: 'spec', x: 24, y: 225, w: 168, h: 64, title: 'Spec.lean', sub: 'Pure defs (0 proofs)', kind: 'spec', card: 'mod-targets' },
-  { id: 'basic', x: 232, y: 24, w: 205, h: 62, title: 'Basic.lean (26)', sub: 'Ultrametric + Monna', kind: 'core', card: 'mod-basic' },
-  { id: 'adelic', x: 486, y: 24, w: 230, h: 62, title: 'AdelicSymmetry (23)', sub: 'Thm I & Prop 4.2', kind: 'core', card: 'mod-adelic' },
-  { id: 'btz', x: 232, y: 112, w: 205, h: 62, title: 'HolographyCurv (39)', sub: 'Thm II & V (L_c = 5)', kind: 'core', card: 'mod-btz' },
-  { id: 'vglobal', x: 486, y: 112, w: 230, h: 62, title: 'MultiEdgeHolo (33)', sub: 'Thm V-Global & VI', kind: 'core', card: 'mod-vglobal' },
-  { id: 'fgraph', x: 486, y: 200, w: 230, h: 62, title: 'FiniteGraphGB (24)', sub: 'Edge-Sum Gauss-Bonnet', kind: 'core', card: 'mod-fgraph' },
-  { id: 'soliton', x: 232, y: 200, w: 205, h: 62, title: 'SolitonAndSolver (12)', sub: 'Thm III & IV (Kerr)', kind: 'core', card: 'mod-soliton' },
-  { id: 'vlad', x: 232, y: 288, w: 205, h: 62, title: 'VladimirovOp (26)', sub: 'Thm VII D_K + Kozyrev', kind: 'core', card: 'mod-vlad' },
-  { id: 'adv', x: 486, y: 288, w: 230, h: 62, title: 'AdversarialTests (7)', sub: 'Sharpness Negations', kind: 'adv', card: 'mod-adv' },
-  { id: 'challenge', x: 232, y: 396, w: 205, h: 64, title: 'Challenge.lean (12)', sub: 'Statement-only targets', kind: 'target', card: 'mod-targets' },
-  { id: 'solution', x: 800, y: 218, w: 336, h: 82, title: 'Solution.lean + 6 Kernels', sub: '202 audited (127+56+7+12)', kind: 'target', card: 'mod-targets' },
+  { id: 'spec', x: 20, y: 295, w: 162, h: 62, title: 'Spec.lean', sub: 'Pure defs (0 proofs)', kind: 'spec', card: 'mod-targets' },
+  { id: 'basic', x: 222, y: 20, w: 204, h: 58, title: 'Basic.lean (26)', sub: 'Ultrametric + Monna', kind: 'core', card: 'mod-basic' },
+  { id: 'adelic', x: 472, y: 20, w: 234, h: 58, title: 'AdelicSymmetry (23)', sub: 'Thm I & Prop 4.2', kind: 'core', card: 'mod-adelic' },
+  { id: 'opspec', x: 472, y: 94, w: 234, h: 58, title: 'OperatorAndSpec (21)', sub: 'Block-Diag + Mult >= 2', kind: 'core', card: 'mod-opspec' },
+  { id: 'btz', x: 222, y: 112, w: 204, h: 58, title: 'HolographyCurv (40)', sub: 'Thm II & V (L_c = 5)', kind: 'core', card: 'mod-btz' },
+  { id: 'fullbtz', x: 472, y: 170, w: 234, h: 58, title: 'FullGraphBTZ (6)', sub: '(p+2)x(p+2) Reduction', kind: 'core', card: 'mod-fullbtz' },
+  { id: 'vglobal', x: 222, y: 204, w: 204, h: 58, title: 'MultiEdgeHolo (33)', sub: 'Thm V-Global & VI', kind: 'core', card: 'mod-vglobal' },
+  { id: 'fgraph', x: 472, y: 246, w: 234, h: 58, title: 'FiniteGraphGB (24)', sub: 'Edge-Sum Gauss-Bonnet', kind: 'core', card: 'mod-fgraph' },
+  { id: 'soliton', x: 222, y: 296, w: 204, h: 58, title: 'SolitonAndSolver (18)', sub: 'Thm III & IV (100% Aud)', kind: 'core', card: 'mod-soliton' },
+  { id: 'bulkpos', x: 472, y: 322, w: 234, h: 58, title: 'BulkOperatorPos (8)', sub: 'T > 0 & Tree Schur', kind: 'core', card: 'mod-bulkpos' },
+  { id: 'vlad', x: 222, y: 388, w: 204, h: 58, title: 'VladimirovOp (26)', sub: 'Thm VII D_K + Kozyrev', kind: 'core', card: 'mod-vlad' },
+  { id: 'adv', x: 472, y: 400, w: 234, h: 58, title: 'AdversarialTests (10)', sub: 'Sharpness Negations', kind: 'adv', card: 'mod-adv' },
+  { id: 'challenge', x: 222, y: 520, w: 204, h: 62, title: 'Challenge.lean (15)', sub: 'Statement-only targets', kind: 'target', card: 'mod-targets' },
+  { id: 'solution', x: 792, y: 268, w: 348, h: 86, title: 'Solution.lean + 6 Kernels', sub: '250 audited (144+81+10+15)', kind: 'target', card: 'mod-targets' },
 ];
 
 const DAG_EDGES = [
@@ -23,17 +26,23 @@ const DAG_EDGES = [
   ['basic', 'adelic'],
   ['basic', 'btz'],
   ['basic', 'vlad'],
+  ['adelic', 'opspec'],
+  ['soliton', 'opspec'],
   ['btz', 'vglobal'],
+  ['btz', 'fullbtz'],
+  ['vglobal', 'fullbtz'],
   ['vglobal', 'fgraph'],
-  ['basic', 'adv'],
-  ['adelic', 'adv'],
+  ['soliton', 'bulkpos'],
+  ['fgraph', 'bulkpos'],
+  ['opspec', 'adv'],
+  ['fullbtz', 'adv'],
   ['fgraph', 'adv'],
-  ['soliton', 'adv'],
+  ['bulkpos', 'adv'],
   ['vlad', 'adv'],
-  ['adelic', 'solution'],
-  ['vglobal', 'solution'],
+  ['opspec', 'solution'],
+  ['fullbtz', 'solution'],
   ['fgraph', 'solution'],
-  ['soliton', 'solution'],
+  ['bulkpos', 'solution'],
   ['vlad', 'solution'],
   ['adv', 'solution'],
   ['challenge', 'solution'],
@@ -86,13 +95,13 @@ function renderDag() {
 
     const title = document.createElementNS(SVG_NS, 'text');
     title.setAttribute('x', String(node.x + 12));
-    title.setAttribute('y', String(node.y + 27));
+    title.setAttribute('y', String(node.y + 25));
     title.setAttribute('class', 'dag-title');
     title.textContent = node.title;
 
     const sub = document.createElementNS(SVG_NS, 'text');
     sub.setAttribute('x', String(node.x + 12));
-    sub.setAttribute('y', String(node.y + 47));
+    sub.setAttribute('y', String(node.y + 44));
     sub.setAttribute('class', 'dag-sub');
     sub.textContent = node.sub;
 

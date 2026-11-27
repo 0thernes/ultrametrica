@@ -47,6 +47,30 @@
 'Ultrametrica.picket_fence_gap_sum' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.picket_fence_odd_prime_strictly_positive' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.picket_fence_dyadic_zero_gap' does not depend on any axioms
+'Ultrametrica.CInt.conj_add' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.CInt.conj_mul' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.CInt.conj_smul' depends on axioms: [propext]
+'Ultrametrica.CInt.conj_self_of_im_zero' does not depend on any axioms
+'Ultrametrica.CInt.conj_normSq' depends on axioms: [propext]
+'Ultrametrica.CInt.mul_conj_self' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.CInt.mul_eq_zero_or' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finSumCInt_conj' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finSumCInt_zero_all' does not depend on any axioms
+'Ultrametrica.finSumCInt_single' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.real_matrix_commutes_conj' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.real_matrix_eigenvector_conj' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.commuting_diag_block_diagonal' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.block_diag_preserves_eigenspace' depends on axioms: [propext]
+'Ultrametrica.fourier_neg_maps_sector' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.fourierConj_maps_sector' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.disjoint_sectors_orthogonal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.fourierConj_involutive' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.hermitianDot_self_pos_of_ne_zero' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.odd_prime_sector_eigenvector_orthogonal_doublet' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ultrametrica.odd_prime_doublet_linearly_independent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.int_sq_nonneg' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ads_dual_1lipschitz' does not depend on any axioms
 'Ultrametrica.ads_wasserstein_lower_bound' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ads_primal_cost_exact' depends on axioms: [propext, Quot.sound]
@@ -145,6 +169,18 @@
  Quot.sound]
 'Ultrametrica.finite_graph_curved_eq_flat_subcritical' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.finite_graph_gauss_bonnet_nonvacuous_witness' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.fullBtz_agg_feasible' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.fullBtz_cost_eq_agg' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.fullBtz_wasserstein_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.finSum_kronecker_right' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finSum_kronecker_left' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.fullBtz_primal_optimal_exists' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.CInt.normSq_nonneg' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.CInt.normSq_zero' does not depend on any axioms
+'Ultrametrica.CInt.smul_zero' depends on axioms: [propext]
+'Ultrametrica.CInt.add_zero_right' depends on axioms: [propext]
+'Ultrametrica.CInt.add_zero_left' depends on axioms: [propext]
+'Ultrametrica.CInt.add_smul' depends on axioms: [propext]
 'Ultrametrica.kozyrev_exact_nonlinear_soliton' depends on axioms: [propext]
 'Ultrametrica.disjoint_multi_soliton_no_crosstalk' depends on axioms: [propext]
 'Ultrametrica.multi_ball_kozyrev_soliton_list' depends on axioms: [propext]
@@ -157,6 +193,14 @@
 'Ultrametrica.sherman_morrison_exact_identity' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.kerr_flux_edge_stress_even' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.kerr_flux_edge_current_odd' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gaugeLaplacianQuad_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.weightedNormSq_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.weightedNormSq_pos_of_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.bulk_operator_strictly_pos_def' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.hermitianDot_re_symm' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.spd_operator_sherman_morrison_den_ge_one' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.tree_schur_pivot_stays_positive' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.tree_schur_elim_exact' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.padicValAux_le' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.padicValMod_le' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.padicValAux_ge_iff' depends on axioms: [propext, Quot.sound]
@@ -190,6 +234,9 @@
 'Ultrametrica.Adversarial.adv_rt_ssa_reverse_inequality_false' does not depend on any axioms
 'Ultrametrica.Adversarial.adv_supercritical_finite_graph_violates_conservation' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.Adversarial.adv_nonzerosum_not_vladimirov_eigenfunction' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.Adversarial.adv_fullBtz_negative_entry_undercuts_dual' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.Adversarial.adv_dyadic_sector_not_orthogonal_to_self_conj' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.Adversarial.adv_negative_mass_breaks_bulk_pos_def' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ComparatorTarget.target_thm1_monna_and_parity' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.ComparatorTarget.target_thm1_picket_fence_law' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.ComparatorTarget.target_thm2_btz_ollivier_ricci' depends on axioms: [propext, Quot.sound]
@@ -204,5 +251,14 @@
  Classical.choice,
  Quot.sound]
 'Ultrametrica.ComparatorTarget.target_thm7_vladimirov_kozyrev_eigenfunction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm2_full_graph_btz_reduction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm1_operator_orthogonal_doublets' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm4_bulk_positivity_and_schur' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]

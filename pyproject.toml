@@ -1,6 +1,6 @@
 [project]
 name = "ultrametrica-verification"
-version = "1.7.0"
+version = "1.8.0"
 description = "Zero-dependency Python stdlib exact-rational falsifier, differential oracle, vector figure generator, and arXiv packager for ULTRAMETRICA."
 requires-python = ">=3.11"
 dependencies = []

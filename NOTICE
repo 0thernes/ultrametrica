@@ -1,4 +1,4 @@
-ULTRAMETRICA (v1.7.0)
+ULTRAMETRICA (v1.8.0)
 Copyright (c) 2026 Alexander Stephen Donahue (0thernes) <0_0@0thernes.art>.
 All commercial rights reserved. Licensed under the COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY (see LICENSE).
 
@@ -9,22 +9,23 @@ Third-Party Runtime Dependencies:
   and local HTTP server contain ZERO third-party npm packages or vendored libraries.
 
 External Toolchains Used for Execution & Formal Proof Checking (not vendored):
-  - Node.js (MIT License) — executes the local server, automated 34-test verification suite
-    (10 theorems, 10 true source-code killed mutants, 3,400+ properties/curved-BTZ stress,
+  - Node.js (MIT License) — executes the local server, automated 36-test verification suite
+    (10 theorems, 12 true source-code killed mutants, 3,400+ properties/curved-BTZ stress,
     1,000 B15 fuzz cases, B19 concurrency + AudioWorklet VM storm, HTTP contract/EIO/realpath,
     golden snapshot), runnable examples, performance benchmarks, pre-registered Experiment I,
     and Exp A-H.
   - Python 3 standard library (PSF License) — executes the independent textbook differential
-    oracle (reference/padic_oracle.py), exact-rational falsifier (scripts/verify_exact.py),
-    live Crossref DOI/title/author/retraction auditor (scripts/check_citations.py),
-    live negative Lean tamper-rejection gate (scripts/test_lean_negative.py),
-    dual DigiCert RFC 3161 + Bitcoin OpenTimestamps stamper (scripts/stamp_manifest.py),
-    blueprint guard (scripts/check_blueprint.py), and verbatim README axiom checker
-    (scripts/check_readme_axioms.py).
+    oracle (reference/padic_oracle.py), exact-rational falsifier + 100% Lean audit coverage +
+    internal Markdown link verifier (scripts/verify_exact.py), live Crossref DOI/title/author/
+    retraction auditor (scripts/check_citations.py), live negative Lean tamper-rejection gate
+    (scripts/test_lean_negative.py), dual DigiCert RFC 3161 + Bitcoin OpenTimestamps stamper
+    (scripts/stamp_manifest.py), blueprint guard (scripts/check_blueprint.py), and verbatim
+    README axiom checker (scripts/check_readme_axioms.py).
   - Lean 4 v4.35.0 & Lake + bundled external checkers (Apache License 2.0) — machine-checks
-    all 202 audited declarations in lean/ (127 core theorems + 56 zero-Mathlib helper lemmas +
-    7 adversarial false-variant refutations across eight Palomar proof modules + 12 isolated
-    Spec/Challenge/Solution 6-kernel comparator target bindings; zero Mathlib dependency).
+    all 250 audited declarations in lean/ (100.0% public theorem coverage: 144 core theorems +
+    81 zero-Mathlib helper lemmas + 10 adversarial false-variant refutations across eleven
+    Palomar proof modules + 15 isolated Spec/Challenge/Solution 6-kernel comparator target
+    bindings; zero Mathlib dependency).
 
 Mention of Node.js, Python, Lean, Tectonic, WebGL2, WebAudio, or any cited academic authors
 does not imply institutional sponsorship, endorsement, or relicensing of this work.

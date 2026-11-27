@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_SRC_ROOT = path.resolve(__dirname, 'src');
 const VERSION_PATH = path.resolve(__dirname, 'VERSION');
-let DEFAULT_VERSION = '1.7.0';
+let DEFAULT_VERSION = '1.8.0';
 try {
   DEFAULT_VERSION = readFileSync(VERSION_PATH, 'utf8').trim() || DEFAULT_VERSION;
 } catch {}

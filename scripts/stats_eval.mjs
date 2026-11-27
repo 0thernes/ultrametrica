@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ULTRAMETRICA (v1.7.0) — Pre-Registered Confirmatory Statistical Evaluation (Experiment I).
+ * ULTRAMETRICA (v1.8.0) — Pre-Registered Confirmatory Statistical Evaluation (Experiment I).
  *
  * Implements Build Standard B28 (20 fixed seeds + RMT control arm), B29 (10,000-resample
  * Monte Carlo permutation test + Mann-Whitney U + non-pseudoreplicated matrix-level sign,

@@ -13,7 +13,10 @@
     "Ultrametrica.ComparatorTarget.target_adversarial_refutations",
     "Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses",
     "Ultrametrica.ComparatorTarget.target_thm5_finite_graph_gauss_bonnet",
-    "Ultrametrica.ComparatorTarget.target_thm7_vladimirov_kozyrev_eigenfunction"
+    "Ultrametrica.ComparatorTarget.target_thm7_vladimirov_kozyrev_eigenfunction",
+    "Ultrametrica.ComparatorTarget.target_thm2_full_graph_btz_reduction",
+    "Ultrametrica.ComparatorTarget.target_thm1_operator_orthogonal_doublets",
+    "Ultrametrica.ComparatorTarget.target_thm4_bulk_positivity_and_schur"
   ],
   "permitted_axioms": [
     "propext",

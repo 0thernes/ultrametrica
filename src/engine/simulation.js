@@ -71,6 +71,7 @@ export class UltrametricaSimulation {
   /** @type {BruhatTitsBulk} */ bulk;
   /** @type {PadicQuantumEngine} */ quantum;
   /** @type {Float64Array} */ _potScratch;
+  /** @type {Uint8Array} */ _rtScratch;
   /** @type {number[]} */ triangleLeaves = [0, 0, 0];
   /** @type {ReturnType<PadicSpace['proveUltrametricTriangle']> | null} */ triangleProof = null;
   /** @type {Array<ReturnType<BruhatTitsBulk['shortestGeodesic']>>} */ triangleGeodesics = [];
@@ -99,9 +100,21 @@ export class UltrametricaSimulation {
     this.bulk = /** @type {BruhatTitsBulk} */ (/** @type {unknown} */ (null));
     this.quantum = /** @type {PadicQuantumEngine} */ (/** @type {unknown} */ (null));
     this._potScratch = new Float64Array(0);
+    this._rtScratch = new Uint8Array(0);
 
     this._initUniverse(this.p, this.n, this.horizonDepth);
     this.loadExperiment('kozyrev_trap', { keepTopology: true });
+  }
+
+  /**
+   * Compute a valid default BTZ horizon depth h in [1, n - 1] (requires p^h >= 3).
+   * @param {number} p
+   * @param {number} n
+   */
+  _defaultBtzDepth(p, n) {
+    const minH = p === 2 ? 2 : 1;
+    const pref = PRIME_DEFAULTS[p]?.btzDepth ?? minH;
+    return Math.max(minH, Math.min(n - 1, pref));
   }
 
   /**
@@ -117,6 +130,7 @@ export class UltrametricaSimulation {
     this.horizonDepth = this.bulk.horizonDepth;
     this.quantum = new PadicQuantumEngine(this.space);
     this._potScratch = new Float64Array(this.space.N);
+    this._rtScratch = new Uint8Array(this.space.N);
 
     // Default ultrametric triangle probe: 3 distinct leaves in 2 sibling balls + 1 distant ball
     const N = this.space.N;
@@ -138,7 +152,7 @@ export class UltrametricaSimulation {
   reconfigure({ p = this.p, n = null, horizonDepth = this.horizonDepth, btz = null } = {}) {
     const def = PRIME_DEFAULTS[p] || PRIME_DEFAULTS[3];
     const targetN = n ?? def.n;
-    const targetH = btz === null ? horizonDepth : (btz ? def.btzDepth : 0);
+    const targetH = btz === null ? horizonDepth : (btz ? this._defaultBtzDepth(p, targetN) : 0);
     const prevExp = this.activeExperiment;
     this._initUniverse(p, targetN, targetH);
 
@@ -148,8 +162,7 @@ export class UltrametricaSimulation {
 
   /** @param {boolean} enabled */
   setBTZEnabled(enabled) {
-    const def = PRIME_DEFAULTS[this.p] || PRIME_DEFAULTS[3];
-    const targetH = enabled ? def.btzDepth : 0;
+    const targetH = enabled ? this._defaultBtzDepth(this.p, this.n) : 0;
     if (targetH === this.horizonDepth) return;
     this.bulk = new BruhatTitsBulk(this.space, targetH);
     this.horizonDepth = this.bulk.horizonDepth;
@@ -175,7 +188,7 @@ export class UltrametricaSimulation {
     let targetH = this.horizonDepth;
     if (!keepTopology) {
       if (id === 'btz_black_hole' || id === 'page_transition') {
-        targetH = def.btzDepth;
+        targetH = this._defaultBtzDepth(this.p, this.n);
       } else {
         targetH = 0;
       }
@@ -354,7 +367,8 @@ export class UltrametricaSimulation {
     const ballSize = this.space.powP[this.n - j];
     const start = ballIndex * ballSize;
     const end = Math.min(N, start + ballSize);
-    const region = new Uint8Array(N);
+    const region = this._rtScratch;
+    region.fill(0);
     for (let l = start; l < end; l++) region[l] = 1;
     this.rtFraction = (end - start) / N;
     this.bulk.computeRyuTakayanagi(region);
@@ -372,7 +386,8 @@ export class UltrametricaSimulation {
     this.rtFraction = f;
     const N = this.space.N;
     const count = Math.max(1, Math.min(N - 1, Math.round(f * N)));
-    const region = new Uint8Array(N);
+    const region = this._rtScratch;
+    region.fill(0);
     for (let l = 0; l < count; l++) region[l] = 1;
     this.bulk.computeRyuTakayanagi(region);
   }
@@ -463,6 +478,12 @@ export class UltrametricaSimulation {
     if (this.paused || dt === 0) return;
     if (!Number.isFinite(this.timeScale) || this.timeScale < 0) {
       throw new RangeError(`simulation timeScale must be finite and >= 0, got ${this.timeScale}.`);
+    }
+    if (!Number.isFinite(this.backreactionStrength)) {
+      throw new RangeError(`simulation backreactionStrength must be finite, got ${this.backreactionStrength}.`);
+    }
+    if (!Number.isFinite(this.newtonG)) {
+      throw new RangeError(`simulation newtonG must be finite, got ${this.newtonG}.`);
     }
     const effDt = Math.min(dt, 0.035) * this.timeScale;
     if (effDt <= 0) return;

@@ -72,6 +72,7 @@ const panelReality = new RealitySplitPanel(document.getElementById('canvasRealit
   const ballIdx = (leaf / ballSize) | 0;
   const w = sim.quantum.injectKozyrevWavelet(j, ballIdx, 1, 0.9, replace);
   sim.syncBulkAndMetrics();
+  updateTelemetryDOM();
   audio.pluck(w.j + 1, (ballIdx + 0.5) / sim.space.powP[j], 0.95);
 });
 const panelSpectrum = new PontryaginSpectrumPanel(document.getElementById('canvasSpectrum'));
@@ -365,6 +366,7 @@ function hydrateStateFromURL() {
   if (Number.isFinite(rt) && rt >= 0.03 && rt <= 0.97) {
     sim.setRTRegionFraction(rt);
   }
+  sim.quantum.computeDiagnostics();
   sim.syncBulkAndMetrics();
 }
 
@@ -409,8 +411,7 @@ elHelpModal.addEventListener('click', (e) => {
 elChkGravity.addEventListener('change', () => {
   sim.gravityEnabled = elChkGravity.checked;
   if (!sim.gravityEnabled) {
-    sim.bulk.sigma.fill(0);
-    sim.bulk.sigmaVel.fill(0);
+    sim.bulk.resetGravity();
     sim.syncBulkAndMetrics();
   }
   updateTelemetryDOM();
@@ -498,7 +499,8 @@ renderer.onHoverChange = (hit) => {
 renderer.onPickClick = (hit, evt) => {
   if (activeTool === 'wavelet') {
     if (hit.node >= 0) {
-      const w = sim.injectAtNode(hit.node, 1 + (evt.altKey ? 1 : 0), evt.shiftKey);
+      const charM = sim.p > 2 && evt.altKey ? 2 : 1;
+      const w = sim.injectAtNode(hit.node, charM, evt.shiftKey);
       const pan = (w.ballIndex + 0.5) / Math.max(1, sim.space.powP[w.j]);
       audio.pluck(w.j + 1, pan, 0.95);
       updateTelemetryDOM();
@@ -546,11 +548,15 @@ renderer.onPickClick = (hit, evt) => {
 // ---- Keyboard Shortcuts ----
 window.addEventListener('keydown', (e) => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
-  if (e.target && e.target.tagName === 'INPUT') return;
+  const tag = e.target?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target?.isContentEditable) return;
+  const modalOpen = !elHelpModal.classList.contains('hidden');
   if (e.key === 'Escape') {
     setHelpModalOpen(false);
   } else if (e.key === '?') {
-    setHelpModalOpen(elHelpModal.classList.contains('hidden'));
+    setHelpModalOpen(!modalOpen);
+  } else if (modalOpen) {
+    return;
   } else if (e.code === 'Space') {
     e.preventDefault();
     elBtnPause.click();

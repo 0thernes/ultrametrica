@@ -11,13 +11,13 @@
 
 ---
 
-## 2. Explicit Performance Budgets (`v1.6.0`)
+## 2. Explicit Performance Budgets (`v1.8.0`)
 
-| Kernel / Operation | Hard Budget | Measured Median (`v1.6.0`) | IQR | Margin | Status |
+| Kernel / Operation | Hard Budget | Measured Median (`v1.8.0`) | IQR | Margin | Status |
 |---|---|---|---|---|---|
-| Coupled BTZ Frame Step (`p=3, n=5, L=9`, Yoshida + Bulk KG + Dijkstra Ricci + Gravity) | `< 16.67 ms` (60 FPS) | **`0.7485 ms`** | `0.4404 ms` | **22.3× faster than budget** | PASS |
-| Full Bulk KG + Dijkstra Ricci + Exact RT (`p=5, n=4, N=625`, BTZ $L=5$) | `< 10.00 ms` | **`0.1236 ms`** | `0.0369 ms` | **80.9× faster than budget** | PASS |
-| Native Radix-$p$ Pontryagin FFT (`p=5, n=4, N=625`, single transform) | `< 1.00 ms` | **`0.0287 ms`** (`0.2867 ms / 10`) | `0.0022 ms` | **34.9× faster than budget** | PASS |
+| Coupled BTZ Frame Step (`p=3, n=5, L=9`, Yoshida + Bulk KG + Dijkstra Ricci + Gravity) | `< 16.67 ms` (60 FPS) | **`0.6539 ms`** | `0.2307 ms` | **25.5× faster than budget** | PASS |
+| Full Bulk KG + Dijkstra Ricci + Exact RT (`p=5, n=4, N=625`, BTZ $L=5$) | `< 10.00 ms` | **`0.1215 ms`** | `0.0318 ms` | **82.3× faster than budget** | PASS |
+| Native Radix-$p$ Pontryagin FFT (`p=5, n=4, N=625`, single transform) | `< 1.00 ms` | **`0.0275 ms`** (`0.2749 ms / 10`) | `0.0024 ms` | **36.4× faster than budget** | PASS |
 
 ---
 
@@ -25,14 +25,14 @@
 
 | Dimension $(p, n, N)$ | Radix-$p$ FFT (per call) | Naive $O(N^2)$ DFT (per call) | Speedup | Max Error Checksum |
 |---|---|---|---|---|
-| `p=3, n=2, N=9` | `0.000260 ms` (`0.0520 ms / 200`) | `0.001780 ms` (`0.0356 ms / 20`) | **`6.85×`** | `maxErr = 1.02e-15` |
-| `p=3, n=5, N=243` | `0.010535 ms` (`0.2107 ms / 20`) | `1.79125 ms` (`3.5825 ms / 2`) | **`170.03×`** | `maxErr = 1.12e-14` |
-| `p=5, n=4, N=625` | `0.02867 ms` (`0.2867 ms / 10`) | `14.2165 ms` (`14.2165 ms / 1`) | **`495.87×`** | `maxErr = 1.07e-14` |
+| `p=3, n=2, N=9` | `0.000223 ms` (`0.0446 ms / 200`) | `0.001730 ms` (`0.0346 ms / 20`) | **`7.76×`** | `maxErr = 1.02e-15` |
+| `p=3, n=5, N=243` | `0.010155 ms` (`0.2031 ms / 20`) | `1.61940 ms` (`3.2388 ms / 2`) | **`159.47×`** | `maxErr = 1.12e-14` |
+| `p=5, n=4, N=625` | `0.02749 ms` (`0.2749 ms / 10`) | `7.7027 ms` (`7.7027 ms / 1`) | **`280.2×`** | `maxErr = 1.07e-14` |
 
 ### Honest Caveats & Small-$N$ / Variance Disclosure (`B27`)
 
-- **Tiny-$N$ overhead:** For trivial sizes like $N = 2$ or $N = 3$, loop overhead and twiddle-table indexing make naive summation competitive; Radix-$p$ wins decisively starting at $N \ge 9$ (`6.85×` at $N=9$, `495.87×` at $N=625$).
-- **Thermal & JIT variance:** `min`/`max` ranges on sub-millisecond workloads (e.g. `0.5517 ms`–`1.9367 ms` on `coupled_btz_frame_step`) reflect V8 tier-up and OS scheduling jitter across laptop power states; we therefore report median + IQR rather than cherry-picked minimums.
+- **Tiny-$N$ overhead:** For trivial sizes like $N = 2$ or $N = 3$, loop overhead and twiddle-table indexing make naive summation competitive; Radix-$p$ wins decisively starting at $N \ge 9$ (`7.76×` at $N=9$, `280.2×` at $N=625$).
+- **Thermal & JIT variance:** `min`/`max` ranges on sub-millisecond workloads (e.g. `0.5258 ms`–`1.1383 ms` on `coupled_btz_frame_step`, and variation in V8 turbofan loop optimization of the naive $O(N^2)$ DFT baseline across runs) reflect CPU boost clock and OS scheduling jitter across laptop power states; we therefore report median + IQR rather than cherry-picked minimums.
 - **Quadratic visual/spectral ceiling:** Interactive WebGL2 presets stay below $N \le 343$ because the 2D ultrametric matrix/oscilloscope rendering and exact Jacobi diagonalization (in `scripts/discover.mjs`) scale as $O(N^2)$–$O(N^3)$, whereas the core FFT/bulk/RT engine scales as $O(p N \log_p N)$ and $O(V)$.
 
 ---
@@ -45,4 +45,5 @@
 | `v1.3.0` | Cached WebGL2 uniform locations, preallocated scratch TypedArrays in `computeOllivierRicci` / `computeRyuTakayanagi` / `stepGravity` (`_sigmaSnap`) | `< 1 ms` (60 FPS verified in browser) | — | — |
 | `v1.4.0` | Formal hardware-tagged median/IQR harness (`scripts/bench.mjs`) + strict input bounds | `0.3882 ms` (IQR `0.1318 ms`) | `0.2223 ms` (SPFA) | `319.89×` (`maxErr=1.07e-14`) |
 | `v1.5.0` | Replaced BTZ horizon SPFA with Johnson potential-reduced Dijkstra (`F35`, negative-cycle impossible) + strict JSDoc typed engine | `0.7307 ms` (IQR `0.1875 ms`, `kgRes=1.20e-16`) | `0.1584 ms` (IQR `0.0851 ms`, `kgRes=1.78e-15`) | `445.37×` (`maxErr=1.07e-14`) |
-| `v1.6.0` | Added engine defense-in-depth guards (`F41`–`F44`), removed constructor double-allocation (`F42`), and replaced audio foldback loop with $O(1)$ log-space folding (`F65`) | **`0.7485 ms`** (IQR `0.4404 ms`, `kgRes=1.20e-16`) | **`0.1236 ms`** (IQR `0.0369 ms`, `kgRes=1.78e-15`) | **`495.87×`** (`maxErr=1.07e-14`) |
+| `v1.6.0` | Added engine defense-in-depth guards (`F41`–`F44`), removed constructor double-allocation (`F42`), and replaced audio foldback loop with $O(1)$ log-space folding (`F65`) | `0.7485 ms` (IQR `0.4404 ms`, `kgRes=1.20e-16`) | `0.1236 ms` (IQR `0.0369 ms`, `kgRes=1.78e-15`) | `495.87×` (`maxErr=1.07e-14`) |
+| `v1.8.0` | Reused `_rtScratch` in `simulation.js` + `applyVladimirov` scratch buffers (`F76`, `F93`) + strict `quantum.js` & `simulation.js` validation (`F93`–`F94`, `F95`) | **`0.6539 ms`** (IQR `0.2307 ms`, `kgRes=1.20e-16`) | **`0.1215 ms`** (IQR `0.0318 ms`, `kgRes=1.78e-15`) | **`280.2×`** (`0.0275 ms` FFT, `maxErr=1.07e-14`) |

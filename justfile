@@ -1,4 +1,4 @@
-# ULTRAMETRICA (v1.7.0) — Canonical Task Runner (`justfile`, Build Standard A31/A36/B01)
+# ULTRAMETRICA (v1.8.0) — Canonical Task Runner (`justfile`, Build Standard A31/A36/B01)
 set shell := ["bash", "-euo", "pipefail", "-c"]
 set windows-shell := ["pwsh", "-NoProfile", "-Command"]
 
@@ -10,11 +10,11 @@ setup:
     node --version
     python --version
 
-# Run all 34 Node tests (10 theorems + 10 real source mutants + 3,400+ properties + 1,000 fuzz + 3 concurrency/race + server + golden)
+# Run all 36 Node tests (10 theorems + 12 real source mutants + 3,400+ properties + 1,000 fuzz + 3 concurrency/race + server + golden)
 test:
     npm run verify:all
 
-# Run real source-code mutation testing suite (10/10 production mutants killed)
+# Run real source-code mutation testing suite (12/12 production mutants killed)
 falsify:
     npm run falsify
 
@@ -61,9 +61,9 @@ lint:
     npx --yes -p typescript tsc --noEmit -p jsconfig.json
     python -m py_compile scripts/verify_exact.py scripts/check_readme_axioms.py scripts/check_citations.py scripts/check_blueprint.py scripts/test_lean_negative.py scripts/stamp_manifest.py scripts/generate_figures.py scripts/package_dist.py scripts/build_llms_full.py reference/padic_oracle.py
 
-# Build & audit pure Lean 4.35.0 proofs (202 audited decls: 127 core + 56 helpers + 7 adversarial + 12 isolated comparator targets)
+# Build & audit pure Lean 4.35.0 proofs (250 audited decls: 144 core + 81 helpers + 10 adversarial + 15 isolated comparator targets)
 lean:
-    cd lean && lake build UltrametricaProofs Challenge Solution && lake env lean VerifyAxioms.lean && lake env leanchecker --fresh UltrametricaProofs && lake env leanchecker --fresh Solution
+    cd lean && lake build UltrametricaProofs SolutionBridge Challenge Solution && lake env lean VerifyAxioms.lean && lake env leanchecker --fresh UltrametricaProofs && lake env leanchecker --fresh Solution
 
 # Run live negative Lean tamper-rejection gate (verifies sorry & weakened target rejection)
 lean-negative:
@@ -99,7 +99,7 @@ deploy:
     git push origin main
 
 # Rollback release/deployment safely to a prior verified tag (Build Standard A36)
-rollback tag="v1.6.0":
+rollback tag="v1.7.0":
     @echo "Inspecting target tag {{tag}} before rollback..."
     git show --stat {{tag}}
     @echo "To roll back main cleanly while preserving history, run: git revert --no-commit {{tag}}..HEAD && git commit -m 'revert: rollback to {{tag}}' && git push origin main"

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ULTRAMETRICA (v1.4.0) — Honest Hardware-Tagged Performance Benchmark Suite (A37, B26, B27).
+ * ULTRAMETRICA (v1.8.0) — Honest Hardware-Tagged Performance Benchmark Suite (A37, B26, B27).
  *
  * Measures core kernels with warmup, 15 fresh timed runs, median + IQR + min-max spread,
  * explicit output correctness checksums inside every timed run, and fair O(N^2) vs O(p N log_p N)

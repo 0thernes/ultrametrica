@@ -337,7 +337,8 @@ test('B06 Negative Tests & B20 Numeric Edge-Value Guards: All invalid public inp
     RangeError
   );
 
-  // PadicQuantumEngine boundaries
+  // PadicQuantumEngine boundaries (including F94 constructor & computeDiagnostics guards)
+  assert.throws(() => new PadicQuantumEngine(null), TypeError);
   const q = new PadicQuantumEngine(s);
   assert.throws(() => q.setAlpha(0), RangeError);
   assert.throws(() => q.setAlpha(-1), RangeError);
@@ -352,10 +353,26 @@ test('B06 Negative Tests & B20 Numeric Edge-Value Guards: All invalid public inp
   assert.throws(() => q.step(Infinity, 1), RangeError);
   assert.throws(() => q.step(0.01, 0), RangeError);
   assert.throws(() => q.step(0.01, -2), RangeError);
+  q.nonlinearity = NaN;
+  assert.throws(() => q.computeDiagnostics(), RangeError);
+  q.nonlinearity = 0;
+  q.adelicMix = 1.5;
+  assert.throws(() => q.computeDiagnostics(), RangeError);
+  q.adelicMix = 1.0;
 
-  // Simulation boundaries
+  // Simulation boundaries (including F93 custom-depth BTZ & step finiteness guards)
   const sim = new UltrametricaSimulation(3, 4, 0);
   assert.throws(() => sim.loadExperiment('nonexistent_experiment'), RangeError);
+  sim.backreactionStrength = NaN;
+  assert.throws(() => sim.step(0.01), RangeError);
+  sim.backreactionStrength = 0;
+  sim.newtonG = Infinity;
+  assert.throws(() => sim.step(0.01), RangeError);
+  sim.newtonG = 0;
+  const simSmall = new UltrametricaSimulation(7, 2, 0);
+  simSmall.setBTZEnabled(true);
+  assert.equal(simSmall.bulk.isBTZ, true);
+  assert.equal(simSmall.horizonDepth, 1);
 });
 
 test('B10/B20 Curved BTZ Horizon Optimal-Transport Stress (200 trials across p=2,3,5,7): Zero SPFA/Dijkstra negative-cycle crashes (F35)', () => {

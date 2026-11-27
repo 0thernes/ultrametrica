@@ -2,18 +2,23 @@ module
 
 public import UltrametricaProofs.Basic
 public import UltrametricaProofs.AdelicSymmetry
+public import UltrametricaProofs.OperatorAndSpectrum
 public import UltrametricaProofs.HolographyCurvature
+public import UltrametricaProofs.FullGraphBTZ
 public import UltrametricaProofs.MultiEdgeHolography
 public import UltrametricaProofs.FiniteGraphGaussBonnet
 public import UltrametricaProofs.SolitonAndSolver
+public import UltrametricaProofs.BulkOperatorPositivity
 public import UltrametricaProofs.VladimirovOperator
 
 /-!
-  ULTRAMETRICA (v1.7.0) — Adversarial False-Variant Refutation Suite (`AdversarialTests.lean`).
+  ULTRAMETRICA (v1.8.0) — Adversarial False-Variant Refutation Suite (`AdversarialTests.lean`).
 
-  Playbook Gold Standard Item #12: formally proves 7 explicit NEGATIONS (`¬ (...)`) of
-  deliberately weakened or false statements across Theorems I–VII, confirming that our
-  definitions are sharp, non-degenerate, and cannot trivially validate false mathematical claims.
+  Playbook Gold Standard Item #12: formally proves 10 explicit NEGATIONS (`¬ (...)`) of
+  deliberately weakened or false statements across Theorems I–VII (including full-graph BTZ,
+  operator-level parity doubling, finite-graph Gauss-Bonnet, bulk operator positivity, and
+  discrete Vladimirov/Kozyrev wavelets), confirming that our definitions are sharp,
+  non-degenerate, and cannot trivially validate false mathematical claims.
   Zero Mathlib, zero `sorry`, zero `native_decide`, zero custom axioms.
 -/
 
@@ -113,5 +118,71 @@ public theorem adv_nonzerosum_not_vladimirov_eigenfunction :
   have h1 := h ⟨1, by omega⟩
   rw [hlhs, hrhs, Int.mul_zero] at h1
   omega
+
+/-- Refutation 8 (Full-Graph BTZ Sharpness — F88): Dropping the non-negativity hypothesis on a
+    full-graph `(p+2) x (p+2)` BTZ coupling allows negative-entry couplings to undercut the
+    Kantorovich optimal transport bound (`2 < 20` at `p = 2, L = 6, M = 1`). -/
+public theorem adv_fullBtz_negative_entry_undercuts_dual :
+    ∃ Q : Ultrametrica.BTZNbr 2 → Ultrametrica.BTZNbr 2 → Int,
+      (∀ x, Ultrametrica.sumBTZNbr 2 (fun y => Q x y) = 1) ∧
+      (∀ y, Ultrametrica.sumBTZNbr 2 (fun x => Q x y) = 1) ∧
+      Ultrametrica.fullBtzTransportCost 2 6 Q < 1 * (3 * (2 : Int) + 2 - Ultrametrica.shortcutSaving 6) := by
+  let Q2 : Ultrametrica.BTZNbr 2 → Ultrametrica.BTZNbr 2 → Int
+    | .opp,     .opp     => -5
+    | .opp,     .child _ => 3
+    | .opp,     .back    => 0
+    | .back,    .opp     => 0
+    | .back,    .back    => 1
+    | .back,    .child _ => 0
+    | .child _, .opp     => 3
+    | .child _, .back    => 0
+    | .child r, .child s => if r = s then -2 else 0
+  refine ⟨Q2, ?_, ?_, ?_⟩
+  · intro x
+    cases x with
+    | opp => decide
+    | back => decide
+    | child r =>
+      rcases r with ⟨v, hv⟩
+      have hv2 : v = 0 ∨ v = 1 := by omega
+      rcases hv2 with rfl | rfl <;> decide +revert
+  · intro y
+    cases y with
+    | opp => decide
+    | back => decide
+    | child s =>
+      rcases s with ⟨v, hv⟩
+      have hv2 : v = 0 ∨ v = 1 := by omega
+      rcases hv2 with rfl | rfl <;> decide +revert
+  · decide
+
+/-- Refutation 9 (Operator-Level Adelic Doublet Sharpness — F89): For even prime `p = 2`,
+    there exists a nonzero vector `v ∈ W_{0,1}` on `CVec (2^2)` whose Fourier conjugate
+    `fourierConj v` is NOT orthogonal to `v` (`<v, fourierConj v> = 2 ≠ 0`), proving odd-prime
+    orthogonality (`p % 2 = 1`) is essential! -/
+public theorem adv_dyadic_sector_not_orthogonal_to_self_conj :
+    let v : Ultrametrica.CVec (2 ^ 2) := fun k =>
+      if k.val = 1 ∨ k.val = 3 then Ultrametrica.CInt.one else Ultrametrica.CInt.zero
+    Ultrametrica.InSector 2 2 0 1 v ∧
+    Ultrametrica.hermitianDot v (Ultrametrica.fourierConj (2 ^ 2) (by decide) v) ≠ Ultrametrica.CInt.zero := by
+  refine ⟨?_, by decide⟩
+  intro k hnot
+  rcases k with ⟨val, hval⟩
+  have hcases : val = 0 ∨ val = 1 ∨ val = 2 ∨ val = 3 := by omega
+  rcases hcases with rfl | rfl | rfl | rfl
+  · rfl
+  · exact False.elim (hnot (show (1 : Nat) % 2 ^ 1 = 1 * 2 ^ 0 by decide))
+  · rfl
+  · exact False.elim (hnot (show (3 : Nat) % 2 ^ 1 = 1 * 2 ^ 0 by decide))
+
+/-- Refutation 10 (Bulk Operator Positivity Sharpness — F90): Violating the positivity
+    hypothesis (`d x > 0`, e.g., strongly tachyonic mass below the BF bound `d = -10`) breaks
+    strict positive definiteness of `bulkQuadForm` (`Q < 0` on a nonzero vector)! -/
+public theorem adv_negative_mass_breaks_bulk_pos_def :
+    let edges : List (Ultrametrica.GaugeEdge 2) := [⟨⟨0, by omega⟩, ⟨1, by omega⟩, 1, Ultrametrica.CInt.one⟩]
+    let d : Fin 2 → Int := fun _ => -10
+    let v : Ultrametrica.CVec 2 := fun _ => Ultrametrica.CInt.one
+    Ultrametrica.bulkQuadForm edges d v < 0 := by
+  decide
 
 end Ultrametrica.Adversarial

@@ -25,6 +25,9 @@ export class PadicQuantumEngine {
    * @param {import('./padic.js').PadicSpace} space
    */
   constructor(space) {
+    if (!space || !Number.isInteger(space.p) || !Number.isInteger(space.n) || !Number.isInteger(space.N) || space.N < 1) {
+      throw new TypeError('PadicQuantumEngine requires a valid PadicSpace instance.');
+    }
     this.space = space;
     this.p = space.p;
     this.n = space.n;
@@ -450,6 +453,12 @@ export class PadicQuantumEngine {
    *   - Pontryagin-dual valuation shell spectrum & Fast Kozyrev wavelet shell power
    */
   computeDiagnostics() {
+    if (!Number.isFinite(this.nonlinearity)) {
+      throw new RangeError(`computeDiagnostics requires finite nonlinearity, got ${this.nonlinearity}.`);
+    }
+    if (!Number.isFinite(this.adelicMix) || this.adelicMix < 0 || this.adelicMix > 1) {
+      throw new RangeError(`computeDiagnostics requires adelicMix in [0, 1], got ${this.adelicMix}.`);
+    }
     const N = this.N;
     const g = this.nonlinearity;
     const theta = this.adelicMix;

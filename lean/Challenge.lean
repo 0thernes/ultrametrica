@@ -3,12 +3,13 @@ module
 public import UltrametricaProofs.Spec
 
 /-!
-  ULTRAMETRICA (v1.7.0) — Isolated Statement-Only Challenge File (`lake comparator`).
+  ULTRAMETRICA (v1.8.0) — Isolated Statement-Only Challenge File (`lake comparator`).
 
-  Palomar Registry compliant Lean 4.35.0 `module` (< 320 lines).
+  Palomar Registry compliant Lean 4.35.0 `module` (< 400 lines).
   Imports ONLY `UltrametricaProofs.Spec` (pure definitions, zero proofs) and NONE of the
-  eight proof modules (`Basic`, `AdelicSymmetry`, `HolographyCurvature`, `MultiEdgeHolography`,
-  `FiniteGraphGaussBonnet`, `SolitonAndSolver`, `VladimirovOperator`, `AdversarialTests`).
+  eleven proof modules (`Basic`, `AdelicSymmetry`, `OperatorAndSpectrum`, `HolographyCurvature`,
+  `FullGraphBTZ`, `MultiEdgeHolography`, `FiniteGraphGaussBonnet`, `SolitonAndSolver`,
+  `BulkOperatorPositivity`, `VladimirovOperator`, `AdversarialTests`).
 
   Every `sorry` in this file is intentional — matched strictly against sorry-free `Solution.lean` by:
       lake comparator --config comparator.json --paranoid
@@ -183,7 +184,7 @@ public theorem target_adversarial_refutations :
         lam * Spec.kozyrevHaar 3 2 1 0 (Nat.le_succ 2) (fun d => if d.val = 0 then 1 else 0) x) := by
   sorry
 
-/-- Target 10 (Complete Non-Vacuity Witnesses Covering ALL 10 Theorem Targets 1–8 & 11–12 — Playbook Gold #8). -/
+/-- Target 10 (Complete Non-Vacuity Witnesses Covering ALL 13 Theorem Targets 1–8 & 11–15 — Playbook Gold #8). -/
 public theorem target_nonvacuity_witnesses :
     -- Target 1 witness: p=3, n=4, x=5 < 81
     (Spec.revBase 3 4 5 = 63 ∧ 5 < 3 ^ 4) ∧
@@ -226,7 +227,20 @@ public theorem target_nonvacuity_witnesses :
      Spec.graphVertexWeight edges v3 = 5) ∧
     -- Target 12 witness: p=3, n=2, j=0, a=[1, -1, 0], K(v)=v has zero sum and eigenvalue 4
     (let a : Fin 3 → Int := fun d => if d.val = 0 then 1 else if d.val = 1 then -1 else 0
-     Spec.finSum 3 a = 0 ∧ Spec.ultrametricWaveletEigenvalue 3 2 0 (fun v => (v : Int)) = 4) := by
+     Spec.finSum 3 a = 0 ∧ Spec.ultrametricWaveletEigenvalue 3 2 0 (fun v => (v : Int)) = 4) ∧
+    -- Target 13 witness: full-graph BTZ (p=3, L=5) has exact child-to-child dist 3 & back-to-back dist 2
+    (Spec.fullBtzDist 3 5 (.child ⟨0, Nat.zero_lt_succ 2⟩) (.child ⟨1, Nat.succ_lt_succ (Nat.zero_lt_succ 1)⟩) = 3 ∧
+     Spec.fullBtzDist 3 5 .back .back = 2) ∧
+    -- Target 14 witness: odd prime p=3, n=1, s=0, m=1 has orthogonal conjugate basis vectors e_1 and e_2
+    (let e1 : Spec.CVec (3 ^ 1) := fun k => if k.val = 1 then Spec.CInt.one else Spec.CInt.zero
+     let e2 := Spec.fourierConj (3 ^ 1) (Nat.pow_pos (Nat.zero_lt_succ 2)) e1
+     Spec.InSector 3 1 0 1 e1 ∧ Spec.InSector 3 1 0 2 e2 ∧ Spec.hermitianDot e1 e2 = Spec.CInt.zero) ∧
+    -- Target 15 witness: 2-vertex gauge edge w=1 + positive mass d=2 has positive bulkQuadForm & positive Schur pivot
+    (let v0 : Fin 2 := ⟨0, Nat.zero_lt_succ 1⟩
+     let v1 : Fin 2 := ⟨1, Nat.lt_succ_self 1⟩
+     let gEdges : List (Spec.GaugeEdge 2) := [⟨v0, v1, 1, Spec.CInt.one⟩]
+     Spec.bulkQuadForm gEdges (fun _ => 2) (fun _ => Spec.CInt.one) = 4 ∧
+     (Spec.schurReducedDiag 2 3 1 (Int.ofNat_lt.mpr (Nat.zero_lt_succ 2))).num = 5) := by
   sorry
 
 /-- Target 11 (Theorem V-Global Actual Finite-Graph Edge-Sum Curved Gauss-Bonnet Conservation — closes F70):
@@ -274,6 +288,75 @@ public theorem target_thm7_vladimirov_kozyrev_eigenfunction :
       (∀ v, H (fun i => -(v i)) = fun i => -(H v i)) →
       (∀ v, Spec.vecRev N v = v → Spec.vecRev N (H v) = H v) ∧
       (∀ v, Spec.vecRev N v = (fun i => -(v i)) → Spec.vecRev N (H v) = fun i => -(H v i))) := by
+  sorry
+
+/-- Target 13 (Full-Graph `(p+2) x (p+2)` BTZ Symmetry Reduction & Optimal Transport — closes F88):
+    Proves BOTH the universal Kantorovich lower bound over ALL arbitrary non-negative `(p+2) x (p+2)`
+    full-graph couplings `Q` AND existence of an explicit non-negative `(p+2) x (p+2)` full-graph
+    optimal transport plan attaining exact equality! -/
+public theorem target_thm2_full_graph_btz_reduction :
+    (∀ (p : Nat) (L M : Int), 3 ≤ L →
+      ∀ Q : Spec.BTZNbr p → Spec.BTZNbr p → Int,
+        (∀ x y, 0 ≤ Q x y) →
+        (∀ x, Spec.sumBTZNbr p (fun y => Q x y) = M) →
+        (∀ y, Spec.sumBTZNbr p (fun x => Q x y) = M) →
+        M * (3 * (p : Int) + 2 - max 0 (6 - L)) ≤ Spec.fullBtzTransportCost p L Q) ∧
+    (∀ (p : Nat) (L M : Int), 1 ≤ p → 3 ≤ L → 0 ≤ M →
+      ∃ Q : Spec.BTZNbr p → Spec.BTZNbr p → Int,
+        (∀ x y, 0 ≤ Q x y) ∧
+        (∀ x, Spec.sumBTZNbr p (fun y => Q x y) = (p : Int) * M) ∧
+        (∀ y, Spec.sumBTZNbr p (fun x => Q x y) = (p : Int) * M) ∧
+        Spec.fullBtzTransportCost p L Q = ((p : Int) * M) * (3 * (p : Int) + 2 - max 0 (6 - L))) := by
+  sorry
+
+/-- Target 14 (Operator-Level Adelic Block-Diagonality & Odd-Prime Orthogonal Multiplicity >= 2 — closes F89):
+    Proves that ANY matrix commuting with a diagonal sector-label operator is identically block-diagonal
+    (`d i ≠ d j -> H i j = 0`), AND that for every odd prime `p >= 3` (`p % 2 = 1`), any nonzero
+    real-eigenvalue eigenvector `v ∈ W_{s,m}` of any Fourier-conjugate-equivariant operator `H` yields
+    a strictly orthogonal conjugate twin eigenvector `w ∈ W_{s, p - m}` with identical eigenvalue `λ`
+    and `<v, w> = 0`! -/
+public theorem target_thm1_operator_orthogonal_doublets :
+    (∀ (N : Nat) (H : Fin N → Fin N → Spec.CInt) (d : Fin N → Int),
+      (∀ v : Spec.CVec N, Spec.matVecMul N H (Spec.diagOp d v) = Spec.diagOp d (Spec.matVecMul N H v)) →
+      ∀ i j : Fin N, d i ≠ d j → H i j = Spec.CInt.zero) ∧
+    (∀ (p n s m : Nat) (hpn : 0 < p ^ n),
+      2 ≤ p → p % 2 = 1 → s < n → 1 ≤ m → m < p →
+      ∀ (H : Spec.CVec (p ^ n) → Spec.CVec (p ^ n)),
+        (∀ u, H (Spec.fourierConj (p ^ n) hpn u) = Spec.fourierConj (p ^ n) hpn (H u)) →
+        ∀ (v : Spec.CVec (p ^ n)) (lam : Int),
+          Spec.InSector p n s m v →
+          (∃ k : Fin (p ^ n), v k ≠ Spec.CInt.zero) →
+          (H v = fun i => Spec.CInt.smul lam (v i)) →
+          let w := Spec.fourierConj (p ^ n) hpn v
+          Spec.InSector p n s (p - m) w ∧
+          (H w = fun i => Spec.CInt.smul lam (w i)) ∧
+          0 < (Spec.hermitianDot v v).re ∧
+          0 < (Spec.hermitianDot w w).re ∧
+          Spec.hermitianDot v w = Spec.CInt.zero) := by
+  sorry
+
+/-- Target 15 (Bulk Gauge-Covariant Graph Laplacian `T ≻ 0`, Sherman-Morrison Discharge & Tree Schur Pivot Positivity — closes F90):
+    Proves that ANY finite weighted gauge-covariant graph Laplacian + strictly positive diagonal is
+    strictly positive definite (`bulkQuadForm > 0` for `v ≠ 0`), that ANY PSD operator `T` with `T z = u`
+    forces `(1 + w <u, z>).re >= 1` and `den ≠ 0`, AND that tree Schur elimination preserves strict
+    pivot positivity `D_p - w^2 / D_c > 0` and exact elimination! -/
+public theorem target_thm4_bulk_positivity_and_schur :
+    (∀ (n : Nat) (edges : List (Spec.GaugeEdge n)) (d : Fin n → Int),
+      (∀ e ∈ edges, 0 ≤ e.w) → (∀ x, 0 < d x) →
+      ∀ v : Spec.CVec n, (∃ x : Fin n, v x ≠ Spec.CInt.zero) →
+        0 < Spec.bulkQuadForm edges d v) ∧
+    (∀ (L : Nat) (T : Spec.CVec L → Spec.CVec L),
+      (∀ z : Spec.CVec L, 0 ≤ (Spec.hermitianDot z (T z)).re) →
+      ∀ (w : Int), 0 ≤ w → ∀ (u z : Spec.CVec L), T z = u →
+        let den := Spec.CInt.add Spec.CInt.one (Spec.CInt.smul w (Spec.hermitianDot u z))
+        1 ≤ den.re ∧ den ≠ Spec.CInt.zero) ∧
+    (∀ (Dp Dc w : Int) (hDc : 0 < Dc),
+      0 < w → w < Dc → w ≤ Dp →
+      0 < (Spec.schurReducedDiag Dp Dc w hDc).num ∧ 0 < (Spec.schurReducedDiag Dp Dc w hDc).den) ∧
+    (∀ Dp Dc w phiP phiC bP bC : Int,
+      Dc * phiC - w * phiP = bC →
+      Dp * phiP - w * phiC = bP →
+      (Dp * Dc - w * w) * phiP = Dc * bP + w * bC) := by
   sorry
 
 end Ultrametrica.ComparatorTarget

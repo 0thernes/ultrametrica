@@ -24,14 +24,14 @@ jobs:
         os: [ubuntu-24.04, macos-latest, windows-latest]
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
-      - name: Run all 34 Node tests (10 theorems, 10 real source mutants, properties, 1,000 fuzz, concurrency/AudioWorklet race, server, golden)
+      - name: Run all 36 Node tests (10 theorems, 12 real source mutants, properties, 1,000 fuzz, concurrency/AudioWorklet race, server, golden)
         run: npm run verify:all
       - name: Run all 3 runnable examples
         run: npm run examples
@@ -45,7 +45,7 @@ jobs:
         run: python scripts/check_blueprint.py
       - name: Verify dual RFC 3161 DigiCert (.tsr) + Bitcoin OpenTimestamps (.ots) receipts
         run: python scripts/stamp_manifest.py --verify
-      - name: Run independent exact-rational falsifier (Thm I-VII) & SHA-256 checksums
+      - name: Run independent exact-rational falsifier (Thm I-VII), 100% Lean coverage, md links & SHA-256 checksums
         run: python scripts/verify_exact.py --check-checksums
       - name: Verify cryptographic SHA-256 manifests with standard sha256sum (before fresh benchmark regeneration)
         if: runner.os == 'Linux'
@@ -64,13 +64,13 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
       - name: Node syntax check (report-only)
@@ -103,18 +103,18 @@ jobs:
         run: bash scripts/audit-repo.sh .
 
   lean4-six-kernel-audit:
-    name: Lean 4 (v4.35.0) 202-Decl Audit, Negative Tamper Gate & 6-Kernel lake check + comparator --paranoid
+    name: Lean 4 (v4.35.0) 250-Decl Audit, Negative Tamper Gate & 6-Kernel lake check + comparator --paranoid
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install elan, Lean 4.35.0 & bubblewrap
         run: |
           sudo apt-get update && sudo apt-get install -y bubblewrap
           toolchain="$(tr -d '[:space:]' < lean/lean-toolchain)"
           curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain "$toolchain"
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Nested-comment & string-safe forbidden-token scan (UltrametricaProofs + Solution)
+      - name: Nested-comment & string-safe forbidden-token scan (UltrametricaProofs + SolutionBridge + Solution)
         run: |
           python3 - <<'PY'
           import re, sys
@@ -122,7 +122,11 @@ jobs:
           sys.path.insert(0, "scripts")
           from verify_exact import strip_lean_comments_and_strings
 
-          files = [Path("lean/UltrametricaProofs.lean"), Path("lean/Solution.lean")] + sorted(Path("lean/UltrametricaProofs").glob("*.lean"))
+          files = [
+              Path("lean/UltrametricaProofs.lean"),
+              Path("lean/SolutionBridge.lean"),
+              Path("lean/Solution.lean"),
+          ] + sorted(Path("lean/UltrametricaProofs").glob("*.lean"))
           forb = re.compile(r"\b(sorry|admit|axiom|native_decide|unsafe|implemented_by)\b|@\[extern")
           for p in files:
               cleaned = strip_lean_comments_and_strings(p.read_text(encoding="utf-8"))
@@ -131,13 +135,13 @@ jobs:
                   raise SystemExit(f"ERROR: Forbidden token '{m.group(0)}' in executable code of {p}")
           print(f"PASS: Zero forbidden Lean tokens across {len(files)} sorry-free files.")
           PY
-      - name: Clean-build UltrametricaProofs, Challenge & Solution + audit 202 axioms + leanchecker
+      - name: Clean-build UltrametricaProofs, SolutionBridge, Challenge & Solution + audit 250 axioms + leanchecker
         working-directory: lean
         shell: bash
         run: |
           set -o pipefail
           lake clean
-          lake build UltrametricaProofs Challenge Solution
+          lake build UltrametricaProofs SolutionBridge Challenge Solution
           lake env lean VerifyAxioms.lean | tee ../results/lean-audit-ci.log
           lake env leanchecker --fresh UltrametricaProofs
           lake env leanchecker --fresh Solution
@@ -160,7 +164,7 @@ jobs:
                       raise SystemExit(f"ERROR: Forbidden axiom {used - allowed} in: {line}")
               elif "does not depend on any axioms" in line:
                   count += 1
-          assert count >= 202, f"Expected >= 202 audited declarations, got {count}"
+          assert count >= 250, f"Expected >= 250 audited declarations, got {count}"
           print(f"PASS: All {count} Lean 4 declarations strictly within {sorted(allowed)} (or zero axioms).")
           PY
       - name: Run Palomar lake check --paranoid & 6-kernel lake comparator --paranoid (bubblewrap sandbox)
@@ -182,8 +186,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
       - name: Install Tectonic
@@ -194,7 +198,7 @@ jobs:
       - name: Compile paper/main.tex (zero warnings) & verify standalone arXiv tarball
         run: python scripts/package_dist.py
       - name: Upload compiled manuscript PDF artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Donahue_2026_Ultrametrica
           path: dist/Donahue_2026_Ultrametrica.pdf

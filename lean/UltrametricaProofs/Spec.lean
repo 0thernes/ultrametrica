@@ -202,4 +202,71 @@ public abbrev CVec (L : Nat) := Fin L → CInt
 @[expose] public def hermitianDot {L : Nat} (u v : CVec L) : CInt :=
   finSumCInt L (fun i => CInt.mul (CInt.conj (u i)) (v i))
 
+-- =====================================================================
+-- v1.8.0 Statement-Only Definitions for Full-Graph BTZ, Operator Doublets
+-- & Bulk Graph-Laplacian Positivity (Targets 13, 14, 15)
+-- =====================================================================
+
+/-- Literal `(p + 2)`-element neighbor set of a uniform BTZ horizon vertex on `T_p / p^{hZ}`. -/
+public inductive BTZNbr (p : Nat)
+  | opp
+  | back
+  | child (r : Fin p)
+deriving DecidableEq, Repr
+
+@[expose] public def BTZNbr.cls {p : Nat} : BTZNbr p → BTZNbrClass
+  | .opp     => .opp
+  | .back    => .back
+  | .child _ => .child
+
+@[expose] public def sumBTZNbr (p : Nat) (f : BTZNbr p → Int) : Int :=
+  f .opp + f .back + finSum p (fun r => f (.child r))
+
+@[expose] public def fullBtzDist (p : Nat) (L : Int) (x y : BTZNbr p) : Int :=
+  btzGraphDist L x.cls y.cls
+
+@[expose] public def fullBtzTransportCost (p : Nat) (L : Int) (Q : BTZNbr p → BTZNbr p → Int) : Int :=
+  sumBTZNbr p (fun x => sumBTZNbr p (fun y => Q x y * fullBtzDist p L x y))
+
+/-- Operator-level Adelic hybrid definitions on `CVec N = Fin N -> CInt`. -/
+@[expose] public def cvecConj {N : Nat} (v : CVec N) : CVec N :=
+  fun i => (v i).conj
+
+@[expose] public def matVecMul (N : Nat) (A : Fin N → Fin N → CInt) (v : CVec N) : CVec N :=
+  fun i => finSumCInt N (fun j => CInt.mul (A i j) (v j))
+
+@[expose] public def diagOp {N : Nat} (d : Fin N → Int) (v : CVec N) : CVec N :=
+  fun i => CInt.smul (d i) (v i)
+
+@[expose] public def isSectorIdx (p s m k : Nat) : Prop :=
+  k % p ^ (s + 1) = m * p ^ s
+
+@[expose] public def InSector (p n s m : Nat) (v : CVec (p ^ n)) : Prop :=
+  ∀ k : Fin (p ^ n), ¬ isSectorIdx p s m k.val → v k = CInt.zero
+
+@[expose] public def fourierConj (N : Nat) (hN : 0 < N) (v : CVec N) : CVec N :=
+  fun k => (v ⟨(N - k.val) % N, Nat.mod_lt _ hN⟩).conj
+
+/-- Finite weighted gauge-covariant bulk graph Laplacian & Schur-complement pivot definitions. -/
+public structure GaugeEdge (n : Nat) where
+  u  : Fin n
+  v  : Fin n
+  w  : Int
+  ph : CInt
+deriving DecidableEq, Repr
+
+@[expose] public def gaugeLaplacianQuad {n : Nat} : List (GaugeEdge n) → CVec n → Int
+  | [], _ => 0
+  | e :: rest, v =>
+      e.w * (CInt.sub (v e.u) (CInt.mul e.ph (v e.v))).normSq + gaugeLaplacianQuad rest v
+
+@[expose] public def weightedNormSq {n : Nat} (d : Fin n → Int) (v : CVec n) : Int :=
+  finSum n (fun x => d x * (v x).normSq)
+
+@[expose] public def bulkQuadForm {n : Nat} (edges : List (GaugeEdge n)) (d : Fin n → Int) (v : CVec n) : Int :=
+  gaugeLaplacianQuad edges v + weightedNormSq d v
+
+@[expose] public def schurReducedDiag (Dp Dc w : Int) (hDc : 0 < Dc) : RatQ :=
+  ⟨Dp * Dc - w * w, Dc, hDc⟩
+
 end Ultrametrica.Spec

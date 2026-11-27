@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA (v1.7.0) — Independent Zero-Dependency Exact-Rational Falsifier,
+ULTRAMETRICA (v1.8.0) — Independent Zero-Dependency Exact-Rational Falsifier,
 Metadata/Affiliation/Citation Auditor & SHA-256 Manifest Verifier.
 
 Completely decoupled from both the JavaScript simulation engine and Lean 4 proofs.
@@ -12,8 +12,10 @@ to independently verify or falsify:
   - Theorem V single-edge + Theorem V-Global multi-edge & finite-graph edge-sum Gauss-Bonnet
   - Theorem VI exact exhaustive brute-force holographic Ryu-Takayanagi Strong Subadditivity (SSA)
   - Theorem VII exact integer discrete Vladimirov/ultrametric Kozyrev-Haar eigenfunctions & J-parity
-  - Nested-comment/string-safe Lean 4 source scan (UltrametricaProofs + Solution)
-  - 202 audited Lean 4 declarations (127 core + 56 helpers + 7 adversarial + 12 isolated comparator targets)
+  - Nested-comment/string-safe Lean 4 source scan (UltrametricaProofs + SolutionBridge + Solution)
+  - 250 audited Lean 4 declarations (144 core + 81 helpers + 10 adversarial + 15 isolated comparator targets)
+    with 100.0% public theorem coverage enforcement (0 unaudited public Lean theorems, F87)
+  - Automated internal Markdown relative link verification across all tracked `.md` files (F91)
   - Pre-registered Experiment I statistical evaluation (results/stats-eval.json) & perf benchmarks
   - Citation / DOI / arXiv syntax & results/citation-audit.json validation
   - Cross-document version, ORCID, CFF 1.2.0 schema, legal & affiliation consistency
@@ -80,11 +82,13 @@ MANIFEST_FILES = [
     "docs/statement-fidelity.md",
     "docs/reviews/2026-11-26-hardening-cycles-v160.md",
     "docs/reviews/2026-11-26-hardening-cycles-v170.md",
+    "docs/reviews/2026-11-27-hardening-cycles-v180.md",
     "src/engine/padic.js",
     "src/engine/holography.js",
     "src/engine/quantum.js",
     "src/engine/simulation.js",
     "src/web/index.html",
+    "src/web/favicon.svg",
     "src/web/styles.css",
     "src/web/app.js",
     "src/web/blueprint.html",
@@ -122,14 +126,18 @@ MANIFEST_FILES = [
     "lean/UltrametricaProofs.lean",
     "lean/VerifyAxioms.lean",
     "lean/Challenge.lean",
+    "lean/SolutionBridge.lean",
     "lean/Solution.lean",
     "lean/UltrametricaProofs/Spec.lean",
     "lean/UltrametricaProofs/Basic.lean",
     "lean/UltrametricaProofs/AdelicSymmetry.lean",
+    "lean/UltrametricaProofs/OperatorAndSpectrum.lean",
     "lean/UltrametricaProofs/HolographyCurvature.lean",
+    "lean/UltrametricaProofs/FullGraphBTZ.lean",
     "lean/UltrametricaProofs/MultiEdgeHolography.lean",
     "lean/UltrametricaProofs/FiniteGraphGaussBonnet.lean",
     "lean/UltrametricaProofs/SolitonAndSolver.lean",
+    "lean/UltrametricaProofs/BulkOperatorPositivity.lean",
     "lean/UltrametricaProofs/VladimirovOperator.lean",
     "lean/UltrametricaProofs/AdversarialTests.lean",
     "results/lean4-audit.txt",
@@ -808,10 +816,14 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
     assert perf["environment"]["cpu"]
 
     # Nested-comment & string-safe Lean 4 source scan (fixes F09!)
-    # Scans UltrametricaProofs.lean, UltrametricaProofs/*.lean, AND Solution.lean
+    # Scans UltrametricaProofs.lean, UltrametricaProofs/*.lean, SolutionBridge.lean, AND Solution.lean
     # (Challenge.lean is excluded because its `sorry` placeholders are the comparator specification.)
     lean_files = (
-        [ROOT / "lean" / "UltrametricaProofs.lean", ROOT / "lean" / "Solution.lean"]
+        [
+            ROOT / "lean" / "UltrametricaProofs.lean",
+            ROOT / "lean" / "SolutionBridge.lean",
+            ROOT / "lean" / "Solution.lean",
+        ]
         + sorted((ROOT / "lean" / "UltrametricaProofs").glob("*.lean"))
     )
     forbidden_re = re.compile(r"\b(sorry|admit|axiom|native_decide|unsafe|implemented_by)\b|@\[extern")
@@ -820,7 +832,35 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
         m = forbidden_re.search(cleaned)
         assert m is None, f"Forbidden token '{m.group(0)}' in executable Lean code of {lf}"
 
-    # Lean 4 audit transcript check (202+ declarations + 6-kernel comparator verdict; multi-line wrap safe)
+    # 100.0% public theorem audit coverage gate (F87): every public theorem in the 11 proof
+    # modules + Solution.lean must appear in VerifyAxioms.lean (zero unaudited public theorems!)
+    verify_ax_src = (ROOT / "lean" / "VerifyAxioms.lean").read_text(encoding="utf-8")
+    declared_in_verify = set(re.findall(r"^#print axioms\s+(\S+)", verify_ax_src, re.MULTILINE))
+    public_theorems: set[str] = set()
+    for pf in sorted((ROOT / "lean" / "UltrametricaProofs").glob("*.lean")) + [ROOT / "lean" / "Solution.lean"]:
+        if pf.name == "Spec.lean":
+            continue
+        ns_stack: list[str] = []
+        for ln in pf.read_text(encoding="utf-8").splitlines():
+            mns = re.match(r"^namespace\s+(\S+)", ln)
+            if mns:
+                ns_stack.append(mns.group(1))
+                continue
+            mend = re.match(r"^end\s+(\S+)", ln)
+            if mend and ns_stack and ns_stack[-1] == mend.group(1):
+                ns_stack.pop()
+                continue
+            mt = re.match(r"^(?:public\s+)?theorem\s+([A-Za-z0-9_.']+)", ln)
+            if mt and not ln.startswith("private "):
+                prefix = ".".join(ns_stack)
+                public_theorems.add(f"{prefix}.{mt.group(1)}" if prefix else mt.group(1))
+    unaudited = sorted(public_theorems - declared_in_verify)
+    extra_audited = sorted(declared_in_verify - public_theorems)
+    assert not unaudited and not extra_audited, (
+        f"Public Lean theorem audit mismatch! Unaudited={unaudited}, Extra={extra_audited}"
+    )
+
+    # Lean 4 audit transcript check (250+ declarations + 6-kernel comparator verdict; multi-line wrap safe)
     audit_path = ROOT / "results" / "lean4-audit.txt"
     audit_text = audit_path.read_text(encoding="utf-8")
     assert "sorryAx" not in audit_text, "sorryAx found in Lean 4 audit!"
@@ -843,10 +883,34 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
             assert used.issubset(allowed), f"Forbidden axiom in line: {line}"
         elif "does not depend on any axioms" in line:
             audited += 1
-    assert audited >= 202, f"Expected >= 202 audited Lean declarations, found {audited}"
+    assert audited >= 250, f"Expected >= 250 audited Lean declarations, found {audited}"
     assert "comparator" in audit_text.lower() or "nanoda" in audit_text.lower(), (
         "results/lean4-audit.txt missing multi-kernel comparator verification output"
     )
+
+    # Automated internal Markdown relative link integrity check (F91)
+    broken_links: list[str] = []
+    md_files = [
+        p
+        for p in ROOT.rglob("*.md")
+        if ".git" not in p.parts and "node_modules" not in p.parts and ".lake" not in p.parts
+    ]
+    link_re = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)")
+    for md in md_files:
+        text = md.read_text(encoding="utf-8")
+        # Strip fenced code blocks and inline backtick spans before extracting markdown links
+        text = re.sub(r"```[\s\S]*?```", "", text)
+        text = re.sub(r"`[^`\n]+`", "", text)
+        for target in link_re.findall(text):
+            if target.startswith(("http://", "https://", "mailto:", "#", "data:")):
+                continue
+            rel_target = target.split("#", 1)[0].split("?", 1)[0]
+            if not rel_target:
+                continue
+            resolved = (md.parent / rel_target).resolve()
+            if not resolved.exists():
+                broken_links.append(f"{md.relative_to(ROOT)} -> {target}")
+    assert not broken_links, f"Broken internal markdown links detected: {broken_links[:10]}"
 
     # Citation audit artifact check (Playbook Pass 5 / Item 16)
     cit_path = ROOT / "results" / "citation-audit.json"

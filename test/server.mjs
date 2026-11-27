@@ -66,7 +66,7 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
     const payload = JSON.parse(health.body);
     assert.equal(payload.status, 'ok');
     assert.equal(payload.service, 'ultrametrica');
-    assert.equal(payload.version, '1.7.0');
+    assert.equal(payload.version, '1.8.0');
     assert.equal(typeof payload.uptime_s, 'number');
 
     // 2. Root & /blueprint redirects preserving query permalink
@@ -77,14 +77,19 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
     assert.equal(bpRedir.status, 302);
     assert.equal(bpRedir.headers.location, '/web/blueprint.html');
 
-    // 3. Static HTML + Blueprint HTML + Security Headers (CSP, nosniff, CORP, Referrer-Policy)
+    // 3. Static HTML + Blueprint HTML + Favicon SVG (F86) + Security Headers (CSP, nosniff, CORP, Referrer-Policy)
     const idx = await rawRequest(port, 'GET', '/web/');
     assert.equal(idx.status, 200);
     assert.match(idx.headers['content-type'], /^text\/html/);
     assert.ok(idx.body.includes('ULTRAMETRICA'));
+    assert.ok(idx.body.includes('favicon.svg'));
     for (const [k, v] of Object.entries(SECURITY_HEADERS)) {
       assert.equal(idx.headers[k.toLowerCase()], v, `Missing/mismatched security header ${k}`);
     }
+    const fav = await rawRequest(port, 'GET', '/web/favicon.svg');
+    assert.equal(fav.status, 200);
+    assert.match(fav.headers['content-type'], /^image\/svg\+xml/);
+    assert.ok(fav.body.includes('<svg'));
     const bp = await rawRequest(port, 'GET', '/web/blueprint.html');
     assert.equal(bp.status, 200);
     assert.match(bp.headers['content-type'], /^text\/html/);

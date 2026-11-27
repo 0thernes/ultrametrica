@@ -18,6 +18,7 @@ function prepHiDPI(canvas) {
     canvas.height = h;
   }
   const ctx = canvas.getContext('2d');
+  if (!ctx) return { ctx: null, W: canvas.clientWidth, H: canvas.clientHeight };
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   return { ctx, W: canvas.clientWidth, H: canvas.clientHeight };
 }
@@ -43,6 +44,7 @@ export class RealitySplitPanel {
   render(sim) {
     this._lastSim = sim;
     const { ctx, W, H } = prepHiDPI(this.canvas);
+    if (!ctx) return;
     ctx.clearRect(0, 0, W, H);
 
     const q = sim.quantum;
@@ -186,6 +188,7 @@ export class PontryaginSpectrumPanel {
 
   render(sim) {
     const { ctx, W, H } = prepHiDPI(this.canvas);
+    if (!ctx) return;
     ctx.clearRect(0, 0, W, H);
 
     const q = sim.quantum;
@@ -280,6 +283,7 @@ export class UltrametricTrianglePanel {
 
   render(sim) {
     const { ctx, W, H } = prepHiDPI(this.canvas);
+    if (!ctx) return;
     ctx.clearRect(0, 0, W, H);
 
     const proof = sim.triangleProof;

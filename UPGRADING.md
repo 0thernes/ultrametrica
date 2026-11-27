@@ -1,5 +1,23 @@
 # Upgrading Guide
 
+## Upgrading `v1.7.0` → `v1.8.0`
+
+### New Formal Modules, 100% Public Coverage, UI/Engine Hardening & Node-24-Clean CI
+1. **Three New Zero-Mathlib Lean 4.35.0 Modules + 100.0% Public Theorem Coverage (`F87`–`F90`):**
+   - `lean/UltrametricaProofs/FullGraphBTZ.lean` (`6` decls, Target 13, `F88`) proving the literal `(p+2)×(p+2)` full-graph-to-3-class BTZ optimal-transport symmetry reduction and existential non-negative attaining plan.
+   - `lean/UltrametricaProofs/OperatorAndSpectrum.lean` (`21` decls, Target 14, `F89`) proving operator-level block-diagonality of symmetry-commuting operators and odd-prime orthogonal doublet multiplicity $\ge 2$ over $\mathbb{Z}[i]^N$.
+   - `lean/UltrametricaProofs/BulkOperatorPositivity.lean` (`8` decls, Target 15, `F90`) proving strict positive definiteness $T \succ 0$ of the gauge-covariant bulk graph Laplacian ($m^2 > 0$), end-to-end Sherman-Morrison $\mathrm{den} \ge 1$ discharge, and exact `RatQ` tree Schur-complement pivot positivity & elimination.
+   - All `250/250` public theorems across all 11 proof modules + `Solution.lean` (`15` isolated comparator targets bridged cleanly via `SolutionBridge.lean`) are audited in `VerifyAxioms.lean` and enforced automatically by `scripts/verify_exact.py` (`0` unaudited public theorems; all 17 `.lean` files `< 1,000` lines). Note that `lake build` now includes `SolutionBridge`: `lake build UltrametricaProofs SolutionBridge Challenge Solution`.
+2. **Engine Validation & Zero-GC Guards (`F93`, `F94`):**
+   - `UltrametricaSimulation` (`src/engine/simulation.js`) adds prime-aware `_defaultBtzDepth(p, n)`, reuses a preallocated `_rtScratch` `Uint8Array`, and rejects non-finite `backreactionStrength`/`newtonG` in `step()`.
+   - `PadicQuantumEngine` (`src/engine/quantum.js`) validates `space instanceof PadicSpace` in its constructor (`TypeError`) and checks finiteness inside `computeDiagnostics()`.
+3. **Favicon (`F86`) & 7 Browser UI / Canvas / WebAudio Fixes (`F96`):**
+   - Added `src/web/favicon.svg` (linked in `index.html` and `blueprint.html`, verified HTTP `200` in `test/server.mjs`), eliminating browser `/favicon.ico` 404s.
+   - Fixed paused 2D-canvas click HUD sync, URL hydration diagnostics, unchecked Dynamic Gravity resetting geometry (`sim.bulk.resetGravity()`), explicit `p=2` Alt+Click `charM` clamping, keyboard shortcut guards for `TEXTAREA`/`SELECT`/`isContentEditable`/open `#helpModal`, 2D canvas `ctx` null guards in `panels2d.js`, and half-initialized `AudioContext` cleanup on `addModule()` failure in `audio.js`.
+4. **Expanded Mutation Suite (`12/12`), Automated Link Check (`F91`) & Node-24-Clean CI (`F97`):**
+   - `test/mutants.mjs` adds production mutants `M11` & `M12` in `src/engine/padic.js` -> **`36/36` Node tests PASS**.
+   - `scripts/verify_exact.py` now checks all internal Markdown links across the repository (`0` broken links) and 100.0% public Lean theorem audit coverage; all 3 GitHub Actions workflows upgraded to Node-24-clean actions (`checkout@v5`, `setup-node@v5`, `setup-python@v6`, `upload-artifact@v5`, `upload-pages-artifact@v4`).
+
 ## Upgrading `v1.6.0` → `v1.7.0`
 
 ### New Formal Modules, Verification Gates & Behavioral Guards
