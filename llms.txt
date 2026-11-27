@@ -1,9 +1,9 @@
 # ULTRAMETRICA
 
-> Zero-dependency real-time discrete $p$-adic AdS/CFT (Bruhat-Tits tree) holography laboratory featuring rotating Tate-curve Kerr-BTZ quotients, Kozyrev wavelets, 48 kHz AudioWorklet sonification, and 148 audited pure Lean 4.35.0 Palomar `module` declarations about the discrete model (104 core theorems + 29 zero-Mathlib helper lemmas + 5 adversarial refutations + 10 isolated comparator bindings verified across 6 independent Lean kernels via `lake comparator --paranoid`; all 11 files < 1,000 lines). No physical, continuum, or quantum-gravity statement is proved, and no open problem is retired.
+> Zero-dependency real-time discrete $p$-adic AdS/CFT (Bruhat-Tits tree) holography laboratory featuring rotating Tate-curve Kerr-BTZ quotients, Kozyrev wavelets, 48 kHz AudioWorklet sonification, and 202 audited pure Lean 4.35.0 Palomar `module` declarations about the discrete model (127 core theorems + 56 zero-Mathlib helper lemmas + 7 adversarial refutations across 8 proof modules + 12 isolated comparator bindings verified across 6 independent Lean kernels via `lake comparator --paranoid` + live negative tamper-rejection gate; all 13 files < 1,000 lines). No physical, continuum, or quantum-gravity statement is proved, and no open problem is retired.
 
 - Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID `0009-0006-8168-9648`)
-- Version: `1.6.0`
+- Version: `1.7.0`
 - Repository: https://github.com/0thernes/ultrametrica
 - Live Observatory: https://0thernes.github.io/ultrametrica/
 - Live Lean Proof Blueprint: https://0thernes.github.io/ultrametrica/web/blueprint.html
@@ -17,7 +17,8 @@
 - [LIMITATIONS.md](LIMITATIONS.md): Honest scope boundaries, literal-vs-metaphor table, and finite-$N$ limits
 - [DEVIATIONS.md](DEVIATIONS.md): Transparent pre-registration deviation log separating confirmatory vs. exploratory Experiment I statistics
 - [REPLICATION.md](REPLICATION.md): Independent replication protocol and dated replication log
-- [VERIFICATION.md](VERIFICATION.md): 8-layer verification architecture (Lean 4, 6-kernel comparator, Python exact rational, 32 Node tests incl. true source mutation, B15 fuzz & B19 concurrency)
+- [VERIFICATION.md](VERIFICATION.md): 9-layer verification architecture (Lean 4, 6-kernel comparator, live negative tamper gate, Python exact rational, 34 Node tests incl. 10/10 true source mutants, B15 fuzz, B19 concurrency & dual RFC 3161/Bitcoin timestamps)
+- [SUBMISSION_READINESS.md](SUBMISSION_READINESS.md): Playbook `v1.3` 43-item Gold Standard self-audit & honest venue readiness matrix
 - [SUMMARY.md](SUMMARY.md): Concise executive research summary
 - [ERRATA.md](ERRATA.md): Correction ledger and withdrawal policy
 
@@ -26,9 +27,10 @@
 - [paper/main.tex](paper/main.tex): Publication-grade AMS-LaTeX preprint (`dist/Donahue_2026_Ultrametrica.pdf`)
 - [paper/WHITE_PAPER.md](paper/WHITE_PAPER.md): Markdown white paper synchronized with `paper/main.tex`
 - [docs/MEGA_ATLAS_CROSSCHECK.md](docs/MEGA_ATLAS_CROSSCHECK.md): Honest cross-check against all 1,900 problems in `0thernes/unsolved-problems-mega-atlas` (`0/1,900` full solutions; discrete sub-results on `SUB-032`)
-- [docs/LITERATURE_SEARCH.md](docs/LITERATURE_SEARCH.md): Dated prior-art anti-rediscovery log & live Crossref DOI/retraction audit (`18/18` HTTP 200, `0` retractions)
+- [docs/LITERATURE_SEARCH.md](docs/LITERATURE_SEARCH.md): Dated prior-art anti-rediscovery log & live Crossref DOI/retraction audit (`results/citation-audit.json`: `18/18` HTTP 200, min Jaccard `1.00`, `0` retractions)
 - [docs/preregistration.md](docs/preregistration.md): Git-sealed preregistration for Experiment I (`c171b1b`) & §3 deviations
-- [docs/statement-fidelity.md](docs/statement-fidelity.md): Line-by-line Lean 4 statement fidelity, 4-bucket accounting & 8/8 non-vacuity audit
+- [docs/statement-fidelity.md](docs/statement-fidelity.md): Line-by-line Lean 4 statement fidelity, 4-bucket accounting & 10/10 non-vacuity audit
+- [docs/reviews/2026-11-26-hardening-cycles-v170.md](docs/reviews/2026-11-26-hardening-cycles-v170.md): `v1.7.0` 3-cycle hardening dossier (`F66`–`F83+` across all 10 classes)
 - [docs/reviews/2026-11-26-hardening-cycles-v160.md](docs/reviews/2026-11-26-hardening-cycles-v160.md): `v1.6.0` 3-cycle hardening dossier (`F37`–`F65` across all 10 classes)
 - [docs/reviews/2026-11-25-hardening-cycles.md](docs/reviews/2026-11-25-hardening-cycles.md): `v1.4.0`–`v1.5.0` hardening dossier (`F01`–`F36`)
 

@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Run all 32 Node tests (10 theorems, 8 real source mutants, properties, 1,000 fuzz, concurrency/AudioWorklet race, server, golden)
+      - name: Run all 34 Node tests (10 theorems, 10 real source mutants, properties, 1,000 fuzz, concurrency/AudioWorklet race, server, golden)
         run: npm run verify:all
       - name: Run all 3 runnable examples
         run: npm run examples
@@ -43,7 +43,9 @@ jobs:
         run: python scripts/check_citations.py
       - name: Run interactive Lean 4 Proof Blueprint declaration guard
         run: python scripts/check_blueprint.py
-      - name: Run independent exact-rational falsifier (Thm I-VI) & SHA-256 checksums
+      - name: Verify dual RFC 3161 DigiCert (.tsr) + Bitcoin OpenTimestamps (.ots) receipts
+        run: python scripts/stamp_manifest.py --verify
+      - name: Run independent exact-rational falsifier (Thm I-VII) & SHA-256 checksums
         run: python scripts/verify_exact.py --check-checksums
       - name: Verify cryptographic SHA-256 manifests with standard sha256sum (before fresh benchmark regeneration)
         if: runner.os == 'Linux'
@@ -79,7 +81,7 @@ jobs:
         continue-on-error: true
         run: |
           npx --yes -p typescript tsc --noEmit -p jsconfig.json
-      - name: Live Crossref DOI, retraction & public URL audit (report-only)
+      - name: Live Crossref DOI, title/author fidelity, retraction & public URL audit (report-only)
         continue-on-error: true
         run: python scripts/check_citations.py --live
       - name: Install Python static analyzers (report-only)
@@ -101,7 +103,7 @@ jobs:
         run: bash scripts/audit-repo.sh .
 
   lean4-six-kernel-audit:
-    name: Lean 4 (v4.35.0) 148-Decl Audit & 6-Kernel lake check + comparator --paranoid
+    name: Lean 4 (v4.35.0) 202-Decl Audit, Negative Tamper Gate & 6-Kernel lake check + comparator --paranoid
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -129,7 +131,7 @@ jobs:
                   raise SystemExit(f"ERROR: Forbidden token '{m.group(0)}' in executable code of {p}")
           print(f"PASS: Zero forbidden Lean tokens across {len(files)} sorry-free files.")
           PY
-      - name: Clean-build UltrametricaProofs, Challenge & Solution + audit 148 axioms + leanchecker
+      - name: Clean-build UltrametricaProofs, Challenge & Solution + audit 202 axioms + leanchecker
         working-directory: lean
         shell: bash
         run: |
@@ -141,9 +143,14 @@ jobs:
           lake env leanchecker --fresh Solution
           python3 - <<'PY'
           allowed = {"propext", "Classical.choice", "Quot.sound"}
+          logical = []
+          for raw in open("../results/lean-audit-ci.log", encoding="utf-8"):
+              if raw.startswith(" ") and logical:
+                  logical[-1] = logical[-1] + " " + raw.strip()
+              else:
+                  logical.append(raw.strip())
           count = 0
-          for line in open("../results/lean-audit-ci.log", encoding="utf-8"):
-              line = line.strip()
+          for line in logical:
               if any(bad in line for bad in ("sorryAx", "Lean.ofReduceBool", "_native")):
                   raise SystemExit(f"ERROR: Forbidden axiom detected: {line}")
               if "depends on axioms:" in line:
@@ -153,7 +160,7 @@ jobs:
                       raise SystemExit(f"ERROR: Forbidden axiom {used - allowed} in: {line}")
               elif "does not depend on any axioms" in line:
                   count += 1
-          assert count >= 148, f"Expected >= 148 audited declarations, got {count}"
+          assert count >= 202, f"Expected >= 202 audited declarations, got {count}"
           print(f"PASS: All {count} Lean 4 declarations strictly within {sorted(allowed)} (or zero axioms).")
           PY
       - name: Run Palomar lake check --paranoid & 6-kernel lake comparator --paranoid (bubblewrap sandbox)
@@ -162,6 +169,8 @@ jobs:
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
           lake check --paranoid
           lake comparator --config comparator.json --paranoid
+      - name: Run live negative Lean tamper-rejection gate (sorry & weakened target rejection via lake comparator)
+        run: python3 scripts/test_lean_negative.py --with-comparator
       - name: SLSA build provenance attestation for Lean audit log
         uses: actions/attest-build-provenance@v2
         continue-on-error: true
@@ -169,7 +178,7 @@ jobs:
           subject-path: results/lean-audit-ci.log
 
   latex-manuscript-and-arxiv:
-    name: AMS-LaTeX Zero-Warning PDF & Standalone arXiv Tarball Check (Tectonic)
+    name: AMS-LaTeX Zero-Warning PDF & Deterministic Standalone arXiv Tarball Check (Tectonic)
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:

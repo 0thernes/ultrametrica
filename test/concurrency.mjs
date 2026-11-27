@@ -1,5 +1,5 @@
 /**
- * ULTRAMETRICA (v1.6.0) — Concurrency, Async Burst & AudioWorklet Race Suite (Build Standard B19, F54).
+ * ULTRAMETRICA (v1.7.0) — Concurrency, Async Burst & AudioWorklet Race Suite (Build Standard B19, F54).
  *
  * Exercises concurrent async execution paths in ULTRAMETRICA:
  *   1. 100 simultaneous in-flight HTTP requests against live `server.mjs` mixing `/healthz`,

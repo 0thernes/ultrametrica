@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_SRC_ROOT = path.resolve(__dirname, 'src');
 const VERSION_PATH = path.resolve(__dirname, 'VERSION');
-let DEFAULT_VERSION = '1.6.0';
+let DEFAULT_VERSION = '1.7.0';
 try {
   DEFAULT_VERSION = readFileSync(VERSION_PATH, 'utf8').trim() || DEFAULT_VERSION;
 } catch {}
@@ -86,10 +86,10 @@ export function createUltrametricaServer({
         return;
       }
 
-      if (rawUrl.startsWith('//')) {
+      if (rawUrl.length > 4096 || /[\x00-\x1f\x7f]/.test(rawUrl) || rawUrl.startsWith('//')) {
         res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
         res.end('Bad Request');
-        emitLog('warn', { reqId, method, url: rawUrl, status: 400, reason: 'protocol_relative_url' });
+        emitLog('warn', { reqId, method, url: rawUrl.slice(0, 128), status: 400, reason: 'invalid_or_oversized_url' });
         return;
       }
 

@@ -1,5 +1,5 @@
 /**
- * ULTRAMETRICA (v1.6.0) — TRUE Source-Code Mutation Testing Suite (Build Standard B13, F52).
+ * ULTRAMETRICA (v1.7.0) — TRUE Source-Code Mutation Testing Suite (Build Standard B13, F52, F83).
  *
  * Unlike synthetic mock tests, EVERY mutant below copies the real production `src/` tree
  * and real `test/verify.mjs` into an isolated temporary directory, mutates ONE real line
@@ -7,14 +7,16 @@
  * REAL verification suite (`node --test test/verify.mjs`) in a subprocess, and asserts
  * non-zero exit (mutant KILLED) and cleanup in `finally`.
  *
- *   M1 (`padic.js`):      Flip Radix-p FFT butterfly root imaginary sign
- *   M2 (`holography.js`): Drop asymptotic root Robin impedance term
- *   M3 (`holography.js`): Break BTZ horizon shortest-path ring metric feeding Dijkstra W1
- *   M4 (`holography.js`): Flip Kerr-BTZ gauge conjugation sign on subdiagonal
- *   M5 (`quantum.js`):    Downgrade 4th-order Yoshida weights to 2nd-order Strang
- *   M6 (`holography.js`): Break 2-case BTZ horizon-ring Ryu-Takayanagi Cycle DP
- *   M7 (`holography.js`): Replace symmetric Jacobi `_sigmaSnap` with in-place Gauss-Seidel
- *   M8 (`holography.js`): Drop `Math.abs` in bridge Wasserstein (breaks Theorem V supercritical pinch)
+ *   M1  (`padic.js`):      Flip Radix-p FFT butterfly root imaginary sign
+ *   M2  (`holography.js`): Drop asymptotic root Robin impedance term
+ *   M3  (`holography.js`): Break BTZ horizon shortest-path ring metric feeding Dijkstra W1
+ *   M4  (`holography.js`): Flip Kerr-BTZ gauge conjugation sign on subdiagonal
+ *   M5  (`quantum.js`):    Downgrade 4th-order Yoshida weights to 2nd-order Strang
+ *   M6  (`holography.js`): Break 2-case BTZ horizon-ring Ryu-Takayanagi Cycle DP
+ *   M7  (`holography.js`): Replace symmetric Jacobi `_sigmaSnap` with in-place Gauss-Seidel
+ *   M8  (`holography.js`): Drop `Math.abs` in bridge Wasserstein (breaks Theorem V supercritical pinch)
+ *   M9  (`holography.js`): Drop outer-arm transport term in curved tree Ollivier-Ricci curvature
+ *   M10 (`holography.js`): Zero out BTZ horizon cyclic wrap-around bond capacity in Ryu-Takayanagi DP
  */
 
 import test from 'node:test';
@@ -92,6 +94,22 @@ const MUTANTS = [
     target: 'w1 += auv * Math.abs(1.0 - wuv * invWu - wuv * invWv);',
     replacement: 'w1 += auv * (1.0 - wuv * invWu - wuv * invWv);',
     expectedTheorem: 'Theorem 10',
+  },
+  {
+    id: 'M9',
+    name: 'Dropping outer-arm transport mass in curved tree Ollivier-Ricci breaks Theorem 9 & 10',
+    relFile: 'src/engine/holography.js',
+    target: 'w1 += a[x.edge] * (w[x.edge] * invWu);',
+    replacement: 'w1 += 0;',
+    expectedTheorem: 'Theorem 9',
+  },
+  {
+    id: 'M10',
+    name: 'Zeroing BTZ horizon wrap-around bond capacity breaks cyclic Ryu-Takayanagi min-cut (Theorem 8)',
+    relFile: 'src/engine/holography.js',
+    target: 'const capWrap = w[this.horizonEdges[L - 1]] * lnP;',
+    replacement: 'const capWrap = 0;',
+    expectedTheorem: 'Theorem 8',
   },
 ];
 

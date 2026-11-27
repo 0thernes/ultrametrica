@@ -413,22 +413,29 @@ elChkGravity.addEventListener('change', () => {
     sim.bulk.sigmaVel.fill(0);
     sim.syncBulkAndMetrics();
   }
+  updateTelemetryDOM();
 });
 
 elSldAlpha.addEventListener('input', () => {
   sim.quantum.setAlpha(parseFloat(elSldAlpha.value));
   elValAlpha.textContent = sim.quantum.alpha.toFixed(2);
   elCaptionFormula.textContent = getExperimentFormula(sim.activeExperiment);
+  sim.quantum.computeDiagnostics();
+  updateTelemetryDOM();
 });
 
 elSldAdelic.addEventListener('input', () => {
   sim.quantum.adelicMix = parseFloat(elSldAdelic.value);
   elValAdelic.textContent = sim.quantum.adelicMix.toFixed(2);
+  sim.quantum.computeDiagnostics();
+  updateTelemetryDOM();
 });
 
 elSldNonlin.addEventListener('input', () => {
   sim.quantum.nonlinearity = parseFloat(elSldNonlin.value);
   elValNonlin.textContent = sim.quantum.nonlinearity.toFixed(1);
+  sim.quantum.computeDiagnostics();
+  updateTelemetryDOM();
 });
 
 elSldDelta.addEventListener('input', () => {
@@ -449,17 +456,20 @@ elSldGravity.addEventListener('input', () => {
   }
   sim.backreactionStrength = Math.min(1.5, sim.newtonG * 0.65);
   elValGravity.textContent = sim.newtonG.toFixed(2);
+  updateTelemetryDOM();
 });
 
 elSldFlux.addEventListener('input', () => {
   sim.bulk.horizonFlux = parseFloat(elSldFlux.value);
   sim.syncBulkAndMetrics();
   elValFlux.textContent = `${sim.bulk.horizonFlux.toFixed(2)} rad`;
+  updateTelemetryDOM();
 });
 
 elSldRT.addEventListener('input', () => {
   sim.setRTRegionFraction(parseFloat(elSldRT.value));
   elValRT.textContent = `${Math.round(sim.rtFraction * 100)}%`;
+  updateTelemetryDOM();
 });
 
 // ---- 3D Raycast Hover & Click Interactions ----
@@ -491,6 +501,7 @@ renderer.onPickClick = (hit, evt) => {
       const w = sim.injectAtNode(hit.node, 1 + (evt.altKey ? 1 : 0), evt.shiftKey);
       const pan = (w.ballIndex + 0.5) / Math.max(1, sim.space.powP[w.j]);
       audio.pluck(w.j + 1, pan, 0.95);
+      updateTelemetryDOM();
     }
   } else if (activeTool === 'surgery') {
     const targetEdge = hit.edge >= 0 ? hit.edge : hit.node >= 0 ? sim.bulk.parentEdge[hit.node] : -1;
@@ -500,6 +511,7 @@ renderer.onPickClick = (hit, evt) => {
       sim.backreactionStrength = Math.max(sim.backreactionStrength, 1.0);
       sim.syncBulkAndMetrics();
       audio.pluck(1, 0.5, 0.65);
+      updateTelemetryDOM();
     }
   } else if (activeTool === 'rt') {
     if (hit.leaf >= 0) {

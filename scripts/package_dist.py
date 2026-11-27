@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA — Release PDF & Standalone arXiv Tarball Packager + Verifier.
+ULTRAMETRICA (v1.7.0) — Release PDF & Deterministic Standalone arXiv Tarball Packager + Verifier.
 
 1. Compiles paper/main.tex via Tectonic (--keep-intermediates --keep-logs).
-2. Copies the frozen release PDF to dist/Donahue_2026_Ultrametrica.pdf.
-3. Packages dist/arxiv_submission.tar.gz containing main.tex, main.bbl, refs.bib,
-   and all vector figures paper/figures/*.pdf.
-4. Extracts dist/arxiv_submission.tar.gz into a fresh temporary directory and
-   verifies standalone compilation via Tectonic with zero errors.
+2. Asserts zero LaTeX warnings / overfull / underfull / undefined references.
+3. Copies the frozen release PDF to dist/Donahue_2026_Ultrametrica.pdf.
+4. Packages a BIT-IDENTICAL deterministic dist/arxiv_submission.tar.gz (normalized uid/gid=0,
+   uname/gname="", mtime=0, mode=0644, gzip mtime=0 — closes F81) containing main.tex, main.bbl,
+   refs.bib, and all vector figures paper/figures/*.pdf.
+5. Extracts dist/arxiv_submission.tar.gz into a fresh temporary directory and verifies standalone
+   compilation via Tectonic with zero errors.
 """
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import shutil
 import subprocess
@@ -41,6 +44,16 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: f.read(65536), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def normalize_tarinfo(ti: tarfile.TarInfo) -> tarfile.TarInfo:
+    ti.uid = 0
+    ti.gid = 0
+    ti.uname = ""
+    ti.gname = ""
+    ti.mtime = 0
+    ti.mode = 0o644
+    return ti
 
 
 def main() -> None:
@@ -75,14 +88,18 @@ def main() -> None:
     pdf_out = DIST / "Donahue_2026_Ultrametrica.pdf"
     shutil.copy2(BUILD / "main.pdf", pdf_out)
 
-    # 3. Package standalone arXiv tarball (main.tex + main.bbl + refs.bib + figures/*.pdf)
+    # 3. Package deterministic standalone arXiv tarball (uid/gid/mtime zeroed, gzip mtime=0)
     tar_out = DIST / "arxiv_submission.tar.gz"
-    with tarfile.open(tar_out, "w:gz") as tf:
-        tf.add(PAPER / "main.tex", arcname="main.tex")
-        tf.add(BUILD / "main.bbl", arcname="main.bbl")
-        tf.add(PAPER / "refs.bib", arcname="refs.bib")
+    with (
+        tar_out.open("wb") as raw_f,
+        gzip.GzipFile(filename="", mode="wb", fileobj=raw_f, mtime=0) as gz_f,
+        tarfile.open(fileobj=gz_f, mode="w") as tf,
+    ):
+        tf.add(PAPER / "main.tex", arcname="main.tex", filter=normalize_tarinfo)
+        tf.add(BUILD / "main.bbl", arcname="main.bbl", filter=normalize_tarinfo)
+        tf.add(PAPER / "refs.bib", arcname="refs.bib", filter=normalize_tarinfo)
         for fig_pdf in sorted((PAPER / "figures").glob("*.pdf")):
-            tf.add(fig_pdf, arcname=f"figures/{fig_pdf.name}")
+            tf.add(fig_pdf, arcname=f"figures/{fig_pdf.name}", filter=normalize_tarinfo)
 
     # 4. Verify standalone extraction & compilation in a fresh temporary directory
     with tempfile.TemporaryDirectory(prefix="ultrametrica_arxiv_check_") as tmpdir:
@@ -101,7 +118,7 @@ def main() -> None:
             print(check.stderr)
             raise RuntimeError("Standalone arXiv tarball failed compilation!")
 
-    print(f"[PASS] Standalone arXiv tarball verified in fresh temp dir: {tar_out.name}")
+    print(f"[PASS] Deterministic standalone arXiv tarball verified in fresh temp dir: {tar_out.name}")
     print(f"PDF SHA-256:   {sha256_file(pdf_out)}  dist/{pdf_out.name} ({pdf_out.stat().st_size:,} bytes)")
     print(f"ARXIV SHA-256: {sha256_file(tar_out)}  dist/{tar_out.name} ({tar_out.stat().st_size:,} bytes)")
 

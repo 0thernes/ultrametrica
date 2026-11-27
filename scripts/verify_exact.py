@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA (v1.6.0) — Independent Zero-Dependency Exact-Rational Falsifier,
+ULTRAMETRICA (v1.7.0) — Independent Zero-Dependency Exact-Rational Falsifier,
 Metadata/Affiliation/Citation Auditor & SHA-256 Manifest Verifier.
 
 Completely decoupled from both the JavaScript simulation engine and Lean 4 proofs.
@@ -9,14 +9,15 @@ to independently verify or falsify:
   - Theorem I + Proposition 4.2 modular picket-fence law
   - Theorem II exact rational bipartite optimal transport on 45 (p, L) BTZ horizons
   - Theorem IV exact Q(i) Rank-1 Sherman-Morrison Kerr-BTZ solve
-  - Theorem V single-edge + Theorem V-Global multi-edge curved AdS Gauss-Bonnet conservation & deficit
+  - Theorem V single-edge + Theorem V-Global multi-edge & finite-graph edge-sum Gauss-Bonnet
   - Theorem VI exact exhaustive brute-force holographic Ryu-Takayanagi Strong Subadditivity (SSA)
+  - Theorem VII exact integer discrete Vladimirov/ultrametric Kozyrev-Haar eigenfunctions & J-parity
   - Nested-comment/string-safe Lean 4 source scan (UltrametricaProofs + Solution)
-  - 148 audited Lean 4 declarations (104 core + 29 helpers + 5 adversarial + 10 isolated comparator targets)
+  - 202 audited Lean 4 declarations (127 core + 56 helpers + 7 adversarial + 12 isolated comparator targets)
   - Pre-registered Experiment I statistical evaluation (results/stats-eval.json) & perf benchmarks
-  - Citation / DOI / arXiv syntax validation in paper/refs.bib
+  - Citation / DOI / arXiv syntax & results/citation-audit.json validation
   - Cross-document version, ORCID, CFF 1.2.0 schema, legal & affiliation consistency
-  - Cryptographic CHECKSUMS.sha256 and data/MANIFEST.sha256 manifests
+  - Cryptographic CHECKSUMS.sha256, data/MANIFEST.sha256, and dual RFC 3161 (.tsr) + Bitcoin (.ots) stamps
 
 Usage:
   python scripts/verify_exact.py                  # Run all exact checks + verify manifests if present
@@ -43,6 +44,7 @@ DATA_MANIFEST_FILES = [
     "results/discovery-benchmarks.json",
     "results/stats-eval.json",
     "results/perf-benchmarks.json",
+    "results/citation-audit.json",
     "test/golden/baseline-snapshot.json",
 ]
 
@@ -66,6 +68,7 @@ MANIFEST_FILES = [
     "INDEX.md",
     "GLOSSARY.md",
     "VERIFICATION.md",
+    "SUBMISSION_READINESS.md",
     "CHANGELOG.md",
     "server.mjs",
     "docs/CLAIMS.md",
@@ -76,6 +79,7 @@ MANIFEST_FILES = [
     "docs/preregistration.md",
     "docs/statement-fidelity.md",
     "docs/reviews/2026-11-26-hardening-cycles-v160.md",
+    "docs/reviews/2026-11-26-hardening-cycles-v170.md",
     "src/engine/padic.js",
     "src/engine/holography.js",
     "src/engine/quantum.js",
@@ -106,6 +110,8 @@ MANIFEST_FILES = [
     "scripts/check_readme_axioms.py",
     "scripts/check_citations.py",
     "scripts/check_blueprint.py",
+    "scripts/test_lean_negative.py",
+    "scripts/stamp_manifest.py",
     "scripts/generate_figures.py",
     "scripts/package_dist.py",
     "lean/lean-toolchain",
@@ -122,12 +128,15 @@ MANIFEST_FILES = [
     "lean/UltrametricaProofs/AdelicSymmetry.lean",
     "lean/UltrametricaProofs/HolographyCurvature.lean",
     "lean/UltrametricaProofs/MultiEdgeHolography.lean",
+    "lean/UltrametricaProofs/FiniteGraphGaussBonnet.lean",
     "lean/UltrametricaProofs/SolitonAndSolver.lean",
+    "lean/UltrametricaProofs/VladimirovOperator.lean",
     "lean/UltrametricaProofs/AdversarialTests.lean",
     "results/lean4-audit.txt",
     "results/discovery-benchmarks.json",
     "results/stats-eval.json",
     "results/perf-benchmarks.json",
+    "results/citation-audit.json",
     "paper/main.tex",
     "paper/refs.bib",
     "paper/WHITE_PAPER.md",
@@ -811,15 +820,22 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
         m = forbidden_re.search(cleaned)
         assert m is None, f"Forbidden token '{m.group(0)}' in executable Lean code of {lf}"
 
-    # Lean 4 audit transcript check (120+ declarations + 6-kernel comparator verdict)
+    # Lean 4 audit transcript check (202+ declarations + 6-kernel comparator verdict; multi-line wrap safe)
     audit_path = ROOT / "results" / "lean4-audit.txt"
     audit_text = audit_path.read_text(encoding="utf-8")
     assert "sorryAx" not in audit_text, "sorryAx found in Lean 4 audit!"
     assert "Lean.ofReduceBool" not in audit_text, "Lean.ofReduceBool found in Lean 4 audit!"
     assert "_native" not in audit_text, "_native axiom found in Lean 4 audit!"
     allowed = {"propext", "Classical.choice", "Quot.sound"}
+    # Join Lean Format continuation lines (leading whitespace) onto the declaration line
+    logical_lines: list[str] = []
+    for raw_line in audit_text.splitlines():
+        if raw_line.startswith(" ") and logical_lines:
+            logical_lines[-1] = logical_lines[-1] + " " + raw_line.strip()
+        else:
+            logical_lines.append(raw_line)
     audited = 0
-    for line in audit_text.splitlines():
+    for line in logical_lines:
         if "depends on axioms:" in line:
             audited += 1
             bracket = line.split("[", 1)[1].rsplit("]", 1)[0]
@@ -827,10 +843,19 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
             assert used.issubset(allowed), f"Forbidden axiom in line: {line}"
         elif "does not depend on any axioms" in line:
             audited += 1
-    assert audited >= 148, f"Expected >= 148 audited Lean declarations, found {audited}"
+    assert audited >= 202, f"Expected >= 202 audited Lean declarations, found {audited}"
     assert "comparator" in audit_text.lower() or "nanoda" in audit_text.lower(), (
         "results/lean4-audit.txt missing multi-kernel comparator verification output"
     )
+
+    # Citation audit artifact check (Playbook Pass 5 / Item 16)
+    cit_path = ROOT / "results" / "citation-audit.json"
+    if cit_path.exists():
+        cit = json.loads(cit_path.read_text(encoding="utf-8"))
+        assert cit["doi_count"] >= 18, f"Expected >= 18 verified DOIs in citation-audit.json, got {cit['doi_count']}"
+        assert cit["retracted_count"] == 0, "Retracted citation detected in citation-audit.json!"
+        assert cit["min_title_jaccard"] >= 0.90, f"Low title Jaccard in citation-audit.json: {cit['min_title_jaccard']}"
+        assert cit["all_authors_matched"] is True
 
     # BibTeX syntax & identifier sanity check (Playbook Section 4)
     bib_text = (ROOT / "paper" / "refs.bib").read_text(encoding="utf-8")
@@ -920,6 +945,55 @@ def check_checksums(required: bool) -> None:
         print(f"[PASS] Cryptographic {rel_manifest}: {checked}/{checked} files verified bit-identical.")
 
 
+def verify_theorem_7_vladimirov_kozyrev_exact() -> None:
+    """
+    Independent exact-integer verification of Theorem VII:
+    Discrete radial ultrametric / Vladimirov convolution operator D_K on Z / p^n Z,
+    actual Kozyrev-Haar wavelets, scale-only exact eigenvalue identity, and [D_K, J] = 0.
+    """
+    def v_p_mod(p: int, n: int, d: int) -> int:
+        r = d % (p**n)
+        if r == 0:
+            return n
+        v = 0
+        while v < n and r % p == 0:
+            r //= p
+            v += 1
+        return v
+
+    checked = 0
+    for p, n in ((2, 4), (3, 3), (5, 2)):
+        N = p**n
+        K = [p ** (2 * (n - v)) for v in range(n + 1)]
+        for j in range(n):
+            m = n - j - 1
+            eig_formula = sum(K[j + 1 + v_p_mod(p, m, t)] for t in range(p**m)) - (p**m) * K[j]
+            a = [0] * p
+            a[0] = 1
+            a[1] = -1
+            for c in range(min(p**j, 4)):
+                psi = [a[(x // (p**j)) % p] if (x % (p**j) == c) else 0 for x in range(N)]
+                assert sum(psi) == 0
+                for x in range(N):
+                    val = sum(K[v_p_mod(p, n, (x - y) % N)] * psi[y] for y in range(N))
+                    assert val == eig_formula * psi[x], (
+                        f"FALSIFIED Theorem VII at p={p}, n={n}, j={j}, c={c}, x={x}: {val} != {eig_formula * psi[x]}"
+                    )
+                checked += 1
+        # Verify exact commutation [D_K, J] = 0 on an arbitrary asymmetric vector
+        f = [(x * 7 + 3) % 11 for x in range(N)]
+        jf = [f[N - 1 - x] for x in range(N)]
+        df = [sum(K[v_p_mod(p, n, (x - y) % N)] * f[y] for y in range(N)) for x in range(N)]
+        djf = [sum(K[v_p_mod(p, n, (x - y) % N)] * jf[y] for y in range(N)) for x in range(N)]
+        jdf = [df[N - 1 - x] for x in range(N)]
+        assert djf == jdf, f"FALSIFIED [D_K, J] = 0 at p={p}, n={n}"
+
+    print(
+        f"[PASS] Theorem VII (Exact Integer Discrete Vladimirov / Kozyrev-Haar & [D_K, J]=0): "
+        f"verified {checked} wavelets + J-commutation with ZERO rounding error."
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="ULTRAMETRICA independent exact-rational falsifier & checksum auditor.")
     parser.add_argument("--write-checksums", action="store_true", help="Regenerate CHECKSUMS.sha256 & data/MANIFEST.sha256")
@@ -931,6 +1005,7 @@ def main() -> None:
     verify_theorem_3_and_4_exact()
     verify_theorem_5_and_5global_exact()
     verify_theorem_6_holographic_ssa_exact()
+    verify_theorem_7_vladimirov_kozyrev_exact()
     verify_archived_benchmarks_and_lean_audit()
 
     if args.write_checksums:

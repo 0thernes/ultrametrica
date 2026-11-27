@@ -125,11 +125,13 @@ export class PadicSpace {
       this.stageTwiddleInvIm.push(iIm);
     }
 
-    // Scratch buffers for zero-allocation butterflies
+    // Scratch buffers for zero-allocation butterflies & Vladimirov operator
     this._tmpRe = new Float64Array(p);
     this._tmpIm = new Float64Array(p);
     this._fftWorkRe = new Float64Array(this.N);
     this._fftWorkIm = new Float64Array(this.N);
+    this._vladFreqRe = new Float64Array(this.N);
+    this._vladFreqIm = new Float64Array(this.N);
   }
 
   /**
@@ -378,7 +380,11 @@ export class PadicSpace {
     const n = this.n;
     const vTab = this.valuationTable;
     for (let k = 1; k < this.N; k++) {
-      spec[k] = p ** (alpha * (n - vTab[k]));
+      const val = p ** (alpha * (n - vTab[k]));
+      if (!Number.isFinite(val)) {
+        throw new RangeError(`Vladimirov eigenvalue overflowed float64 for p=${p}, n=${n}, alpha=${alpha}.`);
+      }
+      spec[k] = val;
     }
     return spec;
   }
@@ -398,7 +404,11 @@ export class PadicSpace {
     const N = this.N;
     for (let k = 1; k < N; k++) {
       const m = k <= N - k ? k : N - k;
-      spec[k] = (TWO_PI * m) ** alpha;
+      const val = (TWO_PI * m) ** alpha;
+      if (!Number.isFinite(val)) {
+        throw new RangeError(`Archimedean eigenvalue overflowed float64 for N=${N}, alpha=${alpha}.`);
+      }
+      spec[k] = val;
     }
     return spec;
   }
@@ -413,8 +423,8 @@ export class PadicSpace {
    */
   applyVladimirov(re, im, alpha, outRe, outIm) {
     const spec = this.vladimirovSpectrum(alpha);
-    const freqRe = new Float64Array(this.N);
-    const freqIm = new Float64Array(this.N);
+    const freqRe = this._vladFreqRe;
+    const freqIm = this._vladFreqIm;
     this.fft(re, im, freqRe, freqIm);
     for (let k = 0; k < this.N; k++) {
       freqRe[k] *= spec[k];

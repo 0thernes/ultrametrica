@@ -23,12 +23,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Verify full Node + Python + SHA-256 suite prior to publishing
+      - name: Verify full Node + Python + Timestamp + SHA-256 suite prior to publishing
         run: |
           npm run verify:all
           npm run examples
           python reference/padic_oracle.py
           python scripts/check_readme_axioms.py
+          python scripts/check_citations.py
+          python scripts/check_blueprint.py
+          python scripts/stamp_manifest.py --verify
           python scripts/verify_exact.py --check-checksums
       - name: Stage release artifacts and compute SHA256SUMS
         run: |
@@ -39,7 +42,10 @@ jobs:
           cp results/discovery-benchmarks.json release-assets/
           cp results/stats-eval.json release-assets/
           cp results/perf-benchmarks.json release-assets/
+          cp results/citation-audit.json release-assets/
           cp CHECKSUMS.sha256 release-assets/
+          cp data/CHECKSUMS.sha256.tsr release-assets/
+          cp data/CHECKSUMS.sha256.ots release-assets/
           (cd release-assets && sha256sum * > SHA256SUMS)
           cat release-assets/SHA256SUMS
       - name: Generate SLSA build provenance attestation for release artifacts
@@ -50,6 +56,8 @@ jobs:
             release-assets/Donahue_2026_Ultrametrica.pdf
             release-assets/arxiv_submission.tar.gz
             release-assets/lean4-audit.txt
+            release-assets/CHECKSUMS.sha256.tsr
+            release-assets/CHECKSUMS.sha256.ots
             release-assets/SHA256SUMS
       - name: Create or update GitHub Release for tag
         if: startsWith(github.ref, 'refs/tags/v')

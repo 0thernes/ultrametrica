@@ -19,7 +19,13 @@ ROOT = Path(__file__).resolve().parent.parent
 def main() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     audit = (ROOT / "results" / "lean4-audit.txt").read_text(encoding="utf-8")
-    audit_lines = {line.strip() for line in audit.splitlines() if line.strip()}
+    logical_audit: list[str] = []
+    for raw in audit.splitlines():
+        if raw.startswith(" ") and logical_audit:
+            logical_audit[-1] = logical_audit[-1] + " " + raw.strip()
+        elif raw.strip():
+            logical_audit.append(raw.strip())
+    audit_lines = set(logical_audit)
 
     # Extract lines in README matching Lean `#print axioms` output format
     axiom_lines = [

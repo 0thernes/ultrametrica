@@ -1,18 +1,20 @@
 /**
- * ULTRAMETRICA v1.6.0 — Interactive Lean 4 Proof Blueprint DAG & Filter Controller.
+ * ULTRAMETRICA v1.7.0 — Interactive Lean 4 Proof Blueprint DAG & Filter Controller.
  * Zero external dependencies, strict CSP compliant (no inline scripts/styles).
  */
 
 const DAG_NODES = [
-  { id: 'spec', x: 30, y: 185, w: 175, h: 66, title: 'Spec.lean', sub: 'Pure defs (0 proofs)', kind: 'spec', card: 'mod-targets' },
-  { id: 'basic', x: 255, y: 28, w: 205, h: 66, title: 'Basic.lean (26)', sub: 'Ultrametric + Monna', kind: 'core', card: 'mod-basic' },
-  { id: 'adelic', x: 510, y: 28, w: 225, h: 66, title: 'AdelicSymmetry (23)', sub: 'Thm I & Prop 4.2', kind: 'core', card: 'mod-adelic' },
-  { id: 'btz', x: 255, y: 132, w: 205, h: 66, title: 'HolographyCurv (39)', sub: 'Thm II & V (L_c = 5)', kind: 'core', card: 'mod-btz' },
-  { id: 'vglobal', x: 510, y: 132, w: 225, h: 66, title: 'MultiEdgeHolo (33)', sub: 'Thm V-Global & VI', kind: 'core', card: 'mod-vglobal' },
-  { id: 'soliton', x: 255, y: 238, w: 205, h: 66, title: 'SolitonAndSolver (12)', sub: 'Thm III & IV (Kerr)', kind: 'core', card: 'mod-soliton' },
-  { id: 'adv', x: 510, y: 238, w: 225, h: 66, title: 'AdversarialTests (5)', sub: 'Sharpness Negations', kind: 'adv', card: 'mod-adv' },
-  { id: 'challenge', x: 255, y: 344, w: 205, h: 66, title: 'Challenge.lean (10)', sub: 'Statement-only targets', kind: 'target', card: 'mod-targets' },
-  { id: 'solution', x: 810, y: 185, w: 315, h: 78, title: 'Solution.lean + 6 Kernels', sub: '148 audited (104+29+5+10)', kind: 'target', card: 'mod-targets' },
+  { id: 'spec', x: 24, y: 225, w: 168, h: 64, title: 'Spec.lean', sub: 'Pure defs (0 proofs)', kind: 'spec', card: 'mod-targets' },
+  { id: 'basic', x: 232, y: 24, w: 205, h: 62, title: 'Basic.lean (26)', sub: 'Ultrametric + Monna', kind: 'core', card: 'mod-basic' },
+  { id: 'adelic', x: 486, y: 24, w: 230, h: 62, title: 'AdelicSymmetry (23)', sub: 'Thm I & Prop 4.2', kind: 'core', card: 'mod-adelic' },
+  { id: 'btz', x: 232, y: 112, w: 205, h: 62, title: 'HolographyCurv (39)', sub: 'Thm II & V (L_c = 5)', kind: 'core', card: 'mod-btz' },
+  { id: 'vglobal', x: 486, y: 112, w: 230, h: 62, title: 'MultiEdgeHolo (33)', sub: 'Thm V-Global & VI', kind: 'core', card: 'mod-vglobal' },
+  { id: 'fgraph', x: 486, y: 200, w: 230, h: 62, title: 'FiniteGraphGB (24)', sub: 'Edge-Sum Gauss-Bonnet', kind: 'core', card: 'mod-fgraph' },
+  { id: 'soliton', x: 232, y: 200, w: 205, h: 62, title: 'SolitonAndSolver (12)', sub: 'Thm III & IV (Kerr)', kind: 'core', card: 'mod-soliton' },
+  { id: 'vlad', x: 232, y: 288, w: 205, h: 62, title: 'VladimirovOp (26)', sub: 'Thm VII D_K + Kozyrev', kind: 'core', card: 'mod-vlad' },
+  { id: 'adv', x: 486, y: 288, w: 230, h: 62, title: 'AdversarialTests (7)', sub: 'Sharpness Negations', kind: 'adv', card: 'mod-adv' },
+  { id: 'challenge', x: 232, y: 396, w: 205, h: 64, title: 'Challenge.lean (12)', sub: 'Statement-only targets', kind: 'target', card: 'mod-targets' },
+  { id: 'solution', x: 800, y: 218, w: 336, h: 82, title: 'Solution.lean + 6 Kernels', sub: '202 audited (127+56+7+12)', kind: 'target', card: 'mod-targets' },
 ];
 
 const DAG_EDGES = [
@@ -20,14 +22,19 @@ const DAG_EDGES = [
   ['spec', 'solution'],
   ['basic', 'adelic'],
   ['basic', 'btz'],
+  ['basic', 'vlad'],
   ['btz', 'vglobal'],
+  ['vglobal', 'fgraph'],
   ['basic', 'adv'],
   ['adelic', 'adv'],
-  ['vglobal', 'adv'],
+  ['fgraph', 'adv'],
   ['soliton', 'adv'],
+  ['vlad', 'adv'],
   ['adelic', 'solution'],
   ['vglobal', 'solution'],
+  ['fgraph', 'solution'],
   ['soliton', 'solution'],
+  ['vlad', 'solution'],
   ['adv', 'solution'],
   ['challenge', 'solution'],
 ];
@@ -79,13 +86,13 @@ function renderDag() {
 
     const title = document.createElementNS(SVG_NS, 'text');
     title.setAttribute('x', String(node.x + 12));
-    title.setAttribute('y', String(node.y + 28));
+    title.setAttribute('y', String(node.y + 27));
     title.setAttribute('class', 'dag-title');
     title.textContent = node.title;
 
     const sub = document.createElementNS(SVG_NS, 'text');
     sub.setAttribute('x', String(node.x + 12));
-    sub.setAttribute('y', String(node.y + 49));
+    sub.setAttribute('y', String(node.y + 47));
     sub.setAttribute('class', 'dag-sub');
     sub.textContent = node.sub;
 

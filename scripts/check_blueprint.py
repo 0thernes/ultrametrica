@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA (v1.6.0) — Interactive Lean 4 Proof Blueprint Consistency Guard.
+ULTRAMETRICA (v1.7.0) — Interactive Lean 4 Proof Blueprint Consistency Guard.
 
 Verifies that:
   1. Every `data-lean-decl="..."` attribute in `src/web/blueprint.html` exists
      verbatim in `results/lean4-audit.txt` (zero stale/fabricated theorem names).
-  2. All 10 isolated comparator targets from `lean/comparator.json` appear in
+  2. All 12 isolated comparator targets from `lean/comparator.json` appear in
      `src/web/blueprint.html`.
   3. Zero inline `<script>` or `<style>` blocks exist in `src/web/blueprint.html`
      (strict CSP compliance with `server.mjs`).
@@ -34,17 +34,17 @@ def main() -> None:
     audited_decls = set(
         re.findall(r"^'([A-Za-z0-9_.]+)' (?:depends on axioms:|does not depend on any axioms)", audit, re.MULTILINE)
     )
-    if len(audited_decls) < 148:
+    if len(audited_decls) < 202:
         print(
-            f"[FAIL] Expected >= 148 audited declarations in results/lean4-audit.txt, found {len(audited_decls)}",
+            f"[FAIL] Expected >= 202 audited declarations in results/lean4-audit.txt, found {len(audited_decls)}",
             file=sys.stderr,
         )
         sys.exit(1)
 
     bp_decls = re.findall(r'data-lean-decl="([A-Za-z0-9_.]+)"', html)
-    if len(bp_decls) < 35:
+    if len(bp_decls) < 48:
         print(
-            f"[FAIL] Expected >= 35 linked declarations in src/web/blueprint.html, found {len(bp_decls)}",
+            f"[FAIL] Expected >= 48 linked declarations in src/web/blueprint.html, found {len(bp_decls)}",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -57,9 +57,9 @@ def main() -> None:
         sys.exit(1)
 
     comp_theorems = comp.get("theorem_names", [])
-    if len(comp_theorems) < 10:
+    if len(comp_theorems) < 12:
         print(
-            f"[FAIL] Expected >= 10 comparator targets in lean/comparator.json, found {len(comp_theorems)}",
+            f"[FAIL] Expected >= 12 comparator targets in lean/comparator.json, found {len(comp_theorems)}",
             file=sys.stderr,
         )
         sys.exit(1)

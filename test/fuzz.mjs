@@ -1,5 +1,5 @@
 /**
- * ULTRAMETRICA (v1.6.0) — Deterministic Fuzzing Suite (Build Standard B15, F53).
+ * ULTRAMETRICA (v1.7.0) — Deterministic Fuzzing Suite (Build Standard B15, F53).
  *
  * Exercises untrusted inputs across two live attack surfaces with fixed deterministic PRNG seeds:
  *   1. HTTP Parser & Static Sandbox (`server.mjs`): 500 fuzzed request targets, encodings,

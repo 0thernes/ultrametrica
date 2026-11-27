@@ -11,7 +11,9 @@
     "Ultrametrica.ComparatorTarget.target_thm5_kantorovich_dual",
     "Ultrametrica.ComparatorTarget.target_thm6_holographic_ssa",
     "Ultrametrica.ComparatorTarget.target_adversarial_refutations",
-    "Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses"
+    "Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses",
+    "Ultrametrica.ComparatorTarget.target_thm5_finite_graph_gauss_bonnet",
+    "Ultrametrica.ComparatorTarget.target_thm7_vladimirov_kozyrev_eigenfunction"
   ],
   "permitted_axioms": [
     "propext",

@@ -1,6 +1,6 @@
 # System Architecture (`docs/architecture.md`)
 
-> Build Standard `A20`. ULTRAMETRICA (`v1.6.0`) is engineered as a **zero-dependency**, cleanly layered mathematical-physics engine, real-time WebGL2/AudioWorklet observatory, interactive Lean 4 Proof Blueprint, and pure Lean 4 (`v4.35.0`, Palomar `module`) formal verification stack.
+> Build Standard `A20`. ULTRAMETRICA (`v1.7.0`) is engineered as a **zero-dependency**, cleanly layered mathematical-physics engine, real-time WebGL2/AudioWorklet observatory, interactive Lean 4 Proof Blueprint, and pure Lean 4 (`v4.35.0`, Palomar `module`) formal verification stack.
 
 ## 1. High-Level Layered Architecture
 
@@ -26,10 +26,10 @@ flowchart TD
     end
 
     subgraph VERIFY["Multi-Layer Independent Verification Stack"]
-        NODE["test/{verify,mutants,properties,server,golden,fuzz,concurrency}.mjs (32 Tests)"]
+        NODE["test/{verify,mutants,properties,server,golden,fuzz,concurrency}.mjs (34 Tests)"]
         PY["reference/padic_oracle.py + scripts/verify_exact.py (Exact Fraction & Q(i))"]
         STATS["scripts/{discover,bench,stats_eval}.mjs (Exp A-I + Perf)"]
-        LEAN["lean/ (148 Audited Lean 4.35.0 Decls across 6 Proof Modules + 6-Kernel Comparator)"]
+        LEAN["lean/ (202 Audited Lean 4.35.0 Decls across 8 Proof Modules + 6-Kernel Comparator)"]
         PAPER["paper/main.tex + scripts/{generate_figures,package_dist}.py (Zero-Warn PDF)"]
     end
 
@@ -48,7 +48,7 @@ flowchart TD
     NODE --> SERVER
     PY --> ENGINE
     STATS --> ENGINE
-    LEAN -.->|formal theorems Thm I-VI| ENGINE
+    LEAN -.->|formal theorems Thm I-VII| ENGINE
     STATS --> PAPER
     LEAN --> PAPER
 ```
@@ -67,9 +67,9 @@ flowchart TD
 - **`renderer3d.js`:** Zero-dependency WebGL2 GLSL 300 es renderer with cached uniform locations, shader link cleanup, `pointercancel` safety, ray-picking, `webglcontextlost`/`webglcontextrestored` recovery, and reduced-motion awareness.
 - **`panels2d.js`:** Canvas 2D twin oscilloscope, live ultrametric isosceles triangle prover, and Pontryagin shell spectrum.
 - **`audio.js` + `audio-worklet.js`:** Lock-free 48 kHz AudioWorklet synthesizing Vladimirov prime-power shells with $O(1)$ log-space frequency folding (`F65`), exponential click-free smoothing, and finite-value guards.
-- **`blueprint.html` + `blueprint.css` + `blueprint.js`:** Strict-CSP interactive Lean 4 Proof Blueprint & Dependency DAG (`54/54` key declarations + `10/10` targets checked by `scripts/check_blueprint.py`).
-- **`server.mjs`:** Hardened local static server enforcing strict `src/` + `fsImpl.realpath` symlink confinement, `GET`/`HEAD` allowlist, protocol-relative & control-char URL filters, strict CSP (`default-src 'self'`), fail-fast `PORT` validation (`parsePort`), single-source `VERSION`, `/healthz` JSON probe, and structured JSON logging (`LOG_FORMAT=json`).
+- **`blueprint.html` + `blueprint.css` + `blueprint.js`:** Strict-CSP interactive Lean 4 Proof Blueprint & Dependency DAG (`12/12` comparator targets and all 8 proof modules checked by `scripts/check_blueprint.py`).
+- **`server.mjs`:** Hardened local static server enforcing strict `src/` + `fsImpl.realpath` symlink confinement, `GET`/`HEAD` allowlist, URI length (`<= 4096`), protocol-relative & control-char URL filters, strict CSP (`default-src 'self'`), fail-fast `PORT` validation (`parsePort`), single-source `VERSION`, `/healthz` JSON probe, and structured JSON logging (`LOG_FORMAT=json`).
 
 ### Layer 3 — Formal Proofs (`lean/`) & Independent Oracles (`reference/`, `scripts/`)
-- **`lean/`:** Zero-Mathlib Lean 4 (`v4.35.0`, Palomar `module`, all 11 files `< 1,000` lines) split cleanly into statement-only definitions (`UltrametricaProofs/Spec.lean`), six sorry-free proof modules (`Basic`, `AdelicSymmetry`, `HolographyCurvature`, `MultiEdgeHolography`, `SolitonAndSolver`, `AdversarialTests`), `VerifyAxioms.lean` (`148` audited declarations = `104 core + 29 helpers + 5 adv + 10 isolated comparator bindings`), and isolated `Challenge.lean` / `Solution.lean` / `comparator.json` (`10` targets) audited via `lake check --paranoid` and 6-kernel `lake comparator --paranoid`.
-- **`reference/padic_oracle.py` & `scripts/verify_exact.py`:** Completely decoupled Python stdlib implementations verifying exact rational `fractions.Fraction` optimal transport, exact $\mathbb{Q}(i)$ linear solves, exact brute-force RT SSA, nested-comment-safe Lean audits, and SHA-256 manifests.
+- **`lean/`:** Zero-Mathlib Lean 4 (`v4.35.0`, Palomar `module`, all 13 files `< 1,000` lines) split cleanly into statement-only definitions (`UltrametricaProofs/Spec.lean`), eight sorry-free proof modules (`Basic`, `AdelicSymmetry`, `HolographyCurvature`, `MultiEdgeHolography`, `FiniteGraphGaussBonnet`, `SolitonAndSolver`, `VladimirovOperator`, `AdversarialTests`), `VerifyAxioms.lean` (`202` audited declarations = `127 core + 56 helpers + 7 adv + 12 isolated comparator bindings`), and isolated `Challenge.lean` / `Solution.lean` / `comparator.json` (`12` targets) audited via `lake check --paranoid`, 6-kernel `lake comparator --paranoid`, and live negative tamper-rejection (`scripts/test_lean_negative.py`).
+- **`reference/padic_oracle.py`, `scripts/verify_exact.py`, `scripts/check_citations.py`, `scripts/stamp_manifest.py`:** Completely decoupled Python stdlib implementations verifying exact rational `fractions.Fraction` optimal transport, exact discrete Vladimirov/Kozyrev wavelets, exact $\mathbb{Q}(i)$ linear solves, exact brute-force RT SSA, live Crossref DOI/title/author/retraction checks (`results/citation-audit.json`), nested-comment-safe Lean audits, SHA-256 manifests, and dual DigiCert RFC 3161 `.tsr` + Bitcoin `.ots` external timestamps.

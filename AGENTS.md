@@ -4,7 +4,7 @@
 
 ## 1. Project Identity & Scope
 
-- **Project:** **ULTRAMETRICA** (`0thernes/ultrametrica`, `v1.6.0`) — zero-dependency real-time discrete $p$-adic AdS/CFT (Bruhat-Tits tree) holography laboratory featuring rotating Tate-curve Kerr-BTZ black hole quotients, Kozyrev wavelets, 48 kHz prime-power AudioWorklet sonification, and pure Lean 4 (`v4.35.0`) checked discrete model invariants.
+- **Project:** **ULTRAMETRICA** (`0thernes/ultrametrica`, `v1.7.0`) — zero-dependency real-time discrete $p$-adic AdS/CFT (Bruhat-Tits tree) holography laboratory featuring rotating Tate-curve Kerr-BTZ black hole quotients, Kozyrev wavelets, 48 kHz prime-power AudioWorklet sonification, and pure Lean 4 (`v4.35.0`) checked discrete model invariants.
 - **Author & Affiliation:** Alexander Stephen Donahue (`Alexander S. Donahue`), ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648), **Independent Researcher, Spokane, WA, USA** (`0_0@0thernes.art`, `https://0thernes.art`, `https://github.com/0thernes`). Never assert `"0thernes LLC"` as a legal entity.
 - **License:** `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` ([`LICENSE`](LICENSE)). Keep attribution intact; see [`LEGAL.md`](LEGAL.md) and [`docs/adr/0005-cosmogonic-noncommercial-license.md`](docs/adr/0005-cosmogonic-noncommercial-license.md).
 
@@ -15,7 +15,7 @@
 - **R3 — Tests Block; Linters Report:** Functional, true source-code mutant, property, fuzz, concurrency, contract, golden, oracle, Lean 4 kernel/comparator, and Tectonic zero-warning PDF checks fail CI on broken invariants; style/static linters report without blocking.
 - **R4 — No Banned Files:** Never add Dependabot, Renovate, PR templates, Copilot instructions, `FUNDING.yml`, or `CODEOWNERS`.
 - **R5 — Ten-Class Finding Taxonomy:** Every audit or review finding MUST be tagged with one of the exact 10 classes: `bug`, `error`, `issue`, `problem`, `concern`, `dilemma`, `conflict`, `gap`, `hole`, `blindspot`.
-- **R6 — Never Fabricate:** Never invent measurements, p-values, citations/DOIs, peer-review claims, or badges. Distinguish strictly between `kernel-checked`, `exact-rational`, `numerical`, `pre-registered statistical`, and `prior work` tiers; report Lean declarations honestly in four buckets (`104 core + 29 helpers + 5 adv + 10 isolated bindings = 148`) without double-counting comparator bindings.
+- **R6 — Never Fabricate:** Never invent measurements, p-values, citations/DOIs, peer-review claims, or badges. Distinguish strictly between `kernel-checked`, `exact-rational`, `numerical`, `pre-registered statistical`, and `prior work` tiers; report Lean declarations honestly in four buckets (`127 core + 56 helpers + 7 adv + 12 isolated bindings = 202`) without double-counting comparator bindings.
 - **R7 — Lean 4 Kernel Integrity:** Zero `sorry`, `admit`, `axiom`, `native_decide`, `unsafe`, `implemented_by`, or `@[extern` in `lean/UltrametricaProofs.lean`, `lean/UltrametricaProofs/*.lean`, and `lean/Solution.lean` (`lean/Challenge.lean` intentionally holds specification `sorry`s matched by `lake comparator --paranoid`). All audited axioms strictly inside `[propext, Classical.choice, Quot.sound]`. Keep every `.lean` file `< 1,000` lines.
 - **R8 — Preserve Author License & Identity:** Keep `LICENSE` and canonical ORCID `0009-0006-8168-9648` synchronized everywhere.
 
@@ -26,17 +26,17 @@
 | `src/engine/` | Pure zero-dependency strict-JSDoc ES modules (`padic.js`, `holography.js`, `quantum.js`, `simulation.js`) |
 | `src/web/` | WebGL2 3D observatory (`renderer3d.js`), 2D panels (`panels2d.js`), 48 kHz AudioWorklet (`audio*.js`), WCAG 2.2 AA UI (`index.html`, `styles.css`, `app.js`), interactive Proof Blueprint (`blueprint.{html,css,js}`) |
 | `server.mjs` | Hardened static server with `/healthz`, `realpath` symlink confinement, strict CSP, fail-fast `PORT` validation, single-source `VERSION`, structured JSON logging |
-| `lean/` | Pure Lean `v4.35.0` formalization (Palomar `module`, 0 Mathlib, all 11 files `< 1,000` lines): `UltrametricaProofs/{Spec,Basic,AdelicSymmetry,HolographyCurvature,MultiEdgeHolography,SolitonAndSolver,AdversarialTests}.lean`, `VerifyAxioms.lean` (`148` audited decls), `Challenge.lean`, `Solution.lean`, `comparator.json` |
-| `test/` | `verify.mjs` (10 theorems), `mutants.mjs` (8 true source-code killed mutants), `properties.mjs` (3,400+ property/metamorphic/curved-BTZ Dijkstra stress cases), `server.mjs` (HTTP contract/realpath + EIO), `golden.mjs`, `fuzz.mjs` (1,000 B15 fuzz cases), `concurrency.mjs` (B19 HTTP + AudioWorklet VM storm) |
+| `lean/` | Pure Lean `v4.35.0` formalization (Palomar `module`, 0 Mathlib, all 13 files `< 1,000` lines): `UltrametricaProofs/{Spec,Basic,AdelicSymmetry,HolographyCurvature,MultiEdgeHolography,FiniteGraphGaussBonnet,SolitonAndSolver,VladimirovOperator,AdversarialTests}.lean`, `VerifyAxioms.lean` (`202` audited decls), `Challenge.lean`, `Solution.lean`, `comparator.json` |
+| `test/` | `verify.mjs` (10 theorems), `mutants.mjs` (**10** true source-code killed mutants), `properties.mjs` (3,400+ property/metamorphic/curved-BTZ Dijkstra stress cases), `server.mjs` (HTTP contract/realpath + EIO), `golden.mjs`, `fuzz.mjs` (1,000 B15 fuzz cases), `concurrency.mjs` (B19 HTTP + AudioWorklet VM storm) |
 | `reference/` | Independent textbook Python oracle (`padic_oracle.py`) |
-| `scripts/` | `verify_exact.py`, `check_readme_axioms.py`, `check_citations.py`, `check_blueprint.py`, `build_llms_full.py`, `discover.mjs`, `bench.mjs`, `stats_eval.mjs`, `generate_figures.py`, `package_dist.py`, `Audit-Repo.ps1`, `audit-repo.sh` |
-| `paper/` & `dist/` | AMS-LaTeX white paper (`main.tex`, `refs.bib`, `WHITE_PAPER.md`), 5 PGFPlots vector figures, frozen `dist/Donahue_2026_Ultrametrica.pdf` & `dist/arxiv_submission.tar.gz` |
-| `docs/` & root | `CLAIMS.md`, `LIMITATIONS.md`, `DEVIATIONS.md`, `REPLICATION.md`, `ERRATA.md`, `docs/{CLAIMS,MASTER_REPORT,AUDIT_AND_CONTRAST_ANALYSIS,MEGA_ATLAS_CROSSCHECK,LITERATURE_SEARCH,preregistration,statement-fidelity,architecture,benchmarks,threat-model,configuration,operations,faq,glossary,run-log}.md`, `docs/adr/`, `docs/reviews/` |
+| `scripts/` | `verify_exact.py`, `check_readme_axioms.py`, `check_citations.py`, `check_blueprint.py`, `test_lean_negative.py`, `stamp_manifest.py`, `build_llms_full.py`, `discover.mjs`, `bench.mjs`, `stats_eval.mjs`, `generate_figures.py`, `package_dist.py`, `Audit-Repo.ps1`, `audit-repo.sh` |
+| `paper/` & `dist/` | AMS-LaTeX white paper (`main.tex`, `refs.bib`, `WHITE_PAPER.md`), 5 PGFPlots vector figures, frozen `dist/Donahue_2026_Ultrametrica.pdf` & bit-identical deterministic `dist/arxiv_submission.tar.gz` |
+| `docs/` & root | `CLAIMS.md`, `LIMITATIONS.md`, `SUBMISSION_READINESS.md`, `DEVIATIONS.md`, `REPLICATION.md`, `ERRATA.md`, `docs/{CLAIMS,MASTER_REPORT,AUDIT_AND_CONTRAST_ANALYSIS,MEGA_ATLAS_CROSSCHECK,LITERATURE_SEARCH,preregistration,statement-fidelity,architecture,benchmarks,threat-model,configuration,operations,faq,glossary,run-log}.md`, `docs/adr/`, `docs/reviews/` |
 
 ## 4. Exact Verification Commands
 
 ```bash
-# 1. All 32 Node test suites (theorems + true source mutants + properties + server + golden + fuzz + concurrency)
+# 1. All 34 Node test suites (theorems + 10/10 true source mutants + properties + server + golden + fuzz + concurrency)
 npm run verify:all
 
 # 2. Runnable examples + benchmarks + pre-registered statistics + discovery
@@ -45,14 +45,15 @@ npm run bench
 npm run stats
 npm run discover
 
-# 3. Independent Python differential oracle, axiom/DOI/blueprint guards & exact-rational falsifier + checksums
+# 3. Independent Python differential oracle, axiom/DOI/blueprint/timestamp guards & exact-rational falsifier + checksums
 python reference/padic_oracle.py
 python scripts/check_readme_axioms.py
 python scripts/check_citations.py --live
 python scripts/check_blueprint.py
+python scripts/stamp_manifest.py --verify
 python scripts/verify_exact.py --check-checksums
 
-# 4. Lean 4.35.0 full build, 148-declaration axiom audit, leanchecker & 6-kernel comparator
+# 4. Lean 4.35.0 full build, 202-declaration axiom audit, leanchecker, 6-kernel comparator & live negative tamper gate
 cd lean
 lake clean && lake build UltrametricaProofs Challenge Solution
 lake env lean VerifyAxioms.lean
@@ -60,6 +61,8 @@ lake env leanchecker --fresh UltrametricaProofs
 lake env leanchecker --fresh Solution
 lake check --paranoid                                  # Ubuntu/Linux with bubblewrap
 lake comparator --config comparator.json --paranoid    # Ubuntu/Linux with bubblewrap
+cd ..
+python scripts/test_lean_negative.py                   # Live negative tamper-rejection gate (--with-comparator on Linux)
 
 # 5. White paper figures, zero-warning PDF, and standalone arXiv check
 python scripts/generate_figures.py

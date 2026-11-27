@@ -1,10 +1,13 @@
-=== ULTRAMETRICA v1.6.0 — Pure Lean 4 Kernel Audit Transcript ===
-Toolchain: Lean (version 4.35.0, x86_64-w64-windows-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release) (Palomar module, autoImplicit = false, zero Mathlib, zero sorry, zero native_decide)
-Audited Declarations: 148 total (104 core theorems + 29 zero-Mathlib helper lemmas + 5 adversarial refutations + 10 isolated comparator targets)
-External Checkers (Local): leanchecker --fresh UltrametricaProofs (EXIT 0), leanchecker --fresh Solution (EXIT 0)
-Multi-Kernel Comparator (CI Linux bubblewrap): lake check --paranoid & lake comparator --config comparator.json --paranoid (6 independent kernels: lean4, leanchecker, lean4lean, con-leche, con-ron, nanoda_bin)
+# ULTRAMETRICA v1.7.0 — Lean 4 (v4.35.0) Kernel Axiom Audit Transcript
+# Toolchain: leanprover/lean4:v4.35.0 (Palomar module system, zero Mathlib, zero sorry, zero native_decide)
+# Honest 4-bucket declaration breakdown (202 audited = 190 library + 12 isolated comparator bindings):
+#   1. Core Mathematical Theorems & Corollaries:       127
+#   2. Zero-Mathlib Infrastructure / Helper Lemmas:     56
+#   3. Adversarial False-Variant Refutations:            7 (AdversarialTests.lean)
+#   4. Isolated Palomar Comparator Target Bindings:     12 (Solution.lean <-> Challenge.lean)
+# Local kernel verification: lake build UltrametricaProofs Challenge Solution + lean VerifyAxioms.lean + leanchecker --fresh UltrametricaProofs & Solution (PASS)
+# Six-kernel comparator verification (Ubuntu CI bubblewrap sandbox): lake check --paranoid + lake comparator --config comparator.json --paranoid (lean4, leanchecker, lean4lean, con-leche, con-ron, nanoda)
 
---- #print axioms Output (VerifyAxioms.lean) ---
 'Ultrametrica.ultrametric_isosceles_lt' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ultrametric_two_longest_equal' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.pow_dvd_add' does not depend on any axioms
@@ -126,6 +129,32 @@ Multi-Kernel Comparator (CI Linux bubblewrap): lake check --paranoid & lake comp
 'Ultrametrica.gen_bridge_primal_sub_optimal' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.gen_bridge_primal_sup_optimal' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.gen_bridge_kappa_from_wasserstein' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.add_comm' depends on axioms: [propext]
+'Ultrametrica.RatQ.add_assoc' depends on axioms: [propext]
+'Ultrametrica.RatQ.add_zero_left' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.neg_congr' depends on axioms: [propext]
+'Ultrametrica.RatQ.sub_congr' depends on axioms: [propext]
+'Ultrametrica.RatQ.neg_add' depends on axioms: [propext]
+'Ultrametrica.RatQ.sub_zero_right' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.add_swap_mid' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.finSumQ_congr' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.finSumQ_zero' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.finSumQ_add' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.finSumQ_const_int' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.finSumQ_single' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.sumList_congr' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.RatQ.sumList_map_add' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.sumList_map_sub' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.RatQ.sumList_map_zero' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finite_graph_half_charge_double_count' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finite_graph_vertex_incident_sum' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finite_graph_vertex_charge_exact' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finite_graph_curved_gauss_bonnet_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.finite_graph_subcritical_gauss_bonnet_conserved' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ultrametrica.finite_graph_curved_eq_flat_subcritical' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.finite_graph_gauss_bonnet_nonvacuous_witness' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.kozyrev_exact_nonlinear_soliton' depends on axioms: [propext]
 'Ultrametrica.disjoint_multi_soliton_no_crosstalk' depends on axioms: [propext]
 'Ultrametrica.multi_ball_kozyrev_soliton_list' depends on axioms: [propext]
@@ -138,11 +167,39 @@ Multi-Kernel Comparator (CI Linux bubblewrap): lake check --paranoid & lake comp
 'Ultrametrica.sherman_morrison_exact_identity' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.kerr_flux_edge_stress_even' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.kerr_flux_edge_current_odd' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicValAux_le' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicValMod_le' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicValAux_ge_iff' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicValMod_ge_iff' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicDistVal_ge_iff' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicDistVal_symm' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicDistVal_strong_tri' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicDistVal_isosceles_eq' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicDistVal_const_outside_ball' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicDistVal_sibling_subball_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.padicDistVal_complement' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finSum_zero' depends on axioms: [propext]
+'Ultrametrica.finSum_single' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finSum_append' depends on axioms: [propext]
+'Ultrametrica.finSum_mul_split' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finSum_rev' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.finSum_modSub_inv' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.padicValMod_mul_pow_shift' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.finSum_padic_3split' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.kozyrevHaar_zero_mean' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.kozyrevHaar_vladimirov_eigenfunction' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.vecRev_involutive' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.vecRev_isometry' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ultrametricOp_commutes_vecRev' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.j_commuting_preserves_parity' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.kozyrevHaar_eigenfunction_nonvacuous_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.Adversarial.adv_dyadic_breaks_odd_doublet_protection' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.Adversarial.adv_btz_L5_not_universally_flatter' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.Adversarial.adv_supercritical_pinch_breaks_conservation' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.Adversarial.adv_overlapping_modes_violate_zero_crosstalk' does not depend on any axioms
 'Ultrametrica.Adversarial.adv_rt_ssa_reverse_inequality_false' does not depend on any axioms
+'Ultrametrica.Adversarial.adv_supercritical_finite_graph_violates_conservation' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.Adversarial.adv_nonzerosum_not_vladimirov_eigenfunction' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ComparatorTarget.target_thm1_monna_and_parity' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.ComparatorTarget.target_thm1_picket_fence_law' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.ComparatorTarget.target_thm2_btz_ollivier_ricci' depends on axioms: [propext, Quot.sound]
@@ -153,3 +210,9 @@ Multi-Kernel Comparator (CI Linux bubblewrap): lake check --paranoid & lake comp
 'Ultrametrica.ComparatorTarget.target_thm6_holographic_ssa' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ComparatorTarget.target_adversarial_refutations' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm5_finite_graph_gauss_bonnet' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ultrametrica.ComparatorTarget.target_thm7_vladimirov_kozyrev_eigenfunction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

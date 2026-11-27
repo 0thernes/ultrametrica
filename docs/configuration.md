@@ -1,6 +1,6 @@
 # Configuration Reference (`docs/configuration.md`)
 
-> Build Standard `A33`. Every environment variable, URL query parameter, and build-time option in ULTRAMETRICA (`v1.6.0`) has explicit defaults, strict bounds validation, and zero hidden magic values.
+> Build Standard `A33`. Every environment variable, URL query parameter, and build-time option in ULTRAMETRICA (`v1.7.0`) has explicit defaults, strict bounds validation, and zero hidden magic values.
 
 ## 1. Local Observatory Server (`server.mjs`)
 
@@ -20,7 +20,7 @@ See also [`.env.example`](../.env.example).
 {
   "status": "ok",
   "service": "ultrametrica",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "uptime_s": 12.345
 }
 ```
@@ -52,11 +52,13 @@ The live observatory (`https://0thernes.github.io/ultrametrica/web/` or `http://
 
 - **`lean/lean-toolchain`:** Pins exact compiler version `leanprover/lean4:v4.35.0`.
 - **`lean/lakefile.toml`:** Sets `autoImplicit = false` and `relaxedAutoImplicit = false` globally across `UltrametricaProofs`, `Challenge`, and `Solution` (all Palomar `module` files).
-- **`lean/comparator.json`:** Pins all **10** isolated target bindings in `Ultrametrica.ComparatorTarget` and permitted axioms strictly to `["propext", "Quot.sound", "Classical.choice"]`.
+- **`lean/comparator.json`:** Pins all **12** isolated target bindings in `Ultrametrica.ComparatorTarget` and permitted axioms strictly to `["propext", "Quot.sound", "Classical.choice"]`.
 
 ## 4. Test & Script Flags
 
 - `node test/golden.mjs --update-golden` — intentionally refreshes `test/golden/baseline-snapshot.json` (never run implicitly by `npm test`).
 - `python scripts/verify_exact.py --write-checksums` — regenerates `CHECKSUMS.sha256` and `data/MANIFEST.sha256`.
 - `python scripts/verify_exact.py --check-checksums` — strictly enforces 100% SHA-256 digest match (used in CI).
-- `python scripts/check_citations.py --live` — runs live Crossref DOI, retraction, and public URL availability checks.
+- `python scripts/stamp_manifest.py` / `--verify` — mints or verifies dual DigiCert RFC 3161 `.tsr` and 3-calendar Bitcoin OpenTimestamps `.ots` proofs over `CHECKSUMS.sha256`.
+- `python scripts/test_lean_negative.py` (`--with-comparator` on Linux CI) — live negative tamper-rejection test proving injected `sorry` and weakened `Challenge.lean` targets are caught and rejected.
+- `python scripts/check_citations.py --live --write-report` — runs live Crossref DOI, title Jaccard, author surname, retraction, and public URL checks, writing `results/citation-audit.json`.

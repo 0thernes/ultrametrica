@@ -1,6 +1,6 @@
-title: "ULTRAMETRICA: Lean 4 Invariants of a Discrete p-adic (Bruhat-Tits Tree) Holography Model: Monna Digit Reversal, BTZ and Bridge-Edge Ollivier-Ricci Transport Bounds, Per-Vertex Gauss-Bonnet Half-Charges, and Graph-Cut Strong Subadditivity"
+title: "ULTRAMETRICA: Lean 4 Invariants of a Discrete p-adic (Bruhat-Tits Tree) Holography Model: Monna Digit Reversal, Discrete Vladimirov/Kozyrev Eigenfunctions, BTZ and Bridge-Edge Ollivier-Ricci Transport Bounds, Finite-Graph Curved Gauss-Bonnet, and Graph-Cut Strong Subadditivity"
 repository: "https://github.com/0thernes/ultrametrica"
-version: "1.6.0"
+version: "1.7.0"
 date: "2026-11-26"
 license:
   code: "Proprietary non-commercial (COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY; see LICENSE; re-licensing to Apache-2.0 / CC-BY-4.0 is an owner-controlled prerequisite for JOSS or Mathlib upstreaming)"
@@ -24,12 +24,13 @@ challenge_module: "Challenge"
 solution_module: "Solution"
 comparator_config: "lean/comparator.json"
 axiom_audit_file: "lean/VerifyAxioms.lean"
+negative_tamper_gate: "scripts/test_lean_negative.py"
 declaration_accounting:
-  core_theorems_and_corollaries: 104
-  zero_mathlib_helper_lemmas: 29
-  adversarial_false_variant_refutations: 5
-  isolated_comparator_target_bindings: 10
-  total_audited_declarations: 148
+  core_theorems_and_corollaries: 127
+  zero_mathlib_helper_lemmas: 56
+  adversarial_false_variant_refutations: 7
+  isolated_comparator_target_bindings: 12
+  total_audited_declarations: 202
   note: "Isolated comparator target bindings re-verify the headline theorems from pure Spec.lean and are never double-counted as extra mathematical discoveries."
 permitted_axioms:
   - "propext"
@@ -45,8 +46,8 @@ kernels_configured:
 automation:
   origin: "AI-assisted mathematical derivation, formalization, exact-rational certification, interactive WebGL2/AudioWorklet engineering, and manuscript drafting under human direction"
   models_used:
-    - "Google Gemini / Antigravity: v1.0.0–v1.6.0 simulation engine, Lean 4 formalizations, exact-rational & real-source-mutation/fuzz/concurrency verification, and AMS-LaTeX manuscript drafting"
+    - "Google Gemini / Antigravity: v1.0.0–v1.7.0 simulation engine, Lean 4 formalizations, exact-rational & real-source-mutation/fuzz/concurrency/negative-tamper verification, and AMS-LaTeX manuscript drafting"
   human_line_by_line_review_recorded: false
   statement_fidelity_table: "docs/statement-fidelity.md"
 review_status: "Research preprint; NOT externally peer reviewed; NOT yet submitted to Palomar Registry, arXiv, or Zenodo."
-limitations: "Formalizes invariants of the repository's own discrete definitions: finite-prime Bruhat-Tits trees, a hand-coded 3-class reduction of unicyclic Tate-curve BTZ horizons, a hand-coded bridge-edge transport cost model (now with kernel-verified primal entry non-negativity in v1.6.0), and finite weighted-graph cuts. Lean does not define the Vladimirov operator, Kozyrev wavelets, the hybrid Hamiltonian H_theta, time evolution or the O(V) bulk solver; no theorem sums curvature over the edges of a finite tree. Six-kernel lake comparator --paranoid covers the 10 targets in lean/comparator.json and their dependency closure; all 148 audited declarations are checked by Lean (lake build, leanchecker, and Ubuntu CI lake check --paranoid). Does NOT solve the continuum adelic unification problem (Mega-Atlas SUB-032), any quantum-gravity problem, or prove asymptotic n -> infinity spectral mixing bounds."
+limitations: "Formalizes invariants of the repository's own discrete definitions: finite-prime Bruhat-Tits trees, a hand-coded 3-class reduction of unicyclic Tate-curve BTZ horizons, a bridge-edge transport cost model (with kernel-verified primal entry non-negativity), direct finite-graph edge-sum curved Gauss-Bonnet conservation over List (WeightedEdge n) on Fin n (closed in v1.7.0), the actual discrete radial ultrametric/Vladimirov operator D_K and Kozyrev-Haar wavelets on Z/p^n Z with exact eigenfunction and [D_K, J]=0 parity theorems (closed in v1.7.0), and finite weighted-graph cuts. Lean still does not define the full complex Fourier-basis hybrid Hamiltonian H_theta, continuum PDE time evolution, the O(V) floating-point bulk solver, positivity of T above the BF bound, or the full-neighbor-to-3-class BTZ symmetry reduction. Six-kernel lake comparator --paranoid covers the 12 targets in lean/comparator.json and their dependency closure; all 202 audited declarations are checked by Lean (lake build, leanchecker, and Ubuntu CI lake check --paranoid). Does NOT solve the continuum adelic unification problem (Mega-Atlas SUB-032), any quantum-gravity problem, or prove asymptotic n -> infinity spectral mixing bounds."

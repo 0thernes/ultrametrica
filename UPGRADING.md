@@ -1,5 +1,23 @@
 # Upgrading Guide
 
+## Upgrading `v1.6.0` → `v1.7.0`
+
+### New Formal Modules, Verification Gates & Behavioral Guards
+1. **Two New Zero-Mathlib Lean 4.35.0 Modules (`F70`, `F71`):**
+   - `lean/UltrametricaProofs/FiniteGraphGaussBonnet.lean` (`24` decls, Target 11) proving direct finite-graph edge-sum curved Gauss-Bonnet conservation over arbitrary `List (WeightedEdge n)` on `Fin n`.
+   - `lean/UltrametricaProofs/VladimirovOperator.lean` (`26` decls, Target 12) proving exact finite-level valuation ultrametricity, first-principles discrete Vladimirov / radial ultrametric operator `ultrametricOp`, actual discrete Kozyrev-Haar eigenfunctions `kozyrevHaar`, and `[D_K, J] = 0` parity preservation.
+   - Both are re-exported automatically by `import UltrametricaProofs` (`202` total audited declarations across 8 proof modules + 12 isolated comparator targets).
+2. **Engine Overflow, Pivot & Buffer Guards (`F75`–`F77`):**
+   - `PadicSpace.vladimirovSpectrum(alpha)` and `archimedeanSpectrum(alpha)` now throw `RangeError` if any eigenvalue overflows IEEE-754 `Float64` to `Infinity`; `applyVladimirov` reuses preallocated scratch buffers.
+   - `BruhatTitsBulk.solveBulkField` now checks `!Number.isFinite(D[c]) || Math.abs(D[c]) < 1e-15` during tree Schur-complement elimination and pure-AdS root inversion.
+   - `BruhatTitsBulk.computeBoundaryPotential(outLeafPotential, strength)` now validates `outLeafPotential.length >= this.N` and `Number.isFinite(strength)`.
+3. **Hardened `server.mjs` (`F79`) & Observatory Paused-HUD Reactivity (`F78`):**
+   - `server.mjs` now rejects raw ASCII control characters and oversized `> 4096`-byte request targets with HTTP `400 Bad Request`.
+   - Interactive sliders and 3D raycast clicks in `src/web/app.js` now recompute quantum diagnostics and refresh HUD telemetry immediately even when `sim.paused === true`.
+4. **Live Negative Lean Tamper Gate, Dual Timestamps & Deterministic arXiv Tarball (`F72`, `F73`, `F81`):**
+   - Added `scripts/test_lean_negative.py` (verifies injected `sorry` and weakened `Challenge.lean` rejection), `scripts/stamp_manifest.py` (DigiCert RFC 3161 `.tsr` + 3-calendar Bitcoin `.ots`), `SUBMISSION_READINESS.md`, `results/citation-audit.json`, and bit-identical normalized `dist/arxiv_submission.tar.gz`.
+   - Expanded true source-code mutants in `test/mutants.mjs` from `8/8` to **`10/10`** (`34/34` Node tests).
+
 ## Upgrading `v1.5.0` → `v1.6.0`
 
 ### Behavioral, API & Security Improvements

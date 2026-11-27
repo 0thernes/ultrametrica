@@ -1,6 +1,6 @@
 {
   "name": "ultrametrica",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Discrete p-adic AdS/CFT (Bruhat-Tits Tree) Holography Laboratory: Tate-Curve BTZ Quotients, Kozyrev Wavelets, Adelic Parity Symmetries & Pure Lean 4.35.0 Model Invariants",
   "type": "module",
   "scripts": {

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA (v1.6.0) — Deterministic `llms-full.txt` Context Pack Builder (`A32`).
+ULTRAMETRICA (v1.7.0) — Deterministic `llms-full.txt` Context Pack Builder (`A32`).
 
 Concatenates key repository documentation into a single self-contained offline
 context bundle (`llms-full.txt`) for LLM/agent consumption.
@@ -19,6 +19,7 @@ SECTIONS = [
     "CLAIMS.md",
     "LIMITATIONS.md",
     "DEVIATIONS.md",
+    "SUBMISSION_READINESS.md",
     "REPLICATION.md",
     "VERIFICATION.md",
     "docs/architecture.md",

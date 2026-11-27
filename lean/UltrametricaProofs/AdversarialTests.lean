@@ -4,13 +4,15 @@ public import UltrametricaProofs.Basic
 public import UltrametricaProofs.AdelicSymmetry
 public import UltrametricaProofs.HolographyCurvature
 public import UltrametricaProofs.MultiEdgeHolography
+public import UltrametricaProofs.FiniteGraphGaussBonnet
 public import UltrametricaProofs.SolitonAndSolver
+public import UltrametricaProofs.VladimirovOperator
 
 /-!
-  ULTRAMETRICA (v1.6.0) — Adversarial False-Variant Refutation Suite (`AdversarialTests.lean`).
+  ULTRAMETRICA (v1.7.0) — Adversarial False-Variant Refutation Suite (`AdversarialTests.lean`).
 
-  Playbook Gold Standard Item #12: formally proves explicit NEGATIONS (`¬ (...)`) of
-  deliberately weakened or false statements across Theorems I–VI, confirming that our
+  Playbook Gold Standard Item #12: formally proves 7 explicit NEGATIONS (`¬ (...)`) of
+  deliberately weakened or false statements across Theorems I–VII, confirming that our
   definitions are sharp, non-degenerate, and cannot trivially validate false mathematical claims.
   Zero Mathlib, zero `sorry`, zero `native_decide`, zero custom axioms.
 -/
@@ -67,5 +69,49 @@ public theorem adv_rt_ssa_reverse_inequality_false :
         Ultrametrica.rtCutCap edges (fun v => S v || T v) +
         Ultrametrica.rtCutCap edges (fun v => S v && T v)) := by
   decide
+
+/-- Refutation 6 (Finite-Graph Theorem V-Global Sharpness): On a finite weighted graph with a
+    supercritical edge (`w * (Wu + Wv) > Wu * Wv`, here 2-vertex edge `w = 2` with `W = (2, 2)`
+    so `2 * 4 = 8 > 4`), the total edge-sum curvature STRICTLY VIOLATES the subcritical
+    Gauss-Bonnet constant `-(p - 1) * n` (`-6 ≠ -4` at `p = 3, n = 2`). -/
+public theorem adv_supercritical_finite_graph_violates_conservation :
+    let edges : List (Ultrametrica.WeightedEdge 2) := [⟨⟨0, by omega⟩, ⟨1, by omega⟩, 2⟩]
+    let hW : ∀ x : Fin 2, 0 < Ultrametrica.graphVertexWeight edges x := fun x => by
+      rcases x with ⟨v, hv⟩
+      have hv2 : v = 0 ∨ v = 1 := by omega
+      rcases hv2 with rfl | rfl <;> decide +revert
+    ¬ Ultrametrica.RatQ.eqv
+        (Ultrametrica.RatQ.sumList (edges.map (fun e =>
+          Ultrametrica.curvedGenKappaQ 3 e.w
+            (Ultrametrica.graphVertexWeight edges e.u)
+            (Ultrametrica.graphVertexWeight edges e.v)
+            (hW e.u) (hW e.v))))
+        ⟨-(3 - 1) * (2 : Int), 1, by omega⟩ := by
+  dsimp only
+  intro h
+  unfold Ultrametrica.RatQ.eqv at h
+  revert h
+  decide
+
+/-- Refutation 7 (Theorem VII Sharpness): Dropping the zero-mean condition (`finSum p a = 0`)
+    on a Kozyrev-Haar wavelet DESTROYS the eigenfunction property: for `p = 3, n = 2, j = 1, c = 0`,
+    profile `a = [1, 0, 0]` (`sum = 1 ≠ 0`), and `K(v) = v + 1`, `ψ(1) = 0` while `(D_K ψ)(1) = 1`,
+    so NO eigenvalue `lam : Int` satisfies `(D_K ψ) x = lam * ψ x` for all `x`. -/
+public theorem adv_nonzerosum_not_vladimirov_eigenfunction :
+    let a : Fin 3 → Int := fun d => if d.val = 0 then 1 else 0
+    let K : Nat → Int := fun v => (v : Int) + 1
+    ¬ (∃ lam : Int, ∀ x : Fin (3 ^ 2),
+        Ultrametrica.ultrametricOp 3 2 K (Ultrametrica.kozyrevHaar 3 2 1 0 (by omega) a) x =
+          lam * Ultrametrica.kozyrevHaar 3 2 1 0 (by omega) a x) := by
+  dsimp only
+  have hlhs : Ultrametrica.ultrametricOp 3 2 (fun v => (v : Int) + 1)
+      (Ultrametrica.kozyrevHaar 3 2 1 0 (by omega) (fun d => if d.val = 0 then 1 else 0))
+      ⟨1, by omega⟩ = 1 := by decide
+  have hrhs : Ultrametrica.kozyrevHaar 3 2 1 0 (by omega)
+      (fun d => if d.val = 0 then 1 else 0) ⟨1, by omega⟩ = 0 := by decide
+  rintro ⟨lam, h⟩
+  have h1 := h ⟨1, by omega⟩
+  rw [hlhs, hrhs, Int.mul_zero] at h1
+  omega
 
 end Ultrametrica.Adversarial

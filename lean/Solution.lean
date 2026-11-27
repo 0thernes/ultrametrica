@@ -4,10 +4,10 @@ public import UltrametricaProofs.Spec
 public import UltrametricaProofs
 
 /-!
-  ULTRAMETRICA (v1.6.0) — Sorry-Free Solution Module Matched Against `Challenge.lean`.
+  ULTRAMETRICA (v1.7.0) — Sorry-Free Solution Module Matched Against `Challenge.lean`.
 
   Palomar Registry compliant Lean 4.35.0 `module`.
-  Proves all 10 upgraded targets in `Ultrametrica.ComparatorTarget` with ZERO `sorry`,
+  Proves all 12 upgraded targets in `Ultrametrica.ComparatorTarget` with ZERO `sorry`,
   ZERO `native_decide`, ZERO custom axioms, and ZERO Mathlib dependencies, verified across
   6 independent Lean kernels via:
       lake check --paranoid
@@ -197,7 +197,78 @@ private theorem spec_sumInt_eq (ws : List Int) :
   | nil => rfl
   | cons w rest ih => simp only [Spec.sumInt, Ultrametrica.sumInt, ih]
 
--- ---- The 10 Upgraded Comparator Targets (Exact Match to `Challenge.lean`) ----
+private def toCoreRatQ (q : Spec.RatQ) : Ultrametrica.RatQ := ⟨q.num, q.den, q.den_pos⟩
+
+private theorem toCoreRatQ_add (a b : Spec.RatQ) :
+    toCoreRatQ (Spec.RatQ.add a b) = Ultrametrica.RatQ.add (toCoreRatQ a) (toCoreRatQ b) := by
+  cases a; cases b; rfl
+
+private theorem toCoreRatQ_sub (a b : Spec.RatQ) :
+    toCoreRatQ (Spec.RatQ.sub a b) = Ultrametrica.RatQ.sub (toCoreRatQ a) (toCoreRatQ b) := by
+  cases a; cases b; rfl
+
+private theorem toCoreRatQ_sumList (xs : List Spec.RatQ) :
+    toCoreRatQ (Spec.RatQ.sumList xs) = Ultrametrica.RatQ.sumList (xs.map toCoreRatQ) := by
+  induction xs with
+  | nil => rfl
+  | cons x rest ih =>
+    simp only [Spec.RatQ.sumList, List.map_cons, Ultrametrica.RatQ.sumList, toCoreRatQ_add, ih]
+
+private theorem toCoreRatQ_eqv_iff (a b : Spec.RatQ) :
+    Spec.RatQ.eqv a b ↔ Ultrametrica.RatQ.eqv (toCoreRatQ a) (toCoreRatQ b) := by
+  cases a; cases b; rfl
+
+private def toCoreEdge {n : Nat} (e : Spec.WeightedEdge n) : Ultrametrica.WeightedEdge n :=
+  ⟨e.u, e.v, e.w⟩
+
+private theorem spec_graphVertexWeight_eq {n : Nat} (edges : List (Spec.WeightedEdge n)) (x : Fin n) :
+    Spec.graphVertexWeight edges x = Ultrametrica.graphVertexWeight (edges.map toCoreEdge) x := by
+  unfold Spec.graphVertexWeight Ultrametrica.graphVertexWeight
+  rw [spec_sumInt_eq, List.map_map]
+  rfl
+
+private theorem spec_padicValAux_eq (p fuel d : Nat) :
+    Spec.padicValAux p fuel d = Ultrametrica.padicValAux p fuel d := by
+  induction fuel generalizing d with
+  | zero => rfl
+  | succ k ih =>
+    simp only [Spec.padicValAux, Ultrametrica.padicValAux]
+    split <;> simp [ih]
+
+private theorem spec_padicValMod_eq (p n d : Nat) :
+    Spec.padicValMod p n d = Ultrametrica.padicValMod p n d :=
+  spec_padicValAux_eq p n (d % p ^ n)
+
+private theorem spec_padicDistVal_eq (p n x y : Nat) :
+    Spec.padicDistVal p n x y = Ultrametrica.padicDistVal p n x y :=
+  spec_padicValMod_eq p n ((x + p ^ n - y) % p ^ n)
+
+private theorem spec_kozyrevHaar_eq (p n j c : Nat) (hp : 2 ≤ p) (a : Fin p → Int) :
+    Spec.kozyrevHaar p n j c hp a = Ultrametrica.kozyrevHaar p n j c hp a := by
+  funext x; rfl
+
+private theorem spec_ultrametricOp_eq (p n : Nat) (K : Nat → Int) (f : Fin (p ^ n) → Int) (x : Fin (p ^ n)) :
+    Spec.ultrametricOp p n K f x = Ultrametrica.ultrametricOp p n K f x := by
+  unfold Spec.ultrametricOp Ultrametrica.ultrametricOp
+  rw [spec_finSum_eq]
+  apply Ultrametrica.finSum_congr
+  intro y
+  rw [spec_padicDistVal_eq]
+
+private theorem spec_ultrametricWaveletEigenvalue_eq (p n j : Nat) (K : Nat → Int) :
+    Spec.ultrametricWaveletEigenvalue p n j K = Ultrametrica.ultrametricWaveletEigenvalue p n j K := by
+  unfold Spec.ultrametricWaveletEigenvalue Ultrametrica.ultrametricWaveletEigenvalue
+  rw [spec_finSum_eq]
+  congr 1
+  apply Ultrametrica.finSum_congr
+  intro t
+  rw [spec_padicValMod_eq]
+
+private theorem spec_vecRev_eq (N : Nat) (v : Fin N → Int) :
+    Spec.vecRev N v = Ultrametrica.vecRev N v := by
+  funext i; rfl
+
+-- ---- The 12 Upgraded Comparator Targets (Exact Match to `Challenge.lean`) ----
 
 public theorem target_thm1_monna_and_parity :
     (∀ p n x, 2 ≤ p → x < p ^ n → Spec.revBase p n (Spec.revBase p n x) = x) ∧
@@ -564,8 +635,23 @@ public theorem target_adversarial_refutations :
     ¬ (Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 1 || v == 2) +
        Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 2 || v == 3) ≤
        Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 1 || v == 2 || v == 3) +
-       Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 2)) := by
-  exact ⟨Ultrametrica.Adversarial.adv_dyadic_breaks_odd_doublet_protection, by decide, by decide⟩
+       Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 2)) ∧
+    Spec.curvedGenKappaNum 3 2 2 2 * 1 ≠ (-(3 - 1) * 2) * (2 * 2) ∧
+    ¬ (∃ lam : Int, ∀ x : Fin (3 ^ 2),
+        Spec.ultrametricOp 3 2 (fun v => (v : Int) + 1)
+          (Spec.kozyrevHaar 3 2 1 0 (by omega) (fun d => if d.val = 0 then 1 else 0)) x =
+        lam * Spec.kozyrevHaar 3 2 1 0 (by omega) (fun d => if d.val = 0 then 1 else 0) x) := by
+  refine ⟨Ultrametrica.Adversarial.adv_dyadic_breaks_odd_doublet_protection, by decide, by decide, by decide, ?_⟩
+  have hlhs : Ultrametrica.ultrametricOp 3 2 (fun v => (v : Int) + 1)
+      (Ultrametrica.kozyrevHaar 3 2 1 0 (by omega) (fun d => if d.val = 0 then 1 else 0))
+      ⟨1, by omega⟩ = 1 := by decide
+  have hrhs : Ultrametrica.kozyrevHaar 3 2 1 0 (by omega)
+      (fun d => if d.val = 0 then 1 else 0) ⟨1, by omega⟩ = 0 := by decide
+  rintro ⟨lam, h⟩
+  have h1 := h ⟨1, by omega⟩
+  rw [spec_ultrametricOp_eq, spec_kozyrevHaar_eq] at h1
+  rw [hlhs, hrhs, Int.mul_zero] at h1
+  omega
 
 public theorem target_nonvacuity_witnesses :
     (Spec.revBase 3 4 5 = 63 ∧ 5 < 3 ^ 4) ∧
@@ -588,8 +674,18 @@ public theorem target_nonvacuity_witnesses :
      (2 : Int) * 6 = 12 ∧ (∀ r, uW r * uA r = 12) ∧ (∀ s, vW s * vA s = 12) ∧
      2 + Spec.finSum 2 uW = 5 ∧ 2 + Spec.finSum 2 vW = 6 ∧ (2 : Int) * (5 + 6) ≤ 5 * 6) ∧
     (Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 1 || v == 2) = 5 ∧
-     Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 2 || v == 3) = 8) := by
-  refine ⟨by decide, by decide, by decide, ?_, rfl, by decide, ?_, by decide⟩
+     Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 2 || v == 3) = 8) ∧
+    (let edges : List (Spec.WeightedEdge 4) :=
+       [⟨⟨0, by omega⟩, ⟨1, by omega⟩, 2⟩,
+        ⟨⟨0, by omega⟩, ⟨2, by omega⟩, 3⟩,
+        ⟨⟨0, by omega⟩, ⟨3, by omega⟩, 5⟩]
+     Spec.graphVertexWeight edges ⟨0, by omega⟩ = 10 ∧
+     Spec.graphVertexWeight edges ⟨1, by omega⟩ = 2 ∧
+     Spec.graphVertexWeight edges ⟨2, by omega⟩ = 3 ∧
+     Spec.graphVertexWeight edges ⟨3, by omega⟩ = 5) ∧
+    (let a : Fin 3 → Int := fun d => if d.val = 0 then 1 else if d.val = 1 then -1 else 0
+     Spec.finSum 3 a = 0 ∧ Spec.ultrametricWaveletEigenvalue 3 2 0 (fun v => (v : Int)) = 4) := by
+  refine ⟨by decide, by decide, by decide, ?_, rfl, by decide, ?_, by decide, by decide, by decide⟩
   · refine ⟨[(fun x => if x == 0 then Spec.CInt.one else Spec.CInt.zero, 1),
               (fun x => if x == 1 then Spec.CInt.one else Spec.CInt.zero, 1)], rfl, ?_, ?_⟩
     · intro m hm x
@@ -626,5 +722,135 @@ public theorem target_nonvacuity_witnesses :
       rcases s with ⟨v, hv⟩
       have hv2 : v = 0 ∨ v = 1 := by omega
       rcases hv2 with rfl | rfl <;> rfl
+
+public theorem target_thm5_finite_graph_gauss_bonnet :
+    (∀ (n : Nat) (p : Int) (edges : List (Spec.WeightedEdge n))
+       (hW : ∀ x : Fin n, 0 < Spec.graphVertexWeight edges x),
+      Spec.RatQ.eqv
+        (Spec.RatQ.sumList (edges.map (fun e =>
+          Spec.curvedGenKappaQ p e.w (Spec.graphVertexWeight edges e.u) (Spec.graphVertexWeight edges e.v)
+            (hW e.u) (hW e.v))))
+        (Spec.RatQ.sub
+          ⟨-(p - 1) * (n : Int), 1, Int.zero_lt_one⟩
+          (Spec.RatQ.sumList (edges.map (fun e =>
+            Spec.curvedGenDeficitQ e.w (Spec.graphVertexWeight edges e.u) (Spec.graphVertexWeight edges e.v)
+              (hW e.u) (hW e.v)))))) ∧
+    (∀ (n : Nat) (p : Int) (edges : List (Spec.WeightedEdge n))
+       (hW : ∀ x : Fin n, 0 < Spec.graphVertexWeight edges x),
+      (∀ e ∈ edges,
+        e.w * (Spec.graphVertexWeight edges e.u + Spec.graphVertexWeight edges e.v) ≤
+          Spec.graphVertexWeight edges e.u * Spec.graphVertexWeight edges e.v) →
+      Spec.RatQ.eqv
+        (Spec.RatQ.sumList (edges.map (fun e =>
+          Spec.curvedGenKappaQ p e.w (Spec.graphVertexWeight edges e.u) (Spec.graphVertexWeight edges e.v)
+            (hW e.u) (hW e.v))))
+        ⟨-(p - 1) * (n : Int), 1, Int.zero_lt_one⟩) := by
+  constructor
+  · intro n p edges hW
+    let edgesC := edges.map toCoreEdge
+    have hWC : ∀ x : Fin n, 0 < Ultrametrica.graphVertexWeight edgesC x := by
+      intro x
+      rw [← spec_graphVertexWeight_eq]
+      exact hW x
+    rw [toCoreRatQ_eqv_iff, toCoreRatQ_sumList, toCoreRatQ_sub, toCoreRatQ_sumList,
+        List.map_map, List.map_map]
+    have h1 : edges.map (toCoreRatQ ∘ fun e =>
+          Spec.curvedGenKappaQ p e.w (Spec.graphVertexWeight edges e.u) (Spec.graphVertexWeight edges e.v)
+            (hW e.u) (hW e.v)) =
+        edgesC.map (fun e =>
+          Ultrametrica.curvedGenKappaQ p e.w (Ultrametrica.graphVertexWeight edgesC e.u)
+            (Ultrametrica.graphVertexWeight edgesC e.v) (hWC e.u) (hWC e.v)) := by
+      simp only [edgesC, List.map_map]
+      apply List.map_congr_left
+      intro e _
+      simp only [Function.comp, toCoreRatQ, toCoreEdge, Spec.curvedGenKappaQ, Ultrametrica.curvedGenKappaQ,
+        Spec.curvedGenKappaNum, Ultrametrica.curvedGenKappaNum, spec_graphVertexWeight_eq]
+      rfl
+    have h2 : edges.map (toCoreRatQ ∘ fun e =>
+          Spec.curvedGenDeficitQ e.w (Spec.graphVertexWeight edges e.u) (Spec.graphVertexWeight edges e.v)
+            (hW e.u) (hW e.v)) =
+        edgesC.map (fun e =>
+          Ultrametrica.curvedGenDeficitQ e.w (Ultrametrica.graphVertexWeight edgesC e.u)
+            (Ultrametrica.graphVertexWeight edgesC e.v) (hWC e.u) (hWC e.v)) := by
+      simp only [edgesC, List.map_map]
+      apply List.map_congr_left
+      intro e _
+      simp only [Function.comp, toCoreRatQ, toCoreEdge, Spec.curvedGenDeficitQ, Ultrametrica.curvedGenDeficitQ,
+        Spec.curvedGenDeficitNum, Ultrametrica.curvedGenDeficitNum, spec_graphVertexWeight_eq]
+      rfl
+    rw [h1, h2]
+    exact Ultrametrica.finite_graph_curved_gauss_bonnet_sum p edgesC hWC
+  · intro n p edges hW hsub
+    let edgesC := edges.map toCoreEdge
+    have hWC : ∀ x : Fin n, 0 < Ultrametrica.graphVertexWeight edgesC x := by
+      intro x
+      rw [← spec_graphVertexWeight_eq]
+      exact hW x
+    have hsubC : ∀ e ∈ edgesC,
+        e.w * (Ultrametrica.graphVertexWeight edgesC e.u + Ultrametrica.graphVertexWeight edgesC e.v) ≤
+          Ultrametrica.graphVertexWeight edgesC e.u * Ultrametrica.graphVertexWeight edgesC e.v := by
+      intro e he
+      rcases List.mem_map.mp he with ⟨es, hes, rfl⟩
+      have h := hsub es hes
+      dsimp only [edgesC, toCoreEdge]
+      rw [← spec_graphVertexWeight_eq, ← spec_graphVertexWeight_eq]
+      exact h
+    rw [toCoreRatQ_eqv_iff, toCoreRatQ_sumList, List.map_map]
+    have h1 : edges.map (toCoreRatQ ∘ fun e =>
+          Spec.curvedGenKappaQ p e.w (Spec.graphVertexWeight edges e.u) (Spec.graphVertexWeight edges e.v)
+            (hW e.u) (hW e.v)) =
+        edgesC.map (fun e =>
+          Ultrametrica.curvedGenKappaQ p e.w (Ultrametrica.graphVertexWeight edgesC e.u)
+            (Ultrametrica.graphVertexWeight edgesC e.v) (hWC e.u) (hWC e.v)) := by
+      simp only [edgesC, List.map_map]
+      apply List.map_congr_left
+      intro e _
+      simp only [Function.comp, toCoreRatQ, toCoreEdge, Spec.curvedGenKappaQ, Ultrametrica.curvedGenKappaQ,
+        Spec.curvedGenKappaNum, Ultrametrica.curvedGenKappaNum, spec_graphVertexWeight_eq]
+      rfl
+    rw [h1]
+    exact Ultrametrica.finite_graph_subcritical_gauss_bonnet_conserved p edgesC hWC hsubC
+
+public theorem target_thm7_vladimirov_kozyrev_eigenfunction :
+    (∀ p n x y z, 2 ≤ p → x < p ^ n → y < p ^ n → z < p ^ n →
+      min (Spec.padicDistVal p n x y) (Spec.padicDistVal p n y z) ≤ Spec.padicDistVal p n x z) ∧
+    (∀ (p n j c : Nat) (hp : 2 ≤ p), j < n → c < p ^ n →
+      ∀ (K : Nat → Int) (a : Fin p → Int), Spec.finSum p a = 0 →
+        ∀ x : Fin (p ^ n),
+          Spec.ultrametricOp p n K (Spec.kozyrevHaar p n j c hp a) x =
+            Spec.ultrametricWaveletEigenvalue p n j K * Spec.kozyrevHaar p n j c hp a x) ∧
+    (∀ (p n : Nat), 2 ≤ p → ∀ (K : Nat → Int) (f : Fin (p ^ n) → Int) (x : Fin (p ^ n)),
+      Spec.ultrametricOp p n K (Spec.vecRev (p ^ n) f) x =
+        Spec.vecRev (p ^ n) (Spec.ultrametricOp p n K f) x) ∧
+    (∀ (N : Nat) (H : (Fin N → Int) → (Fin N → Int)),
+      (∀ v, H (Spec.vecRev N v) = Spec.vecRev N (H v)) →
+      (∀ v, H (fun i => -(v i)) = fun i => -(H v i)) →
+      (∀ v, Spec.vecRev N v = v → Spec.vecRev N (H v) = H v) ∧
+      (∀ v, Spec.vecRev N v = (fun i => -(v i)) → Spec.vecRev N (H v) = fun i => -(H v i))) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · intro p n x y z hp hx hy hz
+    rw [spec_padicDistVal_eq, spec_padicDistVal_eq, spec_padicDistVal_eq]
+    exact Ultrametrica.padicDistVal_strong_tri p n x y z hp hx hy hz
+  · intro p n j c hp hj hc K a hsum x
+    rw [spec_finSum_eq] at hsum
+    rw [spec_ultrametricOp_eq, spec_kozyrevHaar_eq, spec_ultrametricWaveletEigenvalue_eq]
+    exact Ultrametrica.kozyrevHaar_vladimirov_eigenfunction p n j c hp hj hc K a hsum x
+  · intro p n hp K f x
+    rw [spec_ultrametricOp_eq, spec_vecRev_eq]
+    have hfun : Spec.ultrametricOp p n K f = Ultrametrica.ultrametricOp p n K f := by
+      funext y; exact spec_ultrametricOp_eq p n K f y
+    rw [hfun, spec_vecRev_eq]
+    exact Ultrametrica.ultrametricOp_commutes_vecRev p n hp K f x
+  · intro N H hcomm hneg
+    have hcomm' : ∀ v, H (Ultrametrica.vecRev N v) = Ultrametrica.vecRev N (H v) := by
+      intro v; simpa only [spec_vecRev_eq] using hcomm v
+    have hcore := Ultrametrica.j_commuting_preserves_parity N H hcomm' hneg
+    constructor
+    · intro v hv
+      rw [spec_vecRev_eq] at hv ⊢
+      exact hcore.1 v hv
+    · intro v hv
+      rw [spec_vecRev_eq] at hv ⊢
+      exact hcore.2 v hv
 
 end Ultrametrica.ComparatorTarget

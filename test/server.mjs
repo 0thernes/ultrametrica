@@ -66,7 +66,7 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
     const payload = JSON.parse(health.body);
     assert.equal(payload.status, 'ok');
     assert.equal(payload.service, 'ultrametrica');
-    assert.equal(payload.version, '1.6.0');
+    assert.equal(payload.version, '1.7.0');
     assert.equal(typeof payload.uptime_s, 'number');
 
     // 2. Root & /blueprint redirects preserving query permalink
@@ -102,11 +102,12 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
     assert.equal(post.status, 405);
     assert.equal(post.headers.allow, 'GET, HEAD');
 
-    // 6. Malformed URI encoding, null byte, backslash, protocol-relative // -> 400
+    // 6. Malformed URI encoding, null byte, backslash, protocol-relative //, oversized URI (>4096) -> 400 (F79)
     assert.equal((await rawRequest(port, 'GET', '/web/%ZZ')).status, 400);
     assert.equal((await rawRequest(port, 'GET', '/web/index.html%00.js')).status, 400);
     assert.equal((await rawRequest(port, 'GET', '/web/..%5cpackage.json')).status, 400);
     assert.equal((await rawRequest(port, 'GET', '//evil.example/web/')).status, 400);
+    assert.equal((await rawRequest(port, 'GET', '/web/' + 'a'.repeat(4200))).status, 400);
 
     // 7. Directory traversal & bare directory -> 403
     assert.equal((await rawRequest(port, 'GET', '/..%2fpackage.json')).status, 403);

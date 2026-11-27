@@ -1,0 +1,297 @@
+{
+  "schema": "ultrametrica-citation-audit-v1",
+  "audited_utc": "2026-11-27T13:38:56Z",
+  "total_bib_entries": 21,
+  "doi_count": 18,
+  "non_doi_count": 3,
+  "retracted_count": 0,
+  "min_title_jaccard": 1.0,
+  "all_authors_matched": true,
+  "doi_entries": [
+    {
+      "key": "Volovich1987",
+      "doi": "10.1088/0264-9381/4/4/003",
+      "bib_year": "1987",
+      "crossref_years": [
+        "1987",
+        "1999",
+        "2002"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "p-adic string"
+    },
+    {
+      "key": "FreundWitten1987",
+      "doi": "10.1016/0370-2693(87)91357-8",
+      "bib_year": "1987",
+      "crossref_years": [
+        "1987",
+        "2002"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Adelic string amplitudes"
+    },
+    {
+      "key": "Gubser2017",
+      "doi": "10.1007/s00220-016-2813-6",
+      "bib_year": "2017",
+      "crossref_years": [
+        "2017"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "p-Adic AdS/CFT"
+    },
+    {
+      "key": "Heydeman2018",
+      "doi": "10.4310/ATMP.2018.v22.n1.a4",
+      "bib_year": "2018",
+      "crossref_years": [
+        "2018"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Tensor networks, $p$-adic fields, and algebraic curves: arithmetic and the $\\mathrm{AdS}_3 / \\mathrm{CFT}_2$ correspondence"
+    },
+    {
+      "key": "GubserEdge2017",
+      "doi": "10.1007/JHEP06(2017)157",
+      "bib_year": "2017",
+      "crossref_years": [
+        "2017"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Edge length dynamics on graphs with applications to p-adic AdS/CFT"
+    },
+    {
+      "key": "Heydeman2021",
+      "doi": "10.4310/ATMP.2021.v25.n3.a2",
+      "bib_year": "2021",
+      "crossref_years": [
+        "2021",
+        "2022"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Nonarchimedean holographic entropy from networks of perfect tensors"
+    },
+    {
+      "key": "Kozyrev2002",
+      "doi": "10.1070/IM2002v066n02ABEH000381",
+      "bib_year": "2002",
+      "crossref_years": [
+        "2002",
+        "2007"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Wavelet theory as $ p$-adic spectral analysis"
+    },
+    {
+      "key": "Dragovich2017",
+      "doi": "10.1134/S2070046617020017",
+      "bib_year": "2017",
+      "crossref_years": [
+        "2017"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "p-Adic mathematical physics: the first 30 years"
+    },
+    {
+      "key": "Ollivier2009",
+      "doi": "10.1016/j.jfa.2008.11.001",
+      "bib_year": "2009",
+      "crossref_years": [
+        "2008",
+        "2009"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Ricci curvature of Markov chains on metric spaces"
+    },
+    {
+      "key": "RyuTakayanagi2006",
+      "doi": "10.1103/PhysRevLett.96.181602",
+      "bib_year": "2006",
+      "crossref_years": [
+        "2006"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Holographic Derivation of Entanglement Entropy from the anti\u2013de Sitter Space/Conformal Field Theory Correspondence"
+    },
+    {
+      "key": "HeadrickTakayanagi2007",
+      "doi": "10.1103/PhysRevD.76.106013",
+      "bib_year": "2007",
+      "crossref_years": [
+        "2007"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Holographic proof of the strong subadditivity of entanglement entropy"
+    },
+    {
+      "key": "Yoshida1990",
+      "doi": "10.1016/0375-9601(90)90092-3",
+      "bib_year": "1990",
+      "crossref_years": [
+        "1990",
+        "2002"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Construction of higher order symplectic integrators"
+    },
+    {
+      "key": "LinLuYau2011",
+      "doi": "10.2748/tmj/1325886283",
+      "bib_year": "2011",
+      "crossref_years": [
+        "2011",
+        "2012"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Ricci curvature of graphs"
+    },
+    {
+      "key": "ShermanMorrison1950",
+      "doi": "10.1214/aoms/1177729893",
+      "bib_year": "1950",
+      "crossref_years": [
+        "1950",
+        "2007"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Adjustment of an Inverse Matrix Corresponding to a Change in One Element of a Given Matrix"
+    },
+    {
+      "key": "OganesyanHuse2007",
+      "doi": "10.1103/PhysRevB.75.155111",
+      "bib_year": "2007",
+      "crossref_years": [
+        "2007"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Localization of interacting fermions at high temperature"
+    },
+    {
+      "key": "Atas2013",
+      "doi": "10.1103/PhysRevLett.110.084101",
+      "bib_year": "2013",
+      "crossref_years": [
+        "2013"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Distribution of the Ratio of Consecutive Level Spacings in Random Matrix Ensembles"
+    },
+    {
+      "key": "Pastawski2015",
+      "doi": "10.1007/JHEP06(2015)149",
+      "bib_year": "2015",
+      "crossref_years": [
+        "2015"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "Holographic quantum error-correcting codes: toy models for the bulk/boundary correspondence"
+    },
+    {
+      "key": "deMouraUllrich2021",
+      "doi": "10.1007/978-3-030-79876-5_37",
+      "bib_year": "2021",
+      "crossref_years": [
+        "2021"
+      ],
+      "year_match": true,
+      "title_jaccard": 1.0,
+      "author_match": true,
+      "retracted": false,
+      "crossref_title": "The Lean 4 Theorem Prover and Programming Language"
+    }
+  ],
+  "non_doi_entries": [
+    {
+      "key": "Vladimirov1994",
+      "type": "book",
+      "year": "1994",
+      "identifier": "978-9810208806"
+    },
+    {
+      "key": "Monna1970",
+      "type": "book",
+      "year": "1970",
+      "identifier": "978-3540050186"
+    },
+    {
+      "key": "Holm1979",
+      "type": "article",
+      "year": "1979",
+      "identifier": "https://www.jstor.org/stable/4615733"
+    }
+  ],
+  "public_urls": [
+    {
+      "url": "https://github.com/0thernes/ultrametrica",
+      "status": 200
+    },
+    {
+      "url": "https://0thernes.github.io/ultrametrica/",
+      "status": 200
+    },
+    {
+      "url": "https://0thernes.github.io/ultrametrica/web/",
+      "status": 200
+    },
+    {
+      "url": "https://0thernes.github.io/ultrametrica/web/blueprint.html",
+      "status": 200
+    },
+    {
+      "url": "https://orcid.org/0009-0006-8168-9648",
+      "status": 200
+    }
+  ]
+}

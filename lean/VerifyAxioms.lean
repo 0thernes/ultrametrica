@@ -4,21 +4,21 @@ public import UltrametricaProofs
 public import Solution
 
 /-!
-  ULTRAMETRICA (v1.6.0) — Standalone Kernel Axiom Audit (`v4.35.0`, Palomar `module`)
+  ULTRAMETRICA (v1.7.0) — Standalone Kernel Axiom Audit (`v4.35.0`, Palomar `module`)
 
-  Audits all 148 exported declarations strictly classified into four transparent, non-inflated
+  Audits all 202 exported declarations strictly classified into four transparent, non-inflated
   categories (ZERO bench-maxxing / ZERO double counting):
-    1. Core Mathematical Theorems & Corollaries:       104 declarations
-    2. Zero-Mathlib Infrastructure / Helper Lemmas:     29 declarations
-    3. Adversarial False-Variant Refutations:            5 declarations (`AdversarialTests.lean`)
-    4. Isolated Palomar Comparator Target Bindings:     10 targets (`Solution.lean` <-> `Challenge.lean`)
+    1. Core Mathematical Theorems & Corollaries:       127 declarations
+    2. Zero-Mathlib Infrastructure / Helper Lemmas:     56 declarations
+    3. Adversarial False-Variant Refutations:            7 declarations (`AdversarialTests.lean`)
+    4. Isolated Palomar Comparator Target Bindings:     12 targets (`Solution.lean` <-> `Challenge.lean`)
        (standalone re-verifications from pure `Spec.lean`, NEVER double-counted as extra theorems)
-    Total audited declarations = 138 library declarations + 10 isolated comparator bindings = 148.
+    Total audited declarations = 190 library declarations + 12 isolated comparator bindings = 202.
 
   Every declaration must depend strictly on a subset of `[propext, Classical.choice, Quot.sound]`
   (or zero axioms) with zero `sorryAx`, zero `native_decide`, and zero custom axioms.
-  All 148 declarations are kernel-checked by Lean (`lake build`, `leanchecker`, and Ubuntu CI
-  `lake check --paranoid`); six-kernel `lake comparator --paranoid` covers the 10 comparator
+  All 202 declarations are kernel-checked by Lean (`lake build`, `leanchecker`, and Ubuntu CI
+  `lake check --paranoid`); six-kernel `lake comparator --paranoid` covers all 12 comparator
   targets in `comparator.json` and their dependency closure. Seven small `CInt` helper lemmas
   (`add_smul`, `add_zero_left`, `add_zero_right`, `int_sq_nonneg`, `normSq_nonneg`, `normSq_zero`,
   `smul_zero`) are not listed separately below and are transitively checked through the audited
@@ -154,6 +154,32 @@ public import Solution
 #print axioms Ultrametrica.gen_bridge_primal_sup_optimal
 #print axioms Ultrametrica.gen_bridge_kappa_from_wasserstein
 
+-- Module 3C: Actual Finite-Graph Edge-Sum Curved AdS Gauss-Bonnet Conservation (24 decls: 7 core + 17 RatQ helpers)
+#print axioms Ultrametrica.RatQ.add_comm
+#print axioms Ultrametrica.RatQ.add_assoc
+#print axioms Ultrametrica.RatQ.add_zero_left
+#print axioms Ultrametrica.RatQ.neg_congr
+#print axioms Ultrametrica.RatQ.sub_congr
+#print axioms Ultrametrica.RatQ.neg_add
+#print axioms Ultrametrica.RatQ.sub_zero_right
+#print axioms Ultrametrica.RatQ.add_swap_mid
+#print axioms Ultrametrica.RatQ.finSumQ_congr
+#print axioms Ultrametrica.RatQ.finSumQ_zero
+#print axioms Ultrametrica.RatQ.finSumQ_add
+#print axioms Ultrametrica.RatQ.finSumQ_const_int
+#print axioms Ultrametrica.RatQ.finSumQ_single
+#print axioms Ultrametrica.RatQ.sumList_congr
+#print axioms Ultrametrica.RatQ.sumList_map_add
+#print axioms Ultrametrica.RatQ.sumList_map_sub
+#print axioms Ultrametrica.RatQ.sumList_map_zero
+#print axioms Ultrametrica.finite_graph_half_charge_double_count
+#print axioms Ultrametrica.finite_graph_vertex_incident_sum
+#print axioms Ultrametrica.finite_graph_vertex_charge_exact
+#print axioms Ultrametrica.finite_graph_curved_gauss_bonnet_sum
+#print axioms Ultrametrica.finite_graph_subcritical_gauss_bonnet_conserved
+#print axioms Ultrametrica.finite_graph_curved_eq_flat_subcritical
+#print axioms Ultrametrica.finite_graph_gauss_bonnet_nonvacuous_witness
+
 -- Module 4: Multi-Ball Solitons, Exact Complex Sherman-Morrison & Kerr Parity Laws (12 decls)
 #print axioms Ultrametrica.kozyrev_exact_nonlinear_soliton
 #print axioms Ultrametrica.disjoint_multi_soliton_no_crosstalk
@@ -168,14 +194,44 @@ public import Solution
 #print axioms Ultrametrica.kerr_flux_edge_stress_even
 #print axioms Ultrametrica.kerr_flux_edge_current_odd
 
--- Module 5: Adversarial False-Variant Refutations (5 decls)
+-- Module 5: Discrete Vladimirov / Ultrametric Operator, Kozyrev-Haar Eigenfunctions & J-Parity (26 decls: 16 core + 10 helpers)
+#print axioms Ultrametrica.padicValAux_le
+#print axioms Ultrametrica.padicValMod_le
+#print axioms Ultrametrica.padicValAux_ge_iff
+#print axioms Ultrametrica.padicValMod_ge_iff
+#print axioms Ultrametrica.padicDistVal_ge_iff
+#print axioms Ultrametrica.padicDistVal_symm
+#print axioms Ultrametrica.padicDistVal_strong_tri
+#print axioms Ultrametrica.padicDistVal_isosceles_eq
+#print axioms Ultrametrica.padicDistVal_const_outside_ball
+#print axioms Ultrametrica.padicDistVal_sibling_subball_eq
+#print axioms Ultrametrica.padicDistVal_complement
+#print axioms Ultrametrica.finSum_zero
+#print axioms Ultrametrica.finSum_single
+#print axioms Ultrametrica.finSum_append
+#print axioms Ultrametrica.finSum_mul_split
+#print axioms Ultrametrica.finSum_rev
+#print axioms Ultrametrica.finSum_modSub_inv
+#print axioms Ultrametrica.padicValMod_mul_pow_shift
+#print axioms Ultrametrica.finSum_padic_3split
+#print axioms Ultrametrica.kozyrevHaar_zero_mean
+#print axioms Ultrametrica.kozyrevHaar_vladimirov_eigenfunction
+#print axioms Ultrametrica.vecRev_involutive
+#print axioms Ultrametrica.vecRev_isometry
+#print axioms Ultrametrica.ultrametricOp_commutes_vecRev
+#print axioms Ultrametrica.j_commuting_preserves_parity
+#print axioms Ultrametrica.kozyrevHaar_eigenfunction_nonvacuous_witness
+
+-- Module 6: Adversarial False-Variant Refutations (7 decls)
 #print axioms Ultrametrica.Adversarial.adv_dyadic_breaks_odd_doublet_protection
 #print axioms Ultrametrica.Adversarial.adv_btz_L5_not_universally_flatter
 #print axioms Ultrametrica.Adversarial.adv_supercritical_pinch_breaks_conservation
 #print axioms Ultrametrica.Adversarial.adv_overlapping_modes_violate_zero_crosstalk
 #print axioms Ultrametrica.Adversarial.adv_rt_ssa_reverse_inequality_false
+#print axioms Ultrametrica.Adversarial.adv_supercritical_finite_graph_violates_conservation
+#print axioms Ultrametrica.Adversarial.adv_nonzerosum_not_vladimirov_eigenfunction
 
--- Isolated Palomar Comparator Target Bindings (10 targets — standalone re-verifications from pure Spec.lean)
+-- Isolated Palomar Comparator Target Bindings (12 targets — standalone re-verifications from pure Spec.lean)
 #print axioms Ultrametrica.ComparatorTarget.target_thm1_monna_and_parity
 #print axioms Ultrametrica.ComparatorTarget.target_thm1_picket_fence_law
 #print axioms Ultrametrica.ComparatorTarget.target_thm2_btz_ollivier_ricci
@@ -186,3 +242,5 @@ public import Solution
 #print axioms Ultrametrica.ComparatorTarget.target_thm6_holographic_ssa
 #print axioms Ultrametrica.ComparatorTarget.target_adversarial_refutations
 #print axioms Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses
+#print axioms Ultrametrica.ComparatorTarget.target_thm5_finite_graph_gauss_bonnet
+#print axioms Ultrametrica.ComparatorTarget.target_thm7_vladimirov_kozyrev_eigenfunction

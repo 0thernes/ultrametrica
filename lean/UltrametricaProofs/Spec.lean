@@ -1,7 +1,7 @@
 module
 
 /-!
-  ULTRAMETRICA (v1.6.0) — Pure Statement-Only Definitions (`Spec.lean`).
+  ULTRAMETRICA (v1.7.0) — Pure Statement-Only Definitions (`Spec.lean`).
 
   Palomar Registry compliant Lean 4.35.0 `module`.
   Contains ONLY mathematical definitions (ZERO theorems, ZERO tactics, ZERO `sorry`).
@@ -93,6 +93,75 @@ deriving DecidableEq, Repr
 @[expose] public def sumInt : List Int → Int
   | []      => 0
   | x :: xs => x + sumInt xs
+
+/-- Exact positive-denominator rational numbers `num / den` (`den > 0`, zero Mathlib). -/
+public structure RatQ where
+  num     : Int
+  den     : Int
+  den_pos : 0 < den
+
+@[expose] public def RatQ.zero : RatQ := ⟨0, 1, Int.zero_lt_one⟩
+@[expose] public def RatQ.add (a b : RatQ) : RatQ :=
+  ⟨a.num * b.den + b.num * a.den, a.den * b.den, Int.mul_pos a.den_pos b.den_pos⟩
+@[expose] public def RatQ.neg (a : RatQ) : RatQ := ⟨-a.num, a.den, a.den_pos⟩
+@[expose] public def RatQ.sub (a b : RatQ) : RatQ := RatQ.add a (RatQ.neg b)
+@[expose] public def RatQ.eqv (a b : RatQ) : Prop := a.num * b.den = b.num * a.den
+@[expose] public def RatQ.sumList : List RatQ → RatQ
+  | []      => RatQ.zero
+  | x :: xs => RatQ.add x (RatQ.sumList xs)
+
+/-- An undirected weighted edge `(u, v, w)` on finite vertex set `Fin n`. -/
+public structure WeightedEdge (n : Nat) where
+  u : Fin n
+  v : Fin n
+  w : Int
+
+@[expose] public def edgeIncidentWeight {n : Nat} (x : Fin n) (e : WeightedEdge n) : Int :=
+  (if e.u = x then e.w else 0) + (if e.v = x then e.w else 0)
+
+@[expose] public def graphVertexWeight {n : Nat} (edges : List (WeightedEdge n)) (x : Fin n) : Int :=
+  sumInt (edges.map (edgeIncidentWeight x))
+
+@[expose] public def curvedGenKappaQ (p w Wu Wv : Int) (hWu : 0 < Wu) (hWv : 0 < Wv) : RatQ :=
+  ⟨curvedGenKappaNum p w Wu Wv, Wu * Wv, Int.mul_pos hWu hWv⟩
+
+@[expose] public def curvedGenDeficitQ (w Wu Wv : Int) (hWu : 0 < Wu) (hWv : 0 < Wv) : RatQ :=
+  ⟨curvedGenDeficitNum w Wu Wv, Wu * Wv, Int.mul_pos hWu hWv⟩
+
+/-- Exact finite-level `p`-adic valuation & ultrametric distance on `Z / p^n Z`. -/
+@[expose] public def padicValAux (p : Nat) : Nat → Nat → Nat
+  | 0, _        => 0
+  | fuel + 1, d => if d % p = 0 then 1 + padicValAux p fuel (d / p) else 0
+
+@[expose] public def padicValMod (p n d : Nat) : Nat :=
+  padicValAux p n (d % p ^ n)
+
+@[expose] public def modDiff (N x y : Nat) : Nat :=
+  (x + N - y) % N
+
+@[expose] public def padicDistVal (p n x y : Nat) : Nat :=
+  padicValMod p n (modDiff (p ^ n) x y)
+
+/-- Exact discrete radial ultrametric / Vladimirov convolution operator on `Z / p^n Z`. -/
+@[expose] public def ultrametricOp (p n : Nat) (K : Nat → Int) (f : Fin (p ^ n) → Int) (x : Fin (p ^ n)) : Int :=
+  finSum (p ^ n) (fun y => K (padicDistVal p n x.val y.val) * f y)
+
+/-- Actual discrete Kozyrev-Haar wavelet at scale `j`, ball `c`, and child weights `a : Fin p -> Int`. -/
+@[expose] public def kozyrevHaar (p n j c : Nat) (hp : 2 ≤ p) (a : Fin p → Int) (x : Fin (p ^ n)) : Int :=
+  if x.val % p ^ j = c % p ^ j then
+    a ⟨(x.val / p ^ j) % p, Nat.mod_lt _ (Nat.lt_of_lt_of_le (Nat.zero_lt_two) hp)⟩
+  else 0
+
+/-- Exact scale-only eigenvalue of `ultrametricOp p n K` on every scale-`j` Kozyrev-Haar wavelet. -/
+@[expose] public def ultrametricWaveletEigenvalue (p n j : Nat) (K : Nat → Int) : Int :=
+  finSum (p ^ (n - j - 1)) (fun t => K (j + 1 + padicValMod p (n - j - 1) t.val)) -
+    ((p ^ (n - j - 1) : Nat) : Int) * K j
+
+/-- Exact complement-reversal involution `J(v)_i = v_{N - 1 - i}` on `Z^N`. -/
+@[expose] public def vecRev (N : Nat) (v : Fin N → Int) : Fin N → Int :=
+  fun i => v ⟨N - 1 - i.val,
+    Nat.lt_of_le_of_lt (Nat.sub_le (N - 1) i.val)
+      (Nat.sub_lt (Nat.lt_of_le_of_lt (Nat.zero_le i.val) i.isLt) Nat.zero_lt_one)⟩
 
 /-- Exact Ryu-Takayanagi cut capacity of bulk wedge S on any finite weighted graph. -/
 @[expose] public def rtCutCap (edges : List (Nat × Nat × Nat)) (S : Nat → Bool) : Nat :=

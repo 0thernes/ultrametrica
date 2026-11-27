@@ -652,6 +652,9 @@ export class BruhatTitsBulk {
       const c = order[idx];
       const par = this.parent[c];
       const we = w[this.parentEdge[c]];
+      if (!Number.isFinite(D[c]) || Math.abs(D[c]) < 1e-15) {
+        throw new RangeError(`Singular tree Schur-complement pivot at node ${c}: D[${c}] = ${D[c]}.`);
+      }
       const invDc = 1.0 / D[c];
       const factor = we * invDc;
       D[par] -= we * factor;
@@ -661,6 +664,9 @@ export class BruhatTitsBulk {
 
     // 4. Solve apex (pure AdS root) OR cyclic rotating BTZ black hole horizon ring
     if (!this.isBTZ) {
+      if (!Number.isFinite(D[0]) || Math.abs(D[0]) < 1e-15) {
+        throw new RangeError(`Singular pure-AdS root pivot: D[0] = ${D[0]}.`);
+      }
       const invD0 = 1.0 / D[0];
       phiRe[0] = bRe[0] * invD0;
       phiIm[0] = bIm[0] * invD0;
@@ -900,6 +906,12 @@ export class BruhatTitsBulk {
    * @param {number} [strength=1.0]
    */
   computeBoundaryPotential(outLeafPotential, strength = 1.0) {
+    if (!outLeafPotential || outLeafPotential.length < this.N) {
+      throw new RangeError(`computeBoundaryPotential requires outLeafPotential of length >= ${this.N}.`);
+    }
+    if (!Number.isFinite(strength)) {
+      throw new RangeError(`computeBoundaryPotential strength must be finite, got ${strength}.`);
+    }
     for (let l = 0; l < this.N; l++) {
       let cur = this.leafNodes[l];
       let vGrav = 0;

@@ -305,7 +305,9 @@ test('B06 Negative Tests & B20 Numeric Edge-Value Guards: All invalid public inp
   assert.throws(() => s.vladimirovSpectrum(-1), RangeError);
   assert.throws(() => s.vladimirovSpectrum(NaN), RangeError);
   assert.throws(() => s.vladimirovSpectrum(Infinity), RangeError);
+  assert.throws(() => s.vladimirovSpectrum(1000), RangeError); // F76 overflow guard
   assert.throws(() => s.archimedeanSpectrum(-0.5), RangeError);
+  assert.throws(() => s.archimedeanSpectrum(1000), RangeError); // F76 overflow guard
   assert.throws(() => s.createKozyrevWavelet(-1, 0, 1), RangeError);
   assert.throws(() => s.createKozyrevWavelet(s.n, 0, 1), RangeError);
   assert.throws(() => s.createKozyrevWavelet(1.5, 0, 1), RangeError);
@@ -321,8 +323,19 @@ test('B06 Negative Tests & B20 Numeric Edge-Value Guards: All invalid public inp
   assert.throws(() => b.pinchEdge(0, NaN), RangeError);
   assert.throws(() => b.pinchEdge(0, Infinity), RangeError);
   assert.throws(() => b.solveBulkField(new Float64Array(3), new Float64Array(3)), RangeError);
+  assert.throws(() => b.computeBoundaryPotential(new Float64Array(3), 1.0), RangeError); // F77 buffer length guard
+  assert.throws(() => b.computeBoundaryPotential(new Float64Array(s.N), NaN), RangeError); // F77 non-finite strength
+  assert.throws(() => b.computeBoundaryPotential(new Float64Array(s.N), Infinity), RangeError);
   assert.throws(() => b.shortestGeodesic(-1, 0), RangeError);
   assert.throws(() => b.shortestGeodesic(0, s.N), RangeError);
+
+  // F75 regression: non-finite / singular Schur-complement pivot (corrupted NaN sigma -> D[c] = NaN) throws RangeError
+  const bSing = new BruhatTitsBulk(new PadicSpace(3, 3), 0);
+  bSing.sigma[0] = NaN;
+  assert.throws(
+    () => bSing.solveBulkField(new Float64Array(bSing.N), new Float64Array(bSing.N)),
+    RangeError
+  );
 
   // PadicQuantumEngine boundaries
   const q = new PadicQuantumEngine(s);

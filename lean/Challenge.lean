@@ -3,12 +3,12 @@ module
 public import UltrametricaProofs.Spec
 
 /-!
-  ULTRAMETRICA (v1.6.0) — Isolated Statement-Only Challenge File (`lake comparator`).
+  ULTRAMETRICA (v1.7.0) — Isolated Statement-Only Challenge File (`lake comparator`).
 
-  Palomar Registry compliant Lean 4.35.0 `module` (< 250 lines).
+  Palomar Registry compliant Lean 4.35.0 `module` (< 320 lines).
   Imports ONLY `UltrametricaProofs.Spec` (pure definitions, zero proofs) and NONE of the
-  six proof modules (`Basic`, `AdelicSymmetry`, `HolographyCurvature`, `MultiEdgeHolography`,
-  `SolitonAndSolver`, `AdversarialTests`).
+  eight proof modules (`Basic`, `AdelicSymmetry`, `HolographyCurvature`, `MultiEdgeHolography`,
+  `FiniteGraphGaussBonnet`, `SolitonAndSolver`, `VladimirovOperator`, `AdversarialTests`).
 
   Every `sorry` in this file is intentional — matched strictly against sorry-free `Solution.lean` by:
       lake comparator --config comparator.json --paranoid
@@ -102,7 +102,7 @@ public theorem target_thm4_kerr_solver_and_parity :
       j2 = -j1) := by
   sorry
 
-/-- Target 6 (Theorem V-Global — Arbitrary Multi-Edge Curved AdS Gauss-Bonnet Charge Decomposition). -/
+/-- Target 6 (Theorem V-Global — Per-Edge Curved AdS Gauss-Bonnet Charge Decomposition). -/
 public theorem target_thm5_global_curved_gauss_bonnet :
     (∀ p w Wu Wv : Int,
       Spec.curvedGenKappaNum p w Wu Wv =
@@ -168,17 +168,22 @@ public theorem target_thm6_holographic_ssa :
       S_ABC + S_B ≤ Spec.rtCutCap edges W_AB + Spec.rtCutCap edges W_BC := by
   sorry
 
-/-- Target 9 (Adversarial False-Variant Refutations — Sharpness of Theorems I, V-Global & VI). -/
+/-- Target 9 (Adversarial False-Variant Refutations — Sharpness of Theorems I, V-Global, VI & VII). -/
 public theorem target_adversarial_refutations :
     ¬ (∀ m : Nat, 1 ≤ m → m < 2 → m ≠ 2 - m) ∧
     Spec.curvedGenDeficitNum 8 10 10 ≠ 0 ∧
     ¬ (Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 1 || v == 2) +
        Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 2 || v == 3) ≤
        Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 1 || v == 2 || v == 3) +
-       Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 2)) := by
+       Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5), (1, 3, 4)] (fun v => v == 2)) ∧
+    Spec.curvedGenKappaNum 3 2 2 2 * 1 ≠ (-(3 - 1) * 2) * (2 * 2) ∧
+    ¬ (∃ lam : Int, ∀ x : Fin (3 ^ 2),
+        Spec.ultrametricOp 3 2 (fun v => (v : Int) + 1)
+          (Spec.kozyrevHaar 3 2 1 0 (by omega) (fun d => if d.val = 0 then 1 else 0)) x =
+        lam * Spec.kozyrevHaar 3 2 1 0 (by omega) (fun d => if d.val = 0 then 1 else 0) x) := by
   sorry
 
-/-- Target 10 (Complete Non-Vacuity Witnesses Covering ALL 8 Theorem Targets 1–8 — Playbook Gold #8). -/
+/-- Target 10 (Complete Non-Vacuity Witnesses Covering ALL 10 Theorem Targets 1–8 & 11–12 — Playbook Gold #8). -/
 public theorem target_nonvacuity_witnesses :
     -- Target 1 witness: p=3, n=4, x=5 < 81
     (Spec.revBase 3 4 5 = 63 ∧ 5 < 3 ^ 4) ∧
@@ -208,7 +213,66 @@ public theorem target_nonvacuity_witnesses :
      2 + Spec.finSum 2 uW = 5 ∧ 2 + Spec.finSum 2 vW = 6 ∧ (2 : Int) * (5 + 6) ≤ 5 * 6) ∧
     -- Target 8 witness: concrete weighted graph with strict RT SSA
     (Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 1 || v == 2) = 5 ∧
-     Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 2 || v == 3) = 8) := by
+     Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 2 || v == 3) = 8) ∧
+    -- Target 11 witness: 4-vertex finite weighted star with inhomogeneous edges w = 2, 3, 5
+    (let edges : List (Spec.WeightedEdge 4) :=
+       [⟨⟨0, by omega⟩, ⟨1, by omega⟩, 2⟩,
+        ⟨⟨0, by omega⟩, ⟨2, by omega⟩, 3⟩,
+        ⟨⟨0, by omega⟩, ⟨3, by omega⟩, 5⟩]
+     Spec.graphVertexWeight edges ⟨0, by omega⟩ = 10 ∧
+     Spec.graphVertexWeight edges ⟨1, by omega⟩ = 2 ∧
+     Spec.graphVertexWeight edges ⟨2, by omega⟩ = 3 ∧
+     Spec.graphVertexWeight edges ⟨3, by omega⟩ = 5) ∧
+    -- Target 12 witness: p=3, n=2, j=0, a=[1, -1, 0], K(v)=v has zero sum and eigenvalue 4
+    (let a : Fin 3 → Int := fun d => if d.val = 0 then 1 else if d.val = 1 then -1 else 0
+     Spec.finSum 3 a = 0 ∧ Spec.ultrametricWaveletEigenvalue 3 2 0 (fun v => (v : Int)) = 4) := by
+  sorry
+
+/-- Target 11 (Theorem V-Global Actual Finite-Graph Edge-Sum Curved Gauss-Bonnet Conservation — closes F70):
+    Directly sums exact curved Ollivier-Ricci curvature over EVERY edge `e ∈ edges` of an arbitrary
+    finite undirected weighted graph `edges : List (Spec.WeightedEdge n)` on `Fin n`! -/
+public theorem target_thm5_finite_graph_gauss_bonnet :
+    (∀ (n : Nat) (p : Int) (edges : List (Spec.WeightedEdge n))
+       (hW : ∀ x : Fin n, 0 < Spec.graphVertexWeight edges x),
+      Spec.RatQ.eqv
+        (Spec.RatQ.sumList (edges.map (fun e =>
+          Spec.curvedGenKappaQ p e.w (Spec.graphVertexWeight edges e.u) (Spec.graphVertexWeight edges e.v)
+            (hW e.u) (hW e.v))))
+        (Spec.RatQ.sub
+          ⟨-(p - 1) * (n : Int), 1, Int.zero_lt_one⟩
+          (Spec.RatQ.sumList (edges.map (fun e =>
+            Spec.curvedGenDeficitQ e.w (Spec.graphVertexWeight edges e.u) (Spec.graphVertexWeight edges e.v)
+              (hW e.u) (hW e.v)))))) ∧
+    (∀ (n : Nat) (p : Int) (edges : List (Spec.WeightedEdge n))
+       (hW : ∀ x : Fin n, 0 < Spec.graphVertexWeight edges x),
+      (∀ e ∈ edges,
+        e.w * (Spec.graphVertexWeight edges e.u + Spec.graphVertexWeight edges e.v) ≤
+          Spec.graphVertexWeight edges e.u * Spec.graphVertexWeight edges e.v) →
+      Spec.RatQ.eqv
+        (Spec.RatQ.sumList (edges.map (fun e =>
+          Spec.curvedGenKappaQ p e.w (Spec.graphVertexWeight edges e.u) (Spec.graphVertexWeight edges e.v)
+            (hW e.u) (hW e.v))))
+        ⟨-(p - 1) * (n : Int), 1, Int.zero_lt_one⟩) := by
+  sorry
+
+/-- Target 12 (Theorem VII — First-Principles Discrete Vladimirov / Radial Ultrametric Operator,
+    Kozyrev-Haar Wavelet Eigenfunction Theorem, and Complement Involution J-Parity — closes F71). -/
+public theorem target_thm7_vladimirov_kozyrev_eigenfunction :
+    (∀ p n x y z, 2 ≤ p → x < p ^ n → y < p ^ n → z < p ^ n →
+      min (Spec.padicDistVal p n x y) (Spec.padicDistVal p n y z) ≤ Spec.padicDistVal p n x z) ∧
+    (∀ (p n j c : Nat) (hp : 2 ≤ p), j < n → c < p ^ n →
+      ∀ (K : Nat → Int) (a : Fin p → Int), Spec.finSum p a = 0 →
+        ∀ x : Fin (p ^ n),
+          Spec.ultrametricOp p n K (Spec.kozyrevHaar p n j c hp a) x =
+            Spec.ultrametricWaveletEigenvalue p n j K * Spec.kozyrevHaar p n j c hp a x) ∧
+    (∀ (p n : Nat), 2 ≤ p → ∀ (K : Nat → Int) (f : Fin (p ^ n) → Int) (x : Fin (p ^ n)),
+      Spec.ultrametricOp p n K (Spec.vecRev (p ^ n) f) x =
+        Spec.vecRev (p ^ n) (Spec.ultrametricOp p n K f) x) ∧
+    (∀ (N : Nat) (H : (Fin N → Int) → (Fin N → Int)),
+      (∀ v, H (Spec.vecRev N v) = Spec.vecRev N (H v)) →
+      (∀ v, H (fun i => -(v i)) = fun i => -(H v i)) →
+      (∀ v, Spec.vecRev N v = v → Spec.vecRev N (H v) = H v) ∧
+      (∀ v, Spec.vecRev N v = (fun i => -(v i)) → Spec.vecRev N (H v) = fun i => -(H v i))) := by
   sorry
 
 end Ultrametrica.ComparatorTarget
