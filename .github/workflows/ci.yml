@@ -94,10 +94,10 @@ jobs:
         continue-on-error: true
         run: mypy --config-file pyproject.toml
       - name: Secret scan via gitleaks (report-only)
-        uses: gitleaks/gitleaks-action@v2
         continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.24.2/gitleaks_8.24.2_linux_x64.tar.gz | tar -xz -C /tmp gitleaks
+          /tmp/gitleaks detect --source . --no-banner --redact
       - name: Build Standard v1.2.0 90-item repo audit (report-only)
         continue-on-error: true
         run: bash scripts/audit-repo.sh .
