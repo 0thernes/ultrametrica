@@ -1,13 +1,3 @@
-# ULTRAMETRICA v1.7.0 — Lean 4 (v4.35.0) Kernel Axiom Audit Transcript
-# Toolchain: leanprover/lean4:v4.35.0 (Palomar module system, zero Mathlib, zero sorry, zero native_decide)
-# Honest 4-bucket declaration breakdown (202 audited = 190 library + 12 isolated comparator bindings):
-#   1. Core Mathematical Theorems & Corollaries:       127
-#   2. Zero-Mathlib Infrastructure / Helper Lemmas:     56
-#   3. Adversarial False-Variant Refutations:            7 (AdversarialTests.lean)
-#   4. Isolated Palomar Comparator Target Bindings:     12 (Solution.lean <-> Challenge.lean)
-# Local kernel verification: lake build UltrametricaProofs Challenge Solution + lean VerifyAxioms.lean + leanchecker --fresh UltrametricaProofs & Solution (PASS)
-# Six-kernel comparator verification (Ubuntu CI bubblewrap sandbox): lake check --paranoid + lake comparator --config comparator.json --paranoid (lean4, leanchecker, lean4lean, con-leche, con-ron, nanoda)
-
 'Ultrametrica.ultrametric_isosceles_lt' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ultrametric_two_longest_equal' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.pow_dvd_add' does not depend on any axioms

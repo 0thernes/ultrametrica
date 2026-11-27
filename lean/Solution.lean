@@ -639,13 +639,13 @@ public theorem target_adversarial_refutations :
     Spec.curvedGenKappaNum 3 2 2 2 * 1 ≠ (-(3 - 1) * 2) * (2 * 2) ∧
     ¬ (∃ lam : Int, ∀ x : Fin (3 ^ 2),
         Spec.ultrametricOp 3 2 (fun v => (v : Int) + 1)
-          (Spec.kozyrevHaar 3 2 1 0 (by omega) (fun d => if d.val = 0 then 1 else 0)) x =
-        lam * Spec.kozyrevHaar 3 2 1 0 (by omega) (fun d => if d.val = 0 then 1 else 0) x) := by
+          (Spec.kozyrevHaar 3 2 1 0 (Nat.le_succ 2) (fun d => if d.val = 0 then 1 else 0)) x =
+        lam * Spec.kozyrevHaar 3 2 1 0 (Nat.le_succ 2) (fun d => if d.val = 0 then 1 else 0) x) := by
   refine ⟨Ultrametrica.Adversarial.adv_dyadic_breaks_odd_doublet_protection, by decide, by decide, by decide, ?_⟩
   have hlhs : Ultrametrica.ultrametricOp 3 2 (fun v => (v : Int) + 1)
-      (Ultrametrica.kozyrevHaar 3 2 1 0 (by omega) (fun d => if d.val = 0 then 1 else 0))
+      (Ultrametrica.kozyrevHaar 3 2 1 0 (Nat.le_succ 2) (fun d => if d.val = 0 then 1 else 0))
       ⟨1, by omega⟩ = 1 := by decide
-  have hrhs : Ultrametrica.kozyrevHaar 3 2 1 0 (by omega)
+  have hrhs : Ultrametrica.kozyrevHaar 3 2 1 0 (Nat.le_succ 2)
       (fun d => if d.val = 0 then 1 else 0) ⟨1, by omega⟩ = 0 := by decide
   rintro ⟨lam, h⟩
   have h1 := h ⟨1, by omega⟩
@@ -675,14 +675,15 @@ public theorem target_nonvacuity_witnesses :
      2 + Spec.finSum 2 uW = 5 ∧ 2 + Spec.finSum 2 vW = 6 ∧ (2 : Int) * (5 + 6) ≤ 5 * 6) ∧
     (Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 1 || v == 2) = 5 ∧
      Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 2 || v == 3) = 8) ∧
-    (let edges : List (Spec.WeightedEdge 4) :=
-       [⟨⟨0, by omega⟩, ⟨1, by omega⟩, 2⟩,
-        ⟨⟨0, by omega⟩, ⟨2, by omega⟩, 3⟩,
-        ⟨⟨0, by omega⟩, ⟨3, by omega⟩, 5⟩]
-     Spec.graphVertexWeight edges ⟨0, by omega⟩ = 10 ∧
-     Spec.graphVertexWeight edges ⟨1, by omega⟩ = 2 ∧
-     Spec.graphVertexWeight edges ⟨2, by omega⟩ = 3 ∧
-     Spec.graphVertexWeight edges ⟨3, by omega⟩ = 5) ∧
+    (let v0 : Fin 4 := ⟨0, Nat.zero_lt_succ 3⟩
+     let v1 : Fin 4 := ⟨1, Nat.succ_lt_succ (Nat.zero_lt_succ 2)⟩
+     let v2 : Fin 4 := ⟨2, Nat.succ_lt_succ (Nat.succ_lt_succ (Nat.zero_lt_succ 1))⟩
+     let v3 : Fin 4 := ⟨3, Nat.lt_succ_self 3⟩
+     let edges : List (Spec.WeightedEdge 4) := [⟨v0, v1, 2⟩, ⟨v0, v2, 3⟩, ⟨v0, v3, 5⟩]
+     Spec.graphVertexWeight edges v0 = 10 ∧
+     Spec.graphVertexWeight edges v1 = 2 ∧
+     Spec.graphVertexWeight edges v2 = 3 ∧
+     Spec.graphVertexWeight edges v3 = 5) ∧
     (let a : Fin 3 → Int := fun d => if d.val = 0 then 1 else if d.val = 1 then -1 else 0
      Spec.finSum 3 a = 0 ∧ Spec.ultrametricWaveletEigenvalue 3 2 0 (fun v => (v : Int)) = 4) := by
   refine ⟨by decide, by decide, by decide, ?_, rfl, by decide, ?_, by decide, by decide, by decide⟩
