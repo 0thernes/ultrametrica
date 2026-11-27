@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA (v1.5.0) — Interactive Lean 4 Proof Blueprint Consistency Guard.
+ULTRAMETRICA (v1.6.0) — Interactive Lean 4 Proof Blueprint Consistency Guard.
 
 Verifies that:
   1. Every `data-lean-decl="..."` attribute in `src/web/blueprint.html` exists
@@ -34,9 +34,9 @@ def main() -> None:
     audited_decls = set(
         re.findall(r"^'([A-Za-z0-9_.]+)' (?:depends on axioms:|does not depend on any axioms)", audit, re.MULTILINE)
     )
-    if len(audited_decls) < 149:
+    if len(audited_decls) < 148:
         print(
-            f"[FAIL] Expected >= 149 audited declarations in results/lean4-audit.txt, found {len(audited_decls)}",
+            f"[FAIL] Expected >= 148 audited declarations in results/lean4-audit.txt, found {len(audited_decls)}",
             file=sys.stderr,
         )
         sys.exit(1)

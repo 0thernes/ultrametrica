@@ -28,10 +28,34 @@ PUBLIC_URLS = [
     "https://github.com/0thernes/ultrametrica",
     "https://0thernes.github.io/ultrametrica/",
     "https://0thernes.github.io/ultrametrica/web/",
+    "https://0thernes.github.io/ultrametrica/web/blueprint.html",
     "https://orcid.org/0009-0006-8168-9648",
 ]
 
 DOI_RE = re.compile(r"^10\.\d{4,9}/[-._;()/:A-Za-z0-9]+$")
+
+
+def extract_brace_field(raw: str, field: str) -> str | None:
+    """Balanced-brace BibTeX field extractor handling nested `{...}` (fixes F61)."""
+    m = re.search(rf"\b{field}\s*=\s*\{{", raw, flags=re.IGNORECASE)
+    if not m:
+        return None
+    i = m.end()
+    depth = 1
+    out: list[str] = []
+    while i < len(raw) and depth > 0:
+        ch = raw[i]
+        if ch == "{":
+            depth += 1
+            out.append(ch)
+        elif ch == "}":
+            depth -= 1
+            if depth > 0:
+                out.append(ch)
+        else:
+            out.append(ch)
+        i += 1
+    return "".join(out).strip() if depth == 0 else None
 
 
 def parse_bib(text: str) -> list[dict[str, str]]:
@@ -42,9 +66,9 @@ def parse_bib(text: str) -> list[dict[str, str]]:
             continue
         entry: dict[str, str] = {"type": m_key.group(1), "key": m_key.group(2).strip()}
         for field in ("doi", "year", "title", "url", "eprint", "isbn"):
-            m = re.search(rf"\b{field}\s*=\s*\{{(.+?)\}}(?:,|\s*\n|\s*\}})", raw, flags=re.IGNORECASE)
-            if m:
-                entry[field] = m.group(1).strip()
+            val = extract_brace_field(raw, field)
+            if val is not None:
+                entry[field] = val
         entries.append(entry)
     return entries
 

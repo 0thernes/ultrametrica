@@ -1,4 +1,4 @@
-# ULTRAMETRICA (v1.5.0) — Canonical Task Runner (`justfile`, Build Standard A31/A36/B01)
+# ULTRAMETRICA (v1.6.0) — Canonical Task Runner (`justfile`, Build Standard A31/A36/B01)
 set shell := ["bash", "-euo", "pipefail", "-c"]
 set windows-shell := ["pwsh", "-NoProfile", "-Command"]
 
@@ -10,17 +10,25 @@ setup:
     node --version
     python --version
 
-# Run all 27 Node tests (10 theorems + 8 killed mutants + 3,400+ properties/stress + server contract/EIO + golden)
+# Run all 32 Node tests (10 theorems + 8 real source mutants + 3,400+ properties + 1,000 fuzz + 3 concurrency/race + server + golden)
 test:
     npm run verify:all
 
-# Run planted negative-mutant falsification suite
+# Run real source-code mutation testing suite (8/8 production mutants killed)
 falsify:
     npm run falsify
 
 # Run property-based, metamorphic, determinism & negative-input suite
 properties:
     npm run properties
+
+# Run deterministic HTTP + engine fuzzing suite (B15)
+fuzz:
+    npm run fuzz
+
+# Run concurrent HTTP burst + AudioWorklet race suite (B19)
+concurrency:
+    npm run concurrency
 
 # Run all 3 runnable examples
 examples:
@@ -52,7 +60,7 @@ lint:
     npx --yes -p typescript tsc --noEmit -p jsconfig.json
     python -m py_compile scripts/verify_exact.py scripts/check_readme_axioms.py scripts/check_citations.py scripts/check_blueprint.py scripts/generate_figures.py scripts/package_dist.py scripts/build_llms_full.py reference/padic_oracle.py
 
-# Build & audit pure Lean 4.35.0 proofs (149 decls + leanchecker + 6-kernel lake check/comparator on Linux)
+# Build & audit pure Lean 4.35.0 proofs (148 audited decls: 104 core + 29 helpers + 5 adversarial + 10 isolated comparator targets)
 lean:
     cd lean && lake build UltrametricaProofs Challenge Solution && lake env lean VerifyAxioms.lean && lake env leanchecker --fresh UltrametricaProofs && lake env leanchecker --fresh Solution
 

@@ -38,3 +38,4 @@
 | Date | Deviation | Reason |
 |---|---|---|
 | 2026-11-25 | None (pre-execution seal). | Initial preregistration committed before running `scripts/stats_eval.py`. |
+| 2026-11-26 | `DEV-01`, `DEV-02`, `DEV-03` (logged in full in [`DEVIATIONS.md`](../DEVIATIONS.md)). | (1) Implemented runner as zero-dependency `scripts/stats_eval.mjs` directly importing `src/engine/*.js`; (2) Added promised Mann-Whitney $U$ and 10,000-resample 95% bootstrap CIs for Cliff's $\delta$ & Cohen's $d$ (preserving the exact primary RNG stream `20261125` bit-for-bit); (3) Added non-pseudoreplicated matrix-level sensitivity tests (exact sign test, exact Wilcoxon signed-rank, empirical rank $1/21$, matrix $z$-score). |

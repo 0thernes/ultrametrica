@@ -9,7 +9,7 @@ The repository author publishes under the `COSMOGONIC LICENSE — NON-COMMERCIAL
 
 ## Decision
 
-Retain the author's `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` across ULTRAMETRICA (Hard Rule R8), updating only the copyright holder entity string from the unformed `"0thernes LLC"` to `"Alexander Stephen Donahue (0thernes)"` so legal authorship matches ORCID `0009-0006-8168-9648`. Document the trade-off explicitly in [`LEGAL.md`](../../LEGAL.md), [`LIMITATIONS.md`](../../LIMITATIONS.md), [`formalization.yaml`](../../formalization.yaml), and [`docs/reviews/2026-11-25-hardening-cycles.md`](../reviews/2026-11-25-hardening-cycles.md).
+Retain the author's `COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY` across ULTRAMETRICA (Hard Rule R8), updating only the copyright holder entity string from the unformed `"0thernes LLC"` to `"Alexander Stephen Donahue (0thernes)"` so legal authorship matches ORCID `0009-0006-8168-9648`, and in `v1.6.0` replacing the ambiguous `"Patent pending."` header line in `LICENSE` with `"No patent license granted."` (matching Section 3 verbatim to prevent any 35 U.S.C. § 292 false-marking ambiguity while keeping all owner patent rights reserved). Document the trade-off explicitly in [`LEGAL.md`](../../LEGAL.md), [`LIMITATIONS.md`](../../LIMITATIONS.md), [`formalization.yaml`](../../formalization.yaml), [`ERRATA.md`](../../ERRATA.md), and [`docs/reviews/`](../reviews/).
 
 ## Consequences
 

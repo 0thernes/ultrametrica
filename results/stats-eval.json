@@ -1,8 +1,9 @@
 {
   "experiment": "Experiment I — Pre-Registered Confirmatory Statistical Rejection of GUE/GOE Thermalization",
-  "generated_at": "2026-11-25T23:24:06.419Z",
+  "generated_at": "2026-11-26T23:59:28.528Z",
   "preregistration_file": "docs/preregistration.md",
   "preregistration_commit": "c171b1b268b92931a44bfe0f601c6c9ffb2baeb8",
+  "deviations_file": "DEVIATIONS.md",
   "config": {
     "control_seeds": [
       1001,
@@ -28,7 +29,8 @@
     ],
     "permutation_resamples": 10000,
     "bootstrap_resamples": 10000,
-    "resampling_seed": 20261125,
+    "resampling_seed_primary": 20261125,
+    "resampling_seed_effect_cis": 20261126,
     "correction": "Holm-Bonferroni (FWER alpha = 0.01)"
   },
   "environment": {
@@ -53,7 +55,32 @@
         -0.315
       ],
       "cliffs_delta": -0.8035,
+      "bootstrap_95ci_cliffs_delta": [
+        -0.838,
+        -0.7629
+      ],
       "cohens_d": -1.4786,
+      "bootstrap_95ci_cohens_d": [
+        -1.5655,
+        -1.3899
+      ],
+      "mann_whitney_u": {
+        "u_statistic": 29736,
+        "u_min": 29736,
+        "z_score": -15.0589,
+        "p_normal_approx": 3.167e-51
+      },
+      "matrix_level_sensitivity": {
+        "n_independent_control_matrices": 20,
+        "control_matrix_mean_of_means": 0.594187,
+        "control_matrix_std_of_means": 0.025115,
+        "matrix_level_z_score": -13.26,
+        "sign_test_exact_p": 0.000001907,
+        "wilcoxon_w_min": 0,
+        "wilcoxon_exact_p": 0.000001907,
+        "empirical_rank_p": 0.047619,
+        "wilcoxon_holm_adjusted_p": 0.000007628
+      },
       "p_perm_raw": 0.0001,
       "seeds_in_predicted_direction": "20/20",
       "expected_sign": -1,
@@ -178,7 +205,32 @@
         0.12818
       ],
       "cliffs_delta": 0.2686,
+      "bootstrap_95ci_cliffs_delta": [
+        0.1967,
+        0.336
+      ],
       "cohens_d": 0.4059,
+      "bootstrap_95ci_cohens_d": [
+        0.2797,
+        0.5231
+      ],
+      "mann_whitney_u": {
+        "u_statistic": 191927,
+        "u_min": 110653,
+        "z_score": 5.0344,
+        "p_normal_approx": 4.802e-7
+      },
+      "matrix_level_sensitivity": {
+        "n_independent_control_matrices": 20,
+        "control_matrix_mean_of_means": 0.525898,
+        "control_matrix_std_of_means": 0.021372,
+        "matrix_level_z_score": 4.7,
+        "sign_test_exact_p": 0.000001907,
+        "wilcoxon_w_min": 0,
+        "wilcoxon_exact_p": 0.000001907,
+        "empirical_rank_p": 0.047619,
+        "wilcoxon_holm_adjusted_p": 0.000007628
+      },
       "p_perm_raw": 0.0001,
       "seeds_in_predicted_direction": "20/20",
       "expected_sign": 1,
@@ -303,7 +355,32 @@
         -0.52827
       ],
       "cliffs_delta": -0.998,
+      "bootstrap_95ci_cliffs_delta": [
+        -1,
+        -0.9934
+      ],
       "cohens_d": -2.2329,
+      "bootstrap_95ci_cohens_d": [
+        -2.3247,
+        -2.1479
+      ],
+      "mann_whitney_u": {
+        "u_statistic": 75,
+        "u_min": 75,
+        "z_score": -13.2784,
+        "p_normal_approx": 3.207e-40
+      },
+      "matrix_level_sensitivity": {
+        "n_independent_control_matrices": 20,
+        "control_matrix_mean_of_means": 0.546376,
+        "control_matrix_std_of_means": 0.041483,
+        "matrix_level_z_score": -13.1,
+        "sign_test_exact_p": 0.000001907,
+        "wilcoxon_w_min": 0,
+        "wilcoxon_exact_p": 0.000001907,
+        "empirical_rank_p": 0.047619,
+        "wilcoxon_holm_adjusted_p": 0.000007628
+      },
       "p_perm_raw": 0.0001,
       "seeds_in_predicted_direction": "20/20",
       "expected_sign": -1,
@@ -428,7 +505,32 @@
         -0.32479
       ],
       "cliffs_delta": -0.8184,
+      "bootstrap_95ci_cliffs_delta": [
+        -0.8441,
+        -0.7918
+      ],
       "cohens_d": -1.5037,
+      "bootstrap_95ci_cohens_d": [
+        -1.5739,
+        -1.4353
+      ],
+      "mann_whitney_u": {
+        "u_statistic": 27470,
+        "u_min": 27470,
+        "z_score": -15.3396,
+        "p_normal_approx": 4.369e-53
+      },
+      "matrix_level_sensitivity": {
+        "n_independent_control_matrices": 20,
+        "control_matrix_mean_of_means": 0.594187,
+        "control_matrix_std_of_means": 0.025115,
+        "matrix_level_z_score": -13.46,
+        "sign_test_exact_p": 0.000001907,
+        "wilcoxon_w_min": 0,
+        "wilcoxon_exact_p": 0.000001907,
+        "empirical_rank_p": 0.047619,
+        "wilcoxon_holm_adjusted_p": 0.000007628
+      },
       "p_perm_raw": 0.0001,
       "seeds_in_predicted_direction": "20/20",
       "expected_sign": -1,

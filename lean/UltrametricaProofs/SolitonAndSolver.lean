@@ -142,11 +142,13 @@ private theorem CInt.smul_mul_right (w : Int) (a b : CInt) :
 -- Part A: Exact Kozyrev Compacton-Solitons (Single, 2-Ball & Arbitrary K-Ball List)
 -- =====================================================================
 
-/-- Theorem III.1 (Exact Nonlinear Kozyrev Compacton-Soliton Invariance):
-    Let D be any linear operator on functions X -> CInt, psi an eigenfunction (D psi x = lambda * psi x),
-    and suppose psi has constant modulus squared c on its support (for every x, either psi x = 0 or |psi x|^2 = c).
-    Then for EVERY arbitrary local nonlinear function F : Int -> Int,
-    psi is an EXACT nonlinear eigenstate of (D + F(|psi|^2)) with renormalized eigenvalue (lambda + F c). -/
+/-- Theorem III.1 (Abstract Pointwise Constant-Modulus Nonlinear Eigenstate Lemma):
+    Let D be an abstract operator on functions X -> CInt, psi an assumed eigenfunction
+    (D psi x = lambda * psi x), and suppose psi has constant modulus squared c on its support
+    (for every x, either psi x = 0 or |psi x|^2 = c). Then for EVERY F : Int -> Int,
+    (D + F(|psi|^2)) psi = (lambda + F c) * psi pointwise.
+    Note: D_p^alpha, Kozyrev wavelets, and time evolution are not defined in Lean;
+    the eigenfunction property is an explicit hypothesis here and dynamics are checked numerically. -/
 theorem kozyrev_exact_nonlinear_soliton {X : Type}
     (D : (X → CInt) → (X → CInt))
     (psi : X → CInt)
@@ -206,11 +208,11 @@ def DisjointConstantPackets {X : Type} : List ((X → CInt) × Int) → Prop
     (∀ x, psi x = CInt.zero ∨ sumPackets rest x = CInt.zero) ∧
     DisjointConstantPackets rest
 
-/-- Theorem III.3 (Arbitrary Finite K-Ball Compacton-Soliton Zero Cross-Talk):
-    For ANY finite ensemble of K compactly supported wavelets on pairwise-disjoint p-adic balls
-    and ANY local nonlinearity F, the total nonlinear interaction splits identically with
-    ZERO cross-ball coupling:
-      F(|sum_{r=1}^K psi_r|^2) (sum_{r=1}^K psi_r) = sum_{r=1}^K F(c_r) * psi_r. -/
+/-- Theorem III.3 (Arbitrary Finite K-Packet Disjoint Nonlinearity Splitting Lemma):
+    Over CInt (Z[i]), for ANY finite list of pairwise-disjoint constant-modulus packets and
+    ANY F : Int -> Int, the local nonlinear term splits pointwise with zero cross-talk:
+      F(|sum_{r=1}^K psi_r|^2) (sum_{r=1}^K psi_r) = sum_{r=1}^K F(c_r) * psi_r.
+    Note: D_p^alpha, Kozyrev wavelets, and PDE time evolution are not defined in Lean. -/
 theorem multi_ball_kozyrev_soliton_list {X : Type}
     (F : Int → Int)
     (packets : List ((X → CInt) × Int))
@@ -318,13 +320,13 @@ theorem horizon_edge_quadratic_expansion (z0 z1 ph : CInt) (hunit : ph.normSq = 
   omega
 
 -- =====================================================================
--- Part C: Unconditional Non-Singularity & Full Exact Complex Sherman-Morrison Identity
+-- Part C: Positive-Definite Non-Singularity (for w, q >= 0) & Abstract Complex Sherman-Morrison
 -- =====================================================================
 
-/-- Theorem IV.2a (Unconditional Sherman-Morrison Non-Singularity):
-    Because cutting the wrap-around horizon edge extracts a positive-semidefinite rank-1
-    term w * u * u^H, the remaining open-chain matrix T is Hermitian positive definite
-    (so q = u^H T^{-1} u >= 0), guaranteeing 1 + w * q >= 1 > 0 unconditionally! -/
+/-- Theorem IV.2a (Sherman-Morrison Denominator Bound under w >= 0, q >= 0):
+    When w >= 0 and q = u^H T^{-1} u >= 0 (which holds whenever T is Hermitian positive definite
+    above the BF bound — entered here as the explicit hypothesis hq : 0 <= q), we have
+    1 <= 1 + w * q. Positivity of T and the O(V) solver itself are checked outside Lean. -/
 theorem sherman_morrison_denominator_ge_one (w q : Int) (hw : 0 ≤ w) (hq : 0 ≤ q) :
     1 ≤ 1 + w * q := by
   have hmul : 0 ≤ w * q := Int.mul_nonneg hw hq

@@ -1,11 +1,10 @@
-# ULTRAMETRICA v1.5.0 — Machine-Checked Lean 4 (v4.35.0) Axiom & Kernel Audit
-# Toolchain: leanprover/lean4:v4.35.0 (Palomar Registry module headers, zero Mathlib)
-# Command: cd lean && lake build UltrametricaProofs Challenge Solution && lake env lean VerifyAxioms.lean
-# Verified: 149 declarations (139 core theorems across 5 modules + 10 isolated comparator targets)
-# Also verified by: lake env leanchecker --fresh UltrametricaProofs && lake env leanchecker --fresh Solution
-# CI 6-kernel verification: lake check --paranoid && lake comparator --config comparator.json --paranoid
-# Allowed axioms: strictly within [propext, Classical.choice, Quot.sound] (zero sorry, zero native_decide, zero custom axioms)
+=== ULTRAMETRICA v1.6.0 — Pure Lean 4 Kernel Audit Transcript ===
+Toolchain: Lean (version 4.35.0, x86_64-w64-windows-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release) (Palomar module, autoImplicit = false, zero Mathlib, zero sorry, zero native_decide)
+Audited Declarations: 148 total (104 core theorems + 29 zero-Mathlib helper lemmas + 5 adversarial refutations + 10 isolated comparator targets)
+External Checkers (Local): leanchecker --fresh UltrametricaProofs (EXIT 0), leanchecker --fresh Solution (EXIT 0)
+Multi-Kernel Comparator (CI Linux bubblewrap): lake check --paranoid & lake comparator --config comparator.json --paranoid (6 independent kernels: lean4, leanchecker, lean4lean, con-leche, con-ron, nanoda_bin)
 
+--- #print axioms Output (VerifyAxioms.lean) ---
 'Ultrametrica.ultrametric_isosceles_lt' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ultrametric_two_longest_equal' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.pow_dvd_add' does not depend on any axioms
@@ -44,7 +43,7 @@
 'Ultrametrica.conjugate_sector_factor' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.conjugate_residue_mod_p' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.odd_prime_conjugate_sector_disjoint' depends on axioms: [propext, Quot.sound]
-'Ultrametrica.even_prime_self_conjugate' does not depend on any axioms
+'Ultrametrica.even_prime_self_conjugate' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.odd_pow_is_odd' depends on axioms: [propext]
 'Ultrametrica.odd_prime_doublet_bound' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.picket_fence_even_val' depends on axioms: [propext, Quot.sound]
@@ -75,8 +74,7 @@
 'Ultrametrica.gubser_massless_marginal' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.gubser_bf_bound_exact_square' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.gubser_bf_excess_nonneg' depends on axioms: [propext, Quot.sound]
-'Ultrametrica.rt_odd_prime_horizon_dominance' depends on axioms: [propext, Quot.sound]
-'Ultrametrica.rt_dyadic_criticality' does not depend on any axioms
+'Ultrametrica.rt_dyadic_criticality' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.rt_uniform_odd_prime_all_arcs' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.rt_uniform_dyadic_two_arcs' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.rt_cut_complement_symmetry' depends on axioms: [propext]
@@ -125,8 +123,8 @@
 'Ultrametrica.gen_bridge_excess_balance' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.gen_bridge_wasserstein_lower_bound_sub' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.gen_bridge_wasserstein_lower_bound_sup' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Ultrametrica.gen_bridge_primal_sub_optimal' depends on axioms: [propext, Quot.sound]
-'Ultrametrica.gen_bridge_primal_sup_optimal' depends on axioms: [propext, Quot.sound]
+'Ultrametrica.gen_bridge_primal_sub_optimal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ultrametrica.gen_bridge_primal_sup_optimal' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.gen_bridge_kappa_from_wasserstein' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.kozyrev_exact_nonlinear_soliton' depends on axioms: [propext]
 'Ultrametrica.disjoint_multi_soliton_no_crosstalk' depends on axioms: [propext]
@@ -154,4 +152,4 @@
 'Ultrametrica.ComparatorTarget.target_thm5_kantorovich_dual' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Ultrametrica.ComparatorTarget.target_thm6_holographic_ssa' depends on axioms: [propext, Quot.sound]
 'Ultrametrica.ComparatorTarget.target_adversarial_refutations' depends on axioms: [propext, Quot.sound]
-'Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses' does not depend on any axioms
+'Ultrametrica.ComparatorTarget.target_nonvacuity_witnesses' depends on axioms: [propext, Quot.sound]

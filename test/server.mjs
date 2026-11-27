@@ -53,21 +53,20 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
   const server = createUltrametricaServer({
     srcRoot: SRC_ROOT,
     logFn: (entry) => logs.push(entry),
-    version: '1.5.0',
   });
 
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   const { port } = server.address();
 
   try {
-    // 1. A34 /healthz JSON contract
+    // 1. A34 /healthz JSON contract (A08 single-source VERSION read)
     const health = await rawRequest(port, 'GET', '/healthz');
     assert.equal(health.status, 200);
     assert.match(health.headers['content-type'], /^application\/json/);
     const payload = JSON.parse(health.body);
     assert.equal(payload.status, 'ok');
     assert.equal(payload.service, 'ultrametrica');
-    assert.equal(payload.version, '1.5.0');
+    assert.equal(payload.version, '1.6.0');
     assert.equal(typeof payload.uptime_s, 'number');
 
     // 2. Root & /blueprint redirects preserving query permalink
@@ -103,10 +102,11 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
     assert.equal(post.status, 405);
     assert.equal(post.headers.allow, 'GET, HEAD');
 
-    // 6. Malformed URI encoding, null byte, backslash -> 400
+    // 6. Malformed URI encoding, null byte, backslash, protocol-relative // -> 400
     assert.equal((await rawRequest(port, 'GET', '/web/%ZZ')).status, 400);
     assert.equal((await rawRequest(port, 'GET', '/web/index.html%00.js')).status, 400);
     assert.equal((await rawRequest(port, 'GET', '/web/..%5cpackage.json')).status, 400);
+    assert.equal((await rawRequest(port, 'GET', '//evil.example/web/')).status, 400);
 
     // 7. Directory traversal & bare directory -> 403
     assert.equal((await rawRequest(port, 'GET', '/..%2fpackage.json')).status, 403);
@@ -139,7 +139,6 @@ test('B21 Failure Injection: Induced disk EIO read error returns clean 500 & log
     srcRoot: SRC_ROOT,
     fsImpl: faultyFs,
     logFn: (entry) => logs.push(entry),
-    version: '1.5.0',
   });
 
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));

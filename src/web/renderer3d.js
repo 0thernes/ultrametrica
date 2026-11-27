@@ -346,6 +346,9 @@ function createProgram(gl, vsSrc, fsSrc) {
   gl.linkProgram(prog);
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
     const log = gl.getProgramInfoLog(prog);
+    gl.deleteShader(vs);
+    gl.deleteShader(fs);
+    gl.deleteProgram(prog);
     throw new Error(`WebGL2 program link error: ${log}`);
   }
   gl.deleteShader(vs);
@@ -580,6 +583,11 @@ export class HyperbolicRenderer3D {
       }
     });
 
+    this.canvas.addEventListener('pointercancel', (e) => {
+      dragging = false;
+      try { this.canvas.releasePointerCapture(e.pointerId); } catch {}
+    });
+
     this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
     this.canvas.addEventListener(
@@ -762,6 +770,9 @@ export class HyperbolicRenderer3D {
     const roX = nearP[0], roY = nearP[1], roZ = nearP[2];
     const bulk = sim.bulk;
     const pos = this.nodePos;
+    if (!pos || pos.length < bulk.numNodes * 3) {
+      return { node: -1, edge: -1, leaf: -1 };
+    }
 
     // 1. Closest node to ray
     let bestNode = -1;

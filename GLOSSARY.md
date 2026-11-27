@@ -90,7 +90,7 @@ A precision reference covering every concept, symbol, operator, and algorithm us
 ## S
 
 - **Schur-Complement Tree Elimination**: Exact $O(V)$ Gaussian elimination ordering from leaves to root/horizon that eliminates all hanging tree subtrees without fill-in.
-- **Sherman-Morrison Formula**: Exact rank-1 matrix inverse update $(T + w u u^\dagger)^{-1} = T^{-1} - \frac{w T^{-1} u u^\dagger T^{-1}}{1 + w u^\dagger T^{-1} u}$, with denominator $\ge 1$ for our Kerr-BTZ horizon wrap edge when $w \ge 0$ and $u^\dagger T^{-1} u \ge 0$, which holds when $T \succ 0$ (Theorem IV). Lean checks only the integer inequality $1 \le 1 + wq$ for $w, q \ge 0$.
+- **Sherman-Morrison Formula**: Exact rank-1 matrix inverse update $(T + w u u^\dagger)^{-1} = T^{-1} - \frac{w T^{-1} u u^\dagger T^{-1}}{1 + w u^\dagger T^{-1} u}$, with denominator $\ge 1$ for our Kerr-BTZ horizon wrap edge when $w \ge 0$ and $u^\dagger T^{-1} u \ge 0$, which holds when $T \succ 0$ (Theorem IV). Lean checks the integer inequality $1 \le 1 + wq$ for $w, q \ge 0$ (hypotheses) and the abstract cleared-denominator rank-1 identity.
 - **Strong Triangle Inequality**: Ultrametric inequality $|x + y|_p \le \max(|x|_p, |y|_p)$, with equality whenever $|x|_p \ne |y|_p$.
 
 ## V

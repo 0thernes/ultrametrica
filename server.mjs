@@ -11,12 +11,17 @@
 
 import http from 'node:http';
 import fs from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_SRC_ROOT = path.resolve(__dirname, 'src');
 const VERSION_PATH = path.resolve(__dirname, 'VERSION');
+let DEFAULT_VERSION = '1.6.0';
+try {
+  DEFAULT_VERSION = readFileSync(VERSION_PATH, 'utf8').trim() || DEFAULT_VERSION;
+} catch {}
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -52,7 +57,7 @@ export function createUltrametricaServer({
   srcRoot = DEFAULT_SRC_ROOT,
   fsImpl = fs,
   logFn = null,
-  version = '1.5.0',
+  version = DEFAULT_VERSION,
 } = {}) {
   const rootAbs = path.resolve(srcRoot);
   const startedAt = Date.now();
@@ -78,6 +83,13 @@ export function createUltrametricaServer({
         });
         res.end('Method Not Allowed');
         emitLog('warn', { reqId, method, url: rawUrl, status: 405 });
+        return;
+      }
+
+      if (rawUrl.startsWith('//')) {
+        res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
+        res.end('Bad Request');
+        emitLog('warn', { reqId, method, url: rawUrl, status: 400, reason: 'protocol_relative_url' });
         return;
       }
 
@@ -133,7 +145,8 @@ export function createUltrametricaServer({
         return;
       }
 
-      if (decodedPath.includes('\0') || decodedPath.includes('\\')) {
+      // Reject null bytes, backslashes, and ASCII control characters ([\x00-\x1f\x7f])
+      if (/[\x00-\x1f\x7f\\]/.test(decodedPath)) {
         res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
         res.end('Bad Request');
         emitLog('warn', { reqId, method, path: decodedPath, status: 400, reason: 'forbidden_char' });
@@ -158,6 +171,21 @@ export function createUltrametricaServer({
         res.end('Forbidden');
         emitLog('warn', { reqId, method, path: decodedPath, status: 403, reason: 'not_a_file' });
         return;
+      }
+
+      // Symlink-escape defense: resolve real paths when fsImpl supports realpath
+      if (typeof fsImpl.realpath === 'function') {
+        const [realRoot, realTarget] = await Promise.all([
+          fsImpl.realpath(rootAbs),
+          fsImpl.realpath(fullPath),
+        ]);
+        const realRel = path.relative(realRoot, realTarget);
+        if (realRel.startsWith('..') || path.isAbsolute(realRel)) {
+          res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8', ...SECURITY_HEADERS });
+          res.end('Forbidden');
+          emitLog('warn', { reqId, method, path: decodedPath, status: 403, reason: 'symlink_escape' });
+          return;
+        }
       }
 
       const ext = path.extname(fullPath).toLowerCase();
@@ -216,10 +244,7 @@ if (isMain) {
   const PORT = parsePort(process.env.PORT);
   const HOST = process.env.HOST || '127.0.0.1';
   const jsonLogs = process.env.LOG_FORMAT === 'json';
-  let version = '1.5.0';
-  try {
-    version = (await fs.readFile(VERSION_PATH, 'utf8')).trim() || version;
-  } catch {}
+  const version = DEFAULT_VERSION;
 
   const logFn = (entry) => {
     if (jsonLogs || entry.level === 'error') {

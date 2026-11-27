@@ -4,11 +4,12 @@ public import UltrametricaProofs.Spec
 public import UltrametricaProofs
 
 /-!
-  ULTRAMETRICA (v1.5.0) — Sorry-Free Solution Module Matched Against `Challenge.lean`.
+  ULTRAMETRICA (v1.6.0) — Sorry-Free Solution Module Matched Against `Challenge.lean`.
 
   Palomar Registry compliant Lean 4.35.0 `module`.
-  Proves all 10 targets in `Ultrametrica.ComparatorTarget` with ZERO `sorry`, ZERO `native_decide`,
-  ZERO custom axioms, and ZERO Mathlib dependencies, verified across 6 independent Lean kernels via:
+  Proves all 10 upgraded targets in `Ultrametrica.ComparatorTarget` with ZERO `sorry`,
+  ZERO `native_decide`, ZERO custom axioms, and ZERO Mathlib dependencies, verified across
+  6 independent Lean kernels via:
       lake check --paranoid
       lake comparator --config comparator.json --paranoid
 -/
@@ -87,6 +88,62 @@ private theorem spec_genBridgeTransportCost_eq (p : Nat) (ae : Int) (uA vA : Fin
     exact spec_finSum_eq p _
   rw [hinner]
 
+private def toCoreCInt (z : Spec.CInt) : Ultrametrica.CInt := ⟨z.re, z.im⟩
+private def fromCoreCInt (z : Ultrametrica.CInt) : Spec.CInt := ⟨z.re, z.im⟩
+
+private theorem fromCore_toCore_CInt (z : Spec.CInt) : fromCoreCInt (toCoreCInt z) = z := by
+  cases z; rfl
+
+private theorem toCore_fromCore_CInt (z : Ultrametrica.CInt) : toCoreCInt (fromCoreCInt z) = z := by
+  cases z; rfl
+
+private def toCoreCVec {L : Nat} (v : Spec.CVec L) : Ultrametrica.CVec L := fun i => toCoreCInt (v i)
+private def fromCoreCVec {L : Nat} (v : Ultrametrica.CVec L) : Spec.CVec L := fun i => fromCoreCInt (v i)
+
+private theorem fromCore_toCore_CVec {L : Nat} (v : Spec.CVec L) : fromCoreCVec (toCoreCVec v) = v := by
+  funext i; exact fromCore_toCore_CInt (v i)
+
+private theorem toCore_fromCore_CVec {L : Nat} (v : Ultrametrica.CVec L) : toCoreCVec (fromCoreCVec v) = v := by
+  funext i; exact toCore_fromCore_CInt (v i)
+
+private theorem toCore_add (a b : Spec.CInt) :
+    toCoreCInt (Spec.CInt.add a b) = Ultrametrica.CInt.add (toCoreCInt a) (toCoreCInt b) := by
+  cases a; cases b; rfl
+
+private theorem toCore_sub (a b : Spec.CInt) :
+    toCoreCInt (Spec.CInt.sub a b) = Ultrametrica.CInt.sub (toCoreCInt a) (toCoreCInt b) := by
+  cases a; cases b; rfl
+
+private theorem toCore_mul (a b : Spec.CInt) :
+    toCoreCInt (Spec.CInt.mul a b) = Ultrametrica.CInt.mul (toCoreCInt a) (toCoreCInt b) := by
+  cases a; cases b; rfl
+
+private theorem toCore_smul (s : Int) (a : Spec.CInt) :
+    toCoreCInt (Spec.CInt.smul s a) = Ultrametrica.CInt.smul s (toCoreCInt a) := by
+  cases a; rfl
+
+private theorem toCore_conj (a : Spec.CInt) :
+    toCoreCInt (Spec.CInt.conj a) = Ultrametrica.CInt.conj (toCoreCInt a) := by
+  cases a; rfl
+
+private theorem toCore_finSumCInt (n : Nat) (f : Fin n → Spec.CInt) :
+    toCoreCInt (Spec.finSumCInt n f) = Ultrametrica.finSumCInt n (fun i => toCoreCInt (f i)) := by
+  induction n with
+  | zero => rfl
+  | succ k ih =>
+    simp only [Spec.finSumCInt, Ultrametrica.finSumCInt]
+    rw [toCore_add, ih (fun i => f i.castSucc)]
+
+private theorem toCore_hermitianDot {L : Nat} (u v : Spec.CVec L) :
+    toCoreCInt (Spec.hermitianDot u v) = Ultrametrica.hermitianDot (toCoreCVec u) (toCoreCVec v) := by
+  unfold Spec.hermitianDot Ultrametrica.hermitianDot toCoreCVec
+  rw [toCore_finSumCInt]
+  have hfn : (fun i : Fin L => toCoreCInt (Spec.CInt.mul (Spec.CInt.conj (u i)) (v i))) =
+      (fun i : Fin L => Ultrametrica.CInt.mul (Ultrametrica.CInt.conj (toCoreCInt (u i))) (toCoreCInt (v i))) := by
+    funext i
+    rw [toCore_mul, toCore_conj]
+  rw [hfn]
+
 private theorem spec_cint_add_zero_left (a : Spec.CInt) :
     Spec.CInt.add Spec.CInt.zero a = a := by
   cases a; unfold Spec.CInt.add Spec.CInt.zero; simp
@@ -140,22 +197,25 @@ private theorem spec_sumInt_eq (ws : List Int) :
   | nil => rfl
   | cons w rest ih => simp only [Spec.sumInt, Ultrametrica.sumInt, ih]
 
-private def toCoreCInt (z : Spec.CInt) : Ultrametrica.CInt := ⟨z.re, z.im⟩
-
--- ---- The 10 Comparator Targets (Exact Match to `Challenge.lean`) ----
+-- ---- The 10 Upgraded Comparator Targets (Exact Match to `Challenge.lean`) ----
 
 public theorem target_thm1_monna_and_parity :
     (∀ p n x, 2 ≤ p → x < p ^ n → Spec.revBase p n (Spec.revBase p n x) = x) ∧
     (∀ p n x, 2 ≤ p → x < p ^ n → Spec.revBase p n (p ^ n - 1 - x) = p ^ n - 1 - Spec.revBase p n x) ∧
+    (∀ p n j x y, 2 ≤ p → j ≤ n → x < p ^ n → y < p ^ n →
+      (x % p ^ j = y % p ^ j ↔ Spec.revBase p n x / p ^ (n - j) = Spec.revBase p n y / p ^ (n - j))) ∧
     (∀ p m, p % 2 = 1 → 1 ≤ m → m < p → m ≠ p - m) ∧
-    (1 = 2 - 1) := by
-  refine ⟨?_, ?_, ?_, Ultrametrica.even_prime_self_conjugate⟩
+    (∀ m, 1 ≤ m → m < 2 → m = 2 - m) := by
+  refine ⟨?_, ?_, ?_, ?_, Ultrametrica.even_prime_self_conjugate⟩
   · intro p n x hp hx
     rw [spec_revBase_eq, spec_revBase_eq]
     exact Ultrametrica.monna_involution_universal p n x hp hx
   · intro p n x hp hx
     rw [spec_revBase_eq, spec_revBase_eq]
     exact Ultrametrica.complement_commutes_monna_universal p n x hp hx
+  · intro p n j x y hp hj _hx _hy
+    rw [spec_revBase_eq, spec_revBase_eq]
+    exact Ultrametrica.padic_ball_monna_contiguity p n j x y hp hj
   · intro p m hodd h1 hlt
     exact Ultrametrica.odd_prime_conjugate_sector_disjoint p m hodd h1 hlt
 
@@ -187,6 +247,16 @@ public theorem target_thm2_btz_ollivier_ricci :
         P .opp .back + P .back .back + P .child .back = M →
         P .opp .child + P .back .child + P .child .child = p * M →
         M * (3 * p + 2 - max 0 (6 - L)) ≤ Spec.btzTransportCost L P) ∧
+    (∀ p L M : Int, 2 ≤ p → 3 ≤ L → 1 ≤ M →
+      ∃ P : Spec.BTZNbrClass → Spec.BTZNbrClass → Int,
+        (∀ i j, 0 ≤ P i j) ∧
+        P .opp .opp + P .opp .back + P .opp .child = M ∧
+        P .back .opp + P .back .back + P .back .child = M ∧
+        P .child .opp + P .child .back + P .child .child = p * M ∧
+        P .opp .opp + P .back .opp + P .child .opp = M ∧
+        P .opp .back + P .back .back + P .child .back = M ∧
+        P .opp .child + P .back .child + P .child .child = p * M ∧
+        Spec.btzTransportCost L P = M * (3 * p + 2 - max 0 (6 - L))) ∧
     (∀ p L : Int,
       (p + 1) * (-(2 * p - max 0 (6 - L))) - (-2 * (p - 1)) * (p + 2) =
         (p + 1) * max 0 (6 - L) - 4) := by
@@ -194,13 +264,24 @@ public theorem target_thm2_btz_ollivier_ricci :
     intro L
     unfold Ultrametrica.shortcutSaving
     omega
-  constructor
+  refine ⟨?_, ?_, ?_⟩
   · intro p L M _hp hL _hM P hnn hr0 hr1 hr2 hc0 hc1 hc2
     rw [spec_btzTransportCost_eq L hL P, ← hss L]
     exact Ultrametrica.btz_wasserstein_lower_bound p L M hL
       (fun i j => P (fromCoreNbr i) (fromCoreNbr j))
       (fun i j => hnn (fromCoreNbr i) (fromCoreNbr j))
       hr0 hr1 hr2 hc0 hc1 hc2
+  · intro p L M hp hL hM
+    let Pspec : Spec.BTZNbrClass → Spec.BTZNbrClass → Int :=
+      fun i j => Ultrametrica.btzOptimalPlan p M (toCoreNbr i) (toCoreNbr j)
+    have hfeas := Ultrametrica.btz_primal_feasible p M (by omega) (by omega)
+    have hcost := Ultrametrica.btz_primal_cost_exact p L M
+    have hmatch : (fun i j => Pspec (fromCoreNbr i) (fromCoreNbr j)) = Ultrametrica.btzOptimalPlan p M := by
+      funext i j; cases i <;> cases j <;> rfl
+    refine ⟨Pspec, ?_, hfeas.2.1, hfeas.2.2.1, hfeas.2.2.2.1, hfeas.2.2.2.2.1, hfeas.2.2.2.2.2.1, hfeas.2.2.2.2.2.2, ?_⟩
+    · intro i j
+      exact hfeas.1 (toCoreNbr i) (toCoreNbr j)
+    · rw [spec_btzTransportCost_eq L hL Pspec, hmatch, hcost, hss L]
   · intro p L
     have hid := Ultrametrica.btz_curvature_excess_identity p L
     unfold Ultrametrica.curvatureExcessNum Ultrametrica.kappaBTZNum Ultrametrica.kappaAdSNum
@@ -258,6 +339,17 @@ public theorem target_thm3_multiball_soliton :
 
 public theorem target_thm4_kerr_solver_and_parity :
     (∀ w q : Int, 0 ≤ w → 0 ≤ q → 1 ≤ 1 + w * q) ∧
+    (∀ (L : Nat) (T : Spec.CVec L → Spec.CVec L),
+      (∀ (c1 c2 : Spec.CInt) (v1 v2 : Spec.CVec L),
+        T (Spec.cvecSub (Spec.cvecSmul c1 v1) (Spec.cvecSmul c2 v2)) =
+          Spec.cvecSub (Spec.cvecSmul c1 (T v1)) (Spec.cvecSmul c2 (T v2))) →
+      ∀ (w : Int) (u b y z : Spec.CVec L),
+        T y = b → T z = u →
+        let den := Spec.CInt.add Spec.CInt.one (Spec.CInt.smul w (Spec.hermitianDot u z))
+        let wy := Spec.CInt.smul w (Spec.hermitianDot u y)
+        let xScaled := Spec.cvecSub (Spec.cvecSmul den y) (Spec.cvecSmul wy z)
+        Spec.cvecAdd (T xScaled) (Spec.cvecSmul (Spec.CInt.smul w (Spec.hermitianDot u xScaled)) u) =
+          Spec.cvecSmul den b) ∧
     (∀ w : Int, ∀ z0 z1 ph : Spec.CInt,
       let d1 := Spec.CInt.sub z0 (Spec.CInt.mul ph z1)
       let d2 := Spec.CInt.sub z0.conj (Spec.CInt.mul ph.conj z1.conj)
@@ -266,7 +358,66 @@ public theorem target_thm4_kerr_solver_and_parity :
       let j1 := w * (Spec.CInt.mul z0.conj (Spec.CInt.mul ph z1)).im
       let j2 := w * (Spec.CInt.mul z0 (Spec.CInt.mul ph.conj z1.conj)).im
       j2 = -j1) := by
-  refine ⟨Ultrametrica.sherman_morrison_denominator_ge_one, ?_, ?_⟩
+  refine ⟨Ultrametrica.sherman_morrison_denominator_ge_one, ?_, ?_, ?_⟩
+  · intro L T hT_lin w u b y z hTy hTz
+    dsimp only
+    let Tcore : Ultrametrica.CVec L → Ultrametrica.CVec L := fun v => toCoreCVec (T (fromCoreCVec v))
+    have hTcore_lin : ∀ (c1 c2 : Ultrametrica.CInt) (v1 v2 : Ultrametrica.CVec L),
+        Tcore (Ultrametrica.cvecSub (Ultrametrica.cvecSmul c1 v1) (Ultrametrica.cvecSmul c2 v2)) =
+          Ultrametrica.cvecSub (Ultrametrica.cvecSmul c1 (Tcore v1)) (Ultrametrica.cvecSmul c2 (Tcore v2)) := by
+      intro c1 c2 v1 v2
+      have harg : fromCoreCVec (Ultrametrica.cvecSub (Ultrametrica.cvecSmul c1 v1) (Ultrametrica.cvecSmul c2 v2)) =
+          Spec.cvecSub (Spec.cvecSmul (fromCoreCInt c1) (fromCoreCVec v1))
+                       (Spec.cvecSmul (fromCoreCInt c2) (fromCoreCVec v2)) := by
+        funext i; rfl
+      show toCoreCVec (T (fromCoreCVec _)) = _
+      rw [harg, hT_lin]
+      funext i
+      unfold toCoreCVec Spec.cvecSub Spec.cvecSmul Ultrametrica.cvecSub Ultrametrica.cvecSmul
+      rw [toCore_sub, toCore_mul, toCore_mul, toCore_fromCore_CInt, toCore_fromCore_CInt]
+      rfl
+    have hTcore_y : Tcore (toCoreCVec y) = toCoreCVec b := by
+      show toCoreCVec (T (fromCoreCVec (toCoreCVec y))) = toCoreCVec b
+      rw [fromCore_toCore_CVec, hTy]
+    have hTcore_z : Tcore (toCoreCVec z) = toCoreCVec u := by
+      show toCoreCVec (T (fromCoreCVec (toCoreCVec z))) = toCoreCVec u
+      rw [fromCore_toCore_CVec, hTz]
+    have hcore := Ultrametrica.sherman_morrison_exact_identity Tcore hTcore_lin w
+      (toCoreCVec u) (toCoreCVec b) (toCoreCVec y) (toCoreCVec z) hTcore_y hTcore_z
+    funext i
+    have hi := congrFun hcore i
+    have h_eq : ∀ a b : Spec.CInt, toCoreCInt a = toCoreCInt b → a = b := by
+      intro a b h
+      rw [← fromCore_toCore_CInt a, ← fromCore_toCore_CInt b, h]
+    apply h_eq
+    have hden_eq : toCoreCInt (Spec.CInt.add Spec.CInt.one (Spec.CInt.smul w (Spec.hermitianDot u z))) =
+        Ultrametrica.CInt.add Ultrametrica.CInt.one (Ultrametrica.CInt.smul w (Ultrametrica.hermitianDot (toCoreCVec u) (toCoreCVec z))) := by
+      rw [toCore_add, toCore_smul, toCore_hermitianDot]; rfl
+    have hwy_eq : toCoreCInt (Spec.CInt.smul w (Spec.hermitianDot u y)) =
+        Ultrametrica.CInt.smul w (Ultrametrica.hermitianDot (toCoreCVec u) (toCoreCVec y)) := by
+      rw [toCore_smul, toCore_hermitianDot]
+    let xS : Spec.CVec L :=
+      Spec.cvecSub (Spec.cvecSmul (Spec.CInt.add Spec.CInt.one (Spec.CInt.smul w (Spec.hermitianDot u z))) y)
+                   (Spec.cvecSmul (Spec.CInt.smul w (Spec.hermitianDot u y)) z)
+    have hx_eq : toCoreCVec xS =
+        Ultrametrica.cvecSub
+          (Ultrametrica.cvecSmul (Ultrametrica.CInt.add Ultrametrica.CInt.one (Ultrametrica.CInt.smul w (Ultrametrica.hermitianDot (toCoreCVec u) (toCoreCVec z)))) (toCoreCVec y))
+          (Ultrametrica.cvecSmul (Ultrametrica.CInt.smul w (Ultrametrica.hermitianDot (toCoreCVec u) (toCoreCVec y))) (toCoreCVec z)) := by
+      funext j
+      unfold xS toCoreCVec Spec.cvecSub Spec.cvecSmul Ultrametrica.cvecSub Ultrametrica.cvecSmul
+      rw [toCore_sub, toCore_mul, toCore_mul, hden_eq, hwy_eq]
+      rfl
+    change toCoreCInt (Spec.CInt.add (T xS i) (Spec.CInt.mul (Spec.CInt.smul w (Spec.hermitianDot u xS)) (u i))) =
+      toCoreCInt (Spec.CInt.mul (Spec.CInt.add Spec.CInt.one (Spec.CInt.smul w (Spec.hermitianDot u z))) (b i))
+    rw [toCore_add, toCore_mul, toCore_mul, toCore_smul, toCore_hermitianDot, hden_eq, hx_eq]
+    have hTx : toCoreCInt (T xS i) =
+        Tcore (Ultrametrica.cvecSub
+          (Ultrametrica.cvecSmul (Ultrametrica.CInt.add Ultrametrica.CInt.one (Ultrametrica.CInt.smul w (Ultrametrica.hermitianDot (toCoreCVec u) (toCoreCVec z)))) (toCoreCVec y))
+          (Ultrametrica.cvecSmul (Ultrametrica.CInt.smul w (Ultrametrica.hermitianDot (toCoreCVec u) (toCoreCVec y))) (toCoreCVec z))) i := by
+      show (toCoreCVec (T xS)) i = (toCoreCVec (T (fromCoreCVec _))) i
+      rw [← hx_eq, fromCore_toCore_CVec]
+    rw [hTx]
+    exact hi
   · intro w z0 z1 ph
     have hcore := Ultrametrica.kerr_flux_edge_stress_even (toCoreCInt z0) (toCoreCInt z1) (toCoreCInt ph)
     dsimp only
@@ -323,20 +474,75 @@ public theorem target_thm5_kantorovich_dual :
       ae * M * (Wu * Wv + ((p : Int) - 1) * w * (Wu + Wv)) ≤
         Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy ∧
       ae * M * (((p : Int) + 1) * w * (Wu + Wv) - Wu * Wv) ≤
-        Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy) := by
-  intro p D ae w Wu Wv M uW vW uA vA P00 P0y Px0 Pxy hae hwD huA hvA hWu hP00 hPxy hRowR hCol0 hColS
-  rw [spec_finSum_eq] at hWu hCol0
-  have hRowR' : ∀ r, Px0 r + Ultrametrica.finSum p (fun s => Pxy r s) = uW r * Wv * M := by
-    intro r; rw [← spec_finSum_eq]; exact hRowR r
-  have hColS' : ∀ s, P0y s + Ultrametrica.finSum p (fun r => Pxy r s) = vW s * Wu * M := by
-    intro s; rw [← spec_finSum_eq]; exact hColS s
-  rw [spec_genBridgeTransportCost_eq]
-  exact ⟨
-    Ultrametrica.gen_bridge_wasserstein_lower_bound_sub
-      p D ae w Wu Wv M uW vW uA vA P00 P0y Px0 Pxy hae hwD huA hvA hWu hP00 hRowR' hCol0 hColS',
-    Ultrametrica.gen_bridge_wasserstein_lower_bound_sup
-      p D ae w Wu Wv M uW vW uA vA P00 P0y Px0 Pxy hae hwD huA hvA hWu hPxy hRowR' hCol0 hColS'
-  ⟩
+        Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy) ∧
+    (∀ (p : Nat) (D ae w Wu Wv : Int) (uW vW uA vA : Fin p → Int),
+      0 ≤ w → (∀ r, 0 ≤ uW r) → (∀ s, 0 ≤ vW s) →
+      w * (Wu + Wv) ≤ Wu * Wv →
+      w * ae = D → (∀ r, uW r * uA r = D) → (∀ s, vW s * vA s = D) →
+      w + Spec.finSum p uW = Wu → w + Spec.finSum p vW = Wv →
+      ∃ (M P00 : Int) (P0y Px0 : Fin p → Int) (Pxy : Fin p → Fin p → Int),
+        0 ≤ M ∧ 0 ≤ P00 ∧ (∀ s, 0 ≤ P0y s) ∧ (∀ r, 0 ≤ Px0 r) ∧ (∀ r s, 0 ≤ Pxy r s) ∧
+        P00 + Spec.finSum p P0y = w * Wv * M ∧
+        (∀ r, Px0 r + Spec.finSum p (fun s => Pxy r s) = uW r * Wv * M) ∧
+        P00 + Spec.finSum p Px0 = w * Wu * M ∧
+        (∀ s, P0y s + Spec.finSum p (fun r => Pxy r s) = vW s * Wu * M) ∧
+        Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy =
+          ae * M * (Wu * Wv + ((p : Int) - 1) * w * (Wu + Wv))) ∧
+    (∀ (p : Nat) (D ae w Wu Wv : Int) (uW vW uA vA : Fin p → Int),
+      0 ≤ w → (∀ r, 0 ≤ uW r) → (∀ s, 0 ≤ vW s) →
+      Wu * Wv ≤ w * (Wu + Wv) →
+      w * ae = D → (∀ r, uW r * uA r = D) → (∀ s, vW s * vA s = D) →
+      w + Spec.finSum p uW = Wu → w + Spec.finSum p vW = Wv →
+      ∃ (P00 : Int) (P0y Px0 : Fin p → Int) (Pxy : Fin p → Fin p → Int),
+        0 ≤ P00 ∧ (∀ s, 0 ≤ P0y s) ∧ (∀ r, 0 ≤ Px0 r) ∧ (∀ r s, 0 ≤ Pxy r s) ∧
+        P00 + Spec.finSum p P0y = w * Wv * 1 ∧
+        (∀ r, Px0 r + Spec.finSum p (fun s => Pxy r s) = uW r * Wv * 1) ∧
+        P00 + Spec.finSum p Px0 = w * Wu * 1 ∧
+        (∀ s, P0y s + Spec.finSum p (fun r => Pxy r s) = vW s * Wu * 1) ∧
+        Spec.genBridgeTransportCost p ae uA vA P00 P0y Px0 Pxy =
+          ae * 1 * (((p : Int) + 1) * w * (Wu + Wv) - Wu * Wv)) := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro p D ae w Wu Wv M uW vW uA vA P00 P0y Px0 Pxy hae hwD huA hvA hWu hP00 hPxy hRowR hCol0 hColS
+    rw [spec_finSum_eq] at hWu hCol0
+    have hRowR' : ∀ r, Px0 r + Ultrametrica.finSum p (fun s => Pxy r s) = uW r * Wv * M := by
+      intro r; rw [← spec_finSum_eq]; exact hRowR r
+    have hColS' : ∀ s, P0y s + Ultrametrica.finSum p (fun r => Pxy r s) = vW s * Wu * M := by
+      intro s; rw [← spec_finSum_eq]; exact hColS s
+    rw [spec_genBridgeTransportCost_eq]
+    exact ⟨
+      Ultrametrica.gen_bridge_wasserstein_lower_bound_sub
+        p D ae w Wu Wv M uW vW uA vA P00 P0y Px0 Pxy hae hwD huA hvA hWu hP00 hRowR' hCol0 hColS',
+      Ultrametrica.gen_bridge_wasserstein_lower_bound_sup
+        p D ae w Wu Wv M uW vW uA vA P00 P0y Px0 Pxy hae hwD huA hvA hWu hPxy hRowR' hCol0 hColS'
+    ⟩
+  · intro p D ae w Wu Wv uW vW uA vA hw huW hvW hsub hwD huA hvA hWu hWv
+    rw [spec_finSum_eq] at hWu hWv
+    have hopt := Ultrametrica.gen_bridge_primal_sub_optimal
+      p D ae w Wu Wv uW vW uA vA hw huW hvW hsub hwD huA hvA hWu hWv
+    refine ⟨(Wu - w) * (Wv - w), 0,
+      fun s => w * Wv * (Wu - w) * vW s,
+      fun r => w * Wu * (Wv - w) * uW r,
+      fun r s => (Wu * Wv - w * (Wu + Wv)) * (uW r * vW s),
+      hopt.1, hopt.2.1, hopt.2.2.1, hopt.2.2.2.1, hopt.2.2.2.2.1, ?_, ?_, ?_, ?_, ?_⟩
+    · rw [spec_finSum_eq]; exact hopt.2.2.2.2.2.1
+    · intro r; rw [spec_finSum_eq]; exact hopt.2.2.2.2.2.2.1 r
+    · rw [spec_finSum_eq]; exact hopt.2.2.2.2.2.2.2.1
+    · intro s; rw [spec_finSum_eq]; exact hopt.2.2.2.2.2.2.2.2.1 s
+    · rw [spec_genBridgeTransportCost_eq]; exact hopt.2.2.2.2.2.2.2.2.2
+  · intro p D ae w Wu Wv uW vW uA vA hw huW hvW hsup hwD huA hvA hWu hWv
+    rw [spec_finSum_eq] at hWu hWv
+    have hopt := Ultrametrica.gen_bridge_primal_sup_optimal
+      p D ae w Wu Wv uW vW uA vA hw huW hvW hsup hwD huA hvA hWu hWv
+    refine ⟨w * (Wu + Wv) - Wu * Wv,
+      fun s => vW s * Wu,
+      fun r => uW r * Wv,
+      fun _ _ => 0,
+      hopt.1, hopt.2.1, hopt.2.2.1, hopt.2.2.2.1, ?_, ?_, ?_, ?_, ?_⟩
+    · rw [spec_finSum_eq]; exact hopt.2.2.2.2.1
+    · intro r; rw [spec_finSum_eq]; exact hopt.2.2.2.2.2.1 r
+    · rw [spec_finSum_eq]; exact hopt.2.2.2.2.2.2.1
+    · intro s; rw [spec_finSum_eq]; exact hopt.2.2.2.2.2.2.2.1 s
+    · rw [spec_genBridgeTransportCost_eq]; exact hopt.2.2.2.2.2.2.2.2
 
 public theorem target_thm6_holographic_ssa :
     ∀ (edges : List (Nat × Nat × Nat)) (bdry A B C W_AB W_BC : Nat → Bool) (S_ABC S_B : Nat),
@@ -362,11 +568,63 @@ public theorem target_adversarial_refutations :
   exact ⟨Ultrametrica.Adversarial.adv_dyadic_breaks_odd_doublet_protection, by decide, by decide⟩
 
 public theorem target_nonvacuity_witnesses :
-    Spec.revBase 3 4 5 = 63 ∧
-    Spec.picketVal 5 1 1 - Spec.picketVal 5 1 0 = 3 ∧
-    Spec.curvedGenDeficitNum 2 5 7 = 0 ∧
-    Spec.curvedGenDeficitNum 8 10 10 = 120 ∧
-    Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 1 || v == 2) = 5 := by
-  decide
+    (Spec.revBase 3 4 5 = 63 ∧ 5 < 3 ^ 4) ∧
+    (Spec.picketVal 5 1 1 - Spec.picketVal 5 1 0 = 3) ∧
+    ((3 + 1 : Int) * (-(2 * 3 - max 0 (6 - 5))) - (-2 * (3 - 1)) * (3 + 2) = 0 ∧
+      Spec.btzGraphDist 5 .back .back = 2) ∧
+    (∃ modes : List ((Nat → Spec.CInt) × Int),
+      modes.length = 2 ∧
+      (∀ m ∈ modes, ∀ x, m.1 x = Spec.CInt.zero ∨ (m.1 x).normSq = m.2) ∧
+      (∀ i j (hi : i < modes.length) (hj : j < modes.length),
+        i ≠ j → ∀ x, (modes[i]'hi).1 x = Spec.CInt.zero ∨ (modes[j]'hj).1 x = Spec.CInt.zero)) ∧
+    (Spec.CInt.add Spec.CInt.one
+      (Spec.CInt.smul 2 (Spec.hermitianDot (fun _ : Fin 1 => Spec.CInt.one) (fun _ : Fin 1 => Spec.CInt.one)))
+      = ⟨3, 0⟩) ∧
+    (Spec.curvedGenDeficitNum 2 5 7 = 0 ∧ Spec.curvedGenDeficitNum 8 10 10 = 120) ∧
+    (let uW : Fin 2 → Int := fun i => if i.val == 0 then 1 else 2
+     let vW : Fin 2 → Int := fun i => if i.val == 0 then 3 else 1
+     let uA : Fin 2 → Int := fun i => if i.val == 0 then 12 else 6
+     let vA : Fin 2 → Int := fun i => if i.val == 0 then 4 else 12
+     (2 : Int) * 6 = 12 ∧ (∀ r, uW r * uA r = 12) ∧ (∀ s, vW s * vA s = 12) ∧
+     2 + Spec.finSum 2 uW = 5 ∧ 2 + Spec.finSum 2 vW = 6 ∧ (2 : Int) * (5 + 6) ≤ 5 * 6) ∧
+    (Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 1 || v == 2) = 5 ∧
+     Spec.rtCutCap [(0, 1, 2), (0, 2, 3), (0, 3, 5)] (fun v => v == 2 || v == 3) = 8) := by
+  refine ⟨by decide, by decide, by decide, ?_, rfl, by decide, ?_, by decide⟩
+  · refine ⟨[(fun x => if x == 0 then Spec.CInt.one else Spec.CInt.zero, 1),
+              (fun x => if x == 1 then Spec.CInt.one else Spec.CInt.zero, 1)], rfl, ?_, ?_⟩
+    · intro m hm x
+      simp only [List.mem_cons, List.not_mem_nil, or_false] at hm
+      rcases hm with rfl | rfl
+      · by_cases hx : x == 0
+        · right; simp [hx, Spec.CInt.one, Spec.CInt.normSq]
+        · left; simp [hx]
+      · by_cases hx : x == 1
+        · right; simp [hx, Spec.CInt.one, Spec.CInt.normSq]
+        · left; simp [hx]
+    · intro i j hi hj hne x
+      simp only [List.length_cons, List.length_nil] at hi hj
+      have hi2 : i = 0 ∨ i = 1 := by omega
+      have hj2 : j = 0 ∨ j = 1 := by omega
+      rcases hi2 with rfl | rfl <;> rcases hj2 with rfl | rfl
+      · exact False.elim (hne rfl)
+      · cases x with
+        | zero => right; rfl
+        | succ _ => left; rfl
+      · cases x with
+        | zero => left; rfl
+        | succ k =>
+          cases k with
+          | zero => right; rfl
+          | succ _ => left; rfl
+      · exact False.elim (hne rfl)
+  · refine ⟨by decide, ?_, ?_, by decide, by decide, by decide⟩
+    · intro r
+      rcases r with ⟨v, hv⟩
+      have hv2 : v = 0 ∨ v = 1 := by omega
+      rcases hv2 with rfl | rfl <;> rfl
+    · intro s
+      rcases s with ⟨v, hv⟩
+      have hv2 : v = 0 ∨ v = 1 := by omega
+      rcases hv2 with rfl | rfl <;> rfl
 
 end Ultrametrica.ComparatorTarget

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ULTRAMETRICA v1.5.0 — Interactive Lean 4 Proof Blueprint &amp; Dependency Graph</title>
+  <title>ULTRAMETRICA v1.6.0 — Interactive Lean 4 Proof Blueprint &amp; Dependency Graph</title>
   <link rel="stylesheet" href="./blueprint.css" />
 </head>
 <body>
@@ -12,10 +12,11 @@
       <div class="bp-brand">
         <div class="bp-mark" aria-hidden="true"></div>
         <div>
-          <h1 class="bp-title">ULTRAMETRICA <span class="bp-ver">v1.5.0</span> — Lean 4 Proof Blueprint</h1>
+          <h1 class="bp-title">ULTRAMETRICA <span class="bp-ver">v1.6.0</span> — Lean 4 Proof Blueprint</h1>
           <p class="bp-sub">
-            Pure Lean 4.35.0 (Palomar <code>module</code>, zero Mathlib) &middot; <strong>149 audited declarations</strong>
-            (139 core theorems across 5 modules + 10 isolated comparator targets) &middot; 6-kernel verified
+            Pure Lean 4.35.0 (Palomar <code>module</code>, zero Mathlib, all files &lt; 1,000 lines) &middot;
+            <strong>148 audited declarations</strong> (104 core theorems + 29 zero-Mathlib helper lemmas +
+            5 adversarial refutations + 10 isolated comparator bindings) &middot; 6-kernel verified
           </p>
         </div>
       </div>
@@ -29,9 +30,9 @@
 
     <section class="bp-kpis" aria-label="Verification summary metrics">
       <div class="kpi-card">
-        <span class="kpi-label">LEAN 4 DECLARATIONS</span>
-        <span class="kpi-value mono">149 / 149</span>
-        <span class="kpi-note">0 sorry &middot; 0 native_decide &middot; 0 custom axioms</span>
+        <span class="kpi-label">HONEST 4-BUCKET AUDIT</span>
+        <span class="kpi-value mono">148 Total</span>
+        <span class="kpi-note">104 core + 29 helpers + 5 adv + 10 isolated bindings (0 sorry)</span>
       </div>
       <div class="kpi-card">
         <span class="kpi-label">INDEPENDENT KERNELS</span>
@@ -41,7 +42,7 @@
       <div class="kpi-card">
         <span class="kpi-label">COMPARATOR TARGETS</span>
         <span class="kpi-value mono">10 / 10</span>
-        <span class="kpi-note">lake check --paranoid &amp; lake comparator --paranoid</span>
+        <span class="kpi-note">Primal-dual W₁ + full L-dim Sherman-Morrison + 8/8 non-vacuity</span>
       </div>
       <div class="kpi-card">
         <span class="kpi-label">EXACT ORACLE &amp; CITATIONS</span>
@@ -52,7 +53,7 @@
 
     <section class="bp-controls" aria-label="Filter proof nodes">
       <div class="filter-group" role="group" aria-label="Filter by theorem family">
-        <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All Modules (149)</button>
+        <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All Modules (148)</button>
         <button type="button" class="filter-btn" data-filter="thm1" aria-pressed="false">Thm I &amp; Prop 4.2</button>
         <button type="button" class="filter-btn" data-filter="thm2" aria-pressed="false">Thm II (BTZ Ricci)</button>
         <button type="button" class="filter-btn" data-filter="thm34" aria-pressed="false">Thm III &amp; IV</button>
@@ -75,7 +76,7 @@
         </span>
       </div>
       <div class="dag-scroll">
-        <svg id="dagSvg" class="dag-svg" viewBox="0 0 1160 440" role="img" aria-label="Interactive dependency graph connecting Spec.lean through the five Lean proof modules to the ten isolated comparator targets">
+        <svg id="dagSvg" class="dag-svg" viewBox="0 0 1160 440" role="img" aria-label="Interactive dependency graph connecting Spec.lean through the six Lean proof modules to the ten isolated comparator targets">
           <defs>
             <marker id="arrowHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
               <path d="M 0 1 L 9 5 L 0 9 z" class="dag-arrow" />
@@ -138,7 +139,7 @@
       <!-- Module 3A -->
       <article class="bp-card" data-family="thm2" data-node-id="mod-btz">
         <div class="card-head">
-          <span class="pill pill-core">Module 3a &middot; HolographyCurvature.lean</span>
+          <span class="pill pill-core">Module 3A &middot; HolographyCurvature.lean (39)</span>
           <span class="pill pill-ok">First-Principles W₁</span>
         </div>
         <h3>Theorem II — BTZ Ollivier-Ricci Law, L<sub>c</sub> = 5 &amp; BF Bound</h3>
@@ -162,11 +163,11 @@
       <!-- Module 3B -->
       <article class="bp-card" data-family="thm56" data-node-id="mod-vglobal">
         <div class="card-head">
-          <span class="pill pill-core">Module 3b &middot; HolographyCurvature.lean (73 total)</span>
-          <span class="pill pill-new">NEW in v1.5.0</span>
+          <span class="pill pill-core">Module 3B &middot; MultiEdgeHolography.lean (33)</span>
+          <span class="pill pill-new">Primal Non-Negativity</span>
         </div>
         <h3>Theorem V-Global &amp; VI — Multi-Edge Kantorovich Duality, Gauss-Bonnet &amp; RT SSA</h3>
-        <p>First-principles arbitrary-degree arbitrary-weight multi-edge inhomogeneous Kantorovich primal-dual duality (both subcritical &amp; supercritical regimes), exact curved Gauss-Bonnet charge conservation, and universal holographic Ryu-Takayanagi Strong Subadditivity.</p>
+        <p>First-principles arbitrary-degree arbitrary-weight multi-edge inhomogeneous Kantorovich primal-dual duality (with full entry non-negativity in both subcritical &amp; supercritical regimes), exact curved Gauss-Bonnet charge conservation, and universal holographic Ryu-Takayanagi Strong Subadditivity.</p>
         <ul class="decl-list mono">
           <li data-lean-decl="Ultrametrica.gen_bridge_transport_cost_identity">gen_bridge_transport_cost_identity</li>
           <li data-lean-decl="Ultrametrica.gen_bridge_wasserstein_lower_bound_sub">gen_bridge_wasserstein_lower_bound_sub</li>
@@ -178,7 +179,7 @@
           <li data-lean-decl="Ultrametrica.rt_strong_subadditivity">rt_strong_subadditivity</li>
         </ul>
         <div class="card-foot">
-          <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/UltrametricaProofs/HolographyCurvature.lean" target="_blank" rel="noopener">View Section 12-13 &rarr;</a>
+          <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/UltrametricaProofs/MultiEdgeHolography.lean" target="_blank" rel="noopener">View MultiEdgeHolography.lean &rarr;</a>
           <span class="mono">Paper Thm 6.3, 6.4</span>
         </div>
       </article>
@@ -190,7 +191,7 @@
           <span class="pill pill-ok">0 sorry</span>
         </div>
         <h3>Theorems III &amp; IV — K-Ball Kozyrev Solitons &amp; Kerr-BTZ Solver</h3>
-        <p>Proves zero-crosstalk nonlinear invariance for arbitrary finite lists of pairwise-disjoint Kozyrev compactons, the rank-1 Sherman-Morrison denominator inequality <code>1 &le; 1 + wq</code> for <code>w, q &ge; 0</code> (hypotheses), exact complex matrix identity, and Kerr flux stress-even / current-odd parity laws.</p>
+        <p>Proves pointwise zero-crosstalk nonlinearity splitting over <code>&Zopf;[i]</code> for finite lists of pairwise-disjoint constant-modulus packets (abstract operator; <code>D_p^&alpha;</code> and PDE dynamics checked numerically), the rank-1 Sherman-Morrison denominator inequality <code>1 &le; 1 + wq</code> for <code>w, q &ge; 0</code> (hypotheses), an abstract complex matrix Sherman-Morrison identity, and edge-level Kerr flux parity laws.</p>
         <ul class="decl-list mono">
           <li data-lean-decl="Ultrametrica.kozyrev_exact_nonlinear_soliton">kozyrev_exact_nonlinear_soliton</li>
           <li data-lean-decl="Ultrametrica.disjoint_multi_soliton_no_crosstalk">disjoint_multi_soliton_no_crosstalk</li>
@@ -203,7 +204,7 @@
         </ul>
         <div class="card-foot">
           <a href="https://github.com/0thernes/ultrametrica/blob/main/lean/UltrametricaProofs/SolitonAndSolver.lean" target="_blank" rel="noopener">View SolitonAndSolver.lean &rarr;</a>
-          <span class="mono">Paper Thm 6.1, 6.2</span>
+          <span class="mono">Paper Thm 3.1, 5.1</span>
         </div>
       </article>
 
@@ -211,7 +212,7 @@
       <article class="bp-card" data-family="adv" data-node-id="mod-adv">
         <div class="card-head">
           <span class="pill pill-adv">Module 5 &middot; AdversarialTests.lean (5)</span>
-          <span class="pill pill-new">NEW in v1.5.0</span>
+          <span class="pill pill-ok">0 sorry</span>
         </div>
         <h3>Adversarial False-Variant Refutations (Playbook #12)</h3>
         <p>Kernel-checked explicit negations <code>&not; (...)</code> refuting weakened or false variants of Theorems I, II, III, V/V-Global, and VI — guaranteeing every theorem hypothesis is mathematically sharp and non-vacuous.</p>
@@ -234,8 +235,8 @@
           <span class="pill pill-target">Isolated Palomar Comparator &middot; Challenge.lean &harr; Solution.lean (10 Targets)</span>
           <span class="pill pill-ok">6-Kernel Paranoid</span>
         </div>
-        <h3>Zero-Trust Statement Isolation (`Challenge.lean` imports ONLY `Spec.lean`)</h3>
-        <p>Every target statement is frozen in <code>Challenge.lean</code> (&lt;150 lines, zero proof imports) and verified strictly against sorry-free <code>Solution.lean</code> inside a Linux <code>bubblewrap</code> sandbox via <code>lake check --paranoid</code> and <code>lake comparator --config comparator.json --paranoid</code>.</p>
+        <h3>Zero-Trust Statement Isolation (<code>Challenge.lean</code> imports ONLY <code>Spec.lean</code>)</h3>
+        <p>Every target statement is frozen in <code>Challenge.lean</code> (&lt;220 lines, zero proof imports) and verified strictly against sorry-free <code>Solution.lean</code> inside a Linux <code>bubblewrap</code> sandbox via <code>lake check --paranoid</code> and <code>lake comparator --config comparator.json --paranoid</code>. Target bindings re-verify the headline theorems and are never double-counted as separate mathematical discoveries.</p>
         <ul class="decl-list decl-cols mono">
           <li data-lean-decl="Ultrametrica.ComparatorTarget.target_thm1_monna_and_parity">target_thm1_monna_and_parity</li>
           <li data-lean-decl="Ultrametrica.ComparatorTarget.target_thm1_picket_fence_law">target_thm1_picket_fence_law</li>
@@ -258,7 +259,7 @@
 
     <footer class="bp-footer">
       <p>
-        ULTRAMETRICA v1.5.0 &middot; Author: Alexander Stephen Donahue (ORCID
+        ULTRAMETRICA v1.6.0 &middot; Author: Alexander Stephen Donahue (ORCID
         <a href="https://orcid.org/0009-0006-8168-9648" target="_blank" rel="noopener">0009-0006-8168-9648</a>) &middot;
         Every <code>data-lean-decl</code> identifier on this page is verified automatically by
         <code>scripts/check_blueprint.py</code> against <code>results/lean4-audit.txt</code>.

@@ -51,8 +51,8 @@ class PadicSynthProcessor extends AudioWorkletProcessor {
 
       if (msg.type === 'state') {
         const nextP = Number.isFinite(msg.p) && msg.p >= 2 ? msg.p : this.p;
-        const nextN = Number.isFinite(msg.n) && msg.n >= 1 ? msg.n : this.n;
-        const nextAlpha = Number.isFinite(msg.alpha) ? msg.alpha : this.alpha;
+        const nextN = Number.isFinite(msg.n) && msg.n >= 1 ? Math.min(32, msg.n) : this.n;
+        const nextAlpha = Number.isFinite(msg.alpha) && msg.alpha > 0 ? Math.min(10.0, msg.alpha) : this.alpha;
         const changedTuning = nextP !== this.p || nextN !== this.n || Math.abs(nextAlpha - this.alpha) > 1e-4;
         this.p = nextP;
         this.n = nextN;
@@ -113,13 +113,18 @@ class PadicSynthProcessor extends AudioWorkletProcessor {
 
     const f0 = baseByPrime[this.p] || 78.0;
     const beta = (expScaleByPrime[this.p] || 0.48) * (0.55 + 0.45 * this.alpha);
+    const safeP = Math.max(2, this.p);
+    const logP = Math.log(safeP);
+    const logF0 = Math.log(f0);
+    const logMax = Math.log(3600);
 
     this.targetFreq[0] = f0;
     for (let s = 1; s < MAX_SHELLS; s++) {
-      let f = f0 * (this.p ** (beta * s));
-      // Fold extreme top shells down by exact prime-power ratio p^1 to avoid aliasing
-      while (f > 3600) f /= this.p;
-      this.targetFreq[s] = f;
+      // Exact O(1) log-space prime-power folding (immune to IEEE-754 overflow infinite loops; F65)
+      const logF = logF0 + beta * s * logP;
+      const folds = logF > logMax ? Math.ceil((logF - logMax) / logP) : 0;
+      const f = Math.exp(logF - folds * logP);
+      this.targetFreq[s] = Number.isFinite(f) && f > 10 ? f : f0;
     }
   }
 

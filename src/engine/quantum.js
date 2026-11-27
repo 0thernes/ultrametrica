@@ -141,6 +141,14 @@ export class PadicQuantumEngine {
    * @param {Float64Array} potLeaf
    */
   setPotentialLeaf(potLeaf) {
+    if (!potLeaf || potLeaf.length !== this.N) {
+      throw new RangeError(`setPotentialLeaf requires an array of exact length ${this.N}.`);
+    }
+    for (let l = 0; l < this.N; l++) {
+      if (!Number.isFinite(potLeaf[l])) {
+        throw new RangeError(`setPotentialLeaf received non-finite potential at leaf ${l}.`);
+      }
+    }
     this.potentialLeaf.set(potLeaf);
     const rev = this.space.revTable;
     for (let l = 0; l < this.N; l++) {
@@ -201,6 +209,17 @@ export class PadicQuantumEngine {
     if (norm2 <= 1e-30) {
       throw new RangeError('setState requires a non-zero normalizable quantum state.');
     }
+    if (
+      !Number.isInteger(trackedLeafStart) ||
+      !Number.isInteger(trackedLeafEnd) ||
+      trackedLeafStart < 0 ||
+      trackedLeafEnd > this.N ||
+      trackedLeafStart > trackedLeafEnd
+    ) {
+      throw new RangeError(
+        `setState tracked leaf range [${trackedLeafStart}, ${trackedLeafEnd}) out of bounds [0, ${this.N}].`
+      );
+    }
     this.psiRe.set(rePadic);
     this.psiIm.set(imPadic);
     this._normalize(this.psiRe, this.psiIm);
@@ -227,6 +246,9 @@ export class PadicQuantumEngine {
    * @param {boolean} [replace=false]
    */
   injectKozyrevWavelet(j, ballIndex, characterM = 1, amplitude = 0.85, replace = false) {
+    if (!Number.isFinite(amplitude)) {
+      throw new RangeError(`injectKozyrevWavelet amplitude must be finite, got ${amplitude}.`);
+    }
     const w = this.space.createKozyrevWavelet(j, ballIndex, characterM);
     if (replace) {
       this.setState(w.re, w.im, w.leafStart, w.leafEnd);
@@ -234,14 +256,31 @@ export class PadicQuantumEngine {
     }
 
     const rev = this.space.revTable;
+    let normPadic2 = 0;
+    let normTwin2 = 0;
     for (let x = 0; x < this.N; x++) {
       this.psiRe[x] += amplitude * w.re[x];
       this.psiIm[x] += amplitude * w.im[x];
+      normPadic2 += this.psiRe[x] * this.psiRe[x] + this.psiIm[x] * this.psiIm[x];
     }
     for (let l = 0; l < this.N; l++) {
       const x = rev[l];
       this.twinRe[l] += amplitude * w.re[x];
       this.twinIm[l] += amplitude * w.im[x];
+      normTwin2 += this.twinRe[l] * this.twinRe[l] + this.twinIm[l] * this.twinIm[l];
+    }
+
+    // Guard exact destructive cancellation back onto the injected pure wavelet state
+    if (normPadic2 <= 1e-30) {
+      this.psiRe.set(w.re);
+      this.psiIm.set(w.im);
+    }
+    if (normTwin2 <= 1e-30) {
+      for (let l = 0; l < this.N; l++) {
+        const x = rev[l];
+        this.twinRe[l] = w.re[x];
+        this.twinIm[l] = w.im[x];
+      }
     }
 
     this._normalize(this.psiRe, this.psiIm);
@@ -382,6 +421,12 @@ export class PadicQuantumEngine {
     }
     if (!Number.isInteger(substeps) || substeps < 1) {
       throw new RangeError(`step substeps must be an integer >= 1, got ${substeps}.`);
+    }
+    if (!Number.isFinite(this.nonlinearity)) {
+      throw new RangeError(`nonlinearity must be finite, got ${this.nonlinearity}.`);
+    }
+    if (!Number.isFinite(this.adelicMix) || this.adelicMix < 0 || this.adelicMix > 1) {
+      throw new RangeError(`adelicMix must be in [0, 1], got ${this.adelicMix}.`);
     }
     const h = dt / substeps;
     for (let s = 0; s < substeps; s++) {

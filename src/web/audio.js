@@ -3,16 +3,28 @@
  */
 
 export function computeShellFrequencies(p, n, alpha) {
+  if (!Number.isInteger(p) || p < 2) {
+    throw new RangeError(`computeShellFrequencies requires integer prime p >= 2, got ${p}.`);
+  }
+  if (!Number.isInteger(n) || n < 1 || n > 32) {
+    throw new RangeError(`computeShellFrequencies requires integer depth n in [1, 32], got ${n}.`);
+  }
+  if (!Number.isFinite(alpha) || alpha <= 0 || alpha > 100) {
+    throw new RangeError(`computeShellFrequencies requires finite alpha in (0, 100], got ${alpha}.`);
+  }
   const baseByPrime = { 2: 65.41, 3: 78.0, 5: 68.0, 7: 72.0 };
   const expScaleByPrime = { 2: 0.48, 3: 0.5, 5: 0.42, 7: 0.46 };
   const f0 = baseByPrime[p] || 78.0;
   const beta = (expScaleByPrime[p] || 0.48) * (0.55 + 0.45 * alpha);
+  const logP = Math.log(p);
+  const logF0 = Math.log(f0);
+  const logMax = Math.log(3600);
   const freqs = new Float64Array(n + 1);
   freqs[0] = f0;
   for (let s = 1; s <= n; s++) {
-    let f = f0 * (p ** (beta * s));
-    while (f > 3600) f /= p;
-    freqs[s] = f;
+    const logF = logF0 + beta * s * logP;
+    const folds = logF > logMax ? Math.ceil((logF - logMax) / logP) : 0;
+    freqs[s] = Math.exp(logF - folds * logP);
   }
   return freqs;
 }

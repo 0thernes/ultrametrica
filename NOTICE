@@ -1,23 +1,27 @@
-ULTRAMETRICA (v1.5.0)
+ULTRAMETRICA (v1.6.0)
 Copyright (c) 2026 Alexander Stephen Donahue (0thernes) <0_0@0thernes.art>.
 All commercial rights reserved. Licensed under the COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY (see LICENSE).
 
 Third-Party Runtime Dependencies:
   NONE. The ULTRAMETRICA mathematical engine, Radix-p FFT, Schur-complement + Sherman-Morrison
-  bulk solver, exact bipartite Wasserstein transport solver, Ryu-Takayanagi DP solver, WebGL2
-  3D hyperbolic renderer, AudioWorklet synthesizer, and local HTTP server contain ZERO third-party
-  npm packages or vendored libraries.
+  bulk solver, exact bipartite Johnson-Dijkstra Wasserstein transport solver, Ryu-Takayanagi DP
+  solver, WebGL2 3D hyperbolic renderer, AudioWorklet synthesizer, interactive Proof Blueprint,
+  and local HTTP server contain ZERO third-party npm packages or vendored libraries.
 
 External Toolchains Used for Execution & Formal Proof Checking (not vendored):
-  - Node.js (MIT License) — executes the local server, automated 26-test verification suite
-    (10 theorems, 8 killed mutants, 3,200+ properties, HTTP contract/EIO, golden snapshot),
-    runnable examples, performance benchmarks, pre-registered Experiment I, and Exp A-H.
+  - Node.js (MIT License) — executes the local server, automated 32-test verification suite
+    (10 theorems, 8 true source-code killed mutants, 3,400+ properties/curved-BTZ stress,
+    1,000 B15 fuzz cases, B19 concurrency + AudioWorklet VM storm, HTTP contract/EIO/realpath,
+    golden snapshot), runnable examples, performance benchmarks, pre-registered Experiment I,
+    and Exp A-H.
   - Python 3 standard library (PSF License) — executes the independent textbook differential
     oracle (reference/padic_oracle.py), exact-rational falsifier (scripts/verify_exact.py),
-    and verbatim README axiom checker (scripts/check_readme_axioms.py).
+    live Crossref DOI/retraction auditor (scripts/check_citations.py), blueprint guard
+    (scripts/check_blueprint.py), and verbatim README axiom checker (scripts/check_readme_axioms.py).
   - Lean 4 v4.35.0 & Lake + bundled external checkers (Apache License 2.0) — machine-checks
-    all 120 formal proofs in lean/ plus isolated Spec/Challenge/Solution 6-kernel comparator
-    using core Lean 4 only (zero Mathlib dependency).
+    all 148 audited declarations in lean/ (104 core theorems + 29 zero-Mathlib helper lemmas +
+    5 adversarial false-variant refutations across six Palomar proof modules + 10 isolated
+    Spec/Challenge/Solution 6-kernel comparator target bindings; zero Mathlib dependency).
 
 Mention of Node.js, Python, Lean, Tectonic, WebGL2, WebAudio, or any cited academic authors
 does not imply institutional sponsorship, endorsement, or relicensing of this work.

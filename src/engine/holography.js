@@ -1,6 +1,6 @@
 /**
  * ULTRAMETRICA — Bruhat-Tits Tree T_p & Rotating p-adic BTZ Black Hole (T_p / p^{hZ})
- * Holographic Quantum Gravity Engine.
+ * Discrete Bruhat-Tits Tree & Tate-Curve BTZ Holography Engine.
  *
  * Implements:
  *   1. Exact Bruhat-Tits tree T_p and Tate-curve BTZ black hole quotient (horizon ring L = p^h)
@@ -526,6 +526,9 @@ export class BruhatTitsBulk {
     const dIm = this._tDIm;
 
     // Row 0
+    if (!Number.isFinite(diag[0]) || Math.abs(diag[0]) < 1e-15) {
+      throw new RangeError(`Singular tridiagonal pivot at row 0: ${diag[0]}.`);
+    }
     const inv0 = 1.0 / diag[0];
     cRe[0] = supRe[0] * inv0;
     cIm[0] = supIm[0] * inv0;
@@ -539,7 +542,11 @@ export class BruhatTitsBulk {
       // denom = diag[i] - a * c[i - 1]
       const denRe = diag[i] - (aRe * cRe[i - 1] - aIm * cIm[i - 1]);
       const denIm = -(aRe * cIm[i - 1] + aIm * cRe[i - 1]);
-      const invMag2 = 1.0 / (denRe * denRe + denIm * denIm);
+      const denMag2 = denRe * denRe + denIm * denIm;
+      if (!Number.isFinite(denMag2) || denMag2 < 1e-30) {
+        throw new RangeError(`Singular tridiagonal pivot at row ${i}: |den|^2 = ${denMag2}.`);
+      }
+      const invMag2 = 1.0 / denMag2;
 
       if (i < L - 1) {
         const sRe = supRe[i];
@@ -580,6 +587,14 @@ export class BruhatTitsBulk {
     }
     if (!Number.isFinite(this.delta)) {
       throw new RangeError(`Conformal dimension delta must be finite, got ${this.delta}.`);
+    }
+    if (!Number.isFinite(this.horizonFlux)) {
+      throw new RangeError(`Horizon flux must be finite, got ${this.horizonFlux}.`);
+    }
+    for (let l = 0; l < this.N; l++) {
+      if (!Number.isFinite(boundaryLeafRe[l]) || !Number.isFinite(boundaryLeafIm[l])) {
+        throw new RangeError(`solveBulkField received non-finite boundary value at leaf ${l}.`);
+      }
     }
     this._syncWeights();
 
@@ -710,7 +725,11 @@ export class BruhatTitsBulk {
       // 1 + v^H z = 1 + wWrap * (z[0] - exp(-i*theta) * z[L-1])
       const denRe = 1.0 + wWrap * (zRe[0] - (cosT * zRe[L - 1] + sinT * zIm[L - 1]));
       const denIm = wWrap * (zIm[0] - (cosT * zIm[L - 1] - sinT * zRe[L - 1]));
-      const invDenMag2 = 1.0 / (denRe * denRe + denIm * denIm);
+      const denMag2 = denRe * denRe + denIm * denIm;
+      if (!Number.isFinite(denMag2) || denMag2 < 1e-30) {
+        throw new RangeError(`Singular Sherman-Morrison denominator: |den|^2 = ${denMag2}.`);
+      }
+      const invDenMag2 = 1.0 / denMag2;
 
       const cRe = (vyRe * denRe + vyIm * denIm) * invDenMag2;
       const cIm = (vyIm * denRe - vyRe * denIm) * invDenMag2;
@@ -818,6 +837,17 @@ export class BruhatTitsBulk {
    * @param {{ newtonG?: number, stiffness?: number, coupling?: number, damping?: number }} [opts]
    */
   stepGravity(dt, { newtonG = 1.2, stiffness = 2.4, coupling = 1.6, damping = 1.4 } = {}) {
+    if (!Number.isFinite(dt) || dt < 0) {
+      throw new RangeError(`stepGravity dt must be finite and >= 0, got ${dt}.`);
+    }
+    if (
+      !Number.isFinite(newtonG) ||
+      !Number.isFinite(stiffness) ||
+      !Number.isFinite(coupling) ||
+      !Number.isFinite(damping)
+    ) {
+      throw new RangeError('stepGravity options (newtonG, stiffness, coupling, damping) must be finite.');
+    }
     const E = this.numEdges;
     const sigma = this.sigma;
     const vel = this.sigmaVel;
@@ -1038,6 +1068,9 @@ export class BruhatTitsBulk {
    * via bottom-up tree DP + exact 2-case cyclic DP around the BTZ horizon ring.
    */
   computeRyuTakayanagi(regionALeaves = this.rtRegionA) {
+    if (!regionALeaves || regionALeaves.length !== this.N) {
+      throw new RangeError(`computeRyuTakayanagi requires regionALeaves of exact length ${this.N}.`);
+    }
     if (regionALeaves !== this.rtRegionA) {
       this.rtRegionA.set(regionALeaves);
     }

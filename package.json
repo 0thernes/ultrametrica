@@ -1,19 +1,21 @@
 {
   "name": "ultrametrica",
-  "version": "1.5.0",
-  "description": "Real-time p-adic AdS/CFT Holographic Quantum Gravity, Bruhat-Tits BTZ Black Hole, Kozyrev Wavelet & Ultrametric Acoustic Engine with 149 Pure Lean 4.35.0 Formal Proofs Verified Across 6 Independent Kernels",
+  "version": "1.6.0",
+  "description": "Discrete p-adic AdS/CFT (Bruhat-Tits Tree) Holography Laboratory: Tate-Curve BTZ Quotients, Kozyrev Wavelets, Adelic Parity Symmetries & Pure Lean 4.35.0 Model Invariants",
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
     "test": "node --test test/verify.mjs",
     "falsify": "node --test test/mutants.mjs",
     "properties": "node --test test/properties.mjs",
+    "fuzz": "node --test test/fuzz.mjs",
+    "concurrency": "node --test test/concurrency.mjs",
     "server:test": "node --test test/server.mjs",
     "golden": "node --test test/golden.mjs",
     "examples": "node examples/01_kozyrev_compacton.mjs && node examples/02_btz_curvature_and_rt.mjs && node examples/03_global_gauss_bonnet.mjs",
     "discover": "node scripts/discover.mjs",
     "bench": "node scripts/bench.mjs",
     "stats": "node scripts/stats_eval.mjs",
-    "verify:all": "node --test test/verify.mjs test/mutants.mjs test/properties.mjs test/server.mjs test/golden.mjs"
+    "verify:all": "node --test test/verify.mjs test/mutants.mjs test/properties.mjs test/server.mjs test/golden.mjs test/fuzz.mjs test/concurrency.mjs"
   }
 }

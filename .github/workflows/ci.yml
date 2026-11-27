@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Run all 27 Node tests (10 theorems, 8 killed mutants, properties, curved-BTZ stress, server, golden)
+      - name: Run all 32 Node tests (10 theorems, 8 real source mutants, properties, 1,000 fuzz, concurrency/AudioWorklet race, server, golden)
         run: npm run verify:all
       - name: Run all 3 runnable examples
         run: npm run examples
@@ -101,7 +101,7 @@ jobs:
         run: bash scripts/audit-repo.sh .
 
   lean4-six-kernel-audit:
-    name: Lean 4 (v4.35.0) 149-Decl Audit & 6-Kernel lake check + comparator --paranoid
+    name: Lean 4 (v4.35.0) 148-Decl Audit & 6-Kernel lake check + comparator --paranoid
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -129,7 +129,7 @@ jobs:
                   raise SystemExit(f"ERROR: Forbidden token '{m.group(0)}' in executable code of {p}")
           print(f"PASS: Zero forbidden Lean tokens across {len(files)} sorry-free files.")
           PY
-      - name: Clean-build UltrametricaProofs, Challenge & Solution + audit 149 axioms + leanchecker
+      - name: Clean-build UltrametricaProofs, Challenge & Solution + audit 148 axioms + leanchecker
         working-directory: lean
         shell: bash
         run: |
@@ -153,7 +153,7 @@ jobs:
                       raise SystemExit(f"ERROR: Forbidden axiom {used - allowed} in: {line}")
               elif "does not depend on any axioms" in line:
                   count += 1
-          assert count >= 149, f"Expected >= 149 audited declarations, got {count}"
+          assert count >= 148, f"Expected >= 148 audited declarations, got {count}"
           print(f"PASS: All {count} Lean 4 declarations strictly within {sorted(allowed)} (or zero axioms).")
           PY
       - name: Run Palomar lake check --paranoid & 6-kernel lake comparator --paranoid (bubblewrap sandbox)

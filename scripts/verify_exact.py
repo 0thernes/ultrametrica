@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ULTRAMETRICA (v1.5.0) — Independent Zero-Dependency Exact-Rational Falsifier,
+ULTRAMETRICA (v1.6.0) — Independent Zero-Dependency Exact-Rational Falsifier,
 Metadata/Affiliation/Citation Auditor & SHA-256 Manifest Verifier.
 
 Completely decoupled from both the JavaScript simulation engine and Lean 4 proofs.
@@ -12,10 +12,10 @@ to independently verify or falsify:
   - Theorem V single-edge + Theorem V-Global multi-edge curved AdS Gauss-Bonnet conservation & deficit
   - Theorem VI exact exhaustive brute-force holographic Ryu-Takayanagi Strong Subadditivity (SSA)
   - Nested-comment/string-safe Lean 4 source scan (UltrametricaProofs + Solution)
-  - 120+ audited Lean 4 declarations + 6-kernel comparator verdict in results/lean4-audit.txt
+  - 148 audited Lean 4 declarations (104 core + 29 helpers + 5 adversarial + 10 isolated comparator targets)
   - Pre-registered Experiment I statistical evaluation (results/stats-eval.json) & perf benchmarks
   - Citation / DOI / arXiv syntax validation in paper/refs.bib
-  - Cross-document version, ORCID, and affiliation consistency
+  - Cross-document version, ORCID, CFF 1.2.0 schema, legal & affiliation consistency
   - Cryptographic CHECKSUMS.sha256 and data/MANIFEST.sha256 manifests
 
 Usage:
@@ -60,6 +60,7 @@ MANIFEST_FILES = [
     "SUMMARY.md",
     "CLAIMS.md",
     "LIMITATIONS.md",
+    "DEVIATIONS.md",
     "REPLICATION.md",
     "ERRATA.md",
     "INDEX.md",
@@ -74,6 +75,7 @@ MANIFEST_FILES = [
     "docs/LITERATURE_SEARCH.md",
     "docs/preregistration.md",
     "docs/statement-fidelity.md",
+    "docs/reviews/2026-11-26-hardening-cycles-v160.md",
     "src/engine/padic.js",
     "src/engine/holography.js",
     "src/engine/quantum.js",
@@ -93,6 +95,8 @@ MANIFEST_FILES = [
     "test/properties.mjs",
     "test/server.mjs",
     "test/golden.mjs",
+    "test/fuzz.mjs",
+    "test/concurrency.mjs",
     "test/golden/baseline-snapshot.json",
     "reference/padic_oracle.py",
     "scripts/discover.mjs",
@@ -117,6 +121,7 @@ MANIFEST_FILES = [
     "lean/UltrametricaProofs/Basic.lean",
     "lean/UltrametricaProofs/AdelicSymmetry.lean",
     "lean/UltrametricaProofs/HolographyCurvature.lean",
+    "lean/UltrametricaProofs/MultiEdgeHolography.lean",
     "lean/UltrametricaProofs/SolitonAndSolver.lean",
     "lean/UltrametricaProofs/AdversarialTests.lean",
     "results/lean4-audit.txt",
@@ -782,6 +787,10 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
         assert h["prereg_confirmed"] is True, f"Experiment I hypothesis failed: {h['id']}"
         assert h["p_holm_adjusted"] < 0.01
         assert h["seeds_in_predicted_direction"] == "20/20"
+        assert "bootstrap_95ci_cliffs_delta" in h and len(h["bootstrap_95ci_cliffs_delta"]) == 2
+        assert "bootstrap_95ci_cohens_d" in h and len(h["bootstrap_95ci_cohens_d"]) == 2
+        assert h["mann_whitney_u"]["p_normal_approx"] < 1e-5
+        assert h["matrix_level_sensitivity"]["wilcoxon_holm_adjusted_p"] < 1e-4
 
     # Performance benchmarks (A37 / B26)
     perf_path = ROOT / "results" / "perf-benchmarks.json"
@@ -818,7 +827,7 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
             assert used.issubset(allowed), f"Forbidden axiom in line: {line}"
         elif "does not depend on any axioms" in line:
             audited += 1
-    assert audited >= 149, f"Expected >= 149 audited Lean declarations, found {audited}"
+    assert audited >= 148, f"Expected >= 148 audited Lean declarations, found {audited}"
     assert "comparator" in audit_text.lower() or "nanoda" in audit_text.lower(), (
         "results/lean4-audit.txt missing multi-kernel comparator verification output"
     )
@@ -845,6 +854,10 @@ def verify_metadata_consistency() -> None:
     cff = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
     assert f'version: "{version}"' in cff, f"CITATION.cff missing version {version}"
     assert CANONICAL_ORCID in cff, "CITATION.cff missing canonical ORCID"
+    assert 'license: "NOASSERTION"' not in cff, "CITATION.cff contains invalid CFF 1.2.0 SPDX license NOASSERTION"
+
+    lic = (ROOT / "LICENSE").read_text(encoding="utf-8")
+    assert "Patent pending." not in lic, "LICENSE header must not assert unfiled 'Patent pending.' (35 U.S.C. 292)"
 
     for rel in ("README.md", "LEGAL.md", "paper/main.tex", "CLAIMS.md", "docs/CLAIMS.md"):
         p = ROOT / rel

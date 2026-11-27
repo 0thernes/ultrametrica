@@ -20,9 +20,10 @@
 
 ## 2. Live Crossref DOI & Retraction Audit Summary
 
-Verified live via `python scripts/check_citations.py --live` against `https://api.crossref.org/works/<doi>` on `2026-11-25`:
+Verified live via `python scripts/check_citations.py --live` (using balanced-brace BibTeX parsing) against `https://api.crossref.org/works/<doi>` on `2026-11-26`:
 
 - **BibTeX ↔ LaTeX 1-to-1 coverage:** `21 / 21` entries cited in `paper/main.tex` (zero uncited orphans, zero missing keys).
 - **Crossref DOI resolution:** `18 / 18` DOIs resolved HTTP `200`, `18 / 18` publication years matched, **`0 / 18` retractions** flagged in Crossref `update-to` / `updated-by` metadata.
+- **Public URL availability:** `5 / 5` live endpoints verified HTTP `200` (GitHub repository, ORCID `0009-0006-8168-9648`, Live Observatory, Interactive Proof Blueprint `blueprint.html`, and Master Research Archive).
 - **Non-DOI references:** `2` classic monographs with verified ISBNs (`Vladimirov1994`, `Monna1970`) and `1` JSTOR landmark paper (`Holm1979`, `https://www.jstor.org/stable/4615733`).
 - **Correction caught by live Crossref check (`F36`):** Corrected `Kozyrev2002` title in `paper/refs.bib` from `"Wavelet analysis as a $p$-adic spectral analysis"` to the exact published Izvestiya Mathematics English title `"Wavelet theory as $p$-adic spectral analysis"`.

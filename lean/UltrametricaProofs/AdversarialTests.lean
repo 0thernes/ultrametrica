@@ -3,10 +3,11 @@ module
 public import UltrametricaProofs.Basic
 public import UltrametricaProofs.AdelicSymmetry
 public import UltrametricaProofs.HolographyCurvature
+public import UltrametricaProofs.MultiEdgeHolography
 public import UltrametricaProofs.SolitonAndSolver
 
 /-!
-  ULTRAMETRICA (v1.5.0) — Adversarial False-Variant Refutation Suite (`AdversarialTests.lean`).
+  ULTRAMETRICA (v1.6.0) — Adversarial False-Variant Refutation Suite (`AdversarialTests.lean`).
 
   Playbook Gold Standard Item #12: formally proves explicit NEGATIONS (`¬ (...)`) of
   deliberately weakened or false statements across Theorems I–VI, confirming that our

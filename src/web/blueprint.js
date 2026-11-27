@@ -1,5 +1,5 @@
 /**
- * ULTRAMETRICA v1.5.0 — Interactive Lean 4 Proof Blueprint DAG & Filter Controller.
+ * ULTRAMETRICA v1.6.0 — Interactive Lean 4 Proof Blueprint DAG & Filter Controller.
  * Zero external dependencies, strict CSP compliant (no inline scripts/styles).
  */
 
@@ -7,12 +7,12 @@ const DAG_NODES = [
   { id: 'spec', x: 30, y: 185, w: 175, h: 66, title: 'Spec.lean', sub: 'Pure defs (0 proofs)', kind: 'spec', card: 'mod-targets' },
   { id: 'basic', x: 255, y: 28, w: 205, h: 66, title: 'Basic.lean (26)', sub: 'Ultrametric + Monna', kind: 'core', card: 'mod-basic' },
   { id: 'adelic', x: 510, y: 28, w: 225, h: 66, title: 'AdelicSymmetry (23)', sub: 'Thm I & Prop 4.2', kind: 'core', card: 'mod-adelic' },
-  { id: 'btz', x: 255, y: 132, w: 205, h: 66, title: 'BTZ Ricci + BF', sub: 'Thm II (L_c = 5)', kind: 'core', card: 'mod-btz' },
-  { id: 'vglobal', x: 510, y: 132, w: 225, h: 66, title: 'Multi-Edge W1 & SSA', sub: 'Thm V-Global & VI (73)', kind: 'core', card: 'mod-vglobal' },
+  { id: 'btz', x: 255, y: 132, w: 205, h: 66, title: 'HolographyCurv (39)', sub: 'Thm II & V (L_c = 5)', kind: 'core', card: 'mod-btz' },
+  { id: 'vglobal', x: 510, y: 132, w: 225, h: 66, title: 'MultiEdgeHolo (33)', sub: 'Thm V-Global & VI', kind: 'core', card: 'mod-vglobal' },
   { id: 'soliton', x: 255, y: 238, w: 205, h: 66, title: 'SolitonAndSolver (12)', sub: 'Thm III & IV (Kerr)', kind: 'core', card: 'mod-soliton' },
   { id: 'adv', x: 510, y: 238, w: 225, h: 66, title: 'AdversarialTests (5)', sub: 'Sharpness Negations', kind: 'adv', card: 'mod-adv' },
   { id: 'challenge', x: 255, y: 344, w: 205, h: 66, title: 'Challenge.lean (10)', sub: 'Statement-only targets', kind: 'target', card: 'mod-targets' },
-  { id: 'solution', x: 810, y: 185, w: 315, h: 78, title: 'Solution.lean + 6 Kernels', sub: '149 decls · lake check + comparator', kind: 'target', card: 'mod-targets' },
+  { id: 'solution', x: 810, y: 185, w: 315, h: 78, title: 'Solution.lean + 6 Kernels', sub: '148 audited (104+29+5+10)', kind: 'target', card: 'mod-targets' },
 ];
 
 const DAG_EDGES = [

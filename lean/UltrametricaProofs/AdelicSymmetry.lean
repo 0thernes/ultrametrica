@@ -339,11 +339,12 @@ theorem odd_prime_conjugate_sector_disjoint (p m : Nat) (hodd : p % 2 = 1)
   omega
 
 /-- Theorem I.4 (Even-Prime Self-Conjugacy — Complete Doublet Lifting at p = 2):
-    For p = 2, the unique non-zero residue m = 1 satisfies m = p - m,
+    For p = 2, EVERY non-zero residue m in {1, ..., p-1} satisfies m = 2 - m (uniquely m = 1),
     so every valuation sector W_{s, 1} is self-conjugate under C and admits
     generically simple (non-degenerate) eigenvalues. -/
-theorem even_prime_self_conjugate : (1 : Nat) = 2 - 1 := by
-  decide
+theorem even_prime_self_conjugate (m : Nat) (hm1 : 1 ≤ m) (hm2 : m < 2) :
+    m = 2 - m := by
+  omega
 
 /-- Theorem I.5 (Exact Odd-Prime Excited-State Doublet Count):
     For every odd integer p and depth n, p^n is odd, so the (p^n - 1) excited states

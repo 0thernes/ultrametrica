@@ -1,9 +1,9 @@
 # ULTRAMETRICA — Cross-Check Against `0thernes/unsolved-problems-mega-atlas`
 
 **Author:** Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA · ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648))  
-**Date:** 2026-11-25  
+**Date:** 2026-11-26  
 **Target Catalog:** [`0thernes/unsolved-problems-mega-atlas`](https://github.com/0thernes/unsolved-problems-mega-atlas) (`outputs/MegaAtlas_Unsolved_Problems_V2.json`, `1,900` open problems)  
-**ULTRAMETRICA Version:** `v1.4.0`
+**ULTRAMETRICA Version:** `v1.6.0`
 
 ---
 
@@ -13,7 +13,7 @@
 
 ULTRAMETRICA does **not** solve or retire any grand open problem in `unsolved-problems-mega-atlas`. Every continuum, Millennium, quantum-gravity, and number-theoretic problem in the catalog remains **OPEN**.
 
-What ULTRAMETRICA **does** deliver — with pure Lean 4 (`v4.35.0`) proofs kernel-checked by Lean (`lake build`, `leanchecker`), whose 10 comparator targets were also accepted by 6 independent kernels, exact rational (`fractions.Fraction`) certificates, and reproducible numerical experiments — is a set of **exact finite-prime discrete sub-results, structural obstructions, and negative-result falsifications** directly attached to **`SUB-032`** and adjacent to **`ANL-065` / `QM-016`**, **`GR-002` / `GR-044` / `GR-045` / `GR-050`**, **`SUB-030`**, **`STAT-017`**, and **`GEOM-018` / `GEOM-019`**.
+What ULTRAMETRICA **does** deliver — with pure Lean 4 (`v4.35.0`) proofs kernel-checked by Lean (`lake build`, `leanchecker`, and Ubuntu CI `lake check --paranoid`), whose 10 comparator targets (and dependency closure) are also verified across six independent kernels via `lake comparator --paranoid`, exact rational (`fractions.Fraction`) certificates, and reproducible numerical/statistical experiments — is a set of **exact finite-prime discrete sub-results, structural obstructions, and negative-result falsifications** directly attached to **`SUB-032`** and adjacent to **`ANL-065` / `QM-016`**, **`GR-002` / `GR-044` / `GR-045` / `GR-050`**, **`SUB-030`**, **`STAT-017`**, and **`GEOM-018` / `GEOM-019`**.
 
 ---
 
@@ -29,7 +29,7 @@ An exhaustive scan over all `1,900` problem entries in `MegaAtlas_Unsolved_Probl
 
 ## 3. Problem-by-Problem Audit Matrix
 
-| Mega-Atlas ID | Problem Title & 2026 Status | Full Solution? | Exact Scoped Relation to ULTRAMETRICA (`v1.4.0`) | What Remains Unsolved (Honest Boundary) |
+| Mega-Atlas ID | Problem Title & 2026 Status | Full Solution? | Exact Scoped Relation to ULTRAMETRICA (`v1.6.0`) | What Remains Unsolved (Honest Boundary) |
 |---|---|---|---|---|
 | **`SUB-032`** | **Non-Archimedean / $p$-adic AdS/CFT Holography Continuum Limit & Adelic Unification** (*Active Breakthroughs / Frontier*) | **NO** | **Primary direct match (partial discrete sub-results).** Proves exact finite-$p$ discrete structures on $\mathbb{Z}_p/p^n\mathbb{Z}_p$, $T_p$, and Tate-curve quotients $T_p/p^{h\mathbb{Z}}$: (1) **Theorem I & Prop. 4.2** adelic parity-doubling dichotomy & modular picket-fence obstruction; (2) **Theorem II** first-principles Kantorovich BTZ Ollivier-Ricci law & $L_c = 5$ trichotomy for all $p \ge 2, L \ge 3$; (3) **Theorem V (Global)** non-perturbative arbitrary multi-edge curved AdS discrete Gauss-Bonnet conservation ($\frac{w_e}{W_u}+\frac{w_e}{W_v}\le 1$) and exact supercritical pinch deficit; (4) **Theorem VI** universal discrete holographic Strong Subadditivity on arbitrary weighted graphs. | Reconstructing continuous Lorentzian Einstein gravity and real $\mathrm{AdS}/\mathrm{CFT}$ rigorously from the infinite adelic product $\prod_p |x|_p \cdot |x|_\infty = 1$ remains **completely open**. ULTRAMETRICA couples one finite prime $p$ to $\mathbb{R}$ via the discrete Monna map $R_p$; it does not construct an infinite-prime continuum limit. |
 | **`ANL-065` & `QM-016`** | **Berry–Tabor and Bohigas–Giannoni–Schmit (BGS) Quantum Chaos Spectral Conjectures** (*Partially Solved / Special Cases*) | **NO** | **Sharp negative-result falsification for a concrete non-commuting adelic family.** Despite $[H_Q, H_R] \ne 0$ and Baker's-map-like digit reversal $R_p$, Theorem I + Prop. 4.2 + Experiments E & G (with multi-seed GUE/GOE control rejection) prove that $H_\theta$ fails to thermalize to Wigner-Dyson GOE/GUE, remaining locked to $r_0(p,m) = \min(2m, p-2m)/\max(2m, p-2m)$. | Proving BGS for even one generic classically chaotic billiard (e.g., Bunimovich stadium) remains **completely open**. |
@@ -43,7 +43,7 @@ An exhaustive scan over all `1,900` problem entries in `MegaAtlas_Unsolved_Probl
 
 ## 4. Recommended Next Open-Problem Targets Directly Extending ULTRAMETRICA (`SUB-032`)
 
-If future work aims to push further on `SUB-032` from this verified baseline, three concrete mathematical sub-problems sit directly adjacent to `v1.4.0`:
+If future work aims to push further on `SUB-032` from this verified `v1.6.0` baseline, three concrete mathematical sub-problems sit directly adjacent:
 
 1. **Higher-Genus Mumford–Schottky Multi-Mouth Wormholes ($g \ge 2$):** Derive and formalize exact Kantorovich primal-dual Ollivier-Ricci laws and $O(V + g^3)$ Woodbury bulk Klein-Gordon solvers on $T_p / \Gamma_g$.
 2. **Simultaneous Inhomogeneous Curvature on Cyclic BTZ Horizons:** Extend Theorem V's global multi-edge Gauss-Bonnet conservation and supercritical deficit formula from bridges on $T_p$ to dynamic edge lengths on the cyclic BTZ horizon ring where shortest paths switch across the cycle.

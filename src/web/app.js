@@ -82,8 +82,10 @@ function getExperimentFormula(id) {
   const p = sim.p;
   const a = sim.quantum.alpha.toFixed(2);
   switch (id) {
-    case 'kozyrev_trap':
-      return `D_${p}^${a} psi = ${p}^(3*${a}) psi`;
+    case 'kozyrev_trap': {
+      const shell = Math.max(1, Math.min(sim.n - 2, 2)) + 1;
+      return `D_${p}^${a} psi = ${p}^(${shell}*${a}) psi`;
+    }
     case 'btz_black_hole':
       return `T_${p} / ${p}^(${sim.horizonDepth}Z), L=${sim.bulk.horizonLength}`;
     case 'ultrametric_tunneling':
@@ -315,16 +317,16 @@ function hydrateStateFromURL() {
   if ([...params.keys()].length === 0) return;
 
   const p = Number(params.get('p'));
+  const btz = params.get('btz');
+  const hasExplicitBtz = btz === '0' || btz === '1';
   if ([2, 3, 5, 7].includes(p) && p !== sim.p) {
-    sim.reconfigure({ p, btz: false });
+    sim.reconfigure({ p, btz: hasExplicitBtz ? btz === '1' : false });
+  } else if (hasExplicitBtz) {
+    sim.setBTZEnabled(btz === '1');
   }
   const exp = params.get('exp');
   if (exp && EXPERIMENTS.some((e) => e.id === exp)) {
-    sim.loadExperiment(exp);
-  }
-  const btz = params.get('btz');
-  if (btz === '0' || btz === '1') {
-    sim.setBTZEnabled(btz === '1');
+    sim.loadExperiment(exp, { keepTopology: hasExplicitBtz });
   }
   const view = params.get('view');
   if (['field', 'ricci', 'rt', 'gravity'].includes(view)) {
@@ -388,7 +390,13 @@ elBtnSnapshot.addEventListener('click', () => {
 });
 
 function setHelpModalOpen(open) {
+  const wasOpen = !elHelpModal.classList.contains('hidden');
   elHelpModal.classList.toggle('hidden', !open);
+  if (open && !wasOpen) {
+    elBtnCloseHelp.focus();
+  } else if (!open && wasOpen) {
+    elBtnHelp.focus();
+  }
 }
 
 elBtnHelp.addEventListener('click', () => setHelpModalOpen(elHelpModal.classList.contains('hidden')));
@@ -525,7 +533,8 @@ renderer.onPickClick = (hit, evt) => {
 
 // ---- Keyboard Shortcuts ----
 window.addEventListener('keydown', (e) => {
-  if (e.target.tagName === 'INPUT') return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.target && e.target.tagName === 'INPUT') return;
   if (e.key === 'Escape') {
     setHelpModalOpen(false);
   } else if (e.key === '?') {

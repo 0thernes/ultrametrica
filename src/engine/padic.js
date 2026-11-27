@@ -138,6 +138,9 @@ export class PadicSpace {
    * @returns {Int32Array}
    */
   digits(x) {
+    if (!Number.isInteger(x)) {
+      throw new RangeError(`p-adic integer x must be an integer, got ${x}.`);
+    }
     const out = new Int32Array(this.n);
     let v = ((x % this.N) + this.N) % this.N;
     for (let i = 0; i < this.n; i++) {
@@ -165,6 +168,9 @@ export class PadicSpace {
    * @returns {number}
    */
   monna(x) {
+    if (!Number.isInteger(x)) {
+      throw new RangeError(`p-adic integer x must be an integer, got ${x}.`);
+    }
     const xm = ((x % this.N) + this.N) % this.N;
     return this.revTable[xm] / this.N;
   }
@@ -200,6 +206,9 @@ export class PadicSpace {
    * @returns {number}
    */
   diffValuation(x, y) {
+    if (!Number.isInteger(x) || !Number.isInteger(y)) {
+      throw new RangeError(`diffValuation requires integer inputs, got (${x}, ${y}).`);
+    }
     const diff = ((x - y) % this.N + this.N) % this.N;
     return this.valuationTable[diff];
   }
@@ -211,6 +220,9 @@ export class PadicSpace {
    * @returns {number}
    */
   distance(x, y) {
+    if (!Number.isInteger(x) || !Number.isInteger(y)) {
+      throw new RangeError(`distance requires integer inputs, got (${x}, ${y}).`);
+    }
     const diff = ((x - y) % this.N + this.N) % this.N;
     if (diff === 0) return 0;
     return this.p ** (-this.valuationTable[diff]);
@@ -492,14 +504,22 @@ export class PadicSpace {
     const p = this.p;
     const n = this.n;
     const N = this.N;
+    if (!psiRe || !psiIm || psiRe.length < N || psiIm.length < N) {
+      throw new RangeError(`kozyrevTransform requires real/imag arrays of length >= ${N}.`);
+    }
 
     // Reorder into Bruhat-Tits leaf order so every p-adic ball is contiguous
     let curRe = new Float64Array(N);
     let curIm = new Float64Array(N);
     for (let l = 0; l < N; l++) {
       const x = this.revTable[l];
-      curRe[l] = psiRe[x];
-      curIm[l] = psiIm[x];
+      const r = psiRe[x];
+      const m = psiIm[x];
+      if (!Number.isFinite(r) || !Number.isFinite(m)) {
+        throw new RangeError(`kozyrevTransform received non-finite amplitude at index ${x}.`);
+      }
+      curRe[l] = r;
+      curIm[l] = m;
     }
 
     const shellPower = new Float64Array(n + 1);

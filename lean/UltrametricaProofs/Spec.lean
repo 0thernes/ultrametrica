@@ -1,7 +1,7 @@
 module
 
 /-!
-  ULTRAMETRICA (v1.5.0) — Pure Statement-Only Definitions (`Spec.lean`).
+  ULTRAMETRICA (v1.6.0) — Pure Statement-Only Definitions (`Spec.lean`).
 
   Palomar Registry compliant Lean 4.35.0 `module`.
   Contains ONLY mathematical definitions (ZERO theorems, ZERO tactics, ZERO `sorry`).
@@ -111,11 +111,26 @@ public structure CInt where
 deriving DecidableEq, Repr
 
 @[expose] public def CInt.zero : CInt := ⟨0, 0⟩
+@[expose] public def CInt.one : CInt := ⟨1, 0⟩
 @[expose] public def CInt.add (a b : CInt) : CInt := ⟨a.re + b.re, a.im + b.im⟩
 @[expose] public def CInt.sub (a b : CInt) : CInt := ⟨a.re - b.re, a.im - b.im⟩
 @[expose] public def CInt.mul (a b : CInt) : CInt := ⟨a.re * b.re - a.im * b.im, a.re * b.im + a.im * b.re⟩
 @[expose] public def CInt.smul (s : Int) (a : CInt) : CInt := ⟨s * a.re, s * a.im⟩
 @[expose] public def CInt.conj (a : CInt) : CInt := ⟨a.re, -a.im⟩
 @[expose] public def CInt.normSq (a : CInt) : Int := a.re * a.re + a.im * a.im
+
+/-- Finite-dimensional Gaussian-integer vector space CInt^L and Hermitian inner product <u, v>. -/
+public abbrev CVec (L : Nat) := Fin L → CInt
+
+@[expose] public def cvecAdd {L : Nat} (a b : CVec L) : CVec L := fun i => CInt.add (a i) (b i)
+@[expose] public def cvecSub {L : Nat} (a b : CVec L) : CVec L := fun i => CInt.sub (a i) (b i)
+@[expose] public def cvecSmul {L : Nat} (c : CInt) (a : CVec L) : CVec L := fun i => CInt.mul c (a i)
+
+@[expose] public def finSumCInt : (n : Nat) → (Fin n → CInt) → CInt
+  | 0, _ => CInt.zero
+  | n + 1, f => CInt.add (finSumCInt n (fun i => f i.castSucc)) (f ⟨n, Nat.lt_succ_self n⟩)
+
+@[expose] public def hermitianDot {L : Nat} (u v : CVec L) : CInt :=
+  finSumCInt L (fun i => CInt.mul (CInt.conj (u i)) (v i))
 
 end Ultrametrica.Spec

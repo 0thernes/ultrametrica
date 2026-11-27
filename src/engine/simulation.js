@@ -95,11 +95,10 @@ export class UltrametricaSimulation {
     this.activeExperiment = 'kozyrev_trap';
     this.rtFraction = 0.38;
 
-    this.space = new PadicSpace(this.p, this.n);
-    this.bulk = new BruhatTitsBulk(this.space, this.horizonDepth);
-    this.horizonDepth = this.bulk.horizonDepth;
-    this.quantum = new PadicQuantumEngine(this.space);
-    this._potScratch = new Float64Array(this.space.N);
+    this.space = /** @type {PadicSpace} */ (/** @type {unknown} */ (null));
+    this.bulk = /** @type {BruhatTitsBulk} */ (/** @type {unknown} */ (null));
+    this.quantum = /** @type {PadicQuantumEngine} */ (/** @type {unknown} */ (null));
+    this._potScratch = new Float64Array(0);
 
     this._initUniverse(this.p, this.n, this.horizonDepth);
     this.loadExperiment('kozyrev_trap', { keepTopology: true });
@@ -344,6 +343,13 @@ export class UltrametricaSimulation {
    * @param {number} ballIndex
    */
   setRTRegionBall(j, ballIndex) {
+    if (!Number.isInteger(j) || j < 0 || j > this.n) {
+      throw new RangeError(`setRTRegionBall scale j=${j} out of range [0, ${this.n}].`);
+    }
+    const maxBalls = this.space.powP[j];
+    if (!Number.isInteger(ballIndex) || ballIndex < 0 || ballIndex >= maxBalls) {
+      throw new RangeError(`setRTRegionBall ballIndex=${ballIndex} out of range [0, ${maxBalls - 1}].`);
+    }
     const N = this.space.N;
     const ballSize = this.space.powP[this.n - j];
     const start = ballIndex * ballSize;
@@ -359,6 +365,9 @@ export class UltrametricaSimulation {
    * @param {number} frac
    */
   setRTRegionFraction(frac) {
+    if (!Number.isFinite(frac)) {
+      throw new RangeError(`setRTRegionFraction requires a finite fraction, got ${frac}.`);
+    }
     const f = Math.max(0.02, Math.min(0.98, frac));
     this.rtFraction = f;
     const N = this.space.N;
@@ -374,6 +383,12 @@ export class UltrametricaSimulation {
    * @param {number} [scaleOffset=2]
    */
   toggleRTRegionAtLeaf(leaf, scaleOffset = 2) {
+    if (!Number.isInteger(leaf) || leaf < 0 || leaf >= this.space.N) {
+      throw new RangeError(`toggleRTRegionAtLeaf leaf=${leaf} out of range [0, ${this.space.N - 1}].`);
+    }
+    if (!Number.isInteger(scaleOffset) || scaleOffset < 0) {
+      throw new RangeError(`toggleRTRegionAtLeaf scaleOffset must be integer >= 0, got ${scaleOffset}.`);
+    }
     const j = Math.max(1, this.n - scaleOffset);
     const ballSize = this.space.powP[this.n - j];
     const b = (leaf / ballSize) | 0;
@@ -396,6 +411,9 @@ export class UltrametricaSimulation {
    * @param {boolean} [replace=false]
    */
   injectAtNode(nodeId, characterM = 1, replace = false) {
+    if (!Number.isInteger(nodeId) || nodeId < 0 || nodeId >= this.bulk.numNodes) {
+      throw new RangeError(`injectAtNode nodeId=${nodeId} out of range [0, ${this.bulk.numNodes - 1}].`);
+    }
     const depth = this.bulk.nodeDepth[nodeId];
     const idx = this.bulk.nodeIndexInLevel[nodeId];
     const j = Math.min(this.n - 1, Math.max(0, depth));
@@ -410,6 +428,9 @@ export class UltrametricaSimulation {
    * @param {number} leaf
    */
   pushTriangleProbeLeaf(leaf) {
+    if (!Number.isInteger(leaf) || leaf < 0 || leaf >= this.space.N) {
+      throw new RangeError(`pushTriangleProbeLeaf leaf=${leaf} out of range [0, ${this.space.N - 1}].`);
+    }
     this.triangleLeaves = [this.triangleLeaves[1], this.triangleLeaves[2], leaf];
     this.updateTriangleProof();
   }
@@ -436,7 +457,13 @@ export class UltrametricaSimulation {
    * @param {number} dt
    */
   step(dt) {
-    if (this.paused) return;
+    if (!Number.isFinite(dt) || dt < 0) {
+      throw new RangeError(`simulation step dt must be finite and >= 0, got ${dt}.`);
+    }
+    if (this.paused || dt === 0) return;
+    if (!Number.isFinite(this.timeScale) || this.timeScale < 0) {
+      throw new RangeError(`simulation timeScale must be finite and >= 0, got ${this.timeScale}.`);
+    }
     const effDt = Math.min(dt, 0.035) * this.timeScale;
     if (effDt <= 0) return;
 

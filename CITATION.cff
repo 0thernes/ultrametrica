@@ -2,8 +2,8 @@ cff-version: 1.2.0
 title: "ULTRAMETRICA — Discrete p-adic AdS/CFT (Bruhat-Tits Tree) Holography Laboratory: Tate-Curve BTZ Quotients, Adelic Parity Symmetries, and Lean 4 Checked Model Invariants"
 message: "If you reference, verify, or build upon ULTRAMETRICA in academic or independent non-commercial research, please cite this software and preprint using the metadata below."
 type: software
-version: "1.5.0"
-date-released: "2026-11-25"
+version: "1.6.0"
+date-released: "2026-11-26"
 authors:
   - family-names: "Donahue"
     given-names: "Alexander Stephen"
@@ -12,7 +12,6 @@ authors:
     orcid: "https://orcid.org/0009-0006-8168-9648"
 repository-code: "https://github.com/0thernes/ultrametrica"
 url: "https://0thernes.github.io/ultrametrica/"
-license: "NOASSERTION"
 license-url: "https://github.com/0thernes/ultrametrica/blob/main/LICENSE"
 keywords:
   - p-adic-ads-cft
