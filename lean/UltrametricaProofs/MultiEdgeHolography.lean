@@ -3,10 +3,15 @@ module
 public import UltrametricaProofs.HolographyCurvature
 
 /-!
-  ULTRAMETRICA (v1.6.0) — Lean 4 Formal Proofs (Module 3B: Multi-Edge Curved AdS
-  Gauss-Bonnet Conservation, First-Principles Arbitrary-Degree Inhomogeneous Kantorovich
-  Primal-Dual Duality with Full Coupling Non-Negativity, and Universal Holographic
-  Ryu-Takayanagi Strong Subadditivity)
+  ULTRAMETRICA (v1.8.1) — Lean 4 Formal Proofs (Module 3B: Multi-Edge Bridge Ollivier-Ricci
+  Subcritical Metric-Invariance & Supercritical Pinch Deficit, First-Principles Arbitrary-Degree
+  Inhomogeneous Kantorovich Primal-Dual Duality with Full Coupling Non-Negativity, and Universal
+  Holographic Ryu-Takayanagi Strong Subadditivity)
+
+  Note (v1.8.1 terminology): legacy `gauss_bonnet` identifiers in downstream modules are retained
+  for comparator compatibility; mathematically Theorem V-Global is local vertex probability-
+  normalization telescoping on strictly interior bridges (distinct from topological Gauss-Bonnet
+  and from Gubser et al. 2017's t -> 0+ lazy J_e = a_e^{-2} action).
 
   Palomar-compliant Lean 4.35.0 `module` (< 1,000 lines), zero Mathlib,
   zero `native_decide`, zero `sorry`, zero custom axioms.
@@ -17,7 +22,7 @@ public import UltrametricaProofs.HolographyCurvature
 namespace Ultrametrica
 
 /-!
-## 11. Theorem V-Global: Arbitrary Multi-Edge Curved AdS Discrete Gauss-Bonnet & Supercritical Deficit
+## 11. Theorem V-Global: Multi-Edge Bridge Ollivier-Ricci Subcritical Metric-Invariance & Pinch Deficit
 
 Generalizes Theorem V from a single perturbed edge to ARBITRARY simultaneous multi-edge
 inhomogeneous positive conductance assignments `w_e > 0` (`a_e = 1/w_e`) on any finite interior
@@ -27,9 +32,10 @@ Every interior bridge `e = (u, v)` with endpoint weighted degrees `W_u, W_v > 0`
 vertex half-charge decomposition:
   kappa_e(w) = -(p - 1)*(w_e / W_u) - (p - 1)*(w_e / W_v) - 2*max(0, w_e/W_u + w_e/W_v - 1).
 Because `sum_{e ni u} -(p - 1)*(w_e / W_u) = -(p - 1)` at EVERY interior vertex `u` independently
-of the weights `w_e`, summing `(kappa_e - kappa_AdS)` over any finite perturbed interior patch
-cancels identically to `0` whenever all edges are locally subcritical (`w_e/W_u + w_e/W_v <= 1`),
-and equals `-2 * sum_{e sup} (w_e/W_u + w_e/W_v - 1) < 0` in general.
+of the weights `w_e` (local probability-normalization telescoping), summing `(kappa_e - kappa_AdS)`
+over any finite perturbed interior patch cancels identically to `0` whenever all edges are locally
+subcritical (`w_e/W_u + w_e/W_v <= 1`), and equals `-2 * sum_{e sup} (w_e/W_u + w_e/W_v - 1) < 0`
+otherwise.
 -/
 
 /-- Pure-core exact rational number (numerator / positive denominator) with zero Mathlib dependency. -/

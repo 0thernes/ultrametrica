@@ -81,17 +81,17 @@ A major blindspot in `v1.2.0` was that Experiment E tested only linear dispersio
 
 ### 4.1 Curved Edge-Length Curvature Gradient & Critical Pinch Margin (Theorem V)
 
-On an interior edge $e$ of $T_p$ perturbed by $\sigma_e = \ln a_e$ (conductance $w_e = e^{-\sigma_e}$, all other edges at $1$), exact bipartite optimal transport establishes:
+On a strictly interior bridge edge $e$ of $(p+1)$-regular $T_p$ (prime integer $p \ge 2$, uniform background $\kappa_{\mathrm{AdS}}(p) = -2(p-1)/(p+1)$) perturbed to edge length $a_e = e^{\sigma_e} > 0$ (conductance $w_e = 1/a_e = e^{-\sigma_e}$, all other edges at $1$; edges at graph distance $\ge 2$ have unchanged 1-hop neighborhoods and zero excess), exact non-lazy ($t=1$) bipartite optimal transport establishes:
 
 - **Subcritical Regime ($\sigma_e \ge -\ln p$, i.e. $a_e \ge 1/p$):**
   $$\kappa_e(\sigma_e) = -\frac{2(p-1)}{p e^{\sigma_e} + 1}, \qquad \kappa_{e'}(\sigma_e) = -\frac{p-1}{p + e^{-\sigma_e}} - \frac{p-1}{p+1} \quad (2p \text{ neighbors}),$$
   with exact uniform-AdS gradients:
   $$\left.\frac{\partial \kappa_e}{\partial \sigma_e}\right|_{0} = +\frac{2p(p-1)}{(p+1)^2}, \qquad \left.\frac{\partial \kappa_{e'}}{\partial \sigma_e}\right|_{0} = -\frac{p-1}{(p+1)^2}, \qquad \frac{\partial}{\partial \sigma_e}\!\left(\kappa_e + 2p\kappa_{e'}\right) \equiv 0.$$
-  Non-perturbatively across the **entire** interval $\sigma_e \in [-\ln p, +\infty)$, $\sum_{e'} (\kappa_{e'} - \kappa_{\mathrm{AdS}}) \equiv 0$ identically (proved in Lean 4 as `curved_ads_gauss_bonnet_subcritical`, verified to `7.77e-16`–`5.33e-15` in Experiment H).
+  Non-perturbatively across the **entire** subcritical interval $\sigma_e \in [-\ln p, +\infty)$, the finite-support sum ($2p+1$ nonzero terms) satisfies $\sum_{e'' \in E(T_p)} (\kappa_{e''} - \kappa_{\mathrm{AdS}}(p)) \equiv 0$ identically by local vertex probability-normalization telescoping (proved in Lean 4 as `curved_ads_gauss_bonnet_subcritical`, verified to `7.77e-16`–`5.33e-15` in Experiment H; see `ERRATA.md` & `paper/main.tex` Remark 5.4 for why `"Gauss-Bonnet Conservation"` was withdrawn in `v1.8.1`).
 - **Supercritical Pinch Margin ($\sigma_e < \sigma_e^* = -\ln p$, i.e. $a_e < 1/p$):**
   - Critical margins: $\sigma_2^* = -0.6931$, $\sigma_3^* = -1.0986$, $\sigma_5^* = -1.6094$, $\sigma_7^* = -1.9459$.
-  - Crossing $\sigma_e < \sigma_e^*$ triggers Branch 2 (`curved_ads_supercritical_pinch_deficit`), breaking Gauss-Bonnet conservation with exact negative curvature deficit:
-    $$\sum_{e'} \big(\kappa_{e'} - \kappa_{\mathrm{AdS}}(p)\big) = -2\,\frac{e^{-\sigma_e} - p}{e^{-\sigma_e} + p} < 0.$$
+  - Crossing $\sigma_e < \sigma_e^*$ triggers Branch 2 (`curved_ads_supercritical_pinch_deficit`), breaking subcritical invariance with exact negative curvature pinch deficit:
+    $$\sum_{e'' \in E(T_p)} \big(\kappa_{e''}(\sigma_e) - \kappa_{\mathrm{AdS}}(p)\big) = -2\,\frac{e^{-\sigma_e} - p}{e^{-\sigma_e} + p} < 0.$$
 
 ### 4.2 Breitenlohner-Freedman Tachyonic Margin ($\Delta \to 0.50^+$, Experiment H2)
 

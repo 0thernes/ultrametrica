@@ -406,7 +406,7 @@ def fig5_spectrum_and_gaussbonnet_tex(data: dict) -> str:
   xshift=1.80cm,
   width=6.8cm,
   height=5.9cm,
-  title={\small (b) Theorem V: Curved Gauss--Bonnet Margin},
+  title={\small (b) Theorem V: Subcritical Invariance \& Pinch Margin},
   xlabel={Edge log-length perturbation $\sigma_e = \ln a_e$},
   ylabel={Total curvature excess $\textstyle\sum (\kappa_{e'} - \kappa_{\mathrm{AdS}})$},
   xmin=-2.4, xmax=2.7,
@@ -424,7 +424,7 @@ def fig5_spectrum_and_gaussbonnet_tex(data: dict) -> str:
   \draw[red!70!black, dotted, thick] (axis cs:-0.6931, -1.45) -- (axis cs:-0.6931, 0.14);
   \draw[blue!70!black, dotted, thick] (axis cs:-1.0986, -1.45) -- (axis cs:-1.0986, 0.14);
   \draw[teal!70!black, dotted, thick] (axis cs:-1.6094, -1.45) -- (axis cs:-1.6094, 0.14);
-  \node[anchor=south, font=\tiny, text=black!80] at (axis cs:1.15, 0.05) {Exact conservation ($\equiv 0$)};
+  \node[anchor=south, font=\tiny, text=black!80] at (axis cs:1.15, 0.05) {Subcritical invariance ($\equiv 0$)};
   \node[anchor=south west, font=\tiny, text=red!75!black] at (axis cs:-2.34, 0.12) {$\sigma^* {=} {-}\ln p$};
 
   \addplot[color=red!75!black, thick, mark=*, mark size=1.8pt] coordinates { """ + gb_by_p[2] + r""" };

@@ -3,13 +3,21 @@ module
 public import UltrametricaProofs.MultiEdgeHolography
 
 /-!
-  ULTRAMETRICA (v1.7.0) — Lean 4 Formal Proofs (Module 3C: Actual Finite-Graph
-  Edge-Sum Curved AdS Gauss-Bonnet Conservation & Supercritical Pinch Deficit)
+  ULTRAMETRICA (v1.8.1) — Lean 4 Formal Proofs (Module 3C: Finite-Graph Edge-Sum
+  Bridge Ollivier-Ricci Subcritical Metric-Invariance & Supercritical Pinch Deficit)
 
-  Directly closes the 2026-11-26 statement-audit gap (F70): proves exact discrete
-  Gauss-Bonnet conservation by direct double-counting induction OVER THE ACTUAL FINITE
-  EDGE LIST `E : List (WeightedEdge n)` of an arbitrary finite undirected weighted graph
-  on vertex set `Fin n`, NOT merely per-vertex lists.
+  Directly closes the 2026-11-26 statement-audit gap (F70): proves exact edge-sum
+  metric-invariance by direct double-counting induction OVER THE ACTUAL FINITE EDGE LIST
+  `E : List (WeightedEdge n)` of an arbitrary finite undirected weighted graph on vertex
+  set `Fin n`, NOT merely per-vertex lists.
+
+  Terminology & Geometric Scope Note (v1.8.1): legacy `gauss_bonnet` identifiers are kept
+  for comparator-target stability. Mathematically, this identity is local vertex probability-
+  normalization telescoping (`sum_{e ni x} w_e / W_x = 1`), NOT global topological Gauss-Bonnet
+  on arbitrary graphs or standalone trees with leaves (every leaf edge is unconditionally
+  supercritical in non-lazy Ollivier-Ricci). Its literal geometric realization is a finite
+  `(p+1)`-regular girth >= 6 graph with no cycle shortcuts (where `-(p-1)*n = 2*chi(G)` by
+  handshaking) or finite-support interior perturbations of `T_p`.
 
   Palomar-compliant Lean 4.35.0 `module` (< 500 lines), zero Mathlib,
   zero `native_decide`, zero `sorry`, zero custom axioms.
@@ -446,9 +454,13 @@ theorem finite_graph_curved_eq_flat_subcritical {n : Nat} (p : Int)
     (finite_graph_subcritical_gauss_bonnet_conserved p edges1 hW1 hsub1)
     (RatQ.eqv_symm (finite_graph_subcritical_gauss_bonnet_conserved p edges2 hW2 hsub2))
 
-/-- Concrete Non-Vacuity Witness (4-vertex star / tree patch on `Fin 4`, `p = 3`):
-    Inhomogeneous edge weights `w = 2, 3, 5` on edges `(0,1), (0,2), (0,3)` all have `u ≠ v`,
-    positive incident weights `W = (10, 2, 3, 5)`, and exact total curvature sum `-8` (`p=3, n=4`). -/
+/-- Concrete Algebraic Non-Vacuity Witness (4-vertex weighted edge list on `Fin 4`, `p = 3`):
+    Inhomogeneous edge weights `w = 2, 3, 5` on edges `(0,1), (0,2), (0,3)` all have `u ≠ v` and
+    strictly positive incident weights `W = (10, 2, 3, 5)`, proving the hypothesis bundle of
+    `finite_graph_curved_gauss_bonnet_sum` is non-vacuous. (Geometrically, `curvedGenKappaQ p`
+    assumes every endpoint has interior degree `p + 1`, so standalone trees with leaves of degree `1`
+    are NOT realized by `curvedGenKappaQ`; geometric realizations are `(p+1)`-regular girth-`>= 6`
+    graphs or strictly interior patches of `T_p`.) -/
 theorem finite_graph_gauss_bonnet_nonvacuous_witness :
     let e1 : WeightedEdge 4 := ⟨⟨0, by omega⟩, ⟨1, by omega⟩, 2⟩
     let e2 : WeightedEdge 4 := ⟨⟨0, by omega⟩, ⟨2, by omega⟩, 3⟩

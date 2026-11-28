@@ -738,12 +738,13 @@ def curvedEdgeExcessNum (p M w : Int) : Int :=
 def curvedAdjExcessNum (p M w : Int) : Int :=
   -(p - 1) * ((p + 1) * M + (p * M + w)) - kappaAdSNum p * (p * M + w)
 
-/-- Theorem V.1 (Non-Perturbative Discrete Gauss-Bonnet Curvature Conservation on Curved T_p):
-    For ALL p >= 2, ALL M > 0, and ALL finite edge conductances w <= p*M (i.e. EVERY stretch a_e >= 1
-    and EVERY pinch down to the exact critical threshold a_e >= 1/p, sigma_e >= -ln p):
+/-- Theorem V.1 (Single-Edge Subcritical Bridge Ollivier-Ricci Metric-Invariance on Curved T_p):
+    For ALL integer degrees p >= 2, ALL M > 0, and ALL finite edge conductances w <= p*M
+    (i.e. EVERY stretch a_e >= 1 and EVERY subcritical pinch a_e >= 1/p, sigma_e >= -ln p):
       (kappa_e - kappa_AdS) + 2*p * (kappa_{e'} - kappa_AdS) = 0  IDENTICALLY!
-    Stretching or moderately pinching an internal bulk throat conserves total Ollivier-Ricci curvature
-    non-perturbatively by redistributing exact opposite curvature onto its 2p adjacent edges. -/
+    Note (v1.8.1 terminology): legacy identifier `gauss_bonnet` is retained for comparator stability;
+    mathematically this is local vertex probability-normalization telescoping on interior bridges
+    (finite support of 2p+1 affected edges), NOT topological Gauss-Bonnet on arbitrary graphs. -/
 theorem curved_ads_gauss_bonnet_subcritical (p M w : Int) (hsub : w ≤ p * M) :
     curvedEdgeExcessNum p M w + 2 * p * curvedAdjExcessNum p M w = 0 := by
   unfold curvedEdgeExcessNum curvedAdjExcessNum kappaCurvedEdgeNum kappaAdSNum

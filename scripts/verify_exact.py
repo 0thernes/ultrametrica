@@ -912,11 +912,14 @@ def verify_archived_benchmarks_and_lean_audit() -> None:
                 broken_links.append(f"{md.relative_to(ROOT)} -> {target}")
     assert not broken_links, f"Broken internal markdown links detected: {broken_links[:10]}"
 
-    # Citation audit artifact check (Playbook Pass 5 / Item 16)
+    # Citation audit artifact check (Playbook Pass 5 / Item 16 + F100 arXiv eprint check)
     cit_path = ROOT / "results" / "citation-audit.json"
     if cit_path.exists():
         cit = json.loads(cit_path.read_text(encoding="utf-8"))
         assert cit["doi_count"] >= 18, f"Expected >= 18 verified DOIs in citation-audit.json, got {cit['doi_count']}"
+        assert cit.get("arxiv_eprint_count", 0) >= 11, (
+            f"Expected >= 11 verified arXiv eprints in citation-audit.json, got {cit.get('arxiv_eprint_count')}"
+        )
         assert cit["retracted_count"] == 0, "Retracted citation detected in citation-audit.json!"
         assert cit["min_title_jaccard"] >= 0.90, f"Low title Jaccard in citation-audit.json: {cit['min_title_jaccard']}"
         assert cit["all_authors_matched"] is True

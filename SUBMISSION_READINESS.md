@@ -1,4 +1,4 @@
-# ULTRAMETRICA (`v1.8.0`) — Submission Readiness & 43-Item Gold Standard Self-Audit (`SUBMISSION_READINESS.md`)
+# ULTRAMETRICA (`v1.8.1`) — Submission Readiness & 43-Item Gold Standard Self-Audit (`SUBMISSION_READINESS.md`)
 
 > Single-page self-audit against the **Defensible Independent AI Research Playbook (`v1.3`)** 43-item Gold Standard and **Build Standard `v1.2.0`** (90 items). Author: **Alexander Stephen Donahue** (Independent Researcher, Spokane, WA, USA; ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648)). Every status below is strictly evidence-backed — zero self-inflation, zero fabricated peer review, and explicit visibility into owner-controlled submission prerequisites.
 
@@ -8,7 +8,7 @@
 
 | Venue / Channel | Technical / Verification Readiness | Blocking Owner-Controlled Prerequisites | Current Status |
 |---|---|---|---|
-| **GitHub Public Release (`v1.8.0`) + GitHub Pages** | **READY** — Node-24-clean 3-OS CI, 6-kernel `bubblewrap` comparator (15 targets) + live negative tamper gate, 36/36 Node tests (`12/12` real source mutants), `favicon.svg` (0 404s), dual RFC 3161 `.tsr` + Bitcoin `.ots` timestamps, SLSA provenance | None | **LIVE** |
+| **GitHub Public Release (`v1.8.1`) + GitHub Pages** | **READY** — Node-24-clean 3-OS CI, 6-kernel `bubblewrap` comparator (15 targets) + live negative tamper gate, 36/36 Node tests (`12/12` real source mutants), `favicon.svg` (0 404s), live Crossref DOI + arXiv `eprint` audit, dual RFC 3161 `.tsr` + Bitcoin `.ots` timestamps, SLSA provenance | None | **LIVE** |
 | **Master Research Archive (`0thernes/0thernes-research-archive`, `0TH-BUILD-003`)** | **READY** — pinned submodule commit, frozen PDF, deterministic arXiv tarball, SHA-256 ledger, `.tsr`/`.ots` stamps | None | **SYNCED** |
 | **arXiv (`math-ph` / `hep-th` / `cs.LO`)** | **Technically Ready** — zero-warning AMS-LaTeX PDF + bit-identical deterministic standalone `dist/arxiv_submission.tar.gz` verified in clean temp dir | Requires human author endorsement/submission & AI-assistance attestation on arXiv.org | **NOT YET SUBMITTED** |
 | **Zenodo DOI Archive** | **Technically Ready** — `CITATION.cff` 1.2.0 valid, `CHECKSUMS.sha256` + `.tsr`/`.ots` sealed | Requires human author deposit & depositor AI-policy attestation on zenodo.org | **NOT YET SUBMITTED** |
@@ -38,7 +38,7 @@
 | 13 | True source-code mutation testing against unmodified test suite | **PASS** | `test/mutants.mjs` kills **`12/12`** real patches across `src/engine/{padic,holography,quantum}.js` against unmodified `test/verify.mjs` |
 | 14 | 1-to-1 Claims Ledger with explicit *What Would Prove Us Wrong* falsification criteria | **PASS** | Root [`CLAIMS.md`](CLAIMS.md) & [`docs/CLAIMS.md`](docs/CLAIMS.md) + `paper/main.tex` Table 1 |
 | 15 | Dated prior-art / literature search log & honest credit | **PASS** | [`docs/LITERATURE_SEARCH.md`](docs/LITERATURE_SEARCH.md) + [`docs/MEGA_ATLAS_CROSSCHECK.md`](docs/MEGA_ATLAS_CROSSCHECK.md) (`0/1,900` open problems claimed solved) |
-| 16 | Live Crossref DOI, title/author fidelity & retraction audit | **PASS** | `scripts/check_citations.py --live --write-report` -> `results/citation-audit.json` (`21/21` cited, `18/18` DOIs HTTP 200, min Jaccard `1.00`, `0` retractions) |
+| 16 | Live Crossref DOI, arXiv `eprint`, title/author fidelity & retraction audit | **PASS** | `scripts/check_citations.py --live --write-report` -> `results/citation-audit.json` (`21/21` cited, `18/18` DOIs HTTP 200, min Jaccard `1.00`, `0` retractions, all arXiv `eprint` IDs matched) |
 | 17 | Git-sealed preregistration prior to confirmatory statistical execution | **PASS** | [`docs/preregistration.md`](docs/preregistration.md) sealed at git commit `c171b1b` prior to running `scripts/stats_eval.mjs` |
 | 18 | Append-only deviation log separating confirmatory vs. exploratory analyses | **PASS** | [`DEVIATIONS.md`](DEVIATIONS.md) + non-pseudoreplicated `K = 20` matrix-level Wilcoxon/sign sensitivity tests |
 | 19 | Complete effect sizes, bootstrap CIs & multiple-testing correction | **PASS** | `results/stats-eval.json`: $\Delta\langle r\rangle$, Cliff's $\delta$, Cohen's $d$ (all 3 with 10,000-resample 95% CIs), Mann-Whitney $U$, Holm-Bonferroni (`p_holm = 0.0004`) |
@@ -51,7 +51,7 @@
 | 26 | Dual external cryptographic timestamping (RFC 3161 TSA + Bitcoin OpenTimestamps) | **PASS** | `scripts/stamp_manifest.py`: DigiCert `data/CHECKSUMS.sha256.tsr` + 3-calendar Bitcoin `data/CHECKSUMS.sha256.ots` offline-verified in CI |
 | 27 | SLSA build provenance attestations on CI & tagged releases | **PASS** | `.github/workflows/ci.yml` & `.github/workflows/release.yml` (`actions/attest-build-provenance@v2`) |
 | 28 | Canonical author identity & ORCID synchronized everywhere (no unformed LLC) | **PASS** | Alexander Stephen Donahue, Independent Researcher, Spokane, WA, USA; ORCID `0009-0006-8168-9648`; guarded by `verify_exact.py` |
-| 29 | Valid CFF 1.2.0 citation metadata (`CITATION.cff`) | **PASS** | Strict CFF 1.2.0 (`license-url`, zero invalid `NOASSERTION`, ORCID, version `1.8.0`) |
+| 29 | Valid CFF 1.2.0 citation metadata (`CITATION.cff`) | **PASS** | Strict CFF 1.2.0 (`license-url`, zero invalid `NOASSERTION`, ORCID, version `1.8.1`) |
 | 30 | Clean legal & patent language (`LICENSE`, `LEGAL.md`, `NOTICE`) | **PASS** | Compliant non-commercial license; zero unfiled `"Patent pending."` (35 U.S.C. § 292) |
 | 31 | CRediT authorship taxonomy & explicit non-peer-reviewed preprint notice | **PASS** | Declared in `paper/main.tex`, `formalization.yaml`, `LEGAL.md`, `LIMITATIONS.md` |
 | 32 | Explicit Funding & Conflict of Interest (COI) statement | **PASS** | Self-funded independent research; zero COI (`paper/main.tex`, `LEGAL.md`) |

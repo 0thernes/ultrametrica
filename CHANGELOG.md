@@ -6,6 +6,12 @@ All notable releases, mathematical proofs, verification suites, and engine chang
 
 - Future genus-$g \ge 2$ Mumford-Schottky wormhole curvature generalization and finite multi-prime adelic product lattice ($\mathbb{A}_{\mathbb{Q}}$ truncation) planned for `v1.9.0+` (see [`ROADMAP.md`](ROADMAP.md)).
 
+## [1.8.1] — 2026-11-27
+
+### Fixed & Clarified (External Referee Hardening — `F99`, `F100`)
+- **Withdrew `"Discrete Gauss-Bonnet Conservation"` Framing & Added Exact Gubser et al. (2017) Contrast (`F99`):** Following mathematical referee critique, renamed Theorems V & V-Global across `paper/main.tex`, `paper/WHITE_PAPER.md`, `README.md`, `CLAIMS.md`, `LIMITATIONS.md`, `docs/statement-fidelity.md`, `docs/glossary.md`, `src/web/{index,blueprint}.html`, Figure 5(b), and Lean docstrings to **Non-Lazy Conductance Ollivier-Ricci Subcritical Metric-Invariance and Supercritical Pinch Deficit**. Made prime integer $p \ge 2$, $\kappa_{\mathrm{AdS}}(p)$, conductance $w_e = 1/a_e = e^{-\sigma_e}$, and $2p+1$ finite support explicit inside Theorem V, and added Remark `rem:gubser-non-topological` contrasting verbatim against Gubser et al. (2017, `arXiv:1612.09580`) ($t \to 0^+$ lazy $J_e = a_e^{-2}$ non-constant vertex sum vs. $t = 1$ linear $w_e = a_e^{-1}$ subcritical variational flatness + supercritical kink) and proving why the identity is local vertex probability-normalization telescoping rather than topological Gauss-Bonnet (including the finite-tree leaf counterexample $\kappa_e^{\mathrm{leaf}} = 1 - d_v w_e/W_v$, $K_{1,m}$ giving $\sum \kappa_e = 0 \ne 2\chi = 2$, and the narrow leafless girth-$\ge 6$ handshaking coincidence $-(p-1)n = 2\chi(G)$). Legacy Lean identifiers containing `gauss_bonnet` are kept unchanged for comparator stability and explicitly documented.
+- **Corrected `GubserEdge2017` arXiv `eprint` Erratum & Added Automated Live arXiv Audit Gate (`F100`):** Fixed `eprint` typo `1611.09770` $\to$ `1612.09580` in `paper/refs.bib`, `paper/WHITE_PAPER.md`, and `docs/LITERATURE_SEARCH.md` (JHEP DOI `10.1007/JHEP06(2017)157` was already verified), and upgraded `scripts/check_citations.py --live` to verify every BibTeX `eprint` against the live arXiv Atom API (`export.arxiv.org`) on both title Jaccard and author surname (`results/citation-audit.json` schema v2).
+
 ## [1.8.0] — 2026-11-27
 
 ### Added

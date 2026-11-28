@@ -1,11 +1,13 @@
 {
-  "schema": "ultrametrica-citation-audit-v1",
-  "audited_utc": "2026-11-27T19:18:12Z",
+  "schema": "ultrametrica-citation-audit-v2",
+  "audited_utc": "2026-11-28T03:00:54Z",
   "total_bib_entries": 21,
   "doi_count": 18,
+  "arxiv_eprint_count": 11,
   "non_doi_count": 3,
   "retracted_count": 0,
   "min_title_jaccard": 1.0,
+  "min_arxiv_title_jaccard": 0.3529,
   "all_authors_matched": true,
   "doi_entries": [
     {
@@ -250,6 +252,96 @@
       "author_match": true,
       "retracted": false,
       "crossref_title": "The Lean 4 Theorem Prover and Programming Language"
+    }
+  ],
+  "arxiv_entries": [
+    {
+      "key": "Gubser2017",
+      "eprint": "1605.01061",
+      "title_jaccard": 1.0,
+      "title_overlap": 1.0,
+      "author_match": true,
+      "arxiv_title": "$p$-adic AdS/CFT"
+    },
+    {
+      "key": "Heydeman2018",
+      "eprint": "1605.07639",
+      "title_jaccard": 1.0,
+      "title_overlap": 1.0,
+      "author_match": true,
+      "arxiv_title": "Tensor networks, $p$-adic fields, and algebraic curves: arithmetic and the AdS$_3$/CFT$_2$ correspondence"
+    },
+    {
+      "key": "GubserEdge2017",
+      "eprint": "1612.09580",
+      "title_jaccard": 1.0,
+      "title_overlap": 1.0,
+      "author_match": true,
+      "arxiv_title": "Edge length dynamics on graphs with applications to $p$-adic AdS/CFT"
+    },
+    {
+      "key": "Heydeman2021",
+      "eprint": "1812.04057",
+      "title_jaccard": 1.0,
+      "title_overlap": 1.0,
+      "author_match": true,
+      "arxiv_title": "Nonarchimedean Holographic Entropy from Networks of Perfect Tensors"
+    },
+    {
+      "key": "Kozyrev2002",
+      "eprint": "math-ph/0012019",
+      "title_jaccard": 0.75,
+      "title_overlap": 0.8571,
+      "author_match": true,
+      "arxiv_title": "Wavelet analysis as a p-adic spectral analysis"
+    },
+    {
+      "key": "Dragovich2017",
+      "eprint": "1705.04758",
+      "title_jaccard": 1.0,
+      "title_overlap": 1.0,
+      "author_match": true,
+      "arxiv_title": "$p$-Adic Mathematical Physics: The First 30 Years"
+    },
+    {
+      "key": "RyuTakayanagi2006",
+      "eprint": "hep-th/0603001",
+      "title_jaccard": 0.3529,
+      "title_overlap": 0.75,
+      "author_match": true,
+      "arxiv_title": "Holographic Derivation of Entanglement Entropy from AdS/CFT"
+    },
+    {
+      "key": "HeadrickTakayanagi2007",
+      "eprint": "0704.3719",
+      "title_jaccard": 0.8889,
+      "title_overlap": 1.0,
+      "author_match": true,
+      "arxiv_title": "A holographic proof of the strong subadditivity of entanglement entropy"
+    },
+    {
+      "key": "OganesyanHuse2007",
+      "eprint": "cond-mat/0610854",
+      "title_jaccard": 1.0,
+      "title_overlap": 1.0,
+      "author_match": true,
+      "arxiv_title": "Localization of interacting fermions at high temperature"
+    },
+    {
+      "key": "Atas2013",
+      "eprint": "1212.5611",
+      "title_jaccard": 1.0,
+      "title_overlap": 1.0,
+      "author_match": true,
+      "arxiv_title": "The distribution of the ratio of consecutive level spacings in random matrix ensembles"
+    },
+    {
+      "key": "Pastawski2015",
+      "eprint": "1503.06237",
+      "title_jaccard": 1.0,
+      "title_overlap": 1.0,
+      "author_match": true,
+      "arxiv_title": "Holographic quantum error-correcting codes: Toy models for the bulk/boundary correspondence"
     }
   ],
   "non_doi_entries": [

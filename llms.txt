@@ -3,7 +3,7 @@
 > Zero-dependency real-time discrete $p$-adic AdS/CFT (Bruhat-Tits tree) holography laboratory featuring rotating Tate-curve Kerr-BTZ quotients, Kozyrev wavelets, 48 kHz AudioWorklet sonification, and 250 audited pure Lean 4.35.0 Palomar `module` declarations about the discrete model (100.0% public theorem coverage, 0 unaudited: 144 core theorems + 81 zero-Mathlib helper lemmas + 10 adversarial refutations across 11 proof modules + 15 isolated comparator bindings verified across 6 independent Lean kernels via `lake comparator --paranoid` + live negative tamper-rejection gate; all 17 `.lean` files < 1,000 lines). No physical, continuum, or quantum-gravity statement is proved, and no open problem is retired.
 
 - Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID `0009-0006-8168-9648`)
-- Version: `1.8.0`
+- Version: `1.8.1`
 - Repository: https://github.com/0thernes/ultrametrica
 - Live Observatory: https://0thernes.github.io/ultrametrica/
 - Live Lean Proof Blueprint: https://0thernes.github.io/ultrametrica/web/blueprint.html

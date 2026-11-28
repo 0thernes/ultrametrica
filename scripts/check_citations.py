@@ -26,7 +26,9 @@ import json
 import re
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
@@ -218,6 +220,71 @@ def check_live_crossref(entries: list[dict[str, str]], write_report: bool) -> No
         f"{doi_ok}/{doi_ok} DOIs resolved (min Jaccard={min(r['title_jaccard'] for r in doi_records):.2f}), 0 retractions."
     )
 
+    # Live arXiv eprint title & first-author verification (guards against wrong arXiv ID typos like 1611.09770 vs 1612.09580)
+    arxiv_records: list[dict[str, Any]] = []
+    eprint_entries = [e for e in entries if e.get("eprint")]
+    if eprint_entries:
+        ids_csv = ",".join(e["eprint"] for e in eprint_entries)
+        arxiv_url = f"https://export.arxiv.org/api/query?id_list={urllib.parse.quote(ids_csv, safe=',/')}&max_results={len(eprint_entries) + 5}"
+        req_ax = urllib.request.Request(arxiv_url, headers=headers)
+        with urllib.request.urlopen(req_ax, timeout=25) as resp:
+            xml_bytes = resp.read()
+        atom_ns = {"a": "http://www.w3.org/2005/Atom"}
+        root_el = ET.fromstring(xml_bytes)
+        by_id: dict[str, tuple[str, list[str]]] = {}
+        for entry_el in root_el.findall("a:entry", atom_ns):
+            id_text = (entry_el.findtext("a:id", "", atom_ns) or "").strip()
+            m_id = re.search(r"arxiv\.org/abs/(.+?)(?:v\d+)?$", id_text)
+            if not m_id:
+                continue
+            eid = m_id.group(1)
+            ax_title = re.sub(r"\s+", " ", (entry_el.findtext("a:title", "", atom_ns) or "").strip())
+            ax_authors = [
+                (a.findtext("a:name", "", atom_ns) or "").strip()
+                for a in entry_el.findall("a:author", atom_ns)
+            ]
+            by_id[eid] = (ax_title, ax_authors)
+
+        for e in eprint_entries:
+            key = e["key"]
+            ep = e["eprint"]
+            assert ep in by_id, f"arXiv eprint {ep!r} for {key} was not returned by export.arxiv.org"
+            ax_title, ax_authors = by_id[ep]
+            bib_toks = normalize_tokens(e.get("title", ""))
+            ax_toks = normalize_tokens(ax_title)
+            union = bib_toks | ax_toks
+            ax_j = len(bib_toks & ax_toks) / len(union) if union else 0.0
+            min_len = min(len(bib_toks), len(ax_toks))
+            ax_ov = len(bib_toks & ax_toks) / min_len if min_len else 0.0
+            bib_surnames = first_author_surname_variants(e.get("author", ""))
+            ax_surnames = {
+                re.sub(r"[^a-z]", "", name.split()[-1].lower())
+                for name in ax_authors
+                if name.strip()
+            }
+            ax_auth_ok = bool(bib_surnames & ax_surnames)
+            assert ax_auth_ok, (
+                f"ARXIV AUTHOR MISMATCH for {key} (arXiv:{ep}): bib={sorted(bib_surnames)!r} | arxiv={sorted(ax_surnames)!r}"
+            )
+            assert ax_j >= 0.65 or ax_ov >= 0.70, (
+                f"ARXIV TITLE MISMATCH for {key} (arXiv:{ep}): Jaccard={ax_j:.2f}, Overlap={ax_ov:.2f} | bib={e.get('title')!r} | arxiv={ax_title!r}"
+            )
+            print(f"  [arXiv OK] {key:24s} j={ax_j:.2f} ov={ax_ov:.2f} auth=OK | arXiv:{ep:16s} | {ax_title[:46]}")
+            arxiv_records.append(
+                {
+                    "key": key,
+                    "eprint": ep,
+                    "title_jaccard": round(ax_j, 4),
+                    "title_overlap": round(ax_ov, 4),
+                    "author_match": ax_auth_ok,
+                    "arxiv_title": ax_title,
+                }
+            )
+        print(
+            f"[PASS] Live arXiv eprint Audit: {len(arxiv_records)}/{len(eprint_entries)} eprints matched "
+            f"(min Jaccard={min(r['title_jaccard'] for r in arxiv_records):.2f})."
+        )
+
     url_records: list[dict[str, Any]] = []
     for u in PUBLIC_URLS:
         req = urllib.request.Request(u, headers=headers, method="HEAD")
@@ -238,15 +305,18 @@ def check_live_crossref(entries: list[dict[str, str]], write_report: bool) -> No
 
     if write_report:
         report = {
-            "schema": "ultrametrica-citation-audit-v1",
+            "schema": "ultrametrica-citation-audit-v2",
             "audited_utc": dt.datetime.now(dt.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "total_bib_entries": len(entries),
             "doi_count": len(doi_records),
+            "arxiv_eprint_count": len(arxiv_records),
             "non_doi_count": len(book_records),
             "retracted_count": 0,
             "min_title_jaccard": min(r["title_jaccard"] for r in doi_records),
-            "all_authors_matched": all(r["author_match"] for r in doi_records),
+            "min_arxiv_title_jaccard": min(r["title_jaccard"] for r in arxiv_records) if arxiv_records else None,
+            "all_authors_matched": all(r["author_match"] for r in doi_records) and all(r["author_match"] for r in arxiv_records),
             "doi_entries": doi_records,
+            "arxiv_entries": arxiv_records,
             "non_doi_entries": book_records,
             "public_urls": url_records,
         }

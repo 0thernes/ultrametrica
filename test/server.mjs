@@ -66,7 +66,7 @@ test('B09 Contract, A34 Observability & B36 Security: HTTP routes, headers, and 
     const payload = JSON.parse(health.body);
     assert.equal(payload.status, 'ok');
     assert.equal(payload.service, 'ultrametrica');
-    assert.equal(payload.version, '1.8.0');
+    assert.equal(payload.version, '1.8.1');
     assert.equal(typeof payload.uptime_s, 'number');
 
     // 2. Root & /blueprint redirects preserving query permalink

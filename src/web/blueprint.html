@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ULTRAMETRICA v1.8.0 — Interactive Lean 4 Proof Blueprint &amp; Dependency Graph</title>
+  <title>ULTRAMETRICA v1.8.1 — Interactive Lean 4 Proof Blueprint &amp; Dependency Graph</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="./blueprint.css" />
 </head>
@@ -13,7 +13,7 @@
       <div class="bp-brand">
         <div class="bp-mark" aria-hidden="true"></div>
         <div>
-          <h1 class="bp-title">ULTRAMETRICA <span class="bp-ver">v1.8.0</span> — Lean 4 Proof Blueprint</h1>
+          <h1 class="bp-title">ULTRAMETRICA <span class="bp-ver">v1.8.1</span> — Lean 4 Proof Blueprint</h1>
           <p class="bp-sub">
             Pure Lean 4.35.0 (Palomar <code>module</code>, zero Mathlib, all 17 files &lt; 1,000 lines, 100% public theorem axiom coverage) &middot;
             <strong>250 audited declarations</strong> (144 core theorems + 81 zero-Mathlib helper lemmas +
@@ -211,7 +211,7 @@
           <span class="pill pill-ok">Primal Non-Negativity</span>
         </div>
         <h3>Theorem V-Global &amp; VI — Multi-Edge Kantorovich Duality &amp; RT SSA</h3>
-        <p>First-principles arbitrary-degree arbitrary-weight multi-edge inhomogeneous Kantorovich primal-dual duality (with full entry non-negativity in both subcritical &amp; supercritical regimes), per-edge Gauss-Bonnet charge decomposition, and universal holographic Ryu-Takayanagi Strong Subadditivity.</p>
+        <p>First-principles arbitrary-degree arbitrary-weight multi-edge inhomogeneous Kantorovich primal-dual duality (with full entry non-negativity in both subcritical &amp; supercritical regimes), per-edge vertex half-charge decomposition (local probability-normalization telescoping), and universal holographic Ryu-Takayanagi Strong Subadditivity.</p>
         <ul class="decl-list mono">
           <li data-lean-decl="Ultrametrica.gen_bridge_transport_cost_identity">gen_bridge_transport_cost_identity</li>
           <li data-lean-decl="Ultrametrica.gen_bridge_wasserstein_lower_bound_sub">gen_bridge_wasserstein_lower_bound_sub</li>
@@ -234,8 +234,8 @@
           <span class="pill pill-core">Module 3C &middot; FiniteGraphGaussBonnet.lean (24)</span>
           <span class="pill pill-ok">0 sorry</span>
         </div>
-        <h3>Actual Finite-Graph Edge-Sum Curved Gauss-Bonnet Conservation</h3>
-        <p>Closes finding F70: proves exact discrete Gauss-Bonnet curvature conservation by direct double-counting induction over an arbitrary finite undirected weighted edge list <code>E : List (WeightedEdge n)</code> on <code>Fin n</code> in exact rational arithmetic <code>RatQ</code>.</p>
+        <h3>Finite-Graph Edge-Sum Bridge Ollivier-Ricci Subcritical Metric-Invariance</h3>
+        <p>Closes finding F70: proves exact local vertex-normalization telescoping and subcritical metric-invariance by direct double-counting induction over an arbitrary finite undirected weighted edge list <code>E : List (WeightedEdge n)</code> on <code>Fin n</code> in exact rational arithmetic <code>RatQ</code> (legacy <code>gauss_bonnet</code> identifiers retained for comparator stability; distinct from topological Gauss-Bonnet on trees with leaves).</p>
         <ul class="decl-list mono">
           <li data-lean-decl="Ultrametrica.finite_graph_half_charge_double_count">finite_graph_half_charge_double_count</li>
           <li data-lean-decl="Ultrametrica.finite_graph_vertex_incident_sum">finite_graph_vertex_incident_sum</li>
@@ -381,7 +381,7 @@
 
     <footer class="bp-footer">
       <p>
-        ULTRAMETRICA v1.8.0 &middot; Author: Alexander Stephen Donahue (ORCID
+        ULTRAMETRICA v1.8.1 &middot; Author: Alexander Stephen Donahue (ORCID
         <a href="https://orcid.org/0009-0006-8168-9648" target="_blank" rel="noopener">0009-0006-8168-9648</a>) &middot;
         Every <code>data-lean-decl</code> identifier on this page is verified automatically by
         <code>scripts/check_blueprint.py</code> against <code>results/lean4-audit.txt</code>.

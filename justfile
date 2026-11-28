@@ -1,4 +1,4 @@
-# ULTRAMETRICA (v1.8.0) — Canonical Task Runner (`justfile`, Build Standard A31/A36/B01)
+# ULTRAMETRICA (v1.8.1) — Canonical Task Runner (`justfile`, Build Standard A31/A36/B01)
 set shell := ["bash", "-euo", "pipefail", "-c"]
 set windows-shell := ["pwsh", "-NoProfile", "-Command"]
 
