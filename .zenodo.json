@@ -1,0 +1,35 @@
+{
+  "title": "ULTRAMETRICA: Lean 4 Invariants of a Discrete p-adic (Bruhat-Tits Tree) Holography Model",
+  "description": "Zero-Mathlib Lean 4.35.0 six-kernel formalization (250/250 audited declarations, zero sorry) of a discrete p-adic Bruhat-Tits tree holography model: Monna digit reversal, operator-level adelic doublets, discrete Vladimirov/Kozyrev eigenfunctions, full-graph BTZ and bridge-edge Ollivier-Ricci transport bounds, bulk operator positivity, finite-graph bridge metric-invariance, and graph-cut strong subadditivity.",
+  "upload_type": "software",
+  "version": "1.8.1",
+  "license": "other-nc",
+  "creators": [
+    {
+      "name": "Donahue, Alexander Stephen",
+      "affiliation": "Independent Researcher, Spokane, WA, USA",
+      "orcid": "0009-0006-8168-9648"
+    }
+  ],
+  "keywords": [
+    "p-adic holography",
+    "Bruhat-Tits tree",
+    "Ollivier-Ricci curvature",
+    "Lean 4",
+    "formal verification",
+    "open research"
+  ],
+  "notes": "Proprietary non-commercial license (COSMOGONIC LICENSE — NON-COMMERCIAL RESEARCH & PLAY; see LICENSE). Independent research preprint (v1.8.1); not externally peer-reviewed. AI tools assisted under human direction and audit.",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/0thernes/ultrametrica",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://0thernes.github.io/ultrametrica/",
+      "relation": "isDocumentedBy",
+      "scheme": "url"
+    }
+  ]
+}
